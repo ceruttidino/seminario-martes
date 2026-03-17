@@ -16,7 +16,7 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        //soft movement
+        //soft movementss
         rb.linearVelocity = Vector2.Lerp(rb.linearVelocity, moveInput * moveSpeed, 0.2f);
     }
 
