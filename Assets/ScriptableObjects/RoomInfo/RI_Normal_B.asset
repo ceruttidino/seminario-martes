@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0fafb5f288fe4d543b32ecddd7f96428, type: 3}
+  m_Name: RI_Normal_B
+  m_EditorClassIdentifier: Assembly-CSharp::RoomInformation
+  roomID: Normal_B
+  type: 1
+  prefab: {fileID: 2425797972450864980, guid: eac01e42f2db3bf4abd29bf677142975, type: 3}
+  availableDoors: 00000000010000000200000003000000
