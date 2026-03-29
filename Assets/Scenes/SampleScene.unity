@@ -218,6 +218,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ae436584551ba624288d04100b341a46, type: 2}
   - {fileID: 11400000, guid: 748e609bd24a3ae49ba2374c679e97b0, type: 2}
   - {fileID: 11400000, guid: a18ca7c113182b24c845b8f5d8cfd137, type: 2}
+  - {fileID: 11400000, guid: dd5282a12f22be74eb40a6daa27edc2c, type: 2}
   transitionDelay: 0.1
 --- !u!4 &505106769
 Transform:
