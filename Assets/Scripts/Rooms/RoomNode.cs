@@ -7,6 +7,7 @@ public class RoomNode //Logic room inside the dungeon
     public string uniqueNodeID;
     public RoomInformation information;
     public Dictionary<DoorDirection, RoomNode> neighboors = new Dictionary<DoorDirection, RoomNode>();
+    public Vector2Int gridPosition;
 
     public RoomInstance spawnedInstance;
     public bool hasBeenVisited;
@@ -36,7 +37,6 @@ public class RoomNode //Logic room inside the dungeon
         if (!neighboors.ContainsKey(direction))
         {
             neighboors.Add(direction, neighbor);
-            Debug.Log($"[RoomNode] {uniqueNodeID} connected {direction} -> {neighbor.uniqueNodeID}");
         }
     }
 }

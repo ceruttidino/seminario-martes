@@ -1,4 +1,3 @@
-using NUnit.Framework;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -23,17 +22,11 @@ public class RoomInstance : MonoBehaviour
 
     private void BuildLookups()
     {
-        spawnPointLookup.Clear();
-        doorLookup.Clear();
-
-        Debug.Log($"[RoomInstance] Building lookups for room instance: {name}");
-
         foreach (DoorSpawnPoint point in doorSpawnPoints)
         {
-            if(point != null && point.spawnPoint != null && !spawnPointLookup.ContainsKey(point.direction))
+            if(point != null && point.spawnPoint != null)
             {
                 spawnPointLookup.Add(point.direction, point.spawnPoint);
-                Debug.Log($"[RoomInstance] Spawn point added: {point.direction} -> {point.spawnPoint.name}");
             }
         }
         foreach (RoomDoor door in roomDoors) 
@@ -41,7 +34,6 @@ public class RoomInstance : MonoBehaviour
             if(door != null && !doorLookup.ContainsKey(door.Direction))
             {
                 doorLookup.Add(door.Direction, door);
-                Debug.Log($"[RoomInstance] Door added: {door.Direction} -> {door.name}");
             }
         }
     }
@@ -50,25 +42,19 @@ public class RoomInstance : MonoBehaviour
     {
         if(spawnPointLookup.TryGetValue(entryDirection, out Transform spawn))
         {
-            Debug.Log($"[RoomInstance] Found spawn point for {entryDirection}: {spawn.name}");
             return spawn;
         }
-        Debug.LogWarning($"[RoomInstance] No spawn point found for {entryDirection}. Falling back to default spawn.");
         return defaultSpawnPoint;
     }
 
     public void ConfigureDoors(RoomNode node)
     {
-        Debug.Log($"[RoomInstance] Configuring doors for node: {node.uniqueNodeID}");
-
         foreach (var pair in doorLookup)
         {
             DoorDirection direction = pair.Key;
             RoomDoor door = pair.Value;
 
             bool shouldBeActive = node.information.HasDoor(direction);
-
-            Debug.Log($"[RoomInstance] Door {direction} active = {shouldBeActive}");
 
             door.gameObject.SetActive(shouldBeActive);
 

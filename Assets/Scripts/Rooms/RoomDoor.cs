@@ -15,7 +15,6 @@ public class RoomDoor : MonoBehaviour //Script for each door prefab
         direction = newDirection;
         canTrigger = true;
 
-        Debug.Log($"[RoomDoor] Initialized door: {name} with direction: {direction}");
     }
 
     public void SetLocked(bool locked) 
@@ -25,19 +24,14 @@ public class RoomDoor : MonoBehaviour //Script for each door prefab
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log($"[RoomDoor] Trigger entered on door {name} by {other.name}");
-
         if (!canTrigger || isLocked)
         {
-            Debug.Log("[RoomDoor] Trigger blocked because canTrigger = false or door is locked");
             return;
         }
         if (!other.CompareTag("Player"))
         {
             return;
         }
-
-        Debug.Log($"[RoomDoor] Player used door {direction}");
 
         canTrigger = false;
         DungeonManager.Instance.TryMoveToNextRoom(direction);
@@ -47,7 +41,6 @@ public class RoomDoor : MonoBehaviour //Script for each door prefab
         if (other.CompareTag("Player"))
         {
             canTrigger = true;
-            Debug.Log($"[RoomDoor] Player exited door trigger: {name}. canTrigger reset to true.");
         }
     }
 }
