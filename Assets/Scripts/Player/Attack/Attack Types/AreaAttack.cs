@@ -51,4 +51,8 @@ public class AreaAttack : MonoBehaviour, IAttack
         Gizmos.color = Color.blue;
         Gizmos.DrawWireSphere(transform.position, radius);
     }
+    public void IncreaseDamage(float amount)
+    {
+        damage += amount;
+    }
 }

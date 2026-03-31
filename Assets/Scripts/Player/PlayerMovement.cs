@@ -41,6 +41,12 @@ public class PlayerMovement : MonoBehaviour
         HandleMovement();
     }
 
+    // method for the improvement system
+    public void IncreaseMoveSpeed(float amount)
+    {
+        moveSpeed += amount;
+    }
+
     public void Move(InputAction.CallbackContext context)
     {
         //reads input values

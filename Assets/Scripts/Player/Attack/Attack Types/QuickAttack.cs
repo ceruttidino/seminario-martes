@@ -68,4 +68,9 @@ public class QuickAttack : MonoBehaviour, IAttack
 
         Gizmos.DrawWireCube(attackCenter, attackBoxSize);
     }
+    public void IncreaseDamage(float amount)
+    {
+        damage += amount;
+    }
 }
+
