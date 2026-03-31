@@ -24,6 +24,11 @@ public class DungeonProgression : MonoBehaviour
 
         if (!bossSpawned)
         {
+            if (!shopSpawned)
+            {
+                return RoomType.Normal;
+            }
+
             if (currentNormalRoomsCount >= normalRoomsBeforeBoss)
             {
                 return RoomType.Boss;

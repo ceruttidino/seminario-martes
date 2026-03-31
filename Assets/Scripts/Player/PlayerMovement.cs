@@ -5,6 +5,8 @@ public class PlayerMovement : MonoBehaviour
 {
     [Header("References")]
     private Rigidbody2D rb;
+    [SerializeField] private Animator animator;
+    [SerializeField] private SpriteRenderer spriteRenderer;
 
     [Header("Input")]
     private Vector2 moveInput;
@@ -83,5 +85,21 @@ public class PlayerMovement : MonoBehaviour
         }
         Vector2 newVelocity = Vector2.MoveTowards(currentVelocity, targetVelocity, accelRate * Time.fixedDeltaTime);
         rb.linearVelocity = newVelocity;
+
+        UpdateAnimator();
+    }
+
+    private void UpdateAnimator()
+    {
+        float speed = rb.linearVelocity.magnitude;
+
+        animator.SetFloat("Speed", speed);
+        animator.SetFloat("X", lastLookDirection.x);
+
+        if(lastLookDirection.x != 0)
+        {
+            spriteRenderer.flipX = lastLookDirection.x < 0; 
+        }
+
     }
 }

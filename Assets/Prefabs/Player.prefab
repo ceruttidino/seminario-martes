@@ -12,11 +12,13 @@ GameObject:
   - component: {fileID: 1380491578855133914}
   - component: {fileID: 1660335391172210950}
   - component: {fileID: 2180484767479099527}
+  - component: {fileID: 6671336775965671393}
   - component: {fileID: 2442127025827706028}
   - component: {fileID: 4973168310728382421}
   - component: {fileID: 5312510268511530110}
   - component: {fileID: 6354491309245815682}
   - component: {fileID: 1785173488312657902}
+  - component: {fileID: 7840586562795469529}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -34,7 +36,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 0.7, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -88,7 +90,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -9095717837082945937, guid: 207ee8102dd4143d288186ef0be518ee, type: 3}
+  m_Sprite: {fileID: -8768366306441875205, guid: 30abf5558a25ab641a89ce30e647a88e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -132,8 +134,8 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_Size: {x: 1, y: 2}
+  m_Offset: {x: 0, y: 0.021621704}
+  m_Size: {x: 1, y: 1.1495407}
   m_Direction: 0
 --- !u!50 &2180484767479099527
 Rigidbody2D:
@@ -162,6 +164,28 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!95 &6671336775965671393
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7409795251022180326}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 8af02a7cfcecee04aa72b2b232ff191e, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &2442127025827706028
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -235,6 +259,54 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 311f26b3-dd76-4f26-aad4-6fe834621a9b
     m_ActionName: 'Player/AreaAttack[/Keyboard/h]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7840586562795469529}
+        m_TargetAssemblyTypeName: PlayerHealth, Assembly-CSharp
+        m_MethodName: Heal
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 53baaeea-1b62-4893-bcb5-2e7c656c70e8
+    m_ActionName: 'Player/Health[/Keyboard/h]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7840586562795469529}
+        m_TargetAssemblyTypeName: PlayerHealth, Assembly-CSharp
+        m_MethodName: Hurt
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 6a60b6d1-d994-4c46-a814-1cd1a0d670f5
+    m_ActionName: 'Player/Hurt[/Keyboard/j]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7840586562795469529}
+        m_TargetAssemblyTypeName: PlayerHealth, Assembly-CSharp
+        m_MethodName: AddHeart
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 9cd03b02-a9a1-4e71-acba-9748883ef2e2
+    m_ActionName: 'Player/Add Heart[/Keyboard/k]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -252,6 +324,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9896bce959dbdb4cbfe88a3f18ab3f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
+  animator: {fileID: 6671336775965671393}
+  spriteRenderer: {fileID: 1380491578855133914}
   moveSpeed: 7
   acceleration: 40
   deceleration: 30
@@ -288,6 +362,7 @@ MonoBehaviour:
   enemyLayer:
     serializedVersion: 2
     m_Bits: 8
+  slashEffectPrefab: {fileID: 4331897489979970182, guid: 00b6463b4b616704aba09a51c11b0f6f, type: 3}
   damage: 10
   cooldown: 0.5
   attackDistance: 1
@@ -310,3 +385,27 @@ MonoBehaviour:
   damage: 20
   cooldown: 2
   radius: 2
+--- !u!114 &7840586562795469529
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7409795251022180326}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a765c66e54f7e5341aab59e1fe40efda, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
+  playerHealthCap: 20
+  playerMaxHealth: 6
+  playerHealth: 6
+  canGetHurt: 1
+  invulTime: 1.5
+  hearts:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}

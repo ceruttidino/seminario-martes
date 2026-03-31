@@ -119,6 +119,11 @@ public class DungeonManager : MonoBehaviour
 
         if (node == null)
         {
+            if(requestedType == RoomType.Shop || requestedType == RoomType.Boss)
+            {
+                return null;
+            }
+
             node = dungeonLayout.CreateNextRoom(currentNode, exitDirection, RoomType.Normal);
             finalType = RoomType.Normal;
         }

@@ -6,6 +6,7 @@ public class QuickAttack : MonoBehaviour, IAttack
     [Header("References")]
     [SerializeField] private PlayerMovement playerDirection;
     [SerializeField] private LayerMask enemyLayer;
+    [SerializeField] private GameObject slashEffectPrefab;
 
     [Header("Quick Attack")]
     [SerializeField] private float damage = 10f;
@@ -49,6 +50,7 @@ public class QuickAttack : MonoBehaviour, IAttack
                 damageable.TakeDamage(damage);
             }
         }
+
     }
 
     //visualize on "scene view" area of attack
