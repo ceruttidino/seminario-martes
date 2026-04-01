@@ -1,0 +1,533 @@
+fileFormatVersion: 2
+guid: 697073a21b53cb64aa112936fb4794f4
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 5624390333836769887
+    second: Tail_Attack-Sheet_0
+  - first:
+      213: 5391636039158021885
+    second: Tail_Attack-Sheet_1
+  - first:
+      213: 4911319678382961187
+    second: Tail_Attack-Sheet_2
+  - first:
+      213: 2992149904780985328
+    second: Tail_Attack-Sheet_3
+  - first:
+      213: -4722912100449569393
+    second: Tail_Attack-Sheet_4
+  - first:
+      213: 2843726377375483031
+    second: Tail_Attack-Sheet_5
+  - first:
+      213: -2617931272336230898
+    second: Tail_Attack-Sheet_6
+  - first:
+      213: -322422696243116290
+    second: Tail_Attack-Sheet_7
+  - first:
+      213: 8086478790965924795
+    second: Tail_Attack-Sheet_8
+  - first:
+      213: -1105128213313056950
+    second: Tail_Attack-Sheet_9
+  - first:
+      213: 511148573303093077
+    second: Tail_Attack-Sheet_10
+  - first:
+      213: 7747569327335482854
+    second: Tail_Attack-Sheet_11
+  - first:
+      213: 7456259380976059056
+    second: Tail_Attack-Sheet_12
+  - first:
+      213: -269933622603889161
+    second: Tail_Attack-Sheet_13
+  - first:
+      213: -5819422023967371815
+    second: Tail_Attack-Sheet_14
+  - first:
+      213: -3329769168567599536
+    second: Tail_Attack-Sheet_15
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Tail_Attack-Sheet_0
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 0
+        width: 57
+        height: 60
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f5a3b769539dd0e40800000000000000
+      internalID: 5624390333836769887
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tail_Attack-Sheet_1
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 0
+        width: 54
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dfe35385960f2da40800000000000000
+      internalID: 5391636039158021885
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tail_Attack-Sheet_2
+      rect:
+        serializedVersion: 2
+        x: 127
+        y: 0
+        width: 58
+        height: 59
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 322f668e933882440800000000000000
+      internalID: 4911319678382961187
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tail_Attack-Sheet_3
+      rect:
+        serializedVersion: 2
+        x: 193
+        y: 1
+        width: 53
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0f3803d3c70468920800000000000000
+      internalID: 2992149904780985328
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tail_Attack-Sheet_4
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 2
+        width: 44
+        height: 56
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f853f4bb778d47eb0800000000000000
+      internalID: -4722912100449569393
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tail_Attack-Sheet_5
+      rect:
+        serializedVersion: 2
+        x: 330
+        y: 4
+        width: 39
+        height: 60
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 794cfd1d212f67720800000000000000
+      internalID: 2843726377375483031
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tail_Attack-Sheet_6
+      rect:
+        serializedVersion: 2
+        x: 392
+        y: 4
+        width: 56
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e063302d06d3babd0800000000000000
+      internalID: -2617931272336230898
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tail_Attack-Sheet_7
+      rect:
+        serializedVersion: 2
+        x: 454
+        y: 2
+        width: 55
+        height: 61
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ef6c7ea1446868bf0800000000000000
+      internalID: -322422696243116290
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tail_Attack-Sheet_8
+      rect:
+        serializedVersion: 2
+        x: 519
+        y: 0
+        width: 54
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bb3114bcd91f83070800000000000000
+      internalID: 8086478790965924795
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tail_Attack-Sheet_9
+      rect:
+        serializedVersion: 2
+        x: 583
+        y: 0
+        width: 58
+        height: 59
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a4f8636cebbc9a0f0800000000000000
+      internalID: -1105128213313056950
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tail_Attack-Sheet_10
+      rect:
+        serializedVersion: 2
+        x: 650
+        y: 1
+        width: 53
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 557bd235be6f71700800000000000000
+      internalID: 511148573303093077
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tail_Attack-Sheet_11
+      rect:
+        serializedVersion: 2
+        x: 724
+        y: 2
+        width: 44
+        height: 56
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6e52b8c3145e48b60800000000000000
+      internalID: 7747569327335482854
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tail_Attack-Sheet_12
+      rect:
+        serializedVersion: 2
+        x: 783
+        y: 4
+        width: 39
+        height: 60
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0b2804ce664f97760800000000000000
+      internalID: 7456259380976059056
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tail_Attack-Sheet_13
+      rect:
+        serializedVersion: 2
+        x: 832
+        y: 4
+        width: 56
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7f5c2c7ecc0014cf0800000000000000
+      internalID: -269933622603889161
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tail_Attack-Sheet_14
+      rect:
+        serializedVersion: 2
+        x: 899
+        y: 2
+        width: 55
+        height: 61
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9dd075770824d3fa0800000000000000
+      internalID: -5819422023967371815
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tail_Attack-Sheet_15
+      rect:
+        serializedVersion: 2
+        x: 963
+        y: 0
+        width: 56
+        height: 60
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 05efa7345984ac1d0800000000000000
+      internalID: -3329769168567599536
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Tail_Attack-Sheet_0: 5624390333836769887
+      Tail_Attack-Sheet_1: 5391636039158021885
+      Tail_Attack-Sheet_10: 511148573303093077
+      Tail_Attack-Sheet_11: 7747569327335482854
+      Tail_Attack-Sheet_12: 7456259380976059056
+      Tail_Attack-Sheet_13: -269933622603889161
+      Tail_Attack-Sheet_14: -5819422023967371815
+      Tail_Attack-Sheet_15: -3329769168567599536
+      Tail_Attack-Sheet_2: 4911319678382961187
+      Tail_Attack-Sheet_3: 2992149904780985328
+      Tail_Attack-Sheet_4: -4722912100449569393
+      Tail_Attack-Sheet_5: 2843726377375483031
+      Tail_Attack-Sheet_6: -2617931272336230898
+      Tail_Attack-Sheet_7: -322422696243116290
+      Tail_Attack-Sheet_8: 8086478790965924795
+      Tail_Attack-Sheet_9: -1105128213313056950
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
