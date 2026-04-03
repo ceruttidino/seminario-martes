@@ -1911,7 +1911,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -0.047095317, y: 0}
   m_SizeDelta: {x: 1920, y: 1080}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1626250797
@@ -2218,6 +2218,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1785173488312657902, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
+      propertyPath: trashLayer.m_Bits
+      value: 64
+      objectReference: {fileID: 0}
     - target: {fileID: 2442127025827706028, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
       propertyPath: m_ActionEvents.Array.size
       value: 7
@@ -2257,6 +2261,10 @@ PrefabInstance:
     - target: {fileID: 2442127025827706028, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
       propertyPath: m_ActionEvents.Array.data[6].m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 6354491309245815682, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
+      propertyPath: trashLayer.m_Bits
+      value: 64
       objectReference: {fileID: 0}
     - target: {fileID: 7409795251022180326, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
       propertyPath: m_Name

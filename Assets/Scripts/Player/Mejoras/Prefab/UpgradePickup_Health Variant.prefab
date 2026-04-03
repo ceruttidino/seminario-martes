@@ -1,0 +1,101 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &4983999793329395612
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 198103972953636832, guid: 5443f03a3acee2543a3d3b3183e03bb2, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -1.33881
+      objectReference: {fileID: 0}
+    - target: {fileID: 198103972953636832, guid: 5443f03a3acee2543a3d3b3183e03bb2, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.72977
+      objectReference: {fileID: 0}
+    - target: {fileID: 198103972953636832, guid: 5443f03a3acee2543a3d3b3183e03bb2, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 198103972953636832, guid: 5443f03a3acee2543a3d3b3183e03bb2, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 198103972953636832, guid: 5443f03a3acee2543a3d3b3183e03bb2, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 198103972953636832, guid: 5443f03a3acee2543a3d3b3183e03bb2, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 198103972953636832, guid: 5443f03a3acee2543a3d3b3183e03bb2, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 198103972953636832, guid: 5443f03a3acee2543a3d3b3183e03bb2, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 198103972953636832, guid: 5443f03a3acee2543a3d3b3183e03bb2, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 198103972953636832, guid: 5443f03a3acee2543a3d3b3183e03bb2, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5301509431083932940, guid: 5443f03a3acee2543a3d3b3183e03bb2, type: 3}
+      propertyPath: m_Color.b
+      value: 0.19754349
+      objectReference: {fileID: 0}
+    - target: {fileID: 5301509431083932940, guid: 5443f03a3acee2543a3d3b3183e03bb2, type: 3}
+      propertyPath: m_Color.g
+      value: 0.19754349
+      objectReference: {fileID: 0}
+    - target: {fileID: 5301509431083932940, guid: 5443f03a3acee2543a3d3b3183e03bb2, type: 3}
+      propertyPath: m_Color.r
+      value: 0.6754716
+      objectReference: {fileID: 0}
+    - target: {fileID: 8130129785676737181, guid: 5443f03a3acee2543a3d3b3183e03bb2, type: 3}
+      propertyPath: upgradeToGrant
+      value: 
+      objectReference: {fileID: 11400000, guid: 90ca9b1a3f463344d842e78103703f9c, type: 2}
+    - target: {fileID: 8288388510651883771, guid: 5443f03a3acee2543a3d3b3183e03bb2, type: 3}
+      propertyPath: m_Name
+      value: UpgradePickup_Health Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 8288388510651883771, guid: 5443f03a3acee2543a3d3b3183e03bb2, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8288388510651883771, guid: 5443f03a3acee2543a3d3b3183e03bb2, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -2059707213957574905}
+  m_SourcePrefab: {fileID: 100100000, guid: 5443f03a3acee2543a3d3b3183e03bb2, type: 3}
+--- !u!1 &3903772088645810023 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8288388510651883771, guid: 5443f03a3acee2543a3d3b3183e03bb2, type: 3}
+  m_PrefabInstance: {fileID: 4983999793329395612}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &-2059707213957574905
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3903772088645810023}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb635969982e9324f8c1a0f3c2dbad74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LootPickup
+  pickupDelay: 0.6
+  autoPickup: 0

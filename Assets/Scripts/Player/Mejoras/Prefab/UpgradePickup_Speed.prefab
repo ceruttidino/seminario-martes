@@ -12,7 +12,8 @@ GameObject:
   - component: {fileID: 6895827624547286482}
   - component: {fileID: 4758524835876486678}
   - component: {fileID: 2991889791072477926}
-  m_Layer: 0
+  - component: {fileID: -7075926356288257696}
+  m_Layer: 7
   m_Name: UpgradePickup_Speed
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -83,8 +84,8 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
-  m_Color: {r: 0.33836237, g: 0.81886786, b: 0.75454205, a: 1}
+  m_Sprite: {fileID: 869989272981080661, guid: 8e992d8e2a0a12e48b7400e5c5b33b62, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -142,3 +143,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UpgradePickup
   upgradeToGrant: {fileID: 11400000, guid: 2ed0168fc78359c4b9355ffcbbc464e7, type: 2}
+--- !u!114 &-7075926356288257696
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5588464782313880407}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb635969982e9324f8c1a0f3c2dbad74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LootPickup
+  pickupDelay: 0.6
+  autoPickup: 0

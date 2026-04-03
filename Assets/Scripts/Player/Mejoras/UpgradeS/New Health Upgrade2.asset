@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41f07b12793d6654faacff56f5aaff81, type: 3}
+  m_Name: New Health Upgrade2
+  m_EditorClassIdentifier: Assembly-CSharp::HealthUpgradeSO
+  upgradeName: Health+2
+  description: "Descripci\xF3n de la mejora"
+  icon: {fileID: 0}
+  heartsToAdd: 2
+  fillNewHearts: 1
