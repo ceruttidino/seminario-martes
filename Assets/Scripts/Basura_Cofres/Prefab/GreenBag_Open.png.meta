@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: a17106ea350c1eb4183600f175a7628e
+guid: c5b39517118f463419e5d06a9522f3ae
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -3409828894883317074
-    second: Bolsa de basura_0
+      213: 7160570662615794101
+    second: Contenedor_Verde_Abierto_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Bolsa de basura_0
+      name: Contenedor_Verde_Abierto_0
       rect:
         serializedVersion: 2
-        x: 7
-        y: 5
-        width: 53
-        height: 56
+        x: 6
+        y: 4
+        width: 52
+        height: 60
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: eaafd97afaadda0d0800000000000000
-      internalID: -3409828894883317074
+      spriteID: 5b14c4e44157f5360800000000000000
+      internalID: 7160570662615794101
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Bolsa de basura_0: -3409828894883317074
+      Contenedor_Verde_Abierto_0: 7160570662615794101
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

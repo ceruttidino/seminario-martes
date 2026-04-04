@@ -934,6 +934,9 @@ MonoBehaviour:
   - {fileID: 2136561010566634888}
   - {fileID: 1237818656150308209}
   - {fileID: 8024582676868195165}
+  diggingSpotLocations: []
+  diggingSpotPrefab: {fileID: 0}
+  chanceToHaveDiggingSpots: 30
 --- !u!1 &5413412434907751617
 GameObject:
   m_ObjectHideFlags: 0
@@ -1578,6 +1581,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5163867741265556760, guid: cdf3947cdfd453147bd85d3ae7e06b23, type: 3}
+      propertyPath: destroyParticlePrefab
+      value: 
+      objectReference: {fileID: 7726800093135833870, guid: 30b5042b42cc6304daa44f89cbace3d0, type: 3}
+    - target: {fileID: 5492638574281854178, guid: cdf3947cdfd453147bd85d3ae7e06b23, type: 3}
+      propertyPath: m_Size.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5492638574281854178, guid: cdf3947cdfd453147bd85d3ae7e06b23, type: 3}
+      propertyPath: m_Size.y
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 5492638574281854178, guid: cdf3947cdfd453147bd85d3ae7e06b23, type: 3}
       propertyPath: m_IsTrigger
       value: 0
@@ -1749,6 +1764,10 @@ PrefabInstance:
     - target: {fileID: 4211959711514281528, guid: 3ab77cdbc74300e488c3d2366e68fa52, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4381134284353896429, guid: 3ab77cdbc74300e488c3d2366e68fa52, type: 3}
+      propertyPath: m_Radius
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 4381134284353896429, guid: 3ab77cdbc74300e488c3d2366e68fa52, type: 3}
       propertyPath: m_IsTrigger

@@ -2241,15 +2241,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2442127025827706028, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
       propertyPath: m_ActionEvents.Array.size
-      value: 7
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 2442127025827706028, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
       propertyPath: m_ActionEvents.Array.data[6].m_ActionId
       value: 6554f3b7-c28e-45c0-978d-c976bc77f7a9
       objectReference: {fileID: 0}
     - target: {fileID: 2442127025827706028, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
+      propertyPath: m_ActionEvents.Array.data[7].m_ActionId
+      value: 5596049d-b095-4142-ae5a-1cf94f4d7715
+      objectReference: {fileID: 0}
+    - target: {fileID: 2442127025827706028, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
       propertyPath: m_ActionEvents.Array.data[6].m_ActionName
       value: 'Player/Menu[/Keyboard/escape]'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2442127025827706028, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
+      propertyPath: m_ActionEvents.Array.data[7].m_ActionName
+      value: 'Player/Dash[/Keyboard/leftShift]'
       objectReference: {fileID: 0}
     - target: {fileID: 2442127025827706028, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
       propertyPath: m_ActionEvents.Array.data[6].m_PersistentCalls.m_Calls.Array.size
@@ -2321,7 +2329,32 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7409795251022180326, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2010496963}
+    - targetCorrespondingSourceObject: {fileID: 7409795251022180326, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1073348446815861785}
   m_SourcePrefab: {fileID: 100100000, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
+--- !u!50 &1073348446815861784 stripped
+Rigidbody2D:
+  m_CorrespondingSourceObject: {fileID: 2180484767479099527, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
+  m_PrefabInstance: {fileID: 1073348446815861783}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1073348446815861785
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2010496951}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ea93b6a8bbc3be42a7d011fa19f4c0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerDash
+  dashSpeed: 25
+  dashDuration: 0.25
+  dashCooldown: 1
+  playerMovement: {fileID: 2010496956}
+  rb: {fileID: 1073348446815861784}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
