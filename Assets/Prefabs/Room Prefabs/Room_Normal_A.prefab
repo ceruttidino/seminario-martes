@@ -262,6 +262,37 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RoomDoor
   direction: 2
   isLocked: 0
+--- !u!1 &3237874667286127667
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1782057880513012828}
+  m_Layer: 0
+  m_Name: DigSpot_1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1782057880513012828
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3237874667286127667}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -6, y: 3, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8855914108497674385}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3857411769287756706
 GameObject:
   m_ObjectHideFlags: 0
@@ -809,6 +840,10 @@ Transform:
   - {fileID: 3961969874413745895}
   - {fileID: 7789988802307065343}
   - {fileID: 2435210143574308681}
+  - {fileID: 1782057880513012828}
+  - {fileID: 4875957682436187740}
+  - {fileID: 5562171015158021200}
+  - {fileID: 7368240045080889273}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5081486977560716221
@@ -838,6 +873,13 @@ MonoBehaviour:
   - {fileID: 2136561010566634888}
   - {fileID: 1237818656150308209}
   - {fileID: 8024582676868195165}
+  diggingSpotLocations:
+  - {fileID: 1782057880513012828}
+  - {fileID: 4875957682436187740}
+  - {fileID: 5562171015158021200}
+  - {fileID: 7368240045080889273}
+  diggingSpotPrefab: {fileID: 3611433241170528407, guid: 7367a0a007b04e74d875d4e74d4a5fa3, type: 3}
+  chanceToHaveDiggingSpots: 35
 --- !u!1 &5413412434907751617
 GameObject:
   m_ObjectHideFlags: 0
@@ -952,6 +994,37 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.5789509, y: 10.026318}
   m_EdgeRadius: 0
+--- !u!1 &6335233308008070996
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4875957682436187740}
+  m_Layer: 0
+  m_Name: DigSpot_2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4875957682436187740
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6335233308008070996}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 6, y: 3, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8855914108497674385}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6838967271370988914
 GameObject:
   m_ObjectHideFlags: 0
@@ -1249,6 +1322,68 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.5789509, y: 10.02632}
   m_EdgeRadius: 0
+--- !u!1 &7750314076695519131
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7368240045080889273}
+  m_Layer: 0
+  m_Name: DigSpot_4
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7368240045080889273
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7750314076695519131}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 6, y: -3, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8855914108497674385}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &8732773923634652628
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5562171015158021200}
+  m_Layer: 0
+  m_Name: DigSpot_3
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5562171015158021200
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8732773923634652628}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -6, y: -3, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8855914108497674385}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8851916279858814583
 GameObject:
   m_ObjectHideFlags: 0

@@ -10,6 +10,11 @@ public class RoomInstance : MonoBehaviour
     [Header("Doors")]
     [SerializeField] private List<RoomDoor> roomDoors = new List<RoomDoor>();
 
+    [Header("Digging Spots (TESTEANDO)")]
+    [SerializeField] private Transform[] diggingSpotLocations;
+    [SerializeField] private GameObject diggingSpotPrefab;
+    [SerializeField] [Range(0f, 100f)] private float chanceToHaveDiggingSpots = 30f;
+
     private Dictionary<DoorDirection, Transform> spawnPointLookup = new Dictionary<DoorDirection, Transform>();
     private Dictionary<DoorDirection, RoomDoor> doorLookup = new Dictionary<DoorDirection, RoomDoor>();
 
@@ -63,6 +68,33 @@ public class RoomInstance : MonoBehaviour
                 door.Initialize(direction);
             }
         }
+
+        GenerateDiggingSpots();
+    }
+
+    private void GenerateDiggingSpots()
+    {
+        if (diggingSpotLocations == null || diggingSpotLocations.Length == 0 || diggingSpotPrefab == null) 
+            return;
+
+        // Chance de que esta room en sí tenga puntos de excavación
+        if (Random.value * 100f <= chanceToHaveDiggingSpots)
+        {
+            int maxPossibleSpawns = Mathf.Min(2, diggingSpotLocations.Length);
+            int numToSpawn = Random.Range(1, maxPossibleSpawns + 1); // 1 or 2
+
+            List<Transform> availableLocations = new List<Transform>(diggingSpotLocations);
+
+            for (int i = 0; i < numToSpawn; i++)
+            {
+                int index = Random.Range(0, availableLocations.Count);
+                Transform spawnLoc = availableLocations[index];
+
+                Instantiate(diggingSpotPrefab, spawnLoc.position, Quaternion.identity, transform);
+
+                availableLocations.RemoveAt(index);
+            }
+        }
     }
 
     private void OnDrawGizmos()
@@ -82,6 +114,19 @@ public class RoomInstance : MonoBehaviour
                 if (point != null && point.spawnPoint != null)
                 {
                     Gizmos.DrawSphere(point.spawnPoint.position, 0.12f);
+                }
+            }
+        }
+
+        if (diggingSpotLocations != null)
+        {
+            Gizmos.color = new Color(0.5f, 0.3f, 0.1f); // Marrón para los puntos de excavación
+
+            foreach (Transform spot in diggingSpotLocations)
+            {
+                if (spot != null)
+                {
+                    Gizmos.DrawSphere(spot.position, 0.12f);
                 }
             }
         }
