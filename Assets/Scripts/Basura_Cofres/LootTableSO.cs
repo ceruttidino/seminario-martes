@@ -8,7 +8,7 @@ public class LootTableSO : ScriptableObject
     public class LootEntry
     {
         public LootItem lootItem;
-        [Range(0, 100)] public float probability;   // % de chance
+        [Range(0, 100)] public float probability;   
         public int minAmount = 1;
         public int maxAmount = 1;
     }
@@ -37,7 +37,7 @@ public class LootTableSO : ScriptableObject
             }
         }
 
-        // Si no salió nada, dar algo mínimo
+        
         if (result.Count == 0 && table.Count > 0)
             result.Add(table[0].lootItem);
 

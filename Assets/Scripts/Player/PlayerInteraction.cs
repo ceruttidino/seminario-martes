@@ -16,7 +16,7 @@ public class PlayerInteraction : MonoBehaviour
     {
         CheckNearbyInteractables();
 
-        // Se usa el nuevo Input System:
+        
         if (Keyboard.current != null && Keyboard.current.fKey.wasPressedThisFrame && currentInteractable != null)
         {
             currentInteractable.Interact();
@@ -31,7 +31,7 @@ public class PlayerInteraction : MonoBehaviour
 
         if (colliders.Length > 0)
         {
-            // Tomamos el primero que encontremos (puedes adaptar para el más cercano)
+            
             foundInteractable = colliders[0].GetComponent<IInteractable>();
         }
 
@@ -46,7 +46,7 @@ public class PlayerInteraction : MonoBehaviour
 
             if (currentInteractable != null)
             {
-                currentInteractable.ShowHighlight(true); // Lo iluminamos
+                currentInteractable.ShowHighlight(true); // resalta el objeto
             }
         }
     }

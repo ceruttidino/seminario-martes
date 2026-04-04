@@ -10,7 +10,7 @@ public class DiggingSpot : MonoBehaviour, IInteractable
 
     [Header("Configuración de Loot")]
     [Tooltip("Probabilidad general de encontrar ALGO en la tierra (0 = jamás, 100 = siempre revisa la tabla)")]
-    [SerializeField] [Range(0f, 100f)] private float chanceToFindLoot = 100f; // 100% chance por defecto para testear
+    [SerializeField] [Range(0f, 100f)] private float chanceToFindLoot = 100f; // CHANCE PARA TESTEAR
 
     [Tooltip("El LootTable contiene internamente TODAS las listas (Bolsa Común, Contenedor Verde, etc.)")]
     [SerializeField] private LootTableSO lootTable;
@@ -34,10 +34,10 @@ public class DiggingSpot : MonoBehaviour, IInteractable
 
         if (spawnPoint == null) spawnPoint = transform;
 
-        // Aseguramos que la capa permita la detección por parte del PlayerInteraction
+        
         gameObject.layer = LayerMask.NameToLayer("Interactable");
 
-        // Si no tenemos collider, lo agregamos y lo ponemos como trigger
+        
         BoxCollider2D collider = GetComponent<BoxCollider2D>();
         if (collider == null)
         {
@@ -64,10 +64,10 @@ public class DiggingSpot : MonoBehaviour, IInteractable
         Debug.Log("Excavando en la zona...");
         isDug = true;
 
-        // Quitar brillo
+        
         if (spriteRenderer != null) spriteRenderer.color = originalColor;
 
-        // Determinar si sale un enemigo
+        // spawnea enemigo
         float randomValue = Random.Range(0f, 100f);
         if (specialEnemyPrefab != null && randomValue <= enemySpawnChance)
         {
@@ -76,7 +76,7 @@ public class DiggingSpot : MonoBehaviour, IInteractable
         }
         else
         {
-            // Tirar loot según el porcentaje master
+            // tira loot segun porcentaje
             if (Random.value * 100f <= chanceToFindLoot)
             {
                 if (lootTable != null)
@@ -94,7 +94,7 @@ public class DiggingSpot : MonoBehaviour, IInteractable
             }
         }
 
-        // Destruye el GameObject por completo para que el TrashTile desaparezca de pantalla
+        // destruye el objeto
         Destroy(gameObject);
     }
 
@@ -114,7 +114,7 @@ public class DiggingSpot : MonoBehaviour, IInteractable
         {
             if (item != null && item.prefab != null)
             {
-                // Pequeño desplazamiento azaroso para que no caigan en el centro exacto
+                // los objetos no caen en el centro exacto
                 Vector2 randomOffset = Random.insideUnitCircle * 0.5f; 
                 Instantiate(item.prefab, (Vector2)spawnPoint.position + randomOffset, Quaternion.identity);
                 spawnedSomething = true;

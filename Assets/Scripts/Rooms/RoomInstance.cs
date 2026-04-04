@@ -77,11 +77,11 @@ public class RoomInstance : MonoBehaviour
         if (diggingSpotLocations == null || diggingSpotLocations.Length == 0 || diggingSpotPrefab == null) 
             return;
 
-        // Chance de que esta room en sí tenga puntos de excavación
+        // spawn de excavar
         if (Random.value * 100f <= chanceToHaveDiggingSpots)
         {
             int maxPossibleSpawns = Mathf.Min(2, diggingSpotLocations.Length);
-            int numToSpawn = Random.Range(1, maxPossibleSpawns + 1); // 1 or 2
+            int numToSpawn = Random.Range(1, maxPossibleSpawns + 1); // numero de spawns
 
             List<Transform> availableLocations = new List<Transform>(diggingSpotLocations);
 
@@ -120,7 +120,7 @@ public class RoomInstance : MonoBehaviour
 
         if (diggingSpotLocations != null)
         {
-            Gizmos.color = new Color(0.5f, 0.3f, 0.1f); // Marrón para los puntos de excavación
+            Gizmos.color = new Color(0.5f, 0.3f, 0.1f); 
 
             foreach (Transform spot in diggingSpotLocations)
             {
