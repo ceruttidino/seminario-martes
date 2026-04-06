@@ -49,7 +49,9 @@ public class QuickAttack : MonoBehaviour, IAttack
 
         foreach (Collider2D hit in hits)
         {
-            if (hit.TryGetComponent<IDamageable>(out IDamageable damageable))
+            IDamageable damageable = hit.GetComponentInParent<IDamageable>();
+
+            if (damageable != null)
             {
                 damageable.TakeDamage(damage);
                 Debug.Log($"Daño a enemigo: {hit.name}");

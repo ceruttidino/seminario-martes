@@ -153,6 +153,7 @@ public class DungeonManager : MonoBehaviour
         node.hasBeenVisited = true;
 
         MovePlayerToCorrectSpawn(entryDirection);
+        currentRoomInstance.SpawnEnemies();
     }
 
     private void MovePlayerToCorrectSpawn(DoorDirection? entryDirection)

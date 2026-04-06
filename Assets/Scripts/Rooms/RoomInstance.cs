@@ -15,6 +15,12 @@ public class RoomInstance : MonoBehaviour
     [SerializeField] private GameObject diggingSpotPrefab;
     [SerializeField] [Range(0f, 100f)] private float chanceToHaveDiggingSpots = 30f;
 
+    [Header("Enemies")]
+    [SerializeField] private GameObject enemyPrefab;
+    [SerializeField] private Transform[] enemySpawnPoints;
+
+    private bool enemiesSpawned = false;
+
     private Dictionary<DoorDirection, Transform> spawnPointLookup = new Dictionary<DoorDirection, Transform>();
     private Dictionary<DoorDirection, RoomDoor> doorLookup = new Dictionary<DoorDirection, RoomDoor>();
 
@@ -95,6 +101,24 @@ public class RoomInstance : MonoBehaviour
                 availableLocations.RemoveAt(index);
             }
         }
+    }
+
+    public void SpawnEnemies()
+    {
+        if (enemiesSpawned) return;
+
+        if (enemyPrefab == null || enemySpawnPoints == null || enemySpawnPoints.Length == 0)
+        {
+            Debug.LogWarning("No hay configuración de enemigos en esta room");
+            return;
+        }
+
+        foreach (Transform point in enemySpawnPoints)
+        {
+            Instantiate(enemyPrefab, point.position, Quaternion.identity, transform);
+        }
+
+        enemiesSpawned = true;
     }
 
     private void OnDrawGizmos()

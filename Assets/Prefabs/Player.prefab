@@ -19,6 +19,9 @@ GameObject:
   - component: {fileID: 6354491309245815682}
   - component: {fileID: 1785173488312657902}
   - component: {fileID: 7840586562795469529}
+  - component: {fileID: 8932515960615368468}
+  - component: {fileID: 1474416971671574629}
+  - component: {fileID: 5308910907278262433}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -307,6 +310,26 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 9cd03b02-a9a1-4e71-acba-9748883ef2e2
     m_ActionName: 'Player/Add Heart[/Keyboard/k]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: PauseMenu, Assembly-CSharp
+        m_MethodName: OnPause
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 6554f3b7-c28e-45c0-978d-c976bc77f7a9
+    m_ActionName: 'Player/Menu[/Keyboard/escape]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 5596049d-b095-4142-ae5a-1cf94f4d7715
+    m_ActionName: 'Player/Dash[/Keyboard/leftShift]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -362,7 +385,9 @@ MonoBehaviour:
   enemyLayer:
     serializedVersion: 2
     m_Bits: 8
-  slashEffectPrefab: {fileID: 4331897489979970182, guid: 00b6463b4b616704aba09a51c11b0f6f, type: 3}
+  trashLayer:
+    serializedVersion: 2
+    m_Bits: 64
   damage: 10
   cooldown: 0.5
   attackDistance: 1
@@ -382,6 +407,9 @@ MonoBehaviour:
   enemyLayer:
     serializedVersion: 2
     m_Bits: 8
+  trashLayer:
+    serializedVersion: 2
+    m_Bits: 64
   damage: 20
   cooldown: 2
   radius: 2
@@ -409,3 +437,54 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+--- !u!114 &8932515960615368468
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7409795251022180326}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58b88ce0cd2b1164dac81f8e64dfd754, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerUpgradeManager
+  playerMovement: {fileID: 4973168310728382421}
+  playerHealth: {fileID: 7840586562795469529}
+  quickAttack: {fileID: 6354491309245815682}
+  areaAttack: {fileID: 1785173488312657902}
+  collectedUpgrades: []
+--- !u!114 &1474416971671574629
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7409795251022180326}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e8a70487c2810343b73e56e93948678, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerInteraction
+  interactionRadius: 1
+  interactableLayer:
+    serializedVersion: 2
+    m_Bits: 256
+  interactionPoint: {fileID: 0}
+--- !u!114 &5308910907278262433
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7409795251022180326}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ea93b6a8bbc3be42a7d011fa19f4c0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerDash
+  dashSpeed: 25
+  dashDuration: 0.25
+  dashCooldown: 1
+  playerMovement: {fileID: 4973168310728382421}
+  rb: {fileID: 2180484767479099527}

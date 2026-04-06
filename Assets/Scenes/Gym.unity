@@ -2104,89 +2104,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1961078270}
   m_CullTransparentMesh: 1
---- !u!1 &2010496951 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7409795251022180326, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
-  m_PrefabInstance: {fileID: 1073348446815861783}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &2010496952 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7840586562795469529, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
-  m_PrefabInstance: {fileID: 1073348446815861783}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2010496951}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a765c66e54f7e5341aab59e1fe40efda, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
---- !u!114 &2010496953 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1785173488312657902, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
-  m_PrefabInstance: {fileID: 1073348446815861783}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2010496951}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 127b6f7272ac37948877f6f97ff496f7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AreaAttack
---- !u!114 &2010496954 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6354491309245815682, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
-  m_PrefabInstance: {fileID: 1073348446815861783}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2010496951}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7cbc97f0eac2d7b449f3bde890d2a36e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::QuickAttack
---- !u!114 &2010496956 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4973168310728382421, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
-  m_PrefabInstance: {fileID: 1073348446815861783}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2010496951}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e9896bce959dbdb4cbfe88a3f18ab3f9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
---- !u!114 &2010496962
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2010496951}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 58b88ce0cd2b1164dac81f8e64dfd754, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerUpgradeManager
-  playerMovement: {fileID: 2010496956}
-  playerHealth: {fileID: 2010496952}
-  quickAttack: {fileID: 2010496954}
-  areaAttack: {fileID: 2010496953}
-  collectedUpgrades: []
---- !u!114 &2010496963
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2010496951}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e8a70487c2810343b73e56e93948678, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerInteraction
-  interactionRadius: 1
-  interactableLayer:
-    serializedVersion: 2
-    m_Bits: 256
-  interactionPoint: {fileID: 0}
 --- !u!1001 &1073348446815861783
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2235,62 +2152,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1785173488312657902, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
-      propertyPath: trashLayer.m_Bits
-      value: 64
-      objectReference: {fileID: 0}
-    - target: {fileID: 2442127025827706028, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
-      propertyPath: m_ActionEvents.Array.size
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 2442127025827706028, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
-      propertyPath: m_ActionEvents.Array.data[6].m_ActionId
-      value: 6554f3b7-c28e-45c0-978d-c976bc77f7a9
-      objectReference: {fileID: 0}
-    - target: {fileID: 2442127025827706028, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
-      propertyPath: m_ActionEvents.Array.data[7].m_ActionId
-      value: 5596049d-b095-4142-ae5a-1cf94f4d7715
-      objectReference: {fileID: 0}
-    - target: {fileID: 2442127025827706028, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
-      propertyPath: m_ActionEvents.Array.data[6].m_ActionName
-      value: 'Player/Menu[/Keyboard/escape]'
-      objectReference: {fileID: 0}
-    - target: {fileID: 2442127025827706028, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
-      propertyPath: m_ActionEvents.Array.data[7].m_ActionName
-      value: 'Player/Dash[/Keyboard/leftShift]'
-      objectReference: {fileID: 0}
-    - target: {fileID: 2442127025827706028, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
-      propertyPath: m_ActionEvents.Array.data[6].m_PersistentCalls.m_Calls.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2442127025827706028, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
-      propertyPath: m_ActionEvents.Array.data[6].m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 2442127025827706028, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
       propertyPath: m_ActionEvents.Array.data[6].m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1800204586}
-    - target: {fileID: 2442127025827706028, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
-      propertyPath: m_ActionEvents.Array.data[6].m_PersistentCalls.m_Calls.Array.data[0].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 2442127025827706028, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
-      propertyPath: m_ActionEvents.Array.data[6].m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OnPause
-      objectReference: {fileID: 0}
-    - target: {fileID: 2442127025827706028, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
-      propertyPath: m_ActionEvents.Array.data[6].m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: PauseMenu, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 2442127025827706028, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
-      propertyPath: m_ActionEvents.Array.data[6].m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
-    - target: {fileID: 6354491309245815682, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
-      propertyPath: trashLayer.m_Bits
-      value: 64
-      objectReference: {fileID: 0}
     - target: {fileID: 7409795251022180326, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
       propertyPath: m_Name
       value: Player
@@ -2322,39 +2187,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 7409795251022180326, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2010496962}
-    - targetCorrespondingSourceObject: {fileID: 7409795251022180326, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2010496963}
-    - targetCorrespondingSourceObject: {fileID: 7409795251022180326, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1073348446815861785}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
---- !u!50 &1073348446815861784 stripped
-Rigidbody2D:
-  m_CorrespondingSourceObject: {fileID: 2180484767479099527, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
-  m_PrefabInstance: {fileID: 1073348446815861783}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1073348446815861785
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2010496951}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8ea93b6a8bbc3be42a7d011fa19f4c0c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerDash
-  dashSpeed: 25
-  dashDuration: 0.25
-  dashCooldown: 1
-  playerMovement: {fileID: 2010496956}
-  rb: {fileID: 1073348446815861784}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: b726ba6951861db44937ba05dafd4183
+guid: 19ec325336aff084b9c53b9f770c1d6c
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 2957827525171992674
-    second: Bolsa de basura_Abierta_0
+      213: -8784439411342433329
+    second: Contenedor_Verde_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -37,7 +37,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -51,7 +51,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 64
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -96,17 +96,30 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Bolsa de basura_Abierta_0
+      name: Contenedor_Verde_0
       rect:
         serializedVersion: 2
-        x: 4
-        y: 5
-        width: 58
-        height: 51
+        x: 6
+        y: 8
+        width: 52
+        height: 49
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 268dfb086705c0920800000000000000
-      internalID: 2957827525171992674
+      spriteID: fc32ef7b5e6671680800000000000000
+      internalID: -8784439411342433329
       vertices: []
       indices: 
       edges: []
@@ -135,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Bolsa de basura_Abierta_0: 2957827525171992674
+      Contenedor_Verde_0: -8784439411342433329
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
