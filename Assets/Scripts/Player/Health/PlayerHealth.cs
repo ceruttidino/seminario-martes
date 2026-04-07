@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 
-public class PlayerHealth : MonoBehaviour
+public class PlayerHealth : MonoBehaviour, IDamageable
 {
     [Header("regular Health")]
     [SerializeField] int playerHealthCap = 20;
@@ -73,11 +73,14 @@ public class PlayerHealth : MonoBehaviour
 
     public void PlayerGetHurt(int hurt)
     {
-        if (canGetHurt) 
+        if (canGetHurt)
         {
+            canGetHurt = false;
+
             playerHealth -= hurt;
             UpdateHearts(playerHealth);
-            Invoke("DesInvul", invulTime);
+
+            Invoke(nameof(DesInvul), invulTime);
         }
     }
 
@@ -142,7 +145,10 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
-
-
-    
+    public void TakeDamage(float damage)
+    {
+        Debug.Log("Player recibió daño: " + damage);
+        Debug.Log("Player tiene vida: " + playerMaxHealth);
+        PlayerGetHurt(Mathf.RoundToInt(damage));
+    }
 }

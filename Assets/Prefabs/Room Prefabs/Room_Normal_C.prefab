@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1808184624737385949}
   - component: {fileID: 9207083083157971801}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Wall_4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -271,7 +271,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3474368878663725918}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Walls
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -307,7 +307,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5900333559750086141}
   - component: {fileID: 4456324881907900450}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Wall_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -805,6 +805,38 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6618421473596936714}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &5037421885651226627
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2997409010999306480}
+  m_Layer: 0
+  m_Name: Enemy Spawns
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2997409010999306480
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5037421885651226627}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.70257, y: -0.42731, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 7655845390035050446}
+  m_Father: {fileID: 8855914108497674385}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5206472789810506396
 GameObject:
   m_ObjectHideFlags: 0
@@ -843,6 +875,7 @@ Transform:
   - {fileID: 6341355618971030643}
   - {fileID: 8109714322389560795}
   - {fileID: 7425836949172315603}
+  - {fileID: 2997409010999306480}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5081486977560716221
@@ -879,6 +912,9 @@ MonoBehaviour:
   - {fileID: 7425836949172315603}
   diggingSpotPrefab: {fileID: 3611433241170528407, guid: 7367a0a007b04e74d875d4e74d4a5fa3, type: 3}
   chanceToHaveDiggingSpots: 35
+  enemyPrefab: {fileID: 8283417630010587146, guid: 93c36bf4b30107349ba48fa2a8110986, type: 3}
+  enemySpawnPoints:
+  - {fileID: 7655845390035050446}
 --- !u!1 &5413412434907751617
 GameObject:
   m_ObjectHideFlags: 0
@@ -915,6 +951,37 @@ Transform:
   - {fileID: 9219129157084741237}
   m_Father: {fileID: 8855914108497674385}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &5973587895011112413
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7655845390035050446}
+  m_Layer: 0
+  m_Name: EnemySpawnPoint_1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7655845390035050446
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5973587895011112413}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2997409010999306480}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6190288223214811826
 GameObject:
   m_ObjectHideFlags: 0
@@ -925,7 +992,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1728197908226040826}
   - component: {fileID: 4796186181303115298}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Wall_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1222,7 +1289,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2276415016944151099}
   - component: {fileID: 8092007059656491233}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Wall_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}

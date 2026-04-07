@@ -6,6 +6,7 @@ public class QuickAttack : MonoBehaviour, IAttack
     [SerializeField] private PlayerMovement playerDirection;
     [SerializeField] private LayerMask enemyLayer;
     [SerializeField] private LayerMask trashLayer;
+    [SerializeField] private Animator animator;
 
     [Header("Quick Attack")]
     [SerializeField] private float damage = 10f;
@@ -34,6 +35,8 @@ public class QuickAttack : MonoBehaviour, IAttack
         if (!CanExecute()) return;
 
         lastUseTime = Time.time;
+
+        animator.SetTrigger("Attack");
 
         Vector2 lookDirection = playerDirection.LastLookDirection;
         Vector2 attackCenter = (Vector2)transform.position + lookDirection * attackDistance;

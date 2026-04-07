@@ -127,8 +127,10 @@ public class PlayerMovement : MonoBehaviour
     private void UpdateAnimator()
     {
         float speed = rb.linearVelocity.magnitude;
+
         animator.SetFloat("Speed", speed);
         animator.SetFloat("X", lastLookDirection.x);
+        animator.SetFloat("Y", lastLookDirection.y);
 
         if (lastLookDirection.x != 0)
         {

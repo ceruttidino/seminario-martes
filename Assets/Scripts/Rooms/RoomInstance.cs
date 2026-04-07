@@ -19,7 +19,12 @@ public class RoomInstance : MonoBehaviour
     [SerializeField] private GameObject enemyPrefab;
     [SerializeField] private Transform[] enemySpawnPoints;
 
+    private EnemyBehaviour[] currentEnemies;
+    private bool roomInCombat = false;
+
     private bool enemiesSpawned = false;
+    private int enemiesAlive;
+
 
     private Dictionary<DoorDirection, Transform> spawnPointLookup = new Dictionary<DoorDirection, Transform>();
     private Dictionary<DoorDirection, RoomDoor> doorLookup = new Dictionary<DoorDirection, RoomDoor>();
@@ -113,12 +118,66 @@ public class RoomInstance : MonoBehaviour
             return;
         }
 
+        enemiesAlive = 0;
+
         foreach (Transform point in enemySpawnPoints)
         {
-            Instantiate(enemyPrefab, point.position, Quaternion.identity, transform);
+            GameObject enemyGO = Instantiate(enemyPrefab, point.position, Quaternion.identity, transform);
+
+            EnemyHealth enemyHealth = enemyGO.GetComponent<EnemyHealth>();
+
+            if (enemyHealth != null)
+            {
+                enemiesAlive++;
+
+                enemyHealth.OnDeath += HandleEnemyDeath;
+            }
         }
 
         enemiesSpawned = true;
+
+        if (enemiesAlive > 0)
+        {
+            roomInCombat = true;
+            LockDoors();
+        }
+    }
+
+    private void LockDoors()
+    {
+        foreach (var door in roomDoors)
+        {
+            if (door != null)
+                door.SetLocked(true);
+        }
+    }
+
+    public void UnlockDoorsInstant()
+    {
+        foreach (var door in roomDoors)
+        {
+            if (door != null)
+                door.SetLocked(false);
+        }
+    }
+
+    private void EndCombat()
+    {
+        roomInCombat = false;
+
+        UnlockDoorsInstant();
+
+        Debug.Log("Room completada");
+    }
+
+    private void HandleEnemyDeath()
+    {
+        enemiesAlive--;
+
+        if (enemiesAlive <= 0)
+        {
+            EndCombat();
+        }
     }
 
     private void OnDrawGizmos()

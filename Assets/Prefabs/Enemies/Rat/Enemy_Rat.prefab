@@ -17,6 +17,8 @@ GameObject:
   - component: {fileID: 3295107473773870682}
   - component: {fileID: 6898505885081546488}
   - component: {fileID: 2378659159166680875}
+  - component: {fileID: 642305526718991060}
+  - component: {fileID: -143269127697244384}
   m_Layer: 3
   m_Name: Enemy_Rat
   m_TagString: Untagged
@@ -210,6 +212,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97e17062c9372614da01de6a9f748b5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyBehaviour
+  enemyType: 0
   player: {fileID: 552183169721398988, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
 --- !u!114 &6898505885081546488
 MonoBehaviour:
@@ -240,3 +243,36 @@ MonoBehaviour:
   ratPrefab: {fileID: 5136333534524507215}
   regenTime: 3
   reducedHealth: 3
+--- !u!114 &642305526718991060
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5136333534524507215}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3e6613880e847e4694c62fe977495b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyCollisionHandler
+  wallLayer:
+    serializedVersion: 2
+    m_Bits: 1024
+--- !u!114 &-143269127697244384
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5136333534524507215}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40521986e017e6a4183e4b4288386610, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyAttack
+  damage: 10
+  attackRange: 1
+  attackCooldown: 1
+  targetLayer:
+    serializedVersion: 2
+    m_Bits: 512

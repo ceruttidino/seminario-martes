@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1808184624737385949}
   - component: {fileID: 9207083083157971801}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Wall_4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -87,7 +87,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9219129157084741237}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Spawn_Right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -118,7 +118,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3471704183191795967}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EnemySpawnPoint_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -152,7 +152,7 @@ GameObject:
   - component: {fileID: 245908909205730912}
   - component: {fileID: 904293447243707842}
   - component: {fileID: 1237818656150308209}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Door_Left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -302,7 +302,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1782057880513012828}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: DigSpot_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -333,7 +333,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3474368878663725918}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Walls
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -369,7 +369,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5900333559750086141}
   - component: {fileID: 4456324881907900450}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Wall_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -449,7 +449,7 @@ GameObject:
   - component: {fileID: 8715959603020859714}
   - component: {fileID: 6536132075907608102}
   - component: {fileID: 8024582676868195165}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Door_Right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -599,7 +599,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4614851764016116438}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Spawn_Up
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -630,7 +630,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 155212034432146174}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Spawn_Left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -664,7 +664,7 @@ GameObject:
   - component: {fileID: 2345359953076024937}
   - component: {fileID: 4788174062378213053}
   - component: {fileID: 2136561010566634888}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Door_Down
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -814,7 +814,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3366284514118136748}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Spawn_Down
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -845,7 +845,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5582182234710786644}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Enemy Spawns
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -878,7 +878,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8855914108497674385}
   - component: {fileID: 5081486977560716221}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Room_Normal_A
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -955,7 +955,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6618421473596936714}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Spawns
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -992,7 +992,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1728197908226040826}
   - component: {fileID: 4796186181303115298}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Wall_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1069,7 +1069,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4875957682436187740}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: DigSpot_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1103,7 +1103,7 @@ GameObject:
   - component: {fileID: 8257058992659503306}
   - component: {fileID: 5148775225275273679}
   - component: {fileID: 7029026482553641474}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Door_Up
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1253,7 +1253,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3961969874413745895}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Doors
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1288,7 +1288,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4121838036480225461}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: DefaultSpawnPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1320,7 +1320,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2276415016944151099}
   - component: {fileID: 8092007059656491233}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Wall_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1397,7 +1397,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7368240045080889273}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: DigSpot_4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1428,7 +1428,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5562171015158021200}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: DigSpot_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1460,7 +1460,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7789988802307065343}
   - component: {fileID: 6755166658222840175}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Floor
   m_TagString: Untagged
   m_Icon: {fileID: 0}

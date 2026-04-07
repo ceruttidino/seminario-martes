@@ -5,6 +5,7 @@ public class AreaAttack : MonoBehaviour, IAttack
     [Header("References")]
     [SerializeField] private LayerMask enemyLayer;
     [SerializeField] private LayerMask trashLayer;
+    [SerializeField] private Animator animator;
 
     [Header("Area Attack")]
     [SerializeField] private float damage = 20f;
@@ -32,6 +33,8 @@ public class AreaAttack : MonoBehaviour, IAttack
         if (!CanExecute()) return;
 
         lastUseTime = Time.time;
+
+        animator.SetTrigger("AreaAttack");
 
         LayerMask combinedMask = enemyLayer | trashLayer;
 

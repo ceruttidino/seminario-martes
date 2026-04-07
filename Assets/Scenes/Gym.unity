@@ -1385,17 +1385,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1176121241}
   m_CullTransparentMesh: 1
---- !u!114 &1191975413 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4973168310728382421, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
-  m_PrefabInstance: {fileID: 1073348446815861783}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e9896bce959dbdb4cbfe88a3f18ab3f9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
 --- !u!1 &1206151332
 GameObject:
   m_ObjectHideFlags: 0
@@ -2164,45 +2153,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2442127025827706028, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
-      propertyPath: m_ActionEvents.Array.data[7].m_PersistentCalls.m_Calls.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2442127025827706028, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
-      propertyPath: m_ActionEvents.Array.data[7].m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2442127025827706028, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
       propertyPath: m_ActionEvents.Array.data[6].m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1800204586}
-    - target: {fileID: 2442127025827706028, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
-      propertyPath: m_ActionEvents.Array.data[7].m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1191975413}
-    - target: {fileID: 2442127025827706028, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
-      propertyPath: m_ActionEvents.Array.data[7].m_PersistentCalls.m_Calls.Array.data[0].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 2442127025827706028, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
-      propertyPath: m_ActionEvents.Array.data[7].m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: Dash
-      objectReference: {fileID: 0}
-    - target: {fileID: 2442127025827706028, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
-      propertyPath: m_ActionEvents.Array.data[7].m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: PlayerMovement, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 2442127025827706028, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
-      propertyPath: m_ActionEvents.Array.data[7].m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
-    - target: {fileID: 4973168310728382421, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
-      propertyPath: dashSpeed
-      value: 15
-      objectReference: {fileID: 0}
-    - target: {fileID: 4973168310728382421, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
-      propertyPath: dashCooldown
-      value: 1.5
-      objectReference: {fileID: 0}
     - target: {fileID: 7409795251022180326, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
       propertyPath: m_Name
       value: Player

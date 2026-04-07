@@ -150,10 +150,18 @@ public class DungeonManager : MonoBehaviour
         }
 
         currentRoomInstance = node.spawnedInstance;
-        node.hasBeenVisited = true;
 
         MovePlayerToCorrectSpawn(entryDirection);
-        currentRoomInstance.SpawnEnemies();
+
+        if (!node.hasBeenVisited)
+        {
+            currentRoomInstance.SpawnEnemies();
+            node.hasBeenVisited = true;
+        }
+        else
+        {
+            currentRoomInstance.UnlockDoorsInstant();
+        }
     }
 
     private void MovePlayerToCorrectSpawn(DoorDirection? entryDirection)
@@ -178,4 +186,5 @@ public class DungeonManager : MonoBehaviour
             player.position = spawnPoint.position;
         }
     }
+
 }
