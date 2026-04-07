@@ -12,11 +12,12 @@ GameObject:
   - component: {fileID: 8208979293606837074}
   - component: {fileID: 6079943379600434295}
   - component: {fileID: 4322036413765262876}
-  - component: {fileID: 6964399883535842292}
+  - component: {fileID: 7485646153013272562}
   - component: {fileID: 1463402056870659288}
-  - component: {fileID: 8918091845439713338}
   - component: {fileID: -2046340648554966154}
   - component: {fileID: 2366819222791710392}
+  - component: {fileID: 6964399883535842292}
+  - component: {fileID: 8918091845439713338}
   - component: {fileID: -1778954237217324266}
   m_Layer: 3
   m_Name: Enemy_Ant
@@ -172,7 +173,7 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.6536252, y: 0.6347318}
   m_EdgeRadius: 0
---- !u!114 &6964399883535842292
+--- !u!114 &7485646153013272562
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -181,13 +182,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 8734249323408576011}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 30fc10574e4e99c4084f043921bce407, type: 3}
+  m_Script: {fileID: 11500000, guid: 1b6f6b2287623074f9e9dcadeabee44b, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AntDetection
-  detectionRange: 5
-  playerPlayer:
-    serializedVersion: 2
-    m_Bits: 512
+  m_EditorClassIdentifier: Assembly-CSharp::Enemy
+  behaviour: {fileID: -2046340648554966154}
+  health: {fileID: 1463402056870659288}
 --- !u!114 &1463402056870659288
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -201,21 +200,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
   maxHealth: 10
---- !u!114 &8918091845439713338
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8734249323408576011}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3e6613880e847e4694c62fe977495b5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyCollisionHandler
-  wallLayer:
-    serializedVersion: 2
-    m_Bits: 1024
 --- !u!114 &-2046340648554966154
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -243,6 +227,37 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyMovement
   speed: 3
+--- !u!114 &6964399883535842292
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8734249323408576011}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30fc10574e4e99c4084f043921bce407, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AntDetection
+  detectionRange: 5
+  playerPlayer:
+    serializedVersion: 2
+    m_Bits: 512
+--- !u!114 &8918091845439713338
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8734249323408576011}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3e6613880e847e4694c62fe977495b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyCollisionHandler
+  wallLayer:
+    serializedVersion: 2
+    m_Bits: 1024
 --- !u!114 &-1778954237217324266
 MonoBehaviour:
   m_ObjectHideFlags: 0
