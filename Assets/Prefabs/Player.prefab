@@ -22,6 +22,8 @@ GameObject:
   - component: {fileID: 8932515960615368468}
   - component: {fileID: 1474416971671574629}
   - component: {fileID: 5308910907278262433}
+  - component: {fileID: 3472467327082267057}
+  - component: {fileID: 7158844549291733657}
   m_Layer: 9
   m_Name: Player
   m_TagString: Player
@@ -505,3 +507,29 @@ MonoBehaviour:
   dashCooldown: 1
   playerMovement: {fileID: 4973168310728382421}
   rb: {fileID: 2180484767479099527}
+--- !u!114 &3472467327082267057
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7409795251022180326}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 048b2f2e2ad613a47b8e2af5ab19bde8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerScrap
+  currentScrap: 0
+--- !u!114 &7158844549291733657
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7409795251022180326}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99a1aa90ee93b884487ce31482d23279, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerKeys
+  currentKeys: 0

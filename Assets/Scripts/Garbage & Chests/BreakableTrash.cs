@@ -88,6 +88,12 @@ public class BreakableTrash : MonoBehaviour
         // instanciar el objeto
         GameObject spawned = Instantiate(lootItem.prefab, spawnPos, Quaternion.identity);
 
+        LootPickup pickup = spawned.GetComponent<LootPickup>();
+        if (pickup != null)
+        {
+            pickup.SetLootItem(lootItem);
+        }
+
         if (spawned.TryGetComponent<SpriteRenderer>(out SpriteRenderer sr))
         {
             sr.transform.localScale = Vector3.one;     // todos los objetos salen del mismo tamaño

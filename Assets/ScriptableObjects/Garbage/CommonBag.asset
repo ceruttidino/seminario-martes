@@ -15,6 +15,18 @@ MonoBehaviour:
   commonLoot:
   - lootItem: {fileID: 11400000, guid: b800567df65492c4e8af26b864cc83c0, type: 2}
     probability: 40
+    minAmount: 1
+    maxAmount: 3
+  - lootItem: {fileID: 11400000, guid: 77ce5807911df084e8ce0ec914dd83c8, type: 2}
+    probability: 60
     minAmount: 3
     maxAmount: 5
+  - lootItem: {fileID: 11400000, guid: 6e742bd491757ac4ea0c0fba76ef9cdc, type: 2}
+    probability: 60
+    minAmount: 0
+    maxAmount: 1
+  - lootItem: {fileID: 11400000, guid: 7cdb49b51cfab5a45baebed6876041c9, type: 2}
+    probability: 60
+    minAmount: 0
+    maxAmount: 2
   greenLoot: []
