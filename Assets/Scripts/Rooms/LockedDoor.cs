@@ -13,7 +13,6 @@ public class LockedDoor : MonoBehaviour
     {
         if (!playerInRange || !isLocked) return;
 
-        // 🔥 Keyboard input (E key)
         if (Keyboard.current.eKey.wasPressedThisFrame)
         {
             TryOpen();

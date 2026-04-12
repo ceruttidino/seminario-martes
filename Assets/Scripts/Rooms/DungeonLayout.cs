@@ -127,10 +127,6 @@ public class DungeonLayout //Builds floor layout (How Rooms Connect with Each Ot
                 return null;
             }
 
-            if (!bossRoomInformation.HasDoor(requiredEntrance))
-            {
-                return null;
-            }
             selected = bossRoomInformation;
         }
 
@@ -146,6 +142,9 @@ public class DungeonLayout //Builds floor layout (How Rooms Connect with Each Ot
 
         fromNode.SetNeighbor(exitDirection, newNode);
         newNode.SetNeighbor(requiredEntrance, fromNode);
+
+        UpdateRoomDoors(fromNode);
+        UpdateRoomDoors(newNode);
 
         generatedRooms.Add(newNode);
 
@@ -176,6 +175,19 @@ public class DungeonLayout //Builds floor layout (How Rooms Connect with Each Ot
             default:
                 return DoorDirection.Down;
         }
+    }
+
+    private void UpdateRoomDoors(RoomNode node)
+    {
+        if (node.spawnedInstance != null)
+        {
+            node.spawnedInstance.ConfigureDoors(node);
+        }
+    }
+
+    public List<RoomNode> GetAllRooms()
+    {
+        return generatedRooms;
     }
 
 }

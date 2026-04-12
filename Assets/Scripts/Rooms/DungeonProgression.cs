@@ -12,7 +12,6 @@ public class DungeonProgression : MonoBehaviour
 
     public RoomType GetNextRoomType()
     {
-
         if (!shopSpawned)
         {
             if (currentNormalRoomsCount >= normalRoomsBeforeShop)
@@ -24,15 +23,11 @@ public class DungeonProgression : MonoBehaviour
 
         if (!bossSpawned)
         {
-            if (!shopSpawned)
-            {
-                return RoomType.Normal;
-            }
-
-            if (currentNormalRoomsCount >= normalRoomsBeforeBoss)
+            if (shopSpawned && currentNormalRoomsCount >= normalRoomsBeforeBoss)
             {
                 return RoomType.Boss;
             }
+
             return RoomType.Normal;
         }
 
@@ -57,6 +52,16 @@ public class DungeonProgression : MonoBehaviour
                 break;
         }
 
+    }
+
+    public bool HasSpawnedShop()
+    {
+        return shopSpawned;
+    }
+
+    public bool HasSpawnedBoss()
+    {
+        return bossSpawned;
     }
 
 }

@@ -63,20 +63,32 @@ public class RoomInstance : MonoBehaviour
         return defaultSpawnPoint;
     }
 
-    public void ConfigureDoors(RoomNode node)
+    public void ConfigureDoors(RoomNode node, DoorDirection? forcedDoor = null)
     {
         foreach (var pair in doorLookup)
         {
             DoorDirection direction = pair.Key;
             RoomDoor door = pair.Value;
 
-            bool shouldBeActive = node.information.HasDoor(direction);
+            bool shouldBeActive = node.HasNeighbor(direction);
+
+            if (forcedDoor.HasValue && direction == forcedDoor.Value)
+            {
+                shouldBeActive = true;
+            }
 
             door.gameObject.SetActive(shouldBeActive);
 
             if (shouldBeActive)
             {
                 door.Initialize(direction);
+
+                RoomNode neighbor = node.GetNeighbor(direction);
+
+                if (neighbor != null)
+                {
+                    door.SetDoorType(neighbor.information.type);
+                }
             }
         }
 

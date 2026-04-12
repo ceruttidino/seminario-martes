@@ -49,7 +49,14 @@ public class DungeonManager : MonoBehaviour
 
         currentNode = dungeonLayout.StartNode;
 
+        dungeonLayout.CreateNextRoom(currentNode, DoorDirection.Up, RoomType.Normal);
+
         EnterRoom(currentNode, null);
+
+        if (currentNode.spawnedInstance != null)
+        {
+            currentNode.spawnedInstance.ConfigureDoors(currentNode);
+        }
     }
 
     public void TryMoveToNextRoom(DoorDirection exitDirection)
@@ -90,8 +97,15 @@ public class DungeonManager : MonoBehaviour
 
         yield return new WaitForSeconds(transitionDelay);
 
+        RoomNode previousNode = currentNode;
+
         currentNode = nextNode;
         EnterRoom(currentNode, entryDirection);
+
+        if (previousNode.spawnedInstance != null)
+        {
+            previousNode.spawnedInstance.ConfigureDoors(previousNode);
+        }
 
         yield return StartCoroutine(screenFader.FadeIn());
 
@@ -113,19 +127,25 @@ public class DungeonManager : MonoBehaviour
                 node = dungeonLayout.CreateNextRoom(currentNode, dir, requestedType);
 
                 if (node != null)
+                {
+                    finalType = requestedType;
                     return node;
+                }
             }
         }
 
         if (node == null)
         {
-            if(requestedType == RoomType.Shop || requestedType == RoomType.Boss)
+            foreach (DoorDirection dir in System.Enum.GetValues(typeof(DoorDirection)))
             {
-                return null;
-            }
+                node = dungeonLayout.CreateNextRoom(currentNode, dir, RoomType.Normal);
 
-            node = dungeonLayout.CreateNextRoom(currentNode, exitDirection, RoomType.Normal);
-            finalType = RoomType.Normal;
+                if (node != null)
+                {
+                    finalType = RoomType.Normal;
+                    return node;
+                }
+            }
         }
 
         return node;
@@ -142,7 +162,7 @@ public class DungeonManager : MonoBehaviour
         {
 
             node.spawnedInstance = Instantiate(node.information.prefab, Vector3.zero, Quaternion.identity, roomParent);
-            node.spawnedInstance.ConfigureDoors(node);
+            node.spawnedInstance.ConfigureDoors(node, entryDirection);
         }
         else
         {
@@ -161,6 +181,11 @@ public class DungeonManager : MonoBehaviour
         else
         {
             currentRoomInstance.UnlockDoorsInstant();
+        }
+
+        if (node.uniqueNodeID != "Start")
+        {
+            GenerateConnections(node);
         }
     }
 
@@ -185,6 +210,104 @@ public class DungeonManager : MonoBehaviour
         {
             player.position = spawnPoint.position;
         }
+    }
+
+    private void GenerateConnections(RoomNode node)
+    {
+        int maxNewRooms = Random.Range(2, 4);
+
+        List<DoorDirection> directions = new List<DoorDirection>()
+    {
+        DoorDirection.Up,
+        DoorDirection.Down,
+        DoorDirection.Left,
+        DoorDirection.Right
+    };
+
+        // shuffle
+        for (int i = 0; i < directions.Count; i++)
+        {
+            DoorDirection temp = directions[i];
+            int randomIndex = Random.Range(i, directions.Count);
+            directions[i] = directions[randomIndex];
+            directions[randomIndex] = temp;
+        }
+
+        int created = 0;
+
+        foreach (var dir in directions)
+        {
+            if (created >= maxNewRooms)
+                break;
+
+            if (node.HasNeighbor(dir))
+                continue;
+
+            RoomType type = dungeonProgression.GetNextRoomType();
+
+            RoomNode newNode = dungeonLayout.CreateNextRoom(node, dir, type);
+
+            if (newNode == null)
+            {
+                newNode = dungeonLayout.CreateNextRoom(node, dir, RoomType.Normal);
+
+                if (newNode != null)
+                {
+                    dungeonProgression.RegisterGeneratedRoom(RoomType.Normal);
+                    created++;
+                }
+
+                continue;
+            }
+
+            dungeonProgression.RegisterGeneratedRoom(type);
+            created++;
+        }
+
+        if (!dungeonProgression.HasSpawnedBoss())
+        {
+            TryForceBossSmart();
+        }
+    }
+
+    private bool TryForceBossSmart()
+    {
+        RoomNode bestNode = null;
+        float bestDistance = -1f;
+
+        foreach (RoomNode node in dungeonLayout.GetAllRooms())
+        {
+            if (node.uniqueNodeID == "Start")
+                continue;
+
+            float dist = node.gridPosition.magnitude;
+
+            if (dist > bestDistance)
+            {
+                bestDistance = dist;
+                bestNode = node;
+            }
+        }
+
+        if (bestNode == null)
+            return false;
+
+        foreach (DoorDirection dir in System.Enum.GetValues(typeof(DoorDirection)))
+        {
+            if (bestNode.HasNeighbor(dir))
+                continue;
+
+            RoomNode newNode = dungeonLayout.CreateNextRoom(bestNode, dir, RoomType.Boss);
+
+            if (newNode != null)
+            {
+                dungeonProgression.RegisterGeneratedRoom(RoomType.Boss);
+                Debug.Log("BOSS GENERADO EN ROOM LEJANA");
+                return true;
+            }
+        }
+
+        return false;
     }
 
 }
