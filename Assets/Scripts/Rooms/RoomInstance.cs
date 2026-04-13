@@ -14,6 +14,7 @@ public class RoomInstance : MonoBehaviour
     [SerializeField] private Transform[] diggingSpotLocations;
     [SerializeField] private GameObject diggingSpotPrefab;
     [SerializeField] [Range(0f, 100f)] private float chanceToHaveDiggingSpots = 30f;
+    private bool diggingSpotsGenerated = false;
 
     [Header("Enemies")]
     [SerializeField] private GameObject enemyPrefab;
@@ -97,6 +98,9 @@ public class RoomInstance : MonoBehaviour
 
     private void GenerateDiggingSpots()
     {
+        if (diggingSpotsGenerated) return;
+        diggingSpotsGenerated = true;
+
         if (diggingSpotLocations == null || diggingSpotLocations.Length == 0 || diggingSpotPrefab == null) 
             return;
 

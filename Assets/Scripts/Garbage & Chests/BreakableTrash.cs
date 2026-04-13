@@ -12,7 +12,10 @@ public class BreakableTrash : MonoBehaviour
     [SerializeField] private LootTableSO lootTable;
 
     [Header("Spawn Settings")]
-    [SerializeField] private float spawnRadius = 1.3f;           // distancia en la que spawnean los objetos
+    [Tooltip("Distancia mínima a la que caen los objetos del contenedor")]
+    [SerializeField] private float minSpawnRadius = 0.8f;
+    [Tooltip("Distancia máxima a la que caen los objetos del contenedor")]
+    [SerializeField] private float maxSpawnRadius = 1.3f;
     [SerializeField] private float spawnDelayBetweenItems = 0.07f; // delay entre cada objeto
 
     [Header("Visuales (Opcional)")]
@@ -47,9 +50,15 @@ public class BreakableTrash : MonoBehaviour
         if (isDestroyed) return;
         isDestroyed = true;
 
-        // partículas de destrucción
+        // partículas de destrucción o tacho abierto (mantiene la rotación del padre)
         if (destroyParticlePrefab != null)
-            Instantiate(destroyParticlePrefab, transform.position, Quaternion.identity);
+        {
+            GameObject visual = Instantiate(destroyParticlePrefab, transform.position, transform.rotation);
+
+            Transform parent = FindRoomParent();
+            if (parent != null)
+                visual.transform.SetParent(parent, true);
+        }
 
         if (lootTable != null)
         {
@@ -82,8 +91,12 @@ public class BreakableTrash : MonoBehaviour
 
         // psición en círculo alrededor del cofre
         Vector2 randomDir = Random.insideUnitCircle.normalized;
-        float distance = Random.Range(0.9f, spawnRadius);
-        Vector2 spawnPos = (Vector2)transform.position + randomDir * distance;
+
+        // Evitamos que caigan muy lejos o fuera de las paredes
+        float distance = Random.Range(minSpawnRadius, maxSpawnRadius);
+
+        // Mantenemos la posición Z original para que los sprites no queden escondidos detrás del fondo
+        Vector3 spawnPos = transform.position + new Vector3(randomDir.x, randomDir.y, 0f) * distance;
 
         // instanciar el objeto
         GameObject spawned = Instantiate(lootItem.prefab, spawnPos, Quaternion.identity);
@@ -115,12 +128,18 @@ public class BreakableTrash : MonoBehaviour
     // busca automáticamente el padre de la habitación actual
     private Transform FindRoomParent()
     {
+        RoomInstance room = GetComponentInParent<RoomInstance>();
+        if (room != null)
+        {
+            return room.transform;
+        }
+
         Transform current = transform.parent;
 
         while (current != null)
         {
             // busca por nombre o por componente
-            if (current.name.Contains("Room") || current.name.Contains("room") || current.GetComponent("Room") != null)
+            if (current.name.Contains("Room") || current.name.Contains("room") || current.GetComponent("RoomInstance") != null)
             {
                 return current;
             }

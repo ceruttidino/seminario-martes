@@ -114,9 +114,19 @@ public class DiggingSpot : MonoBehaviour, IInteractable
         {
             if (item != null && item.prefab != null)
             {
-                // los objetos no caen en el centro exacto
-                Vector2 randomOffset = Random.insideUnitCircle * 0.5f; 
-                Instantiate(item.prefab, (Vector2)spawnPoint.position + randomOffset, Quaternion.identity);
+                // los objetos no caen en el centro exacto, salen un poco más dispersos
+                Vector2 randomOffset = Random.insideUnitCircle * 1.2f; 
+
+                // Mantenemos la posición Z original
+                Vector3 spawnPos = spawnPoint.position + new Vector3(randomOffset.x, randomOffset.y, 0f);
+                GameObject spawned = Instantiate(item.prefab, spawnPos, Quaternion.identity);
+
+                RoomInstance room = GetComponentInParent<RoomInstance>();
+                if (room != null)
+                {
+                    spawned.transform.SetParent(room.transform, true);
+                }
+
                 spawnedSomething = true;
             }
         }

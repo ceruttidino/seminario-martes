@@ -999,6 +999,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RoomDoor
   direction: 2
   isLocked: 0
+  spriteRenderer: {fileID: 0}
+  normalColor: {r: 1, g: 1, b: 1, a: 1}
+  shopColor: {r: 0, g: 1, b: 0, a: 1}
+  bossColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!1 &3857411769287756706
 GameObject:
   m_ObjectHideFlags: 0
@@ -1265,6 +1269,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RoomDoor
   direction: 3
   isLocked: 0
+  spriteRenderer: {fileID: 0}
+  normalColor: {r: 1, g: 1, b: 1, a: 1}
+  shopColor: {r: 0, g: 1, b: 0, a: 1}
+  bossColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!1 &4878072035826389770
 GameObject:
   m_ObjectHideFlags: 0
@@ -1480,6 +1488,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RoomDoor
   direction: 1
   isLocked: 0
+  spriteRenderer: {fileID: 0}
+  normalColor: {r: 1, g: 1, b: 1, a: 1}
+  shopColor: {r: 0, g: 1, b: 0, a: 1}
+  bossColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!1 &5009212152718588624
 GameObject:
   m_ObjectHideFlags: 0
@@ -2097,6 +2109,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RoomDoor
   direction: 0
   isLocked: 0
+  spriteRenderer: {fileID: 0}
+  normalColor: {r: 1, g: 1, b: 1, a: 1}
+  shopColor: {r: 0, g: 1, b: 0, a: 1}
+  bossColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!1 &6850029690147252818
 GameObject:
   m_ObjectHideFlags: 0
