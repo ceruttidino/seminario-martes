@@ -1,31 +1,34 @@
 fileFormatVersion: 2
-guid: d52a4595c7cc2b04fa91d304bba81d6d
+guid: 8ed1cb347f4db3749a87f9ce39a3d522
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -6518861467935484673
-    second: rcc_rework_Front_Walk_Anim-Sheet_0
+      213: -4466517461040744062
+    second: rcc_rework_Back_Walk_Anim-Sheet_0
   - first:
-      213: 8267625892452889396
-    second: rcc_rework_Front_Walk_Anim-Sheet_1
+      213: -5979624073012829007
+    second: rcc_rework_Back_Walk_Anim-Sheet_1
   - first:
-      213: -7731770234973730845
-    second: rcc_rework_Front_Walk_Anim-Sheet_2
+      213: -905030371151100548
+    second: rcc_rework_Back_Walk_Anim-Sheet_2
   - first:
-      213: 1214083247614715949
-    second: rcc_rework_Front_Walk_Anim-Sheet_3
+      213: 8515361584531536868
+    second: rcc_rework_Back_Walk_Anim-Sheet_3
   - first:
-      213: 4525301400653278031
-    second: rcc_rework_Front_Walk_Anim-Sheet_4
+      213: 753300355305991628
+    second: rcc_rework_Back_Walk_Anim-Sheet_4
   - first:
-      213: -1646319771458240731
-    second: rcc_rework_Front_Walk_Anim-Sheet_5
+      213: 5936595127735586318
+    second: rcc_rework_Back_Walk_Anim-Sheet_5
   - first:
-      213: 4448994831454979412
-    second: rcc_rework_Front_Walk_Anim-Sheet_6
+      213: -1239744358510585738
+    second: rcc_rework_Back_Walk_Anim-Sheet_6
   - first:
-      213: 582940629675460759
-    second: rcc_rework_Front_Walk_Anim-Sheet_7
+      213: -4842867530190110547
+    second: rcc_rework_Back_Walk_Anim-Sheet_7
+  - first:
+      213: 1877805749235852361
+    second: rcc_rework_Back_Walk_Anim-Sheet_8
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -58,7 +61,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -72,7 +75,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 64
+  spritePixelsToUnits: 100
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -117,194 +120,203 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 4
-    buildTarget: WebGL
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: rcc_rework_Front_Walk_Anim-Sheet_0
+      name: rcc_rework_Back_Walk_Anim-Sheet_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 64
-        height: 64
+        x: 13
+        y: 4
+        width: 36
+        height: 59
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: ff459b7880a5885a0800000000000000
-      internalID: -6518861467935484673
+      spriteID: 2893697a80eb302c0800000000000000
+      internalID: -4466517461040744062
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: rcc_rework_Front_Walk_Anim-Sheet_1
+      name: rcc_rework_Back_Walk_Anim-Sheet_1
       rect:
         serializedVersion: 2
-        x: 64
-        y: 0
-        width: 64
-        height: 64
+        x: 77
+        y: 5
+        width: 36
+        height: 58
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 433f97702f18cb270800000000000000
-      internalID: 8267625892452889396
+      spriteID: 1b422b5469b140da0800000000000000
+      internalID: -5979624073012829007
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: rcc_rework_Front_Walk_Anim-Sheet_2
+      name: rcc_rework_Back_Walk_Anim-Sheet_2
       rect:
         serializedVersion: 2
-        x: 128
-        y: 0
-        width: 64
-        height: 64
+        x: 140
+        y: 5
+        width: 37
+        height: 57
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 3e7c37b9feb33b490800000000000000
-      internalID: -7731770234973730845
+      spriteID: c7549982cafa073f0800000000000000
+      internalID: -905030371151100548
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: rcc_rework_Front_Walk_Anim-Sheet_3
+      name: rcc_rework_Back_Walk_Anim-Sheet_3
       rect:
         serializedVersion: 2
-        x: 192
-        y: 0
-        width: 64
-        height: 64
+        x: 206
+        y: 5
+        width: 37
+        height: 59
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: d28e3ddf74a49d010800000000000000
-      internalID: 1214083247614715949
+      spriteID: 4eb720cae34ac2670800000000000000
+      internalID: 8515361584531536868
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: rcc_rework_Front_Walk_Anim-Sheet_4
+      name: rcc_rework_Back_Walk_Anim-Sheet_4
       rect:
         serializedVersion: 2
-        x: 256
-        y: 0
-        width: 64
-        height: 64
+        x: 272
+        y: 3
+        width: 35
+        height: 61
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: f4b2487d5a91dce30800000000000000
-      internalID: 4525301400653278031
+      spriteID: ccd60379ea2447a00800000000000000
+      internalID: 753300355305991628
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: rcc_rework_Front_Walk_Anim-Sheet_5
+      name: rcc_rework_Back_Walk_Anim-Sheet_5
       rect:
         serializedVersion: 2
-        x: 320
-        y: 0
-        width: 64
-        height: 64
+        x: 336
+        y: 6
+        width: 35
+        height: 56
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 52f7783f3e81729e0800000000000000
-      internalID: -1646319771458240731
+      spriteID: e0e8ef3b0d5036250800000000000000
+      internalID: 5936595127735586318
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: rcc_rework_Front_Walk_Anim-Sheet_6
+      name: rcc_rework_Back_Walk_Anim-Sheet_6
       rect:
         serializedVersion: 2
-        x: 384
-        y: 0
-        width: 64
-        height: 64
+        x: 399
+        y: 4
+        width: 37
+        height: 57
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 4554c683a310ebd30800000000000000
-      internalID: 4448994831454979412
+      spriteID: 6789eaa031b8bcee0800000000000000
+      internalID: -1239744358510585738
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: rcc_rework_Front_Walk_Anim-Sheet_7
+      name: rcc_rework_Back_Walk_Anim-Sheet_7
       rect:
         serializedVersion: 2
-        x: 448
-        y: 0
-        width: 64
-        height: 64
+        x: 463
+        y: 4
+        width: 37
+        height: 57
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 798c2f40a65071800800000000000000
-      internalID: 582940629675460759
+      spriteID: da0ceb0d3adaaccb0800000000000000
+      internalID: -4842867530190110547
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rcc_rework_Back_Walk_Anim-Sheet_8
+      rect:
+        serializedVersion: 2
+        x: 526
+        y: 3
+        width: 36
+        height: 60
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 944a360416e4f0a10800000000000000
+      internalID: 1877805749235852361
       vertices: []
       indices: 
       edges: []
@@ -313,7 +325,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 3d5b871e3c5f09a4d81164a2c2b640bd
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -321,18 +333,17 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries:
-      - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
+      entries: []
     nameFileIdTable:
-      rcc_rework_Front_Walk_Anim-Sheet_0: -6518861467935484673
-      rcc_rework_Front_Walk_Anim-Sheet_1: 8267625892452889396
-      rcc_rework_Front_Walk_Anim-Sheet_2: -7731770234973730845
-      rcc_rework_Front_Walk_Anim-Sheet_3: 1214083247614715949
-      rcc_rework_Front_Walk_Anim-Sheet_4: 4525301400653278031
-      rcc_rework_Front_Walk_Anim-Sheet_5: -1646319771458240731
-      rcc_rework_Front_Walk_Anim-Sheet_6: 4448994831454979412
-      rcc_rework_Front_Walk_Anim-Sheet_7: 582940629675460759
+      rcc_rework_Back_Walk_Anim-Sheet_0: -4466517461040744062
+      rcc_rework_Back_Walk_Anim-Sheet_1: -5979624073012829007
+      rcc_rework_Back_Walk_Anim-Sheet_2: -905030371151100548
+      rcc_rework_Back_Walk_Anim-Sheet_3: 8515361584531536868
+      rcc_rework_Back_Walk_Anim-Sheet_4: 753300355305991628
+      rcc_rework_Back_Walk_Anim-Sheet_5: 5936595127735586318
+      rcc_rework_Back_Walk_Anim-Sheet_6: -1239744358510585738
+      rcc_rework_Back_Walk_Anim-Sheet_7: -4842867530190110547
+      rcc_rework_Back_Walk_Anim-Sheet_8: 1877805749235852361
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

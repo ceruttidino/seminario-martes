@@ -1,9 +1,7 @@
 using System;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
-using UnityEngine.UIElements;
 
 public class PlayerHealth : MonoBehaviour, IDamageable
 {
@@ -12,16 +10,15 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     [SerializeField] int playerMaxHealth = 6;
     [SerializeField] int playerHealth = 6;
 
-    [Header("Special Hearts")] //en caso de no haber, remover esa seccion
-    //[SerializeField] int ShieldHearts = 0;
-    //Agregar mas tipos de vida si los hay
-
     [Header("Other")]
     [SerializeField] bool canGetHurt = true;
     [SerializeField] float invulTime = 1.5f;
 
     [Header("UI")]
     [SerializeField] GameObject[] hearts;
+
+    // Evento para Game Over
+    public event Action OnPlayerDeath;
 
     void Start()
     {
@@ -31,87 +28,46 @@ public class PlayerHealth : MonoBehaviour, IDamageable
 
     void Update()
     {
-        if (playerHealth > playerMaxHealth) { playerHealth = playerMaxHealth; }
+        if (playerHealth > playerMaxHealth)
+            playerHealth = playerMaxHealth;
     }
 
-    public void Heal(InputAction.CallbackContext context)
+    // ====================== DAÑO ======================
+    public void TakeDamage(float damage)
     {
-        if (!context.performed)
+        if (!canGetHurt || playerHealth <= 0) return;
+
+        canGetHurt = false;
+        playerHealth -= Mathf.RoundToInt(damage);
+        UpdateHearts(playerHealth);
+
+        if (playerHealth <= 0)
         {
-            return;
+            Die();
         }
-        PlayerHeal();
-    }
-    public void Hurt(InputAction.CallbackContext context)
-    {
-        if (!context.performed)
+        else
         {
-            return;
-        }
-        PlayerGetHurt();
-    }
-
-    public void AddHeart(InputAction.CallbackContext context)
-    {
-        if (!context.performed)
-        {
-            return;
-        }
-        PlayerAddHeart(false);
-    }
-
-    public void PlayerGetHurt() 
-    { 
-        if (canGetHurt) 
-        {
-            playerHealth -= 1;
-            UpdateHearts(playerHealth);
-            Invoke("DesInvul", invulTime);
-        }
-
-    }
-
-    public void PlayerGetHurt(int hurt)
-    {
-        if (canGetHurt)
-        {
-            canGetHurt = false;
-
-            playerHealth -= hurt;
-            UpdateHearts(playerHealth);
-
             Invoke(nameof(DesInvul), invulTime);
         }
     }
 
-    public void PlayerAddHeart(bool isFull) 
-    { 
-        playerMaxHealth += 2;
-        if (playerMaxHealth > playerHealthCap) { playerMaxHealth = playerHealthCap; }
-        if (isFull == true) { PlayerHeal(2); }
-        UpdateMaxHearts();
-        UpdateHearts(playerHealth);
+    private void Die()
+    {
+        Debug.Log("¡EL MAPACHE HA MUERTO!");
+        DisablePlayerControls();
+        OnPlayerDeath?.Invoke();
     }
 
-
-    public void PlayerAddHeart(int add, bool isFull) //siempre sera multiplicado por 2 para representar corazones enteros
+    private void DisablePlayerControls()
     {
-        playerMaxHealth += add * 2;
-        if (playerMaxHealth > playerHealthCap) { playerMaxHealth = playerHealthCap; }
-        if (isFull == true) { PlayerHeal(2 * add); }
-        UpdateMaxHearts();
-        UpdateHearts(playerHealth);
-    }
+        if (TryGetComponent<PlayerMovement>(out var movement)) movement.enabled = false;
+        if (TryGetComponent<PlayerAttack>(out var attack)) attack.enabled = false;
+        if (TryGetComponent<PlayerDash>(out var dash)) dash.enabled = false;
 
-    public void PlayerHeal() { if (playerHealth < playerMaxHealth) { playerHealth += 1; UpdateHearts(playerHealth); } }
-
-    public void PlayerHeal(int heal) 
-    {
-        if (playerHealth < playerMaxHealth) 
+        if (TryGetComponent<Rigidbody2D>(out var rb))
         {
-            playerHealth += heal; 
-            if (playerHealth > playerMaxHealth) { playerHealth = playerMaxHealth; }
-            UpdateHearts(playerHealth);
+            rb.linearVelocity = Vector2.zero;
+            rb.isKinematic = true;
         }
     }
 
@@ -120,35 +76,105 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         canGetHurt = true;
     }
 
+    // ====================== CHEATS ======================
+    public void Heal(InputAction.CallbackContext context)
+    {
+        if (!context.performed) return;
+        PlayerHeal();
+    }
+
+    public void Hurt(InputAction.CallbackContext context)
+    {
+        if (!context.performed) return;
+        PlayerGetHurt();
+    }
+
+    public void AddHeart(InputAction.CallbackContext context)
+    {
+        if (!context.performed) return;
+        PlayerAddHeart(false);
+    }
+
+    // ====================== CURACIÓN Y UPGRADES ======================
+    public void PlayerGetHurt()
+    {
+        TakeDamage(1);
+    }
+
+    public void PlayerGetHurt(int hurt)
+    {
+        TakeDamage(hurt);
+    }
+
+    public void PlayerAddHeart(bool isFull)
+    {
+        PlayerAddHeart(1, isFull);
+    }
+
+    public void PlayerAddHeart(int heartsToAdd, bool fillNewHearts = true)
+    {
+        playerMaxHealth += heartsToAdd * 2;
+        if (playerMaxHealth > playerHealthCap) playerMaxHealth = playerHealthCap;
+
+        if (fillNewHearts)
+            playerHealth = playerMaxHealth;
+
+        UpdateMaxHearts();
+        UpdateHearts(playerHealth);
+    }
+
+    public void PlayerHeal()
+    {
+        PlayerHeal(1);
+    }
+
+    public void PlayerHeal(int heal)
+    {
+        if (playerHealth < playerMaxHealth)
+        {
+            playerHealth += heal;
+            if (playerHealth > playerMaxHealth) playerHealth = playerMaxHealth;
+            UpdateHearts(playerHealth);
+        }
+    }
+
+    // ====================== UI ======================
     private void UpdateMaxHearts()
     {
         for (int i = 0; i < playerMaxHealth / 2; i++)
         {
-            hearts[i].SetActive(true);
-        }
-    }
-    private void UpdateHearts(int healthAmmount)
-    {
-        for (int i = 0; i < playerMaxHealth / 2; i++) // a futur actualizar a los sprites de corazon
-        {
-            if (healthAmmount > 1)
-            {
-                hearts[i].GetComponent<UnityEngine.UI.Image>().color = Color.green;
-                healthAmmount -= 2;
-            }
-            else if (healthAmmount == 1)
-            {
-                hearts[i].GetComponent<UnityEngine.UI.Image>().color = Color.red;
-                healthAmmount -= 1;
-            }
-            else { hearts[i].GetComponent<UnityEngine.UI.Image>().color = Color.black; }
+            if (i < hearts.Length)
+                hearts[i].SetActive(true);
         }
     }
 
-    public void TakeDamage(float damage)
+    private void UpdateHearts(int healthAmmount)
     {
-        Debug.Log("Player recibió daño: " + damage);
-        Debug.Log("Player tiene vida: " + playerMaxHealth);
-        PlayerGetHurt(Mathf.RoundToInt(damage));
+        int remaining = healthAmmount;
+        for (int i = 0; i < playerMaxHealth / 2; i++)
+        {
+            if (i >= hearts.Length) break;
+
+            Image heartImage = hearts[i].GetComponent<Image>();
+
+            if (remaining > 1)
+            {
+                heartImage.color = Color.green;
+                remaining -= 2;
+            }
+            else if (remaining == 1)
+            {
+                heartImage.color = Color.red;
+                remaining -= 1;
+            }
+            else
+            {
+                heartImage.color = Color.black;
+            }
+        }
     }
+
+    // Propiedades útiles
+    public int CurrentHealth => playerHealth;
+    public bool IsDead => playerHealth <= 0;
 }
