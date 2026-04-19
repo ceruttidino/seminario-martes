@@ -7,4 +7,14 @@ public class MainMenu : MonoBehaviour
     {
         SceneManager.LoadScene("Gym");
     }
+
+    public void SettingsMenu()
+    {
+        SceneManager.LoadScene("Settings Menu");
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
 }

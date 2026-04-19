@@ -11,6 +11,7 @@ public class RoomNode //Logic room inside the dungeon
 
     public RoomInstance spawnedInstance;
     public bool hasBeenVisited;
+    public bool isCurrentRoom;
 
     public RoomNode(string id, RoomInformation roomInformation)
     {

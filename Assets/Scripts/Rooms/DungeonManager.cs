@@ -21,6 +21,9 @@ public class DungeonManager : MonoBehaviour
     [Header("Transition")]
     [SerializeField] private float transitionDelay = 0.5f;
 
+    [Header("UI")]
+    [SerializeField] private MinimapUI minimapUI;
+
     private DungeonLayout dungeonLayout;
     private RoomNode currentNode;
     private RoomInstance currentRoomInstance;
@@ -48,6 +51,7 @@ public class DungeonManager : MonoBehaviour
         dungeonLayout.Build(startRoomInformation, normalRoomInformations, shopRoomInformation, bossRoomInformation);
 
         currentNode = dungeonLayout.StartNode;
+        currentNode.isCurrentRoom = true;
 
         dungeonLayout.CreateNextRoom(currentNode, DoorDirection.Up, RoomType.Normal);
 
@@ -56,6 +60,11 @@ public class DungeonManager : MonoBehaviour
         if (currentNode.spawnedInstance != null)
         {
             currentNode.spawnedInstance.ConfigureDoors(currentNode);
+        }
+
+        if (minimapUI != null)
+        {
+            minimapUI.Initialize(this);
         }
     }
 
@@ -99,12 +108,26 @@ public class DungeonManager : MonoBehaviour
 
         RoomNode previousNode = currentNode;
 
+        if (previousNode != null)
+        {
+            previousNode.isCurrentRoom = false;
+        }
+
         currentNode = nextNode;
+
+        currentNode.isCurrentRoom = true;
+
         EnterRoom(currentNode, entryDirection);
 
         if (previousNode.spawnedInstance != null)
         {
             previousNode.spawnedInstance.ConfigureDoors(previousNode);
+        }
+
+        if (minimapUI != null)
+        {
+            minimapUI.BuildMap();
+            minimapUI.RefreshMap();
         }
 
         yield return StartCoroutine(screenFader.FadeIn());
@@ -173,7 +196,9 @@ public class DungeonManager : MonoBehaviour
 
         MovePlayerToCorrectSpawn(entryDirection);
 
-        if (!node.hasBeenVisited)
+        bool firstVisit = !node.hasBeenVisited;
+
+        if (firstVisit)
         {
             currentRoomInstance.SpawnEnemies();
             node.hasBeenVisited = true;
@@ -308,6 +333,14 @@ public class DungeonManager : MonoBehaviour
         }
 
         return false;
+    }
+
+    public List<RoomNode> GetAllRooms()
+    {
+        if (dungeonLayout == null)
+            return new List<RoomNode>();
+
+        return dungeonLayout.GetAllRooms();
     }
 
 }
