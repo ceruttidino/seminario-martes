@@ -11,4 +11,18 @@ public class PlayerScrap : MonoBehaviour
     }
 
     public int GetScrap() => currentScrap;
+
+    public bool TrySpendScrap(int amount)
+    {
+        if (currentScrap >= amount)
+        {
+            currentScrap -= amount;
+            Debug.Log($"Scrap restante: {currentScrap}");
+            return true;
+        }
+
+        Debug.Log("No hay suficiente scrap");
+        return false;
+    }
 }
+

@@ -13,7 +13,11 @@ MonoBehaviour:
   m_Name: UpgradeLoot
   m_EditorClassIdentifier: Assembly-CSharp::LootItem
   itemName: UpgradeLoot
-  icon: {fileID: 869989272981080661, guid: 8e992d8e2a0a12e48b7400e5c5b33b62, type: 3}
+  icon: {fileID: 21300000, guid: 8e992d8e2a0a12e48b7400e5c5b33b62, type: 3}
   prefab: {fileID: 5588464782313880407, guid: e5f5b2ab036f6fd458dff2c0c9c366a3, type: 3}
+  lootType: 3
+  scrapAmount: 0
+  healthAmount: 0
+  keyAmount: 0
   isUpgrade: 1
   upgradeSO: {fileID: 11400000, guid: 2ed0168fc78359c4b9355ffcbbc464e7, type: 2}
