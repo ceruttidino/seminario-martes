@@ -23,6 +23,15 @@ public class AreaAttack : MonoBehaviour, IAttack
         }
     }
 
+    public float CooldownNormalized
+    {
+        get
+        {
+            if (cooldown <= 0f) return 1f;
+            return 1f - (CooldownRemaining / cooldown);
+        }
+    }
+
     public bool CanExecute()
     {
         return Time.time >= lastUseTime + cooldown;

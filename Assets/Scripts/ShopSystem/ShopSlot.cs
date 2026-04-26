@@ -39,17 +39,15 @@ public class ShopSlot : MonoBehaviour
 
         PlayerScrap scrap = player.GetComponent<PlayerScrap>();
 
-        if (scrap.GetScrap() < itemData.price)
+        if (scrap == null) return;
+
+        if (!scrap.TrySpendScrap(itemData.price))
         {
             Debug.Log("Not enough scrap");
             return;
         }
 
         Debug.Log("BUYING: " + itemData.itemName);
-        Debug.Log("TYPE: " + itemData.effect.lootType);
-        Debug.Log("UPGRADE: " + itemData.effect.upgradeSO);
-
-        scrap.AddScrap(-itemData.price);
 
         ApplyEffect(player);
 

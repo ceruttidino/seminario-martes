@@ -10,9 +10,4 @@ public class Enemy : MonoBehaviour
         behaviour = GetComponent<EnemyBehaviour>();
         health = GetComponent<EnemyHealth>();
     }
-
-    private void Update()
-    {
-        behaviour.Tick();
-    }
 }

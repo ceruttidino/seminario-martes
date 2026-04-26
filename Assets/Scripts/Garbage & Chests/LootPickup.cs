@@ -10,11 +10,17 @@ public class LootPickup : MonoBehaviour
 
     private bool canBePickedUp = false;
     private float spawnTime;
+    private Collider2D col;
+
+    private void Awake()
+    {
+        col = GetComponent<Collider2D>();
+        col.isTrigger = true;
+    }
 
     private void Start()
     {
         spawnTime = Time.time;
-        GetComponent<Collider2D>().isTrigger = true;   // aseguro que sea Trigger
     }
 
     private void Update()
@@ -28,48 +34,57 @@ public class LootPickup : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (!canBePickedUp) return;
+        if (!other.CompareTag("Player")) return;
 
-        if (other.CompareTag("Player"))
+        bool collected = ApplyLoot(other.gameObject);
+
+        if (collected)
         {
-            ApplyLoot(other.gameObject);
-
+            Debug.Log($"Jugador recogió: {lootItem.itemName}");
             Destroy(gameObject);
-
-            Debug.Log($"Jugador recogió: {gameObject.name}");
-
         }
     }
 
-    private void ApplyLoot(GameObject player)
+    private bool ApplyLoot(GameObject player)
     {
         if (lootItem == null)
         {
             Debug.LogWarning("LootPickup sin LootItem asignado");
-            return;
+            return false;
         }
 
         switch (lootItem.lootType)
         {
             case LootType.Scrap:
-                player.GetComponent<PlayerScrap>()?.AddScrap(lootItem.scrapAmount);
-                Debug.Log($"+{lootItem.scrapAmount} Scrap");
-                break;
+                PlayerScrap scrap = player.GetComponent<PlayerScrap>();
+                if (scrap == null) return false;
+
+                scrap.AddScrap(lootItem.scrapAmount);
+                return true;
 
             case LootType.Health:
-                player.GetComponent<PlayerHealth>()?.PlayerHeal(lootItem.healthAmount);
-                Debug.Log($"+{lootItem.healthAmount} HP");
-                break;
+                PlayerHealth health = player.GetComponent<PlayerHealth>();
+                if (health == null) return false;
+
+                health.PlayerHeal(lootItem.healthAmount);
+                return true;
 
             case LootType.Key:
-                player.GetComponent<PlayerKeys>()?.AddKeys(lootItem.keyAmount);
-                Debug.Log($"+{lootItem.keyAmount} Key");
-                break;
+                PlayerKeys keys = player.GetComponent<PlayerKeys>();
+                if (keys == null) return false;
+
+                keys.AddKeys(lootItem.keyAmount);
+                return true;
 
             case LootType.Upgrade:
-                player.GetComponent<PlayerUpgradeManager>()?.CollectUpgrade(lootItem.upgradeSO);
-                Debug.Log($"Upgrade obtenido: {lootItem.upgradeSO.name}");
-                break;
+                PlayerUpgradeManager upgradeManager = player.GetComponent<PlayerUpgradeManager>();
+                if (upgradeManager == null || lootItem.upgradeSO == null) return false;
+
+                upgradeManager.CollectUpgrade(lootItem.upgradeSO);
+                return true;
         }
+
+        return false;
     }  
 
     // para q no se agarre inmediatamente al spawnear
@@ -81,8 +96,11 @@ public class LootPickup : MonoBehaviour
     public void SetLootItem(LootItem item)
     {
         lootItem = item;
-        Debug.Log($"Loot asignado: {item.itemName} ({item.lootType})");
-    }
 
+        if (lootItem != null)
+        {
+            Debug.Log($"Loot asignado: {lootItem.itemName} ({lootItem.lootType})");
+        }
+    }
 
 }

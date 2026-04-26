@@ -109,6 +109,7 @@ GameObject:
   - component: {fileID: 7355649491790274144}
   - component: {fileID: 3955632396312354887}
   - component: {fileID: 6028116143686986758}
+  - component: {fileID: 2622927903208743674}
   m_Layer: 3
   m_Name: Enemy_Snail
   m_TagString: Untagged
@@ -182,7 +183,7 @@ SpriteRenderer:
   m_SortingOrder: 1
   m_MaskInteraction: 0
   m_Sprite: {fileID: -9095717837082945937, guid: 207ee8102dd4143d288186ef0be518ee, type: 3}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 0.3207547, g: 0.185734, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -282,6 +283,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
   maxHealth: 10
+  damageFlash: {fileID: 2622927903208743674}
 --- !u!114 &5901369088641778859
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -338,3 +340,19 @@ MonoBehaviour:
   wallLayer:
     serializedVersion: 2
     m_Bits: 1024
+--- !u!114 &2622927903208743674
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8283417630010587146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a55419c6abff1d646bfafc7732f77586, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DamageFlash
+  spriteRenderer: {fileID: 1610651138796991159}
+  flashColor: {r: 1, g: 0, b: 0, a: 1}
+  flashDuration: 0.05
+  flashCount: 2

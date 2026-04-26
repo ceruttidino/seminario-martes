@@ -62,7 +62,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5301509431083932940, guid: 5443f03a3acee2543a3d3b3183e03bb2, type: 3}
       propertyPath: m_SortingOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8130129785676737181, guid: 5443f03a3acee2543a3d3b3183e03bb2, type: 3}
       propertyPath: upgradeToGrant
@@ -103,3 +103,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LootPickup
   pickupDelay: 0.6
   autoPickup: 0
+  lootItem: {fileID: 0}

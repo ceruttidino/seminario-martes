@@ -19,6 +19,7 @@ GameObject:
   - component: {fileID: 6964399883535842292}
   - component: {fileID: 8918091845439713338}
   - component: {fileID: -1778954237217324266}
+  - component: {fileID: 8546525372491809007}
   m_Layer: 3
   m_Name: Enemy_Ant
   m_TagString: Untagged
@@ -201,6 +202,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
   maxHealth: 10
+  damageFlash: {fileID: 8546525372491809007}
 --- !u!114 &-2046340648554966154
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -277,6 +279,22 @@ MonoBehaviour:
   targetLayer:
     serializedVersion: 2
     m_Bits: 0
+--- !u!114 &8546525372491809007
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8734249323408576011}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a55419c6abff1d646bfafc7732f77586, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DamageFlash
+  spriteRenderer: {fileID: 8208979293606837074}
+  flashColor: {r: 1, g: 0, b: 0, a: 1}
+  flashDuration: 0.05
+  flashCount: 2
 --- !u!1 &8871834171099964277
 GameObject:
   m_ObjectHideFlags: 0

@@ -13,6 +13,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     [Header("Other")]
     [SerializeField] bool canGetHurt = true;
     [SerializeField] float invulTime = 1.5f;
+    [SerializeField] private DamageFlash damageFlash;
 
     [Header("UI")]
     [SerializeField] GameObject[] hearts;
@@ -35,6 +36,8 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     // ====================== DAÑO ======================
     public void TakeDamage(float damage)
     {
+        damageFlash.Flash();
+
         if (!canGetHurt || playerHealth <= 0) return;
 
         canGetHurt = false;

@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -15,6 +16,28 @@ public class PlayerDash : MonoBehaviour
     private float lastDashTime = -999f;
     private bool isDashing = false;
 
+    public bool IsDashing => isDashing;
+
+    public float CooldownRemaining
+    {
+        get
+        {
+            float remaining = dashCooldown - (Time.time - lastDashTime);
+            return Mathf.Max(0f, remaining);
+        }
+    }
+
+    public float CooldownNormalized
+    {
+        get
+        {
+            if (dashCooldown <= 0f) return 1f;
+            return 1f - (CooldownRemaining / dashCooldown);
+        }
+    }
+
+    public bool CanDash => CooldownRemaining <= 0f && !isDashing;
+
     private void Awake()
     {
         if (playerMovement == null)
@@ -26,13 +49,10 @@ public class PlayerDash : MonoBehaviour
 
     public void OnDash(InputAction.CallbackContext context)
     {
-        if (!context.performed || isDashing)
-            return;
+        if (!context.performed) return;
+        if (!CanDash) return;
 
-        if (Time.time >= lastDashTime + dashCooldown)
-        {
-            PerformDash();
-        }
+        PerformDash();
     }
 
     private void PerformDash()
@@ -47,12 +67,10 @@ public class PlayerDash : MonoBehaviour
         lastDashTime = Time.time;
         isDashing = true;
 
-        Debug.Log($"Dash activado hacia: {dashDirection}");
-
         StartCoroutine(DashCoroutine(dashDirection));
     }
 
-    private System.Collections.IEnumerator DashCoroutine(Vector2 direction)
+    private IEnumerator DashCoroutine(Vector2 direction)
     {
         float startTime = Time.time;
 
@@ -64,9 +82,5 @@ public class PlayerDash : MonoBehaviour
 
         isDashing = false;
         rb.linearVelocity *= 0.6f;
-
-        Debug.Log("Dash terminado");
     }
-
-    public bool IsDashing => isDashing;
 }

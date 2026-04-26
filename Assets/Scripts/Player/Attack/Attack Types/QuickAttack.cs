@@ -36,9 +36,12 @@ public class QuickAttack : MonoBehaviour, IAttack
 
         lastUseTime = Time.time;
 
+        Vector2 lookDirection = GetCardinalDirection(playerDirection.LastLookDirection);
+
+        animator.SetFloat("AttackX", lookDirection.x);
+        animator.SetFloat("AttackY", lookDirection.y);
         animator.SetTrigger("Attack");
 
-        Vector2 lookDirection = playerDirection.LastLookDirection;
         Vector2 attackCenter = (Vector2)transform.position + lookDirection * attackDistance;
 
         // Combinamos las layers correctamente
@@ -70,6 +73,18 @@ public class QuickAttack : MonoBehaviour, IAttack
 
         if (!hitSomething)
             Debug.LogWarning("QuickAttack no golpeó nada (ni enemigo ni cofre)");
+    }
+
+    private Vector2 GetCardinalDirection(Vector2 direction)
+    {
+        if (Mathf.Abs(direction.x) > Mathf.Abs(direction.y))
+        {
+            return direction.x > 0 ? Vector2.right : Vector2.left;
+        }
+        else
+        {
+            return direction.y > 0 ? Vector2.up : Vector2.down;
+        }
     }
 
     private void OnDrawGizmosSelected()
