@@ -70,7 +70,7 @@ public class BreakableTrash : MonoBehaviour
             Debug.LogError($"[{gameObject.name}] No tiene LootTable asignado.");
         }
 
-        Destroy(gameObject, 0.4f);
+        Destroy(gameObject, 0f);
     }
 
     private IEnumerator SpawnLootWithDelay(LootItem[] loots)
