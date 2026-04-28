@@ -28,7 +28,7 @@ public class EnemyBehaviour : MonoBehaviour
         switch (enemyType)
         {
             case EnemyType.Rat:
-                SetState(new ChaseState(player, movement, transform, attack));
+                SetState(new RatChaseState(player, movement, transform, attack));
                 break;
 
             case EnemyType.Snail:
@@ -36,7 +36,7 @@ public class EnemyBehaviour : MonoBehaviour
                 break;
 
             case EnemyType.Ant:
-                SetState(new AntMoveState(player, movement, transform, this));
+                SetState(new AntMoveState(player, movement, transform, this, attack));
                 break;
         }
     }

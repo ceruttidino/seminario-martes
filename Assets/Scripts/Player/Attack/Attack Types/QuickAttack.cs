@@ -36,7 +36,10 @@ public class QuickAttack : MonoBehaviour, IAttack
 
         lastUseTime = Time.time;
 
-        Vector2 lookDirection = GetCardinalDirection(playerDirection.LastLookDirection);
+        Vector2 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector2 directionToMouse = (mouseWorldPos - (Vector2)transform.position).normalized;
+
+        Vector2 lookDirection = GetCardinalDirection(directionToMouse);
 
         animator.SetFloat("AttackX", lookDirection.x);
         animator.SetFloat("AttackY", lookDirection.y);

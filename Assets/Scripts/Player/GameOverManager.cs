@@ -38,12 +38,13 @@ public class GameOverManager : MonoBehaviour
 
             gameOverScreen.transform.SetAsLastSibling();
 
-            Debug.Log("✅ Panel activado y enviado al frente");
+            Time.timeScale = 0f;
         }
     }
 
     public void RestartLevel()
     {
+        Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }

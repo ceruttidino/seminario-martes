@@ -1,19 +1,19 @@
 fileFormatVersion: 2
-guid: 99e6ac16755b2b847b21ce4a57f606b4
+guid: 0ea8d4e57506c95449009691bbccd245
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 8030698790872602088
-    second: HormigaCompleta-Sheet_0
+      213: -6943813488821943829
+    second: Enemy_Ant_Sprite_0
   - first:
-      213: -6693586158399767034
-    second: HormigaCompleta-Sheet_1
+      213: 8074461393096877497
+    second: Enemy_Ant_Sprite_1
   - first:
-      213: 1364145477259195654
-    second: HormigaCompleta-Sheet_2
+      213: 507780433079872434
+    second: Enemy_Ant_Sprite_2
   - first:
-      213: 782734959334639399
-    second: HormigaCompleta-Sheet_3
+      213: 6202964857390752723
+    second: Enemy_Ant_Sprite_3
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -105,24 +105,11 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 4
-    buildTarget: WebGL
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: HormigaCompleta-Sheet_0
+      name: Enemy_Ant_Sprite_0
       rect:
         serializedVersion: 2
         x: 0
@@ -137,14 +124,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 8e5de187006c27f60800000000000000
-      internalID: 8030698790872602088
+      spriteID: be1c33cfb6e92af90800000000000000
+      internalID: -6943813488821943829
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: HormigaCompleta-Sheet_1
+      name: Enemy_Ant_Sprite_1
       rect:
         serializedVersion: 2
         x: 64
@@ -159,14 +146,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 60e3c136ada9b13a0800000000000000
-      internalID: -6693586158399767034
+      spriteID: 9b525205bdf3e0070800000000000000
+      internalID: 8074461393096877497
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: HormigaCompleta-Sheet_2
+      name: Enemy_Ant_Sprite_2
       rect:
         serializedVersion: 2
         x: 128
@@ -181,14 +168,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 6057df1851b6ee210800000000000000
-      internalID: 1364145477259195654
+      spriteID: 2bbae911d9ffb0700800000000000000
+      internalID: 507780433079872434
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: HormigaCompleta-Sheet_3
+      name: Enemy_Ant_Sprite_3
       rect:
         serializedVersion: 2
         x: 192
@@ -203,8 +190,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 727cb646c45dcda00800000000000000
-      internalID: 782734959334639399
+      spriteID: 3d3e10f4cab551650800000000000000
+      internalID: 6202964857390752723
       vertices: []
       indices: 
       edges: []
@@ -213,7 +200,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 372bd8a8455dd91488b19e6e4b88e8fa
+    spriteID: 38a4c527017a07a4a8fe3557331b5005
     internalID: 0
     vertices: []
     indices: 
@@ -225,10 +212,10 @@ TextureImporter:
       - key: SpriteEditor.SliceSettings
         value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      HormigaCompleta-Sheet_0: 8030698790872602088
-      HormigaCompleta-Sheet_1: -6693586158399767034
-      HormigaCompleta-Sheet_2: 1364145477259195654
-      HormigaCompleta-Sheet_3: 782734959334639399
+      Enemy_Ant_Sprite_0: -6943813488821943829
+      Enemy_Ant_Sprite_1: 8074461393096877497
+      Enemy_Ant_Sprite_2: 507780433079872434
+      Enemy_Ant_Sprite_3: 6202964857390752723
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

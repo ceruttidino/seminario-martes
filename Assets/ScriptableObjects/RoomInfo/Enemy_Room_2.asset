@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0fafb5f288fe4d543b32ecddd7f96428, type: 3}
-  m_Name: Room_Normal_B
+  m_Name: Enemy_Room_2
   m_EditorClassIdentifier: Assembly-CSharp::RoomInformation
-  roomID: Normal_B
+  roomID: Enemy_Room_2
   type: 1
-  prefab: {fileID: 5081486977560716221, guid: b95e0c8e70eb46642959aa2083905881, type: 3}
+  prefab: {fileID: 5081486977560716221, guid: bd71483e3c8d57843a6d848d66e185e5, type: 3}
   availableDoors: 00000000010000000200000003000000

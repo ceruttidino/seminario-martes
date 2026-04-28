@@ -13,7 +13,8 @@ public class SlimeTrailSpawner : MonoBehaviour
 
         if(timer <= 0)
         {
-            Instantiate(slimePrefab, transform.position, Quaternion.identity);
+            GameObject slime = Instantiate(slimePrefab, transform.position, Quaternion.identity);
+            slime.transform.SetParent(transform.parent);
             timer = spawnInterval;
         }
     }

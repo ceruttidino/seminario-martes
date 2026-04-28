@@ -201,6 +201,12 @@ public class DungeonManager : MonoBehaviour
         if (firstVisit)
         {
             currentRoomInstance.SpawnEnemies();
+
+            if (node.information.type == RoomType.Boss)
+            {
+                currentRoomInstance.LockDoors();
+            }
+
             node.hasBeenVisited = true;
         }
         else

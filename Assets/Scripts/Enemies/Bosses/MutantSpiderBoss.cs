@@ -39,6 +39,10 @@ public class MutantSpiderBoss : BossBase
     [SerializeField] private GameObject victoryDoorPrefab;
     [SerializeField] private Transform doorSpawnPoint;
 
+    [Header("Chase Settings")]
+    [SerializeField] private float stoppingDistance = 1.4f;
+    [SerializeField] private float attackStartDistance = 1.6f;
+
     private BossAttackType lastAttack;
     private int sameAttackCounter = 0;
     private bool hasLastAttack = false;
@@ -73,7 +77,7 @@ public class MutantSpiderBoss : BossBase
 
             StopMovement();
 
-            yield return PauseBetweenAttacks();
+            yield return new WaitForSeconds(0.35f);
 
             BossAttackType nextAttack = ChooseNextAttack();
 
@@ -96,7 +100,16 @@ public class MutantSpiderBoss : BossBase
         {
             if (player == null) yield break;
 
-            Vector2 direction = ((Vector2)player.position - rb.position).normalized;
+            Vector2 toPlayer = (Vector2)player.position - rb.position;
+            float distanceToPlayer = toPlayer.magnitude;
+
+            if (distanceToPlayer <= stoppingDistance)
+            {
+                StopMovement();
+                break;
+            }
+
+            Vector2 direction = toPlayer.normalized;
             rb.linearVelocity = direction * moveSpeed;
 
             timer += Time.deltaTime;
@@ -275,7 +288,10 @@ public class MutantSpiderBoss : BossBase
     private void StopMovement()
     {
         if (rb != null)
+        {
             rb.linearVelocity = Vector2.zero;
+            rb.angularVelocity = 0f;
+        }
     }
 
     private void HandleDeath()

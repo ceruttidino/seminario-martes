@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class ChaseState : IEnemyState
+public class RatChaseState : IEnemyState
 {
     private Transform player;
     private EnemyMovement movement;
@@ -10,7 +10,7 @@ public class ChaseState : IEnemyState
     private float stopDistance = 0.8f;
     private float slowDownDistance = 1.5f;
 
-    public ChaseState(Transform player, EnemyMovement movement, Transform enemy, EnemyAttack attack)
+    public RatChaseState(Transform player, EnemyMovement movement, Transform enemy, EnemyAttack attack)
     {
         this.player = player;
         this.movement = movement;

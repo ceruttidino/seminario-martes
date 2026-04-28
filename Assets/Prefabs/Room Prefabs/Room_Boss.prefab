@@ -2653,6 +2653,10 @@ PrefabInstance:
       value: MutantSpiderBoss
       objectReference: {fileID: 0}
     - target: {fileID: 7411370051583957722, guid: 563a4986874fb204b8be95907e30fb8d, type: 3}
+      propertyPath: doorSpawnPoint
+      value: 
+      objectReference: {fileID: 8855914108497674385}
+    - target: {fileID: 7411370051583957722, guid: 563a4986874fb204b8be95907e30fb8d, type: 3}
       propertyPath: 'poisonSpawnPoints.Array.data[0]'
       value: 
       objectReference: {fileID: 9125751033027327354}

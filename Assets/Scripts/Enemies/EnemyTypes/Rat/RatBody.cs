@@ -43,6 +43,13 @@ public class RatBody : MonoBehaviour, IDamageable
 
     public void TakeDamage(float dmg)
     {
+        RoomInstance room = GetComponentInParent<RoomInstance>();
+
+        if (room != null)
+        {
+            room.SendMessage("HandleEnemyDeath");
+        }
+
         Destroy(gameObject);
     }
 }

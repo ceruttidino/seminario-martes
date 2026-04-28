@@ -9,6 +9,7 @@ public class AntMoveState : IEnemyState
     private Transform enemyTransform;
     private MonoBehaviour coroutineRunner;
     private Vector2 moveDirection;
+    private EnemyAttack attack;
 
     private float moveSpeed = 3f;
     private float tileSize = 1f;
@@ -19,12 +20,13 @@ public class AntMoveState : IEnemyState
 
     private Coroutine movementCoroutine;
 
-    public AntMoveState(Transform player, EnemyMovement movement, Transform transform, MonoBehaviour runner)
+    public AntMoveState(Transform player, EnemyMovement movement, Transform transform, MonoBehaviour runner, EnemyAttack attack)
     {
         this.player = player;
         this.movement = movement;
         this.enemyTransform = transform;
         this.coroutineRunner = runner;
+        this.attack = attack;
     }
 
     public void Enter()
@@ -44,6 +46,10 @@ public class AntMoveState : IEnemyState
 
     public void Tick()
     {
+        if (attack != null)
+        {
+            attack.TryAttack();
+        }
     }
 
     private IEnumerator MovementLoop()

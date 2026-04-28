@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 public class RoomInstance : MonoBehaviour
@@ -141,12 +142,17 @@ public class RoomInstance : MonoBehaviour
             GameObject enemyGO = Instantiate(enemyPrefab, point.position, Quaternion.identity, transform);
 
             EnemyHealth enemyHealth = enemyGO.GetComponent<EnemyHealth>();
+            RatRegeneration regen = enemyGO.GetComponent<RatRegeneration>();
 
             if (enemyHealth != null)
             {
                 enemiesAlive++;
 
-                enemyHealth.OnDeath += HandleEnemyDeath;
+                // rat regeneration
+                if (regen == null)
+                {
+                    enemyHealth.OnDeath += HandleEnemyDeath;
+                }
             }
         }
 
@@ -159,7 +165,7 @@ public class RoomInstance : MonoBehaviour
         }
     }
 
-    private void LockDoors()
+    public void LockDoors()
     {
         foreach (var door in roomDoors)
         {

@@ -63,8 +63,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 4, y: 4, z: 4}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 8077867731510930268}
   m_Father: {fileID: 0}
@@ -118,7 +118,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: 9e9f964288843704ea387da3e9c80a49, type: 3}
+  m_Sprite: {fileID: 5358230128126236793, guid: 55f8ab01797266f438835836fc95f788, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -151,9 +151,9 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!58 &1693869454464011709
 CircleCollider2D:
@@ -189,8 +189,8 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_Radius: 1.037605
+  m_Offset: {x: 0, y: 0.013789058}
+  m_Radius: 0.34224248
 --- !u!114 &5476226890621526130
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -274,3 +274,5 @@ MonoBehaviour:
   delayBetweenWebShots: 0.5
   victoryDoorPrefab: {fileID: 7851148841807350584, guid: 9bca1745f4537654287a6d501dd14786, type: 3}
   doorSpawnPoint: {fileID: 8855914108497674385, guid: 0e62d717706e383438c199d4e620ef41, type: 3}
+  stoppingDistance: 1.4
+  attackStartDistance: 1.6

@@ -6,6 +6,7 @@ public class RatRegeneration : MonoBehaviour
     [SerializeField] private GameObject ratPrefab;
     [SerializeField] private float regenTime = 3f;
     [SerializeField] private float reducedHealth = 3f;
+    public bool isRegenerating = true;
 
     private EnemyHealth health;
 
@@ -22,7 +23,7 @@ public class RatRegeneration : MonoBehaviour
 
     private void HandleDeath()
     {
-        GameObject body = Instantiate(bodyPrefab, transform.position, Quaternion.identity);
+        GameObject body = Instantiate(bodyPrefab, transform.position, Quaternion.identity, transform.parent);
 
         RatBody bodyScript = body.GetComponent<RatBody>();
         bodyScript.Init(regenTime, reducedHealth);

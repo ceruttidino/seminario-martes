@@ -5,5 +5,5 @@ public enum EnemyType
     Rat,
     Snail,
     Ant,
-    mole
+    Mole
 }
