@@ -46,6 +46,7 @@ GameObject:
   - component: {fileID: 5476226890621526130}
   - component: {fileID: 5414644346259219043}
   - component: {fileID: 7411370051583957722}
+  - component: {fileID: 3878652755879115746}
   m_Layer: 3
   m_Name: MutantSpiderBoss
   m_TagString: Untagged
@@ -189,8 +190,8 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0.013789058}
-  m_Radius: 0.34224248
+  m_Offset: {x: -0.0036575198, y: 0.08602628}
+  m_Radius: 0.24257341
 --- !u!114 &5476226890621526130
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -203,7 +204,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1acd55b0552163419170306de275025, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
-  maxHealth: 120
+  maxHealth: 200
   damageFlash: {fileID: 5414644346259219043}
 --- !u!114 &5414644346259219043
 MonoBehaviour:
@@ -238,7 +239,7 @@ MonoBehaviour:
   rb: {fileID: 6309420547196070923}
   spriteRenderer: {fileID: 1610626988516400734}
   animator: {fileID: 0}
-  moveSpeed: 3.2
+  moveSpeed: 3.8
   chaseDuration: 7
   poisonTilePrefab: {fileID: 6823943260347750578, guid: b9d866a973858a84097fd3481b418286, type: 3}
   poisonSpawnPoints:
@@ -262,8 +263,8 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  minPoisonTilesPerWave: 6
-  maxPoisonTilesPerWave: 10
+  minPoisonTilesPerWave: 12
+  maxPoisonTilesPerWave: 16
   secondWaveDelay: 3
   disappearDuration: 0.4
   reappearDuration: 0.4
@@ -272,7 +273,26 @@ MonoBehaviour:
   minWebShots: 8
   maxWebShots: 10
   delayBetweenWebShots: 0.5
+  enemyAttack: {fileID: 0}
   victoryDoorPrefab: {fileID: 7851148841807350584, guid: 9bca1745f4537654287a6d501dd14786, type: 3}
   doorSpawnPoint: {fileID: 8855914108497674385, guid: 0e62d717706e383438c199d4e620ef41, type: 3}
   stoppingDistance: 1.4
   attackStartDistance: 1.6
+--- !u!114 &3878652755879115746
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3734874258083350194}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40521986e017e6a4183e4b4288386610, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyAttack
+  damage: 1
+  attackRange: 1.4
+  attackCooldown: 2
+  targetLayer:
+    serializedVersion: 2
+    m_Bits: 512

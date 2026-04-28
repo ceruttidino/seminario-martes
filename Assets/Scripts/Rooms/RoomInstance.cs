@@ -139,6 +139,13 @@ public class RoomInstance : MonoBehaviour
 
         foreach (Transform point in enemySpawnPoints)
         {
+            if (point == null)
+            {
+                Debug.LogError("Enemy Spawn Point vacío en la room: " + gameObject.name);
+                continue;
+            }
+
+
             GameObject enemyGO = Instantiate(enemyPrefab, point.position, Quaternion.identity, transform);
 
             EnemyHealth enemyHealth = enemyGO.GetComponent<EnemyHealth>();

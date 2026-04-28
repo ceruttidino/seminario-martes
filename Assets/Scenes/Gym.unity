@@ -415,8 +415,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53590e68809c5c84eb9afc2fd052cd28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DungeonProgression
-  normalRoomsBeforeShop: 2
-  normalRoomsBeforeBoss: 1
+  normalRoomsBeforeShop: 3
+  normalRoomsBeforeBoss: 3
 --- !u!1 &482932171
 GameObject:
   m_ObjectHideFlags: 0
@@ -486,7 +486,10 @@ MonoBehaviour:
   normalRoomInformations:
   - {fileID: 11400000, guid: e5021dffd3a597b4abf1fdae194cfb21, type: 2}
   - {fileID: 11400000, guid: 76a93ad8feed25f4d875795184a45c71, type: 2}
+  - {fileID: 11400000, guid: 0141114be20fe434e9d13878126305de, type: 2}
   - {fileID: 11400000, guid: a2be6d8e345c09348a92b1681a429ed1, type: 2}
+  - {fileID: 11400000, guid: c741746624bb2194fa40e9d3a3b67737, type: 2}
+  - {fileID: 11400000, guid: f2999fc0799c61245afdf8442d03ed64, type: 2}
   shopRoomInformation: {fileID: 11400000, guid: 5d7cc0080f540034a80ec39e4a3a0a05, type: 2}
   bossRoomInformation: {fileID: 11400000, guid: 9ffd6e2afc21c844f9849da92ebe2889, type: 2}
   transitionDelay: 0.1

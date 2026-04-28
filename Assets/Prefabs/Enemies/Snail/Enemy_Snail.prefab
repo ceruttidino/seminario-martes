@@ -282,7 +282,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1acd55b0552163419170306de275025, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
-  maxHealth: 10
+  maxHealth: 20
   damageFlash: {fileID: 2622927903208743674}
 --- !u!114 &5901369088641778859
 MonoBehaviour:
@@ -325,7 +325,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SlimeTrailSpawner
   slimePrefab: {fileID: 2487840858659179355, guid: 7810dde463577ef40ba4bda2ba57c33f, type: 3}
-  spawnInterval: 0.25
+  spawnInterval: 0.5
 --- !u!114 &6028116143686986758
 MonoBehaviour:
   m_ObjectHideFlags: 0

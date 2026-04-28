@@ -35,6 +35,9 @@ public class MutantSpiderBoss : BossBase
     [SerializeField] private int maxWebShots = 10;
     [SerializeField] private float delayBetweenWebShots = 0.5f;
 
+    [Header("Collision Attack")]
+    [SerializeField] private EnemyAttack enemyAttack;
+
     [Header("Victory")]
     [SerializeField] private GameObject victoryDoorPrefab;
     [SerializeField] private Transform doorSpawnPoint;
@@ -65,6 +68,9 @@ public class MutantSpiderBoss : BossBase
         EnemyHealth health = GetComponent<EnemyHealth>();
         if (health != null)
             health.OnDeath += HandleDeath;
+
+        if (enemyAttack == null)
+            enemyAttack = GetComponent<EnemyAttack>();
     }
 
     protected override IEnumerator BossRoutine()
@@ -106,6 +112,10 @@ public class MutantSpiderBoss : BossBase
             if (distanceToPlayer <= stoppingDistance)
             {
                 StopMovement();
+
+                if (enemyAttack != null)
+                    enemyAttack.TryAttack();
+
                 break;
             }
 

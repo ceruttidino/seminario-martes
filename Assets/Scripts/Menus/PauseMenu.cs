@@ -32,8 +32,9 @@ public class PauseMenu : MonoBehaviour
         pausePanel.SetActive(false);
         Time.timeScale = 1f;
         isPaused = false;
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
     public void QuitToMenu()

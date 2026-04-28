@@ -202,7 +202,7 @@ MonoBehaviour:
   lootTable: {fileID: 11400000, guid: c1375e15c8684ef46ab3baf44e193eed, type: 2}
   minSpawnRadius: 0.2
   maxSpawnRadius: 0.6
-  spawnDelayBetweenItems: 0.07
+  spawnDelayBetweenItems: 0
   destroyParticlePrefab: {fileID: 7726800093135833870, guid: 30b5042b42cc6304daa44f89cbace3d0, type: 3}
 --- !u!61 &5492638574281854178
 BoxCollider2D:
@@ -238,7 +238,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: -0.009860754, y: 0.055877864}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -248,5 +248,5 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.5, y: 0.5}
+  m_Size: {x: 0.95359516, y: 0.7563797}
   m_EdgeRadius: 0
