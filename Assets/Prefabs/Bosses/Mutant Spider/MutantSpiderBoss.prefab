@@ -272,3 +272,5 @@ MonoBehaviour:
   minWebShots: 8
   maxWebShots: 10
   delayBetweenWebShots: 0.5
+  victoryDoorPrefab: {fileID: 7851148841807350584, guid: 9bca1745f4537654287a6d501dd14786, type: 3}
+  doorSpawnPoint: {fileID: 8855914108497674385, guid: 0e62d717706e383438c199d4e620ef41, type: 3}

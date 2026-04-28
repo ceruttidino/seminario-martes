@@ -76,13 +76,17 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 7
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 0}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 8288388510651883771, guid: 5443f03a3acee2543a3d3b3183e03bb2, type: 3}
       insertIndex: -1
       addedObject: {fileID: -2059707213957574905}
+    - targetCorrespondingSourceObject: {fileID: 8288388510651883771, guid: 5443f03a3acee2543a3d3b3183e03bb2, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1525444872616118905}
   m_SourcePrefab: {fileID: 100100000, guid: 5443f03a3acee2543a3d3b3183e03bb2, type: 3}
 --- !u!1 &3903772088645810023 stripped
 GameObject:
@@ -104,3 +108,18 @@ MonoBehaviour:
   pickupDelay: 0.6
   autoPickup: 0
   lootItem: {fileID: 0}
+--- !u!114 &1525444872616118905
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3903772088645810023}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 522da9c4f9bffbc438e2eec40a5e0ad4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PickupEffect
+  floatAmplitude: 0.18
+  floatSpeed: 1.8
+  popDuration: 0.35

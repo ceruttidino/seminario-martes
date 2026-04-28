@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 
 public class MutantSpiderBoss : BossBase
@@ -35,6 +35,10 @@ public class MutantSpiderBoss : BossBase
     [SerializeField] private int maxWebShots = 10;
     [SerializeField] private float delayBetweenWebShots = 0.5f;
 
+    [Header("Victory")]
+    [SerializeField] private GameObject victoryDoorPrefab;
+    [SerializeField] private Transform doorSpawnPoint;
+
     private BossAttackType lastAttack;
     private int sameAttackCounter = 0;
     private bool hasLastAttack = false;
@@ -50,13 +54,11 @@ public class MutantSpiderBoss : BossBase
         if (player == null)
         {
             GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
-
             if (playerObject != null)
                 player = playerObject.transform;
         }
 
         EnemyHealth health = GetComponent<EnemyHealth>();
-
         if (health != null)
             health.OnDeath += HandleDeath;
     }
@@ -140,16 +142,12 @@ public class MutantSpiderBoss : BossBase
 
     private BossAttackType RandomAttack()
     {
-        return Random.Range(0, 2) == 0
-            ? BossAttackType.PoisonTiles
-            : BossAttackType.WebShots;
+        return Random.Range(0, 2) == 0 ? BossAttackType.PoisonTiles : BossAttackType.WebShots;
     }
 
     private BossAttackType GetDifferentAttack(BossAttackType attack)
     {
-        return attack == BossAttackType.PoisonTiles
-            ? BossAttackType.WebShots
-            : BossAttackType.PoisonTiles;
+        return attack == BossAttackType.PoisonTiles ? BossAttackType.WebShots : BossAttackType.PoisonTiles;
     }
 
     private IEnumerator ExecuteAttack(BossAttackType attackType)
@@ -191,7 +189,7 @@ public class MutantSpiderBoss : BossBase
     {
         if (poisonTilePrefab == null || poisonSpawnPoints == null || poisonSpawnPoints.Length == 0)
         {
-            Debug.LogWarning("Faltan poisonTilePrefab o poisonSpawnPoints en MutantSpiderBoss");
+            Debug.LogWarning("Faltan poisonTilePrefab o poisonSpawnPoints");
             yield break;
         }
 
@@ -207,7 +205,6 @@ public class MutantSpiderBoss : BossBase
         }
     }
 
-    //attacks
     private IEnumerator WebShotAttack()
     {
         StopMovement();
@@ -228,9 +225,7 @@ public class MutantSpiderBoss : BossBase
     {
         if (webProjectilePrefab == null || player == null) return;
 
-        Vector3 spawnPosition = webFirePoint != null
-            ? webFirePoint.position
-            : transform.position;
+        Vector3 spawnPosition = webFirePoint != null ? webFirePoint.position : transform.position;
 
         GameObject webObject = Instantiate(webProjectilePrefab, spawnPosition, Quaternion.identity);
 
@@ -254,7 +249,6 @@ public class MutantSpiderBoss : BossBase
         {
             float alpha = Mathf.Lerp(startAlpha, endAlpha, timer / duration);
             spriteRenderer.color = new Color(baseColor.r, baseColor.g, baseColor.b, alpha);
-
             timer += Time.deltaTime;
             yield return null;
         }
@@ -270,7 +264,6 @@ public class MutantSpiderBoss : BossBase
         for (int i = 0; i < shuffled.Length; i++)
         {
             int randomIndex = Random.Range(i, shuffled.Length);
-
             Transform temp = shuffled[i];
             shuffled[i] = shuffled[randomIndex];
             shuffled[randomIndex] = temp;
@@ -289,5 +282,48 @@ public class MutantSpiderBoss : BossBase
     {
         StopBoss();
         StopMovement();
+
+        SpawnVictoryDoor();
+    }
+
+    private void SpawnVictoryDoor()
+    {
+        if (victoryDoorPrefab == null)
+        {
+            return;
+        }
+
+        Vector3 spawnPos = doorSpawnPoint != null
+            ? doorSpawnPoint.position
+            : transform.position + new Vector3(0, 2f, 0);
+
+        GameObject door = Instantiate(victoryDoorPrefab, spawnPos, Quaternion.identity);
+
+        Transform roomParent = FindRoomParent();
+        if (roomParent != null)
+        {
+            door.transform.SetParent(roomParent, true);
+        }
+
+    }
+
+    private Transform FindRoomParent()
+    {
+        Transform current = transform.parent;
+
+        while (current != null)
+        {
+            string name = current.name.ToLower();
+
+            if (name.Contains("room_boss") || name.Contains("boss") ||
+                name.Contains("room") || current.GetComponent("Room") != null)
+            {
+                return current;
+            }
+
+            current = current.parent;
+        }
+
+        return null;
     }
 }

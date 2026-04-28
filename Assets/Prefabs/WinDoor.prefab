@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &8288388510651883771
+--- !u!1 &7851148841807350584
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,42 +8,40 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 198103972953636832}
-  - component: {fileID: 5301509431083932940}
-  - component: {fileID: 5878048523578978704}
-  - component: {fileID: 8130129785676737181}
-  - component: {fileID: 4139506166805493479}
-  - component: {fileID: 2502825405010110576}
-  m_Layer: 7
-  m_Name: UpgradePickup_Health
+  - component: {fileID: 9194709701801551344}
+  - component: {fileID: 6851404343343034210}
+  - component: {fileID: -7061574014517608257}
+  - component: {fileID: -752887702637968430}
+  m_Layer: 0
+  m_Name: WinDoor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &198103972953636832
+--- !u!4 &9194709701801551344
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8288388510651883771}
+  m_GameObject: {fileID: 7851148841807350584}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.9338917, y: -0.35452, z: 0}
-  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
-  m_ConstrainProportionsScale: 1
+  m_LocalPosition: {x: -1.336, y: 0.76, z: 0}
+  m_LocalScale: {x: 0.6409703, y: 0.6409703, z: 0.6409703}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &5301509431083932940
+--- !u!212 &6851404343343034210
 SpriteRenderer:
   serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8288388510651883771}
+  m_GameObject: {fileID: 7851148841807350584}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -83,10 +81,10 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: 7c453a2b154e6484f93ccebbb01f9505, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
+  m_Color: {r: 1, g: 0.91782284, b: 0.61698115, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -95,13 +93,13 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!58 &5878048523578978704
-CircleCollider2D:
+--- !u!61 &-7061574014517608257
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8288388510651883771}
+  m_GameObject: {fileID: 7851148841807350584}
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
@@ -125,52 +123,32 @@ CircleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 0.3
---- !u!114 &8130129785676737181
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1, y: 1}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 1, y: 1}
+  m_EdgeRadius: 0
+--- !u!114 &-752887702637968430
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8288388510651883771}
+  m_GameObject: {fileID: 7851148841807350584}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 40acf9bfc8873804eb77829addf272c2, type: 3}
+  m_Script: {fileID: 11500000, guid: bee6a508683160343beeab5174cdc262, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UpgradePickup
-  upgradeToGrant: {fileID: 11400000, guid: c6d58e2fd8eb23c44a5331b7bcd32906, type: 2}
---- !u!114 &4139506166805493479
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8288388510651883771}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb635969982e9324f8c1a0f3c2dbad74, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LootPickup
-  pickupDelay: 0.6
-  autoPickup: 0
-  lootItem: {fileID: 0}
---- !u!114 &2502825405010110576
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8288388510651883771}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 522da9c4f9bffbc438e2eec40a5e0ad4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PickupEffect
-  floatAmplitude: 0.18
-  floatSpeed: 1.8
-  popDuration: 0.35
+  m_EditorClassIdentifier: Assembly-CSharp::VictoryDoor
+  destroyOnTouch: 1
