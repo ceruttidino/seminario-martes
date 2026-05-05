@@ -89,7 +89,7 @@ public class BreakableTrash : MonoBehaviour
     {
         if (lootItem == null || lootItem.prefab == null) return;
 
-        // psición en círculo alrededor del cofre
+        // posición en círculo alrededor del cofre
         Vector2 randomDir = Random.insideUnitCircle.normalized;
 
         // Evitamos que caigan muy lejos o fuera de las paredes

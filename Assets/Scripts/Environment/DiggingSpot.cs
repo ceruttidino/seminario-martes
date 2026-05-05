@@ -121,6 +121,12 @@ public class DiggingSpot : MonoBehaviour, IInteractable
                 Vector3 spawnPos = spawnPoint.position + new Vector3(randomOffset.x, randomOffset.y, 0f);
                 GameObject spawned = Instantiate(item.prefab, spawnPos, Quaternion.identity);
 
+                LootPickup pickup = spawned.GetComponent<LootPickup>();
+                if (pickup != null)
+                {
+                    pickup.SetLootItem(item);
+                }
+
                 RoomInstance room = GetComponentInParent<RoomInstance>();
                 if (room != null)
                 {

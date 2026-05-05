@@ -7,7 +7,7 @@ public class RatChaseState : IEnemyState
     private Transform enemy;
     private EnemyAttack attack;
 
-    private float stopDistance = 0.8f;
+    private float stopDistance = 0.59f;
     private float slowDownDistance = 1.5f;
 
     public RatChaseState(Transform player, EnemyMovement movement, Transform enemy, EnemyAttack attack)

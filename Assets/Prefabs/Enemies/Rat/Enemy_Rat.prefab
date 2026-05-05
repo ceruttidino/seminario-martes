@@ -103,6 +103,7 @@ GameObject:
   - component: {fileID: 708296504960716233}
   - component: {fileID: 5994111645423418850}
   - component: {fileID: 909021982210773671}
+  - component: {fileID: 1219688302283466644}
   - component: {fileID: 2599625856699564854}
   - component: {fileID: 4457620000347050902}
   - component: {fileID: 3295107473773870682}
@@ -266,6 +267,52 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.4573393, y: 0.776868}
   m_EdgeRadius: 0
+--- !u!61 &1219688302283466644
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5136333534524507215}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0.005410999, y: 0.017495334}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1, y: 1}
+    newSize: {x: 1, y: 0.5}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 0.79077524, y: 0.9526596}
+  m_EdgeRadius: 0
 --- !u!114 &2599625856699564854
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -321,6 +368,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyMovement
   speed: 3
+  animator: {fileID: 0}
 --- !u!114 &2378659159166680875
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -337,6 +385,7 @@ MonoBehaviour:
   ratPrefab: {fileID: 5136333534524507215}
   regenTime: 3
   reducedHealth: 3
+  isRegenerating: 1
 --- !u!114 &642305526718991060
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -365,7 +414,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAttack
   damage: 1
-  attackRange: 1
+  attackRange: 1.6
   attackCooldown: 1
   targetLayer:
     serializedVersion: 2

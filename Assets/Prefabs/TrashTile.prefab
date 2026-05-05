@@ -157,5 +157,5 @@ MonoBehaviour:
   lootTable: {fileID: 11400000, guid: c1375e15c8684ef46ab3baf44e193eed, type: 2}
   spawnPoint: {fileID: 0}
   trashTypeParaExcavar: 1
-  specialEnemyPrefab: {fileID: 2258472700812598602, guid: 7e9f708abc9c2484cbff1a0c4da7e2b7, type: 3}
-  enemySpawnChance: 3
+  specialEnemyPrefab: {fileID: 4216251994002000201, guid: cf81d60945cada34fb6046978be4ad51, type: 3}
+  enemySpawnChance: 30
