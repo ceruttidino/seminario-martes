@@ -162,12 +162,12 @@ public class PlayerHealth : MonoBehaviour, IDamageable
 
             if (remaining > 1)
             {
-                heartImage.color = Color.green;
+                heartImage.color = Color.white;
                 remaining -= 2;
             }
             else if (remaining == 1)
             {
-                heartImage.color = Color.red;
+                heartImage.color = Color.gray;
                 remaining -= 1;
             }
             else

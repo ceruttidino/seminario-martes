@@ -10,11 +10,9 @@ public class CooldownBarsUI : MonoBehaviour
 
     [Header("Dash UI")]
     [SerializeField] private Image dashFill;
-    [SerializeField] private TMP_Text dashText;
 
     [Header("Area Attack UI")]
     [SerializeField] private Image areaAttackFill;
-    [SerializeField] private TMP_Text areaAttackText;
 
     private void Awake()
     {
@@ -36,9 +34,6 @@ public class CooldownBarsUI : MonoBehaviour
         if (playerDash == null || dashFill == null) return;
 
         dashFill.fillAmount = playerDash.CooldownNormalized;
-
-        if (dashText != null)
-            dashText.text = playerDash.CanDash ? "DASH" : playerDash.CooldownRemaining.ToString("0.0");
     }
 
     private void UpdateAreaAttackBar()
@@ -47,7 +42,5 @@ public class CooldownBarsUI : MonoBehaviour
 
         areaAttackFill.fillAmount = areaAttack.CooldownNormalized;
 
-        if (areaAttackText != null)
-            areaAttackText.text = areaAttack.CanExecute() ? "HEAVY" : areaAttack.CooldownRemaining.ToString("0.0");
     }
 }
