@@ -41,13 +41,17 @@ public class QuickAttack : MonoBehaviour, IAttack
 
         Vector2 lookDirection = GetCardinalDirection(directionToMouse);
 
+        if (GetComponent<SpriteRenderer>().flipX == true)
+        {
+            lookDirection *= -1;
+        }
+
         animator.SetFloat("AttackX", lookDirection.x);
         animator.SetFloat("AttackY", lookDirection.y);
         animator.SetTrigger("Attack");
 
         Vector2 attackCenter = (Vector2)transform.position + lookDirection * attackDistance;
 
-        // Combinamos las layers correctamente
         LayerMask combinedMask = enemyLayer | trashLayer;
 
         Collider2D[] hits = Physics2D.OverlapBoxAll(attackCenter, attackBoxSize, 0f, combinedMask);

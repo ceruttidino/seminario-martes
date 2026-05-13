@@ -32,7 +32,7 @@ public class RatBody : MonoBehaviour, IDamageable
             return;
         }
 
-        GameObject newRat = Instantiate(ratPrefab, transform.position, Quaternion.identity);
+        GameObject newRat = Instantiate(ratPrefab, transform.position, Quaternion.identity, transform.parent);
 
         EnemyHealth health = newRat.GetComponent<EnemyHealth>();
         if (health != null)
@@ -47,7 +47,12 @@ public class RatBody : MonoBehaviour, IDamageable
 
         if (room != null)
         {
-            room.SendMessage("HandleEnemyDeath");
+            room.HandleEnemyDeath();
+            Debug.Log("Existe Room");
+        }
+        else
+        {
+            Debug.Log("No Existe Room");
         }
 
         Destroy(gameObject);

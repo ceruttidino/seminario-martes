@@ -199,7 +199,7 @@ public class RoomInstance : MonoBehaviour
         Debug.Log("Room completada");
     }
 
-    private void HandleEnemyDeath()
+    public void HandleEnemyDeath()
     {
         enemiesAlive--;
 
