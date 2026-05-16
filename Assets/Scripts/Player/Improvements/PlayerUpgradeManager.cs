@@ -12,6 +12,8 @@ public class PlayerUpgradeManager : MonoBehaviour
     [Header("Upgrades recolectados")]
     [SerializeField] private List<UpgradeSO> collectedUpgrades = new List<UpgradeSO>();
 
+    private Dictionary<UpgradeSO, int> upgradeCounts = new Dictionary<UpgradeSO, int>();
+
     private void Awake()
     {
         // Auto-asignación si no están asignados en el inspector
@@ -20,6 +22,13 @@ public class PlayerUpgradeManager : MonoBehaviour
         if (quickAttack == null) quickAttack = GetComponent<QuickAttack>();
         if (areaAttack == null) areaAttack = GetComponent<AreaAttack>();
     }
+
+    // PlayerUpgradeManager.cs
+    public int GetTimesApplied(UpgradeSO upgrade)
+    {
+        return collectedUpgrades.FindAll(u => u == upgrade).Count;
+    }
+
 
     /// <summary>
     /// Se llama cuando el jugador recoge una mejora
