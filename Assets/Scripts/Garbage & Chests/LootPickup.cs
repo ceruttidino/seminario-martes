@@ -5,7 +5,6 @@ public class LootPickup : MonoBehaviour
 {
     [Header("Loot Settings")]
     [SerializeField] private float pickupDelay = 0.6f;
-    [SerializeField] private bool autoPickup = false;
     [SerializeField] private LootItem lootItem;
 
     private bool canBePickedUp = false;
@@ -27,9 +26,7 @@ public class LootPickup : MonoBehaviour
     private void Update()
     {
         if (!canBePickedUp && Time.time > spawnTime + pickupDelay)
-        {
             canBePickedUp = true;
-        }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -41,8 +38,6 @@ public class LootPickup : MonoBehaviour
 
         if (collected)
         {
-            Debug.Log($"Jugador recogió: {lootItem.itemName}");
-
             PickupEffect effect = GetComponent<PickupEffect>();
             if (effect != null)
                 effect.OnPickup();

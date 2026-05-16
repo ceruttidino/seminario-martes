@@ -44,7 +44,6 @@ public class MutantSpiderBoss : BossBase
 
     [Header("Chase Settings")]
     [SerializeField] private float stoppingDistance = 1.4f;
-    [SerializeField] private float attackStartDistance = 1.6f;
 
     private BossAttackType lastAttack;
     private int sameAttackCounter = 0;

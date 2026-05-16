@@ -78,6 +78,5 @@ public class AreaAttack : MonoBehaviour, IAttack
     public void IncreaseRange(float percent)
     {
         radius *= 1f + percent / 100f;
-        Debug.Log($"New AreaAttack radius: {radius}");
     }
 }

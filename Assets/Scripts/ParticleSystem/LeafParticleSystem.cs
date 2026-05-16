@@ -18,12 +18,13 @@ public class LeafParticleSystem : MonoBehaviour
     [SerializeField] private float maxLifetime = 14f;
 
     private float spawnTimer = 0f;
+    private int activeLeaves = 0;
 
     private void Update()
     {
         spawnTimer += Time.deltaTime;
 
-        if (spawnTimer >= spawnRate)
+        if (spawnTimer >= spawnRate && activeLeaves < maxLeaves)
         {
             SpawnLeaf();
             spawnTimer = 0f;
@@ -45,10 +46,21 @@ public class LeafParticleSystem : MonoBehaviour
 
         float fallSpeed = Random.Range(minSpeed, maxSpeed);
         float rotationSpeed = Random.Range(minRotationSpeed, maxRotationSpeed);
+        float lifetime = Random.Range(minLifetime, maxLifetime);
 
-        leafMovement.Initialize(fallSpeed, rotationSpeed, Random.Range(minLifetime, maxLifetime));
+        leafMovement.Initialize(fallSpeed, rotationSpeed, lifetime);
 
-        Destroy(leaf, Random.Range(minLifetime, maxLifetime) + 2f);
+        activeLeaves++;
+        Destroy(leaf, lifetime + 2f);
+
+        // decrements the counter when the leaf is destroyed
+        StartCoroutine(DecrementOnDestroy(lifetime + 2f));
+    }
+
+    private System.Collections.IEnumerator DecrementOnDestroy(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        activeLeaves--;
     }
 
     public void SetActive(bool active)

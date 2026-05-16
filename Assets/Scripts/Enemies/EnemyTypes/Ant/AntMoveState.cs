@@ -11,7 +11,6 @@ public class AntMoveState : IEnemyState
     private Vector2 moveDirection;
     private EnemyAttack attack;
 
-    private float moveSpeed = 3f;
     private float tileSize = 1f;
 
     private int minTiles = 5;

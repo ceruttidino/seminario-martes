@@ -22,14 +22,12 @@ public class VictoryDoor : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             hasTriggered = true;
-            Debug.Log("¡Jugador tocó la puerta de victoria!");
 
-            VictoryManager victoryManager = FindObjectOfType<VictoryManager>();
+            VictoryManager victoryManager = FindFirstObjectByType<VictoryManager>();
 
             if (victoryManager != null)
             {
                 victoryManager.TriggerVictory();
-                Debug.Log("VictoryManager activado correctamente");
             }
             else
             {

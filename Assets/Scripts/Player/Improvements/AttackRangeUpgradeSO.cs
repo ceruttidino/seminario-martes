@@ -7,17 +7,12 @@ public class AttackRangeUpgradeSO : UpgradeSO
     [SerializeField] private bool affectQuickAttack = true;
     [SerializeField] private bool affectAreaAttack = true;
 
-    private int timesApplied = 0;
-
     public override void Apply(PlayerUpgradeManager manager)
     {
         int timesApplied = manager.GetTimesApplied(this);
 
         if (timesApplied > rangeIncreases.Length - 1)
-        {
-            Debug.Log("No more range bonuses available.");
             return;
-        }
 
         float increase = rangeIncreases[timesApplied];
 
@@ -26,8 +21,5 @@ public class AttackRangeUpgradeSO : UpgradeSO
 
         if (affectAreaAttack && manager.areaAttack != null)
             manager.areaAttack.IncreaseRange(increase);
-
-        Debug.Log($"Attack range increased by {increase}%");
     }
-
 }

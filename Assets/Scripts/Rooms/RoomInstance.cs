@@ -22,7 +22,6 @@ public class RoomInstance : MonoBehaviour
     [SerializeField] private Transform[] enemySpawnPoints;
 
     private EnemyBehaviour[] currentEnemies;
-    private bool roomInCombat = false;
 
     private bool enemiesSpawned = false;
     private int enemiesAlive;
@@ -166,7 +165,6 @@ public class RoomInstance : MonoBehaviour
 
         if (enemiesAlive > 0)
         {
-            roomInCombat = true;
             LockDoors();
         }
     }
@@ -191,7 +189,6 @@ public class RoomInstance : MonoBehaviour
 
     private void EndCombat()
     {
-        roomInCombat = false;
         UnlockDoorsInstant();
     }
 

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class QuickAttack : MonoBehaviour, IAttack
 {
@@ -36,7 +37,7 @@ public class QuickAttack : MonoBehaviour, IAttack
 
         lastUseTime = Time.time;
 
-        Vector2 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector2 mouseWorldPos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
         Vector2 directionToMouse = (mouseWorldPos - (Vector2)transform.position).normalized;
 
         Vector2 lookDirection = GetCardinalDirection(directionToMouse);
