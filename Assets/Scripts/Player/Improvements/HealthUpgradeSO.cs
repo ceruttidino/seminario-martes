@@ -9,9 +9,6 @@ public class HealthUpgradeSO : UpgradeSO
     public override void Apply(PlayerUpgradeManager manager)
     {
         if (manager.playerHealth != null)
-        {
             manager.playerHealth.PlayerAddHeart(heartsToAdd, fillNewHearts);
-            Debug.Log($"Vida aumentada en +{heartsToAdd} corazones");
-        }
     }
 }

@@ -105,5 +105,10 @@ public class PlayerMovement : MonoBehaviour
         moveSpeed += amount;
     }
 
+    public void IncreaseMoveSpeedPercent(float percent)
+    {
+        moveSpeed *= 1f + percent / 100f;
+    }
+
     public bool IsDashing() => playerDash != null && playerDash.IsDashing;
 }

@@ -92,6 +92,11 @@ public class QuickAttack : MonoBehaviour, IAttack
         damage += amount;
     }
 
+    public void IncreaseDamagePercent(float percent)
+    {
+        damage *= 1f + percent / 100f;
+    }
+
     public void IncreaseRange(float percent)
     {
         attackBoxSize *= 1f + percent / 100f;

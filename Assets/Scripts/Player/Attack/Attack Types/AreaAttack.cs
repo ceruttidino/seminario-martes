@@ -75,6 +75,11 @@ public class AreaAttack : MonoBehaviour, IAttack
         damage += amount;
     }
 
+    public void IncreaseDamagePercent(float percent)
+    {
+        damage *= 1f + percent / 100f;
+    }
+
     public void IncreaseRange(float percent)
     {
         radius *= 1f + percent / 100f;

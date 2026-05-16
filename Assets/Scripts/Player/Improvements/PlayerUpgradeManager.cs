@@ -16,31 +16,23 @@ public class PlayerUpgradeManager : MonoBehaviour
 
     private void Awake()
     {
-        // Auto-asignación si no están asignados en el inspector
         if (playerMovement == null) playerMovement = GetComponent<PlayerMovement>();
         if (playerHealth == null) playerHealth = GetComponent<PlayerHealth>();
         if (quickAttack == null) quickAttack = GetComponent<QuickAttack>();
         if (areaAttack == null) areaAttack = GetComponent<AreaAttack>();
     }
 
-    // PlayerUpgradeManager.cs
     public int GetTimesApplied(UpgradeSO upgrade)
     {
         return collectedUpgrades.FindAll(u => u == upgrade).Count;
     }
 
-
-    /// <summary>
-    /// Se llama cuando el jugador recoge una mejora
-    /// </summary>
     public void CollectUpgrade(UpgradeSO upgrade)
     {
         if (upgrade == null) return;
 
         collectedUpgrades.Add(upgrade);
         upgrade.Apply(this);
-
-        Debug.Log($"¡Mejora recolectada! → {upgrade.upgradeName}");
     }
 
     public List<UpgradeSO> GetCollectedUpgrades() => collectedUpgrades;

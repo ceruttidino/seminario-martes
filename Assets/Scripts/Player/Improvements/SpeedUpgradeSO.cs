@@ -8,10 +8,6 @@ public class SpeedUpgradeSO : UpgradeSO
     public override void Apply(PlayerUpgradeManager manager)
     {
         if (manager.playerMovement != null)
-        {
             manager.playerMovement.IncreaseMoveSpeed(speedIncrease);
-        }
-
-        Debug.Log($"Velocidad aumentada en +{speedIncrease}");
     }
 }

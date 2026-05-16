@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e694b862f86f3484f9895016e8246107, type: 3}
+  m_Name: MooseAntlers
+  m_EditorClassIdentifier: Assembly-CSharp::ObjectBuffSO
+  upgradeName: Moose Antlers
+  description: Increases damage by 25% but reduces speed by 5%.
+  icon: {fileID: -5438701882248235152, guid: 5f3388229041e9644af2f95488c4baff, type: 3}
+  heartsToAdd: 0
+  speedPercentChange: -5
+  damagePercentChange: 25
+  rangePercentChange: 0

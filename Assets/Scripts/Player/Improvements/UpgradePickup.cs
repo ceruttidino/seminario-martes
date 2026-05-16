@@ -10,6 +10,11 @@ public class UpgradePickup : MonoBehaviour
             gameObject.AddComponent<PickupEffect>();
     }
 
+    public void SetUpgrade(UpgradeSO upgrade)
+    {
+        upgradeToGrant = upgrade;
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (upgradeToGrant == null) return;
