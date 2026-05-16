@@ -105,11 +105,10 @@ public class RoomInstance : MonoBehaviour
         if (diggingSpotLocations == null || diggingSpotLocations.Length == 0 || diggingSpotPrefab == null) 
             return;
 
-        // spawn de excavar
         if (Random.value * 100f <= chanceToHaveDiggingSpots)
         {
             int maxPossibleSpawns = Mathf.Min(2, diggingSpotLocations.Length);
-            int numToSpawn = Random.Range(1, maxPossibleSpawns + 1); // numero de spawns
+            int numToSpawn = Random.Range(1, maxPossibleSpawns + 1);
 
             List<Transform> availableLocations = new List<Transform>(diggingSpotLocations);
 
@@ -155,7 +154,7 @@ public class RoomInstance : MonoBehaviour
             {
                 enemiesAlive++;
 
-                // rat regeneration
+                // las ratas no se suscriben directamente porque usan RatBody para manejar su muerte
                 if (regen == null)
                 {
                     enemyHealth.OnDeath += HandleEnemyDeath;

@@ -35,7 +35,6 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         UpdateHearts(playerHealth);
     }
 
-    // ====================== DAÑO ======================
     public void TakeDamage(float damage)
     {
         if (!canGetHurt || playerHealth <= 0) return;
@@ -84,7 +83,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         canGetHurt = true;
     }
 
-    // ====================== CHEATS ======================
+    // teclas de debug para testear en el editor
     public void Heal(InputAction.CallbackContext context)
     {
         if (!context.performed) return;
@@ -103,7 +102,6 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         PlayerAddHeart(false);
     }
 
-    // ====================== CURACIÓN Y UPGRADES ======================
     public void PlayerGetHurt()
     {
         TakeDamage(1);
@@ -144,7 +142,6 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         UpdateHearts(playerHealth);
     }
 
-    // ====================== UI ======================
     private void UpdateMaxHearts()
     {
         for (int i = 0; i < hearts.Length; i++)
@@ -175,7 +172,6 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         }
     }
 
-    // Propiedades útiles
     public int CurrentHealth => playerHealth;
     public bool IsDead => playerHealth <= 0;
 }

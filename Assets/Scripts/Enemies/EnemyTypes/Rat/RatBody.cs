@@ -39,7 +39,7 @@ public class RatBody : MonoBehaviour, IDamageable
         {
             health.SetCurrentHealth(reducedHealth);
 
-            // Subscribe the new rat to the room so enemy death count stays accurate
+            // el nuevo rat tiene que estar suscrito a la sala para que el contador de enemigos funcione
             RoomInstance room = GetComponentInParent<RoomInstance>();
             if (room != null)
                 health.OnDeath += room.HandleEnemyDeath;

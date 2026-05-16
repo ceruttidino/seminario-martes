@@ -25,7 +25,7 @@ public class MinimapUI : MonoBehaviour
         List<RoomNode> allRooms = dungeonManager.GetAllRooms();
         Vector2 offset = CalculateCenterOffset(allRooms);
 
-        // Pool existing icons before clearing the dictionary
+        // reutiliza iconos existentes en vez de destruir y recrear
         var pool = new Queue<MinimapRoomIcon>(roomIcons.Values);
         roomIcons.Clear();
 
@@ -43,7 +43,7 @@ public class MinimapUI : MonoBehaviour
             roomIcons.Add(node, icon);
         }
 
-        // Deactivate any leftover pooled icons
+        // desactiva los que sobraron
         foreach (MinimapRoomIcon leftover in pool)
             leftover.gameObject.SetActive(false);
     }
