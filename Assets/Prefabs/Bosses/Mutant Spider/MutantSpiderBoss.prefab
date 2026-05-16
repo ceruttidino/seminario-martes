@@ -47,6 +47,7 @@ GameObject:
   - component: {fileID: 5414644346259219043}
   - component: {fileID: 7411370051583957722}
   - component: {fileID: 3878652755879115746}
+  - component: {fileID: -2028867600783559451}
   m_Layer: 3
   m_Name: MutantSpiderBoss
   m_TagString: Untagged
@@ -68,6 +69,7 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 8077867731510930268}
+  - {fileID: 867035659880861192}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1610626988516400734
@@ -277,7 +279,6 @@ MonoBehaviour:
   victoryDoorPrefab: {fileID: 7851148841807350584, guid: 9bca1745f4537654287a6d501dd14786, type: 3}
   doorSpawnPoint: {fileID: 8855914108497674385, guid: 0e62d717706e383438c199d4e620ef41, type: 3}
   stoppingDistance: 1.4
-  attackStartDistance: 1.6
 --- !u!114 &3878652755879115746
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -296,3 +297,62 @@ MonoBehaviour:
   targetLayer:
     serializedVersion: 2
     m_Bits: 512
+--- !u!114 &-2028867600783559451
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3734874258083350194}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b3069d616d4b734e9675d563b9df167, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BossBuffSpawner
+  possibleBuffs:
+  - {fileID: 11400000, guid: 5675c88eff762c940bd6da0c5ca411a6, type: 2}
+  - {fileID: 11400000, guid: 364e1376a750d01409e2adf496dcd8f7, type: 2}
+  - {fileID: 11400000, guid: 6e1dfd62d1a564f46adf26cd11f31943, type: 2}
+  - {fileID: 11400000, guid: 062d624a5553b7847ad44cb0286213d5, type: 2}
+  - {fileID: 11400000, guid: d6f5bd3b522487243b65ca68085c1663, type: 2}
+  - {fileID: 11400000, guid: 260f8898d5a37504fbcd710b73337385, type: 2}
+  - {fileID: 11400000, guid: f6d46cfde9f62fa4992bcb66e1b6e57b, type: 2}
+  - {fileID: 11400000, guid: 0e5231ad66a40d449beb25b681937388, type: 2}
+  - {fileID: 11400000, guid: 0ddc80887a5f55048ab76c1e91f39dca, type: 2}
+  - {fileID: 11400000, guid: aebf8a7492942e44b95ff2fa5c20d2c6, type: 2}
+  - {fileID: 11400000, guid: b476671b8318dc14bb1c6a5d30d758d3, type: 2}
+  - {fileID: 11400000, guid: ca6d2b5ab2a055e46bfa9a690bed6cea, type: 2}
+  - {fileID: 11400000, guid: 0cd3857cb66cb204d9801ca2c531bbd9, type: 2}
+  buffPickupPrefab: {fileID: 2885216983017933289, guid: c0c1e612fe8fa714bb37f50a67de881d, type: 3}
+  spawnPoint: {fileID: 867035659880861192}
+--- !u!1 &4604647108963819298
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 867035659880861192}
+  m_Layer: 3
+  m_Name: BuffSpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &867035659880861192
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4604647108963819298}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 930288734072793992}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
