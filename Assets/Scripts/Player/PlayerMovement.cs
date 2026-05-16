@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using System.Collections;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -8,6 +7,7 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody2D rb;
     [SerializeField] private Animator animator;
     [SerializeField] private SpriteRenderer spriteRenderer;
+    [SerializeField] private PlayerDash playerDash;
 
     [Header("Input")]
     private Vector2 moveInput;
@@ -24,24 +24,20 @@ public class PlayerMovement : MonoBehaviour
     [Header("Feel")]
     [SerializeField] private bool instantStop = false;
 
-    [Header("Dash")]
-    [SerializeField] private float dashSpeed = 25f;
-    [SerializeField] private float dashDuration = 0.15f;
-    [SerializeField] private float dashCooldown = 0.7f;
-
     [Header("Public Variables")]
     public Vector2 LastLookDirection => lastLookDirection;
     public Vector2 MoveInput => moveInput;
     public Vector2 MoveDirection => moveDirection;
     public Vector2 CurrentVelocity => rb != null ? rb.linearVelocity : Vector2.zero;
-    private bool isDashing = false;
-    private bool canDash = true;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         rb.gravityScale = 0f;
         rb.freezeRotation = true;
+
+        if (playerDash == null)
+            playerDash = GetComponent<PlayerDash>();
     }
 
     void FixedUpdate()
@@ -54,48 +50,17 @@ public class PlayerMovement : MonoBehaviour
         moveInput = context.ReadValue<Vector2>();
 
         if (moveInput.magnitude < inputDeadzone)
-        {
             moveInput = Vector2.zero;
-        }
 
         moveDirection = moveInput.normalized;
 
         if (moveDirection != Vector2.zero)
-        {
             lastLookDirection = moveDirection;
-        }
-    }
-
-    public void Dash(InputAction.CallbackContext context)
-    {
-        if (context.performed && canDash && !isDashing)
-        {
-            StartCoroutine(PerformDash());
-        }
-    }
-
-    private IEnumerator PerformDash()
-    {
-        isDashing = true;
-        canDash = false;
-
-        Vector2 dashDirection = moveDirection != Vector2.zero ? moveDirection : lastLookDirection;
-
-        rb.linearVelocity = dashDirection * dashSpeed;
-
-        yield return new WaitForSeconds(dashDuration);
-
-        rb.linearVelocity = rb.linearVelocity * 0.35f;
-
-        isDashing = false;
-
-        yield return new WaitForSeconds(dashCooldown);
-        canDash = true;
     }
 
     private void HandleMovement()
     {
-        if (isDashing)
+        if (playerDash != null && playerDash.IsDashing)
             return;
 
         Vector2 targetVelocity = moveInput * moveSpeed;
@@ -118,8 +83,7 @@ public class PlayerMovement : MonoBehaviour
             accelRate = velocityDot < 0.5f ? turnAcceleration : acceleration;
         }
 
-        Vector2 newVelocity = Vector2.MoveTowards(currentVelocity, targetVelocity, accelRate * Time.fixedDeltaTime);
-        rb.linearVelocity = newVelocity;
+        rb.linearVelocity = Vector2.MoveTowards(currentVelocity, targetVelocity, accelRate * Time.fixedDeltaTime);
 
         UpdateAnimator();
     }
@@ -133,9 +97,7 @@ public class PlayerMovement : MonoBehaviour
         animator.SetFloat("Y", lastLookDirection.y);
 
         if (lastLookDirection.x != 0)
-        {
             spriteRenderer.flipX = lastLookDirection.x < 0;
-        }
     }
 
     public void IncreaseMoveSpeed(float amount)
@@ -143,5 +105,5 @@ public class PlayerMovement : MonoBehaviour
         moveSpeed += amount;
     }
 
-    public bool IsDashing() => isDashing;
+    public bool IsDashing() => playerDash != null && playerDash.IsDashing;
 }

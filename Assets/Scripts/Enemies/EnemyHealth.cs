@@ -8,7 +8,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     private float currentHealth;
     private bool isDead;
 
-    public System.Action OnDeath;
+    public event System.Action OnDeath;
 
     public float MaxHealth => maxHealth;
     public float CurrentHealth => currentHealth;

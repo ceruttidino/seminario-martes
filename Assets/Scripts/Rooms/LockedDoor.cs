@@ -14,9 +14,7 @@ public class LockedDoor : MonoBehaviour
         if (!playerInRange || !isLocked) return;
 
         if (Keyboard.current.eKey.wasPressedThisFrame)
-        {
             TryOpen();
-        }
     }
 
     private void TryOpen()
@@ -24,45 +22,28 @@ public class LockedDoor : MonoBehaviour
         if (currentPlayer == null) return;
 
         PlayerKeys keys = currentPlayer.GetComponent<PlayerKeys>();
-
         if (keys != null && keys.UseKey())
-        {
             OpenDoor();
-        }
-        else
-        {
-            Debug.Log("Necesitas una llave");
-        }
     }
 
     private void OpenDoor()
     {
         isLocked = false;
-
-        Debug.Log("Puerta abierta");
-
         GetComponent<Collider2D>().enabled = false;
-
         gameObject.SetActive(false);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Player"))
-        {
-            playerInRange = true;
-            currentPlayer = other.gameObject;
-
-            Debug.Log("Presiona E para abrir");
-        }
+        if (!other.CompareTag("Player")) return;
+        playerInRange = true;
+        currentPlayer = other.gameObject;
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.CompareTag("Player"))
-        {
-            playerInRange = false;
-            currentPlayer = null;
-        }
+        if (!other.CompareTag("Player")) return;
+        playerInRange = false;
+        currentPlayer = null;
     }
 }

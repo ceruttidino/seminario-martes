@@ -10,17 +10,15 @@ public class GameOverManager : MonoBehaviour
 
     private void Start()
     {
-        Debug.Log("GameOverManager iniciado");
-
         if (gameOverScreen == null)
         {
-            Debug.LogError("gameOverScreen NO está asignado");
+            Debug.LogError("GameOverManager: gameOverScreen no está asignado en el Inspector.");
             return;
         }
 
         gameOverScreen.SetActive(false);
 
-        PlayerHealth ph = FindObjectOfType<PlayerHealth>();
+        PlayerHealth ph = FindFirstObjectByType<PlayerHealth>();
         if (ph != null)
             ph.OnPlayerDeath += ShowGameOverScreen;
 
@@ -30,16 +28,11 @@ public class GameOverManager : MonoBehaviour
 
     private void ShowGameOverScreen()
     {
-        Debug.Log("ShowGameOverScreen llamado - Intentando mostrar panel...");
+        if (gameOverScreen == null) return;
 
-        if (gameOverScreen != null)
-        {
-            gameOverScreen.SetActive(true);
-
-            gameOverScreen.transform.SetAsLastSibling();
-
-            Time.timeScale = 0f;
-        }
+        gameOverScreen.SetActive(true);
+        gameOverScreen.transform.SetAsLastSibling();
+        Time.timeScale = 0f;
     }
 
     public void RestartLevel()

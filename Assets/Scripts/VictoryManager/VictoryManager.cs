@@ -26,14 +26,11 @@ public class VictoryManager : MonoBehaviour
         {
             victoryScreen.SetActive(true);
             victoryScreen.transform.SetAsLastSibling();
-            Debug.Log("Pantalla de Victoria activada");
         }
     }
 
     public void GoToMainMenu()
     {
-        Debug.Log("Volviendo al menú principal...");
-
-        SceneManager.LoadScene("Scenes/Main Menu");
+        SceneManager.LoadScene("Main Menu");
     }
 }

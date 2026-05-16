@@ -38,6 +38,10 @@ public class EnemyBehaviour : MonoBehaviour
             case EnemyType.Ant:
                 SetState(new AntMoveState(player, movement, transform, this, attack));
                 break;
+
+            default:
+                Debug.LogWarning($"EnemyBehaviour: no hay estado implementado para el tipo '{enemyType}' en {gameObject.name}.");
+                break;
         }
     }
 

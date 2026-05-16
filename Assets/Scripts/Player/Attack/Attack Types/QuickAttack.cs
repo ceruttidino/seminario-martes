@@ -41,10 +41,8 @@ public class QuickAttack : MonoBehaviour, IAttack
 
         Vector2 lookDirection = GetCardinalDirection(directionToMouse);
 
-        if (GetComponent<SpriteRenderer>().flipX == true)
-        {
+        if (GetComponent<SpriteRenderer>().flipX)
             lookDirection *= -1;
-        }
 
         animator.SetFloat("AttackX", lookDirection.x);
         animator.SetFloat("AttackY", lookDirection.y);
@@ -56,10 +54,6 @@ public class QuickAttack : MonoBehaviour, IAttack
 
         Collider2D[] hits = Physics2D.OverlapBoxAll(attackCenter, attackBoxSize, 0f, combinedMask);
 
-        Debug.Log($"QuickAttack ejecutado - Hits detectados: {hits.Length}");
-
-        bool hitSomething = false;
-
         foreach (Collider2D hit in hits)
         {
             IDamageable damageable = hit.GetComponentInParent<IDamageable>();
@@ -67,31 +61,20 @@ public class QuickAttack : MonoBehaviour, IAttack
             if (damageable != null)
             {
                 damageable.TakeDamage(damage);
-                Debug.Log($"Daño a enemigo: {hit.name}");
-                hitSomething = true;
             }
             else if (hit.TryGetComponent<BreakableTrash>(out BreakableTrash trash))
             {
                 trash.TakeHit(damage);
-                Debug.Log($"¡Golpe a cofre! {hit.name} - Hits actuales: {trash.GetCurrentHits()}");
-                hitSomething = true;
             }
         }
-
-        if (!hitSomething)
-            Debug.LogWarning("QuickAttack no golpeó nada (ni enemigo ni cofre)");
     }
 
     private Vector2 GetCardinalDirection(Vector2 direction)
     {
         if (Mathf.Abs(direction.x) > Mathf.Abs(direction.y))
-        {
             return direction.x > 0 ? Vector2.right : Vector2.left;
-        }
         else
-        {
             return direction.y > 0 ? Vector2.up : Vector2.down;
-        }
     }
 
     private void OnDrawGizmosSelected()

@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class ShopSlot : MonoBehaviour
 {
@@ -13,9 +14,6 @@ public class ShopSlot : MonoBehaviour
     public void SetItem(ShopItemData item)
     {
         itemData = item;
-
-        Debug.Log("ITEM: " + item.itemName);
-
         priceText.text = item.price.ToString();
 
         if (itemVisual != null && item.effect != null)
@@ -27,10 +25,8 @@ public class ShopSlot : MonoBehaviour
 
     private void Update()
     {
-        if (playerInRange && Input.GetKeyDown(KeyCode.E))
-        {
+        if (playerInRange && Keyboard.current.eKey.wasPressedThisFrame)
             TryBuy();
-        }
     }
 
     private void TryBuy()
@@ -38,16 +34,9 @@ public class ShopSlot : MonoBehaviour
         if (player == null || itemData == null) return;
 
         PlayerScrap scrap = player.GetComponent<PlayerScrap>();
-
         if (scrap == null) return;
 
-        if (!scrap.TrySpendScrap(itemData.price))
-        {
-            Debug.Log("Not enough scrap");
-            return;
-        }
-
-        Debug.Log("BUYING: " + itemData.itemName);
+        if (!scrap.TrySpendScrap(itemData.price)) return;
 
         ApplyEffect(player);
 
@@ -55,24 +44,24 @@ public class ShopSlot : MonoBehaviour
         enabled = false;
     }
 
-    private void ApplyEffect(GameObject player)
+    private void ApplyEffect(GameObject buyer)
     {
         if (itemData.effect == null) return;
 
         switch (itemData.effect.lootType)
         {
             case LootType.Health:
-                player.GetComponent<PlayerHealth>()
+                buyer.GetComponent<PlayerHealth>()
                     ?.PlayerHeal(itemData.effect.healthAmount);
                 break;
 
             case LootType.Key:
-                player.GetComponent<PlayerKeys>()
+                buyer.GetComponent<PlayerKeys>()
                     ?.AddKeys(itemData.effect.keyAmount);
                 break;
 
             case LootType.Upgrade:
-                player.GetComponent<PlayerUpgradeManager>()
+                buyer.GetComponent<PlayerUpgradeManager>()
                     ?.CollectUpgrade(itemData.effect.upgradeSO);
                 break;
         }
@@ -81,7 +70,6 @@ public class ShopSlot : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (!other.CompareTag("Player")) return;
-
         playerInRange = true;
         player = other.gameObject;
     }
@@ -89,7 +77,6 @@ public class ShopSlot : MonoBehaviour
     private void OnTriggerExit2D(Collider2D other)
     {
         if (!other.CompareTag("Player")) return;
-
         playerInRange = false;
         player = null;
     }

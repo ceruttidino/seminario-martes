@@ -49,28 +49,19 @@ public class AreaAttack : MonoBehaviour, IAttack
 
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, radius, combinedMask);
 
-        Debug.Log($"AreaAttack ejecutado - Hits detectados: {hits.Length}");
-
-        bool hitSomething = false;
-
         foreach (Collider2D hit in hits)
         {
-            if (hit.TryGetComponent<IDamageable>(out IDamageable damageable))
+            IDamageable damageable = hit.GetComponentInParent<IDamageable>();
+
+            if (damageable != null)
             {
                 damageable.TakeDamage(damage);
-                Debug.Log($"Daño a enemigo: {hit.name}");
-                hitSomething = true;
             }
             else if (hit.TryGetComponent<BreakableTrash>(out BreakableTrash trash))
             {
                 trash.TakeHit(damage);
-                Debug.Log($"¡Golpe a cofre! {hit.name}");
-                hitSomething = true;
             }
         }
-
-        if (!hitSomething)
-            Debug.LogWarning("AreaAttack no golpeó nada");
     }
 
     private void OnDrawGizmosSelected()

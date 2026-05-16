@@ -11,7 +11,7 @@ public class MinimapUI : MonoBehaviour
     [SerializeField] private Vector2 roomSpacing = new Vector2(35f, 35f);
 
     private DungeonManager dungeonManager;
-    private Dictionary<RoomNode, MinimapRoomIcon> roomIcons = new Dictionary<RoomNode, MinimapRoomIcon>();
+    private readonly Dictionary<RoomNode, MinimapRoomIcon> roomIcons = new Dictionary<RoomNode, MinimapRoomIcon>();
 
     public void Initialize(DungeonManager manager)
     {
@@ -22,34 +22,38 @@ public class MinimapUI : MonoBehaviour
 
     public void BuildMap()
     {
-        ClearMap();
-
         List<RoomNode> allRooms = dungeonManager.GetAllRooms();
-
         Vector2 offset = CalculateCenterOffset(allRooms);
 
-        foreach (RoomNode node in allRooms) 
+        // Pool existing icons before clearing the dictionary
+        var pool = new Queue<MinimapRoomIcon>(roomIcons.Values);
+        roomIcons.Clear();
+
+        foreach (RoomNode node in allRooms)
         {
-            MinimapRoomIcon icon = Instantiate(roomIconPrefab, mapContainer);
+            MinimapRoomIcon icon = pool.Count > 0 ? pool.Dequeue() : Instantiate(roomIconPrefab, mapContainer);
+            icon.gameObject.SetActive(true);
 
             RectTransform rect = icon.GetComponent<RectTransform>();
-            Vector2 position = new Vector2(node.gridPosition.x * roomSpacing.x, node.gridPosition.y * roomSpacing.y);
-
-            rect.anchoredPosition = position - offset;
+            rect.anchoredPosition = new Vector2(
+                node.gridPosition.x * roomSpacing.x,
+                node.gridPosition.y * roomSpacing.y
+            ) - offset;
 
             roomIcons.Add(node, icon);
         }
+
+        // Deactivate any leftover pooled icons
+        foreach (MinimapRoomIcon leftover in pool)
+            leftover.gameObject.SetActive(false);
     }
 
     public void RefreshMap()
     {
-        foreach(var pair in roomIcons)
+        foreach (var pair in roomIcons)
         {
-            RoomNode node = pair.Key;
-            MinimapRoomIcon icon = pair.Value;
-
-            bool showAsAdjacent = IsAdjacentToVisited(node);
-            icon.Setup(node, showAsAdjacent);
+            bool showAsAdjacent = IsAdjacentToVisited(pair.Key);
+            pair.Value.Setup(pair.Key, showAsAdjacent);
         }
     }
 
@@ -58,27 +62,19 @@ public class MinimapUI : MonoBehaviour
         foreach (var pair in node.neighboors)
         {
             if (pair.Value != null && pair.Value.hasBeenVisited)
-            {
                 return true;
-            }
         }
-
         return false;
     }
 
     private Vector2 CalculateCenterOffset(List<RoomNode> rooms)
     {
         if (rooms == null || rooms.Count == 0)
-        {
             return Vector2.zero;
-        }
 
         Vector2 sum = Vector2.zero;
-
         foreach (RoomNode node in rooms)
-        {
             sum += new Vector2(node.gridPosition.x, node.gridPosition.y);
-        }
 
         Vector2 center = sum / rooms.Count;
         return new Vector2(center.x * roomSpacing.x, center.y * roomSpacing.y);
@@ -86,10 +82,8 @@ public class MinimapUI : MonoBehaviour
 
     private void ClearMap()
     {
-        foreach (Transform child in mapContainer)
-        {
-            Destroy(child.gameObject);
-        }
+        foreach (var icon in roomIcons.Values)
+            icon.gameObject.SetActive(false);
 
         roomIcons.Clear();
     }

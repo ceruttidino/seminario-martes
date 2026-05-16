@@ -18,8 +18,16 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     [Header("UI")]
     [SerializeField] GameObject[] hearts;
 
-    // Evento para Game Over
+    private Image[] heartImages;
+
     public event Action OnPlayerDeath;
+
+    void Awake()
+    {
+        heartImages = new Image[hearts.Length];
+        for (int i = 0; i < hearts.Length; i++)
+            heartImages[i] = hearts[i].GetComponent<Image>();
+    }
 
     void Start()
     {
@@ -27,22 +35,18 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         UpdateHearts(playerHealth);
     }
 
-    void Update()
-    {
-        if (playerHealth > playerMaxHealth)
-            playerHealth = playerMaxHealth;
-    }
-
     // ====================== DAÑO ======================
     public void TakeDamage(float damage)
     {
-        damageFlash.Flash();
-
         if (!canGetHurt || playerHealth <= 0) return;
 
         canGetHurt = false;
         playerHealth -= Mathf.RoundToInt(damage);
+        playerHealth = Mathf.Clamp(playerHealth, 0, playerMaxHealth);
         UpdateHearts(playerHealth);
+
+        if (damageFlash != null)
+            damageFlash.Flash();
 
         if (playerHealth <= 0)
         {
@@ -56,7 +60,8 @@ public class PlayerHealth : MonoBehaviour, IDamageable
 
     private void Die()
     {
-        Debug.Log("¡EL MAPACHE HA MUERTO!");
+        CancelInvoke(nameof(DesInvul));
+        canGetHurt = false;
         DisablePlayerControls();
         OnPlayerDeath?.Invoke();
     }
@@ -117,7 +122,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     public void PlayerAddHeart(int heartsToAdd, bool fillNewHearts = true)
     {
         playerMaxHealth += heartsToAdd * 2;
-        if (playerMaxHealth > playerHealthCap) playerMaxHealth = playerHealthCap;
+        playerMaxHealth = Mathf.Clamp(playerMaxHealth, 0, playerHealthCap);
 
         if (fillNewHearts)
             playerHealth = playerMaxHealth;
@@ -133,46 +138,39 @@ public class PlayerHealth : MonoBehaviour, IDamageable
 
     public void PlayerHeal(int heal)
     {
-        if (playerHealth < playerMaxHealth)
-        {
-            playerHealth += heal;
-            if (playerHealth > playerMaxHealth) playerHealth = playerMaxHealth;
-            UpdateHearts(playerHealth);
-        }
+        if (playerHealth >= playerMaxHealth) return;
+
+        playerHealth = Mathf.Clamp(playerHealth + heal, 0, playerMaxHealth);
+        UpdateHearts(playerHealth);
     }
 
     // ====================== UI ======================
     private void UpdateMaxHearts()
     {
-        for (int i = 0; i < playerMaxHealth / 2; i++)
-        {
-            if (i < hearts.Length)
-                hearts[i].SetActive(true);
-        }
+        for (int i = 0; i < hearts.Length; i++)
+            hearts[i].SetActive(i < playerMaxHealth / 2);
     }
 
-    private void UpdateHearts(int healthAmmount)
+    private void UpdateHearts(int healthAmount)
     {
-        int remaining = healthAmmount;
+        int remaining = healthAmount;
         for (int i = 0; i < playerMaxHealth / 2; i++)
         {
-            if (i >= hearts.Length) break;
-
-            Image heartImage = hearts[i].GetComponent<Image>();
+            if (i >= heartImages.Length) break;
 
             if (remaining > 1)
             {
-                heartImage.color = Color.white;
+                heartImages[i].color = Color.white;
                 remaining -= 2;
             }
             else if (remaining == 1)
             {
-                heartImage.color = Color.gray;
+                heartImages[i].color = Color.gray;
                 remaining -= 1;
             }
             else
             {
-                heartImage.color = Color.black;
+                heartImages[i].color = Color.black;
             }
         }
     }
