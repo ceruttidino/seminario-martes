@@ -333,7 +333,6 @@ public class DungeonManager : MonoBehaviour
             if (newNode != null)
             {
                 dungeonProgression.RegisterGeneratedRoom(RoomType.Boss);
-                Debug.Log("BOSS GENERADO EN ROOM LEJANA");
                 return true;
             }
         }

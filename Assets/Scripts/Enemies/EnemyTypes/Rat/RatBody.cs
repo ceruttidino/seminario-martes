@@ -38,22 +38,19 @@ public class RatBody : MonoBehaviour, IDamageable
         if (health != null)
         {
             health.SetCurrentHealth(reducedHealth);
+
+            // Subscribe the new rat to the room so enemy death count stays accurate
+            RoomInstance room = GetComponentInParent<RoomInstance>();
+            if (room != null)
+                health.OnDeath += room.HandleEnemyDeath;
         }
     }
 
     public void TakeDamage(float dmg)
     {
         RoomInstance room = GetComponentInParent<RoomInstance>();
-
         if (room != null)
-        {
             room.HandleEnemyDeath();
-            Debug.Log("Existe Room");
-        }
-        else
-        {
-            Debug.Log("No Existe Room");
-        }
 
         Destroy(gameObject);
     }

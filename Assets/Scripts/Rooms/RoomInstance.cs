@@ -193,10 +193,7 @@ public class RoomInstance : MonoBehaviour
     private void EndCombat()
     {
         roomInCombat = false;
-
         UnlockDoorsInstant();
-
-        Debug.Log("Room completada");
     }
 
     public void HandleEnemyDeath()
