@@ -8,9 +8,6 @@ public class BossBuffSpawner : MonoBehaviour
     [SerializeField] private GameObject buffPickupPrefab;
     [SerializeField] private Transform spawnPoint;
 
-    // Buffs ya usados durante la sesion actual; static para que persista entre salas
-    private static readonly HashSet<ObjectBuffSO> usedBuffs = new HashSet<ObjectBuffSO>();
-
     private void Awake()
     {
         EnemyHealth health = GetComponent<EnemyHealth>();
@@ -23,13 +20,8 @@ public class BossBuffSpawner : MonoBehaviour
         if (buffPickupPrefab == null || possibleBuffs == null || possibleBuffs.Count == 0)
             return;
 
-        List<ObjectBuffSO> available = possibleBuffs.FindAll(b => b != null && !usedBuffs.Contains(b));
-
-        if (available.Count == 0)
-            return;
-
-        ObjectBuffSO chosen = available[Random.Range(0, available.Count)];
-        usedBuffs.Add(chosen);
+        ObjectBuffSO chosen = BuffPool.PickRandom(possibleBuffs);
+        if (chosen == null) return;
 
         Vector3 pos = spawnPoint != null ? spawnPoint.position : transform.position;
         GameObject pickup = Instantiate(buffPickupPrefab, pos, Quaternion.identity);
@@ -38,18 +30,11 @@ public class BossBuffSpawner : MonoBehaviour
         if (upgradePickup != null)
             upgradePickup.SetUpgrade(chosen);
 
-        // Aplica el sprite del buff al SpriteRenderer del pickup
         if (chosen.icon != null)
         {
             SpriteRenderer sr = pickup.GetComponentInChildren<SpriteRenderer>();
             if (sr != null)
                 sr.sprite = chosen.icon;
         }
-    }
-
-    // Util para tests y debugging: limpiar el historial entre runs
-    public static void ResetUsedBuffs()
-    {
-        usedBuffs.Clear();
     }
 }

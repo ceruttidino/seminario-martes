@@ -38,6 +38,7 @@ public class DungeonManager : MonoBehaviour
         }
 
         Instance = this;
+        BuffPool.Reset();
     }
 
     private void Start()
