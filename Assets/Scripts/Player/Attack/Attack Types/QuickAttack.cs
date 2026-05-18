@@ -15,6 +15,8 @@ public class QuickAttack : MonoBehaviour, IAttack
     [SerializeField] private float attackDistance = 1f;
     [SerializeField] private Vector2 attackBoxSize = new Vector2(1.2f, 0.8f);
 
+    [SerializeField] private AudioSource sfxSource;
+
     private float lastUseTime = -999f;
 
     public float CooldownRemaining
@@ -36,6 +38,11 @@ public class QuickAttack : MonoBehaviour, IAttack
         if (!CanExecute()) return;
 
         lastUseTime = Time.time;
+
+        if (sfxSource != null)
+        {
+            sfxSource.Play();
+        }
 
         Vector2 mouseWorldPos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
         Vector2 directionToMouse = (mouseWorldPos - (Vector2)transform.position).normalized;

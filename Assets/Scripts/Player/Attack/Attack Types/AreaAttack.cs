@@ -12,6 +12,8 @@ public class AreaAttack : MonoBehaviour, IAttack
     [SerializeField] private float cooldown = 2f;
     [SerializeField] private float radius = 2f;
 
+    [SerializeField] private AudioSource sfxSource;
+
     private float lastUseTime = -999f;
 
     public float CooldownRemaining
@@ -42,6 +44,11 @@ public class AreaAttack : MonoBehaviour, IAttack
         if (!CanExecute()) return;
 
         lastUseTime = Time.time;
+
+        if (sfxSource != null)
+        {
+            sfxSource.Play();
+        }
 
         animator.SetTrigger("AreaAttack");
 

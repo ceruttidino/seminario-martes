@@ -7,6 +7,8 @@ public class LootPickup : MonoBehaviour
     [SerializeField] private float pickupDelay = 0.6f;
     [SerializeField] private LootItem lootItem;
 
+    [SerializeField] private AudioSource pickupSfx;
+
     private bool canBePickedUp = false;
     private float spawnTime;
 
@@ -38,6 +40,11 @@ public class LootPickup : MonoBehaviour
 
         if (collected)
         {
+            if (pickupSfx != null)
+            {
+                pickupSfx.Play();
+            }
+
             PickupEffect effect = GetComponent<PickupEffect>();
             if (effect != null)
                 effect.OnPickup();

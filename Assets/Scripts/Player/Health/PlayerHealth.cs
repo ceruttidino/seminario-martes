@@ -18,6 +18,9 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     [Header("UI")]
     [SerializeField] GameObject[] hearts;
 
+    [SerializeField] private AudioSource sfxSource;
+
+
     private Image[] heartImages;
 
     public event Action OnPlayerDeath;
@@ -38,6 +41,11 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     public void TakeDamage(float damage)
     {
         if (!canGetHurt || playerHealth <= 0) return;
+
+        if (sfxSource != null)
+        {
+            sfxSource.Play();
+        }
 
         canGetHurt = false;
         playerHealth -= Mathf.RoundToInt(damage);

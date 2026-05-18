@@ -88,6 +88,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1525444872616118905}
   m_SourcePrefab: {fileID: 100100000, guid: 5443f03a3acee2543a3d3b3183e03bb2, type: 3}
+--- !u!82 &1509089804322768313 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: -3324812894967279067, guid: 5443f03a3acee2543a3d3b3183e03bb2, type: 3}
+  m_PrefabInstance: {fileID: 4983999793329395612}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &3903772088645810023 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8288388510651883771, guid: 5443f03a3acee2543a3d3b3183e03bb2, type: 3}
@@ -108,6 +113,7 @@ MonoBehaviour:
   pickupDelay: 0.6
   autoPickup: 0
   lootItem: {fileID: 0}
+  pickupSfx: {fileID: 1509089804322768313}
 --- !u!114 &1525444872616118905
 MonoBehaviour:
   m_ObjectHideFlags: 0
