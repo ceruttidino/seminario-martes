@@ -1,33 +1,44 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class BreakableTrash : MonoBehaviour
 {
-    [Header("Configuración del Cofre")]
-    [SerializeField] private TrashType trashType = TrashType.CommonBag;
-    [SerializeField] private int maxHits = 3;
-    private int currentHits = 0;
+    [System.Serializable]
+    private struct DropEntry
+    {
+        public GameObject prefab;
+        public LootItem lootItem;
+    }
 
-    [Header("Loot Settings")]
-    [SerializeField] private LootTableSO lootTable;
+    [Header("Configuración")]
+    [SerializeField] private TrashType trashType = TrashType.CommonBag;
+    [SerializeField] private int maxItems = 2;
+
+    [Header("Loot (Heart / Key / Scrap)")]
+    [SerializeField] private DropEntry heartDrop;
+    [SerializeField] private DropEntry keyDrop;
+    [SerializeField] private DropEntry scrapDrop;
+
+    [Header("Upgrade (solo GreenContainer)")]
+    [Tooltip("Chance de que ademas del loot basico aparezca un buff upgrade")]
+    [Range(0f, 100f)]
+    [SerializeField] private float upgradeDropChance = 10f;
+    [SerializeField] private List<ObjectBuffSO> possibleUpgrades;
+    [SerializeField] private GameObject buffPickupPrefab;
 
     [Header("Spawn Settings")]
-    [Tooltip("Distancia mínima a la que caen los objetos del contenedor")]
-    [SerializeField] private float minSpawnRadius = 0.8f;
-    [Tooltip("Distancia máxima a la que caen los objetos del contenedor")]
+    [SerializeField] private float minSpawnRadius = 0.6f;
     [SerializeField] private float maxSpawnRadius = 1.3f;
-    [SerializeField] private float spawnDelayBetweenItems = 0.07f;
 
-    [Header("Visuales (Opcional)")]
+    [Header("Visuales")]
     [SerializeField] private GameObject destroyParticlePrefab;
 
+    private int currentHits = 0;
+    private int maxHits;
     private bool isDestroyed = false;
 
     private void Start()
     {
-        if (lootTable == null)
-            Debug.LogWarning($"[{gameObject.name}] No tiene LootTable asignado.");
-
         maxHits = (trashType == TrashType.GreenContainer) ? 3 : 2;
     }
 
@@ -46,56 +57,88 @@ public class BreakableTrash : MonoBehaviour
         if (isDestroyed) return;
         isDestroyed = true;
 
+        Transform roomParent = FindRoomParent();
+
         if (destroyParticlePrefab != null)
         {
             GameObject visual = Instantiate(destroyParticlePrefab, transform.position, transform.rotation);
-
-            Transform parent = FindRoomParent();
-            if (parent != null)
-                visual.transform.SetParent(parent, true);
+            if (roomParent != null)
+                visual.transform.SetParent(roomParent, true);
         }
 
-        if (lootTable != null)
-        {
-            LootItem[] loots = lootTable.GetRandomLoot(trashType);
-            StartCoroutine(SpawnLootWithDelay(loots));
-        }
+        SpawnLoot(roomParent);
 
-        Destroy(gameObject, 0f);
+        Destroy(gameObject);
     }
 
-    private IEnumerator SpawnLootWithDelay(LootItem[] loots)
+    private void SpawnLoot(Transform roomParent)
     {
-        foreach (LootItem loot in loots)
+        // armar lista con los drops disponibles
+        var options = new List<DropEntry>();
+        if (heartDrop.prefab != null) options.Add(heartDrop);
+        if (keyDrop.prefab != null) options.Add(keyDrop);
+        if (scrapDrop.prefab != null) options.Add(scrapDrop);
+
+        if (options.Count > 0)
         {
-            if (loot != null && loot.prefab != null)
-            {
-                SpawnSingleLoot(loot);
-                yield return new WaitForSeconds(spawnDelayBetweenItems);
-            }
+            // elegir UN tipo y spawnear 1-maxItems del mismo, sin mezclar
+            DropEntry chosen = options[Random.Range(0, options.Count)];
+            int amount = Random.Range(1, maxItems + 1);
+
+            for (int i = 0; i < amount; i++)
+                SpawnPickup(chosen.prefab, chosen.lootItem, roomParent);
         }
+
+        // solo GreenContainer tiene chance de dropear un buff upgrade
+        if (trashType == TrashType.GreenContainer)
+            TrySpawnUpgrade(roomParent);
     }
 
-    private void SpawnSingleLoot(LootItem lootItem)
+    private void TrySpawnUpgrade(Transform roomParent)
     {
-        if (lootItem == null || lootItem.prefab == null) return;
+        if (buffPickupPrefab == null) return;
+        if (possibleUpgrades == null || possibleUpgrades.Count == 0) return;
+        if (Random.Range(0f, 100f) > upgradeDropChance) return;
 
-        Vector2 randomDir = Random.insideUnitCircle.normalized;
-        float distance = Random.Range(minSpawnRadius, maxSpawnRadius);
-        Vector3 spawnPos = transform.position + new Vector3(randomDir.x, randomDir.y, 0f) * distance;
+        ObjectBuffSO chosen = BuffPool.PickRandom(possibleUpgrades);
+        if (chosen == null) return;
 
-        GameObject spawned = Instantiate(lootItem.prefab, spawnPos, Quaternion.identity);
+        Vector3 pos = GetRandomSpawnPos();
+        GameObject pickup = Instantiate(buffPickupPrefab, pos, Quaternion.identity);
+
+        UpgradePickup upgradePickup = pickup.GetComponent<UpgradePickup>();
+        if (upgradePickup != null)
+            upgradePickup.SetUpgrade(chosen);
+
+        if (chosen.icon != null)
+        {
+            SpriteRenderer sr = pickup.GetComponentInChildren<SpriteRenderer>();
+            if (sr != null) sr.sprite = chosen.icon;
+        }
+
+        if (roomParent != null)
+            pickup.transform.SetParent(roomParent, true);
+    }
+
+    private void SpawnPickup(GameObject prefab, LootItem lootItem, Transform roomParent)
+    {
+        if (prefab == null) return;
+
+        GameObject spawned = Instantiate(prefab, GetRandomSpawnPos(), Quaternion.identity);
 
         LootPickup pickup = spawned.GetComponent<LootPickup>();
-        if (pickup != null)
+        if (pickup != null && lootItem != null)
             pickup.SetLootItem(lootItem);
 
-        if (spawned.TryGetComponent<SpriteRenderer>(out SpriteRenderer sr))
-            sr.transform.localScale = Vector3.one;
-
-        Transform roomParent = FindRoomParent();
         if (roomParent != null)
             spawned.transform.SetParent(roomParent, true);
+    }
+
+    private Vector3 GetRandomSpawnPos()
+    {
+        Vector2 dir = Random.insideUnitCircle.normalized;
+        float dist = Random.Range(minSpawnRadius, maxSpawnRadius);
+        return transform.position + new Vector3(dir.x, dir.y, 0f) * dist;
     }
 
     private Transform FindRoomParent()
@@ -106,7 +149,8 @@ public class BreakableTrash : MonoBehaviour
         Transform current = transform.parent;
         while (current != null)
         {
-            if (current.name.Contains("Room") || current.name.Contains("room") || current.GetComponent("RoomInstance") != null)
+            if (current.name.Contains("Room") || current.name.Contains("room") ||
+                current.GetComponent("RoomInstance") != null)
                 return current;
             current = current.parent;
         }

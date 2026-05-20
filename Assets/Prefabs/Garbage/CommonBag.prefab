@@ -107,11 +107,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BreakableTrash
   trashType: 0
-  maxHits: 2
-  lootTable: {fileID: 11400000, guid: b49a5a8057610c84e8def687c27bc82b, type: 2}
+  maxItems: 3
+  heartDrop:
+    prefab: {fileID: 4529712226497508647, guid: 37b2c80b6b0fdc346b4ecab47917b4be, type: 3}
+    lootItem: {fileID: 11400000, guid: 7cdb49b51cfab5a45baebed6876041c9, type: 2}
+  keyDrop:
+    prefab: {fileID: 6470171162183498645, guid: 73b1827f1902e2e42bebce0fadcaa3fd, type: 3}
+    lootItem: {fileID: 11400000, guid: 6e742bd491757ac4ea0c0fba76ef9cdc, type: 2}
+  scrapDrop:
+    prefab: {fileID: 6731944521481601438, guid: 9d33b772eca364945bc7ada72fc442b5, type: 3}
+    lootItem: {fileID: 11400000, guid: 77ce5807911df084e8ce0ec914dd83c8, type: 2}
+  upgradeDropChance: 10
+  possibleUpgrades: []
+  buffPickupPrefab: {fileID: 0}
   minSpawnRadius: 0.8
   maxSpawnRadius: 1.3
-  spawnDelayBetweenItems: 0
   destroyParticlePrefab: {fileID: 935952415728979679, guid: fee2cebf602c8c0459c96eb61d5f827e, type: 3}
 --- !u!58 &4381134284353896429
 CircleCollider2D:
