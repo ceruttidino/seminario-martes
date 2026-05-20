@@ -1,58 +1,49 @@
-using TMPro.Examples;
 using UnityEngine;
 
 public class Mole : MonoBehaviour
 {
-    [SerializeField] LayerMask player;
-    [SerializeField] PlayerHealth ph;
-    [SerializeField] float yoinkRange = 2f;
-    [SerializeField] bool canStealScrap;
-    [SerializeField] int ammountScrapStolen;
-    [SerializeField] bool canStealKey;
+    [SerializeField] private LayerMask player;
+    [SerializeField] private PlayerHealth ph;
+    [SerializeField] private float yoinkRange = 2f;
+    [SerializeField] private bool canStealScrap;
+    [SerializeField] private int ammountScrapStolen;
+    [SerializeField] private bool canStealKey;
 
-
-    private void Awake()
+    private void Start()
     {
         Steal();
     }
 
-    void Update()
-    {
-        
-    }
-
-    void Steal()
+    private void Steal()
     {
         Collider2D hit = Physics2D.OverlapCircle(transform.position, yoinkRange, player);
-        if (hit != null)
-        {
-            Debug.Log("Yoink");
-            if (hit.GetComponent<PlayerHealth>().CurrentHealth > 1) // si el jugador tiene mas de 1 de vida (1/2 corazon) lo dañanamos
-            {
-                hit.GetComponent<PlayerHealth>().PlayerGetHurt();
-            }
-            if (canStealScrap)
-            {
-                if (hit.GetComponent<PlayerScrap>().CurrentScrap >= ammountScrapStolen) //si puedo robar la cantidad que tengo marcada lo hago
-                {
-                    hit.GetComponent<PlayerScrap>().TrySpendScrap(ammountScrapStolen);
-                }
-                else { hit.GetComponent<PlayerScrap>().TrySpendScrap(hit.GetComponent<PlayerScrap>().CurrentScrap); } // sino robo lo que tiene
-            }
-            if (canStealKey) 
-            {
-                if (hit.GetComponent<PlayerKeys>().CurrentKeys > 0) { hit.GetComponent<PlayerKeys>().UseKey(); }
-            }
+        if (hit == null) return;
 
-        }
-        else 
+        PlayerHealth health = hit.GetComponent<PlayerHealth>();
+        if (health != null && health.CurrentHealth > 1)
+            health.PlayerGetHurt();
+
+        if (canStealScrap)
         {
-            Debug.Log("noYoink");
+            PlayerScrap scrap = hit.GetComponent<PlayerScrap>();
+            if (scrap != null)
+            {
+                int amountToSteal = Mathf.Min(ammountScrapStolen, scrap.CurrentScrap);
+                scrap.TrySpendScrap(amountToSteal);
+            }
+        }
+
+        if (canStealKey)
+        {
+            PlayerKeys keys = hit.GetComponent<PlayerKeys>();
+            if (keys != null && keys.CurrentKeys > 0)
+                keys.UseKey();
         }
     }
-        private void OnDrawGizmosSelected()
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(transform.position, yoinkRange);
-        } 
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, yoinkRange);
+    }
 }

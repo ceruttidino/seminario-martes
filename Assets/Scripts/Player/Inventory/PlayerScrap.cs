@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class PlayerScrap : MonoBehaviour
 {
+    private const int MaxScrap = 99;
+
     [SerializeField] private int currentScrap = 0;
 
     public int CurrentScrap => currentScrap;
@@ -14,15 +16,12 @@ public class PlayerScrap : MonoBehaviour
         OnScrapChanged?.Invoke(currentScrap);
     }
 
-
     public void AddScrap(int amount)
     {
         if (amount <= 0) return;
 
-        currentScrap += amount;
+        currentScrap = Mathf.Min(currentScrap + amount, MaxScrap);
         OnScrapChanged?.Invoke(currentScrap);
-
-        Debug.Log($"Scrap actual: {currentScrap}");
     }
 
     public bool TrySpendScrap(int amount)
@@ -33,13 +32,9 @@ public class PlayerScrap : MonoBehaviour
         {
             currentScrap -= amount;
             OnScrapChanged?.Invoke(currentScrap);
-
-            Debug.Log($"Scrap restante: {currentScrap}");
             return true;
         }
 
-        Debug.Log("No hay suficiente scrap");
         return false;
     }
 }
-

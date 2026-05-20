@@ -23,7 +23,14 @@ public class EnemyBehaviour : MonoBehaviour
 
     private void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player").transform;
+        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+        if (playerObj == null)
+        {
+            Debug.LogError($"EnemyBehaviour: no se encontró un objeto con tag 'Player' para {gameObject.name}.");
+            return;
+        }
+
+        player = playerObj.transform;
 
         switch (enemyType)
         {
@@ -37,6 +44,10 @@ public class EnemyBehaviour : MonoBehaviour
 
             case EnemyType.Ant:
                 SetState(new AntMoveState(player, movement, transform, this, attack));
+                break;
+
+            case EnemyType.Mole:
+                // Mole maneja su propia lógica con el componente Mole.cs
                 break;
 
             default:

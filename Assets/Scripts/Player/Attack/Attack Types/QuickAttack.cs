@@ -18,6 +18,13 @@ public class QuickAttack : MonoBehaviour, IAttack
     [SerializeField] private AudioSource sfxSource;
 
     private float lastUseTime = -999f;
+    private SpriteRenderer spriteRenderer;
+    private Vector2 lastAttackDirection = Vector2.down;
+
+    private void Awake()
+    {
+        spriteRenderer = GetComponent<SpriteRenderer>();
+    }
 
     public float CooldownRemaining
     {
@@ -40,27 +47,40 @@ public class QuickAttack : MonoBehaviour, IAttack
         lastUseTime = Time.time;
 
         if (sfxSource != null)
-        {
             sfxSource.Play();
-        }
+
+        if (Camera.main == null || Mouse.current == null) return;
 
         Vector2 mouseWorldPos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
         Vector2 directionToMouse = (mouseWorldPos - (Vector2)transform.position).normalized;
 
-        Vector2 lookDirection = GetCardinalDirection(directionToMouse);
+        // direccion cardinal hacia el mouse — siempre correcta, nunca invertida
+        Vector2 attackDirection = GetCardinalDirection(directionToMouse);
+        lastAttackDirection = attackDirection;
 
-        if (GetComponent<SpriteRenderer>().flipX)
-            lookDirection *= -1;
+        if (animator != null)
+        {
+            // la animacion invierte X si el sprite esta flippeado para que se vea correcto visualmente,
+            // pero esto NO afecta al hitbox
+            Vector2 animDirection = attackDirection;
+            if (spriteRenderer != null && spriteRenderer.flipX)
+                animDirection.x *= -1;
 
-        animator.SetFloat("AttackX", lookDirection.x);
-        animator.SetFloat("AttackY", lookDirection.y);
-        animator.SetTrigger("Attack");
+            animator.SetFloat("AttackX", animDirection.x);
+            animator.SetFloat("AttackY", animDirection.y);
+            animator.SetTrigger("Attack");
+        }
 
-        Vector2 attackCenter = (Vector2)transform.position + lookDirection * attackDistance;
+        // el hitbox siempre va hacia donde apunta el mouse, independiente del flip visual
+        Vector2 attackCenter = (Vector2)transform.position + attackDirection * attackDistance;
+
+        // si el ataque es vertical, rotar las dimensiones del box (mas alto que ancho)
+        Vector2 boxSize = (attackDirection.y != 0)
+            ? new Vector2(attackBoxSize.y, attackBoxSize.x)
+            : attackBoxSize;
 
         LayerMask combinedMask = enemyLayer | trashLayer;
-
-        Collider2D[] hits = Physics2D.OverlapBoxAll(attackCenter, attackBoxSize, 0f, combinedMask);
+        Collider2D[] hits = Physics2D.OverlapBoxAll(attackCenter, boxSize, 0f, combinedMask);
 
         foreach (Collider2D hit in hits)
         {
@@ -87,11 +107,12 @@ public class QuickAttack : MonoBehaviour, IAttack
 
     private void OnDrawGizmosSelected()
     {
-        if (playerDirection == null) return;
         Gizmos.color = Color.red;
-        Vector2 lookDirection = playerDirection.LastLookDirection;
-        Vector2 attackCenter = (Vector2)transform.position + lookDirection * attackDistance;
-        Gizmos.DrawWireCube(attackCenter, attackBoxSize);
+        Vector2 attackCenter = (Vector2)transform.position + lastAttackDirection * attackDistance;
+        Vector2 boxSize = (lastAttackDirection.y != 0)
+            ? new Vector2(attackBoxSize.y, attackBoxSize.x)
+            : attackBoxSize;
+        Gizmos.DrawWireCube(attackCenter, boxSize);
     }
 
     public void IncreaseDamage(float amount)

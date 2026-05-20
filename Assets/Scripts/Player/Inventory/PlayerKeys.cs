@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class PlayerKeys : MonoBehaviour
 {
+    private const int MaxKeys = 99;
+
     [SerializeField] private int currentKeys = 0;
     public int CurrentKeys => currentKeys;
 
@@ -17,25 +19,16 @@ public class PlayerKeys : MonoBehaviour
     {
         if (amount <= 0) return;
 
-        currentKeys += amount;
+        currentKeys = Mathf.Min(currentKeys + amount, MaxKeys);
         OnKeysChanged?.Invoke(currentKeys);
-
-        Debug.Log($"Llaves: {currentKeys}");
     }
 
     public bool UseKey()
     {
-        if (currentKeys > 0)
-        {
-            currentKeys--;
-            OnKeysChanged?.Invoke(currentKeys);
+        if (currentKeys <= 0) return false;
 
-            Debug.Log($"Llaves restantes: {currentKeys}");
-            return true;
-        }
-
-        Debug.Log("No hay llaves");
-        return false;
+        currentKeys--;
+        OnKeysChanged?.Invoke(currentKeys);
+        return true;
     }
-
 }

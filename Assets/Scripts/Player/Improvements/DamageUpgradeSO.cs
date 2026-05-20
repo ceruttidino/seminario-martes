@@ -14,7 +14,5 @@ public class DamageUpgradeSO : UpgradeSO
 
         if (affectAreaAttack && manager.areaAttack != null)
             manager.areaAttack.IncreaseDamage(damageIncrease);
-
-        Debug.Log($"Daño aumentado en +{damageIncrease}");
     }
 }

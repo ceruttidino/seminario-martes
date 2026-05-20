@@ -9,19 +9,13 @@ public class PlayerAttack : MonoBehaviour
 
     public void OnQuickAttack(InputAction.CallbackContext context)
     {
-        if (!context.performed)
-        {
-            return;
-        }
-        quickAttack.Execute();
+        if (!context.performed) return;
+        if (quickAttack != null) quickAttack.Execute();
     }
 
-    public void OnAreaAttack(InputAction.CallbackContext context) 
+    public void OnAreaAttack(InputAction.CallbackContext context)
     {
-        if (!context.performed)
-        {
-            return;
-        }
-        areaAttack.Execute();
+        if (!context.performed) return;
+        if (areaAttack != null) areaAttack.Execute();
     }
 }

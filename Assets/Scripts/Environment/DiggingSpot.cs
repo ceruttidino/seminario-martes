@@ -1,28 +1,35 @@
-using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class DiggingSpot : MonoBehaviour, IInteractable
 {
-    [Header("Visuales y Detección")]
+    [System.Serializable]
+    private struct DropEntry
+    {
+        public GameObject prefab;
+        public LootItem lootItem;
+    }
+
+    [Header("Visuales")]
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private Color highlightColor = Color.yellow;
     private Color originalColor;
 
-    [Header("Configuración de Loot")]
-    [Tooltip("Probabilidad general de encontrar ALGO en la tierra (0 = jamás, 100 = siempre revisa la tabla)")]
-    [SerializeField] [Range(0f, 100f)] private float chanceToFindLoot = 100f; // CHANCE PARA TESTEAR
-
-    [Tooltip("El LootTable contiene internamente TODAS las listas (Bolsa Común, Contenedor Verde, etc.)")]
-    [SerializeField] private LootTableSO lootTable;
+    [Header("Loot (prefab + LootItem por cada tipo)")]
+    [SerializeField] private DropEntry heartDrop;
+    [SerializeField] private DropEntry keyDrop;
+    [SerializeField] private DropEntry scrapDrop;
     [SerializeField] private Transform spawnPoint;
 
-    [Header("Elige con qué lista interactuar")]
-    [Tooltip("Si pones CommonBag usa esa lista del LootTable. Si pones GreenContainer usa la otra.")]
-    [SerializeField] private TrashType trashTypeParaExcavar = TrashType.CommonBag;
+    [Header("Loot Config")]
+    [Range(0f, 100f)]
+    [SerializeField] private float chanceToFindLoot = 75f;
+    [SerializeField] private int maxItems = 2;
 
-    [Header("Enemigo Especial")]
-    [SerializeField] private GameObject specialEnemyPrefab;
-    [SerializeField] [Range(0f, 100f)] private float enemySpawnChance = 15f;
+    [Header("Enemigo Topo")]
+    [SerializeField] private GameObject molePrefab;
+    [Range(0f, 100f)]
+    [SerializeField] private float moleSpawnChance = 10f;
 
     private bool isDug = false;
     private bool isPlayerNear = false;
@@ -31,115 +38,86 @@ public class DiggingSpot : MonoBehaviour, IInteractable
     {
         if (spriteRenderer == null) spriteRenderer = GetComponent<SpriteRenderer>();
         if (spriteRenderer != null) originalColor = spriteRenderer.color;
-
         if (spawnPoint == null) spawnPoint = transform;
 
-        
         gameObject.layer = LayerMask.NameToLayer("Interactable");
 
-        
-        BoxCollider2D collider = GetComponent<BoxCollider2D>();
-        if (collider == null)
+        BoxCollider2D col = GetComponent<BoxCollider2D>();
+        if (col == null)
         {
-            collider = gameObject.AddComponent<BoxCollider2D>();
-            collider.isTrigger = true;
+            col = gameObject.AddComponent<BoxCollider2D>();
+            col.isTrigger = true;
         }
     }
 
     public void ShowHighlight(bool show)
     {
         if (isDug) return;
-        
         isPlayerNear = show;
         if (spriteRenderer != null)
-        {
             spriteRenderer.color = show ? highlightColor : originalColor;
-        }
     }
 
     public void Interact()
     {
         if (isDug || !isPlayerNear) return;
-
-        Debug.Log("Excavando en la zona...");
         isDug = true;
 
-        
         if (spriteRenderer != null) spriteRenderer.color = originalColor;
 
-        // spawnea enemigo
-        float randomValue = Random.Range(0f, 100f);
-        if (specialEnemyPrefab != null && randomValue <= enemySpawnChance)
+        // pequeña chance de que aparezca un Topo en lugar de loot
+        if (molePrefab != null && Random.Range(0f, 100f) <= moleSpawnChance)
         {
-            Debug.Log("¡Apareció un enemigo al excavar!");
-            Instantiate(specialEnemyPrefab, spawnPoint.position, Quaternion.identity);
-        }
-        else
-        {
-            // tira loot segun porcentaje
-            if (Random.value * 100f <= chanceToFindLoot)
-            {
-                if (lootTable != null)
-                {
-                    SpawnLoot();
-                }
-                else
-                {
-                    Debug.Log("No se encontró nada (No hay tabla de loot asignada).");
-                }
-            }
-            else
-            {
-                Debug.Log("No se encontró nada (suerte = mala).");
-            }
+            Transform roomParent = GetComponentInParent<RoomInstance>()?.transform;
+            GameObject mole = Instantiate(molePrefab, spawnPoint.position, Quaternion.identity);
+            if (roomParent != null)
+                mole.transform.SetParent(roomParent, true);
+            Destroy(gameObject);
+            return;
         }
 
-        // destruye el objeto
+        if (Random.Range(0f, 100f) <= chanceToFindLoot)
+            SpawnLoot();
+
         Destroy(gameObject);
     }
 
     private void SpawnLoot()
     {
-        LootItem[] itemsToSpawn = lootTable.GetRandomLoot(trashTypeParaExcavar); 
+        // armar lista de drops disponibles (ignorar los no asignados en el inspector)
+        var options = new List<DropEntry>();
+        if (heartDrop.prefab != null) options.Add(heartDrop);
+        if (keyDrop.prefab != null) options.Add(keyDrop);
+        if (scrapDrop.prefab != null) options.Add(scrapDrop);
 
-        if (itemsToSpawn == null || itemsToSpawn.Length == 0)
+        if (options.Count == 0) return;
+
+        // elegir UN tipo y spawnear 1-maxItems del mismo (sin mezclar)
+        DropEntry chosen = options[Random.Range(0, options.Count)];
+        int amount = Random.Range(1, maxItems + 1);
+
+        Transform roomParent = GetComponentInParent<RoomInstance>()?.transform;
+
+        for (int i = 0; i < amount; i++)
         {
-            Debug.Log("No se encontró nada en este tile.");
-            return;
+            Vector2 offset = Random.insideUnitCircle.normalized * Random.Range(0.4f, 1.2f);
+            Vector3 pos = spawnPoint.position + new Vector3(offset.x, offset.y, 0f);
+            GameObject spawned = Instantiate(chosen.prefab, pos, Quaternion.identity);
+
+            // pasar el LootItem al pickup para que sepa qué efecto aplicar
+            LootPickup pickup = spawned.GetComponent<LootPickup>();
+            if (pickup != null && chosen.lootItem != null)
+                pickup.SetLootItem(chosen.lootItem);
+
+            if (roomParent != null)
+                spawned.transform.SetParent(roomParent, true);
         }
+    }
 
-        bool spawnedSomething = false;
-
-        foreach (var item in itemsToSpawn)
-        {
-            if (item != null && item.prefab != null)
-            {
-                // los objetos no caen en el centro exacto, salen un poco más dispersos
-                Vector2 randomOffset = Random.insideUnitCircle * 1.2f; 
-
-                // Mantenemos la posición Z original
-                Vector3 spawnPos = spawnPoint.position + new Vector3(randomOffset.x, randomOffset.y, 0f);
-                GameObject spawned = Instantiate(item.prefab, spawnPos, Quaternion.identity);
-
-                LootPickup pickup = spawned.GetComponent<LootPickup>();
-                if (pickup != null)
-                {
-                    pickup.SetLootItem(item);
-                }
-
-                RoomInstance room = GetComponentInParent<RoomInstance>();
-                if (room != null)
-                {
-                    spawned.transform.SetParent(room.transform, true);
-                }
-
-                spawnedSomething = true;
-            }
-        }
-
-        if (!spawnedSomething)
-        {
-            Debug.Log("No se encontró nada (Items sin prefab).");
-        }
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.yellow;
+        Vector3 center = spawnPoint != null ? spawnPoint.position : transform.position;
+        Gizmos.DrawWireSphere(center, 1.2f);
     }
 }

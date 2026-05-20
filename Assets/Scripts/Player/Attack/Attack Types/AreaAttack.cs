@@ -46,11 +46,10 @@ public class AreaAttack : MonoBehaviour, IAttack
         lastUseTime = Time.time;
 
         if (sfxSource != null)
-        {
             sfxSource.Play();
-        }
 
-        animator.SetTrigger("AreaAttack");
+        if (animator != null)
+            animator.SetTrigger("AreaAttack");
 
         LayerMask combinedMask = enemyLayer | trashLayer;
 

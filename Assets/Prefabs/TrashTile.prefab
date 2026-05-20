@@ -153,9 +153,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DiggingSpot
   spriteRenderer: {fileID: 0}
   highlightColor: {r: 0.5908513, g: 0.015686274, b: 1, a: 1}
-  chanceToFindLoot: 50
-  lootTable: {fileID: 11400000, guid: c1375e15c8684ef46ab3baf44e193eed, type: 2}
+  heartDrop:
+    prefab: {fileID: 4529712226497508647, guid: 37b2c80b6b0fdc346b4ecab47917b4be, type: 3}
+    lootItem: {fileID: 11400000, guid: 7cdb49b51cfab5a45baebed6876041c9, type: 2}
+  keyDrop:
+    prefab: {fileID: 6470171162183498645, guid: 73b1827f1902e2e42bebce0fadcaa3fd, type: 3}
+    lootItem: {fileID: 11400000, guid: 6e742bd491757ac4ea0c0fba76ef9cdc, type: 2}
+  scrapDrop:
+    prefab: {fileID: 6731944521481601438, guid: 9d33b772eca364945bc7ada72fc442b5, type: 3}
+    lootItem: {fileID: 11400000, guid: 77ce5807911df084e8ce0ec914dd83c8, type: 2}
   spawnPoint: {fileID: 0}
-  trashTypeParaExcavar: 1
-  specialEnemyPrefab: {fileID: 4216251994002000201, guid: cf81d60945cada34fb6046978be4ad51, type: 3}
-  enemySpawnChance: 30
+  chanceToFindLoot: 50
+  maxItems: 2
+  molePrefab: {fileID: 4216251994002000201, guid: cf81d60945cada34fb6046978be4ad51, type: 3}
+  moleSpawnChance: 25

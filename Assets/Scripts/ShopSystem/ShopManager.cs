@@ -19,12 +19,13 @@ public class ShopManager : MonoBehaviour
 
     void GenerateShop()
     {
-        ShopItemData upgrade = upgrades[Random.Range(0, upgrades.Length)];
-        ShopItemData heart = hearts[Random.Range(0, hearts.Length)];
-        ShopItemData key = keys[Random.Range(0, keys.Length)];
+        if (upgrades != null && upgrades.Length > 0 && upgradeSlot != null)
+            upgradeSlot.SetItem(upgrades[Random.Range(0, upgrades.Length)]);
 
-        upgradeSlot.SetItem(upgrade);
-        heartSlot.SetItem(heart);
-        keySlot.SetItem(key);
+        if (hearts != null && hearts.Length > 0 && heartSlot != null)
+            heartSlot.SetItem(hearts[Random.Range(0, hearts.Length)]);
+
+        if (keys != null && keys.Length > 0 && keySlot != null)
+            keySlot.SetItem(keys[Random.Range(0, keys.Length)]);
     }
 }

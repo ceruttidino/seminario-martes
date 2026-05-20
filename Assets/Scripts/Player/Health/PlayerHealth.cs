@@ -182,4 +182,5 @@ public class PlayerHealth : MonoBehaviour, IDamageable
 
     public int CurrentHealth => playerHealth;
     public bool IsDead => playerHealth <= 0;
+    public bool IsHealthFull => playerHealth >= playerMaxHealth;
 }
