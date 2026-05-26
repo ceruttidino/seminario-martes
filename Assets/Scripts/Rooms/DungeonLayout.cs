@@ -60,9 +60,23 @@ public class DungeonLayout //Builds floor layout (How Rooms Connect with Each Ot
 
         Vector2Int newPosition = fromNode.gridPosition + DirectionToGridOffset(exitDirection);
 
+        if (WouldPlaceSpecialNextToOpposite(newPosition, roomType))
+        {
+            return null;
+        }
+
         if (grid.ContainsKey(newPosition))
         {
             RoomNode existing = grid[newPosition];
+
+            if (existing == null || existing.information == null)
+                return null;
+
+            if (IsShopBossCombination(fromNode.information.type, existing.information.type))
+                return null;
+
+            if (roomType != RoomType.Normal && existing.information.type != roomType)
+                return null;
 
             fromNode.SetNeighbor(exitDirection, existing);
             existing.SetNeighbor(GetOppositeDirection(exitDirection), fromNode);
@@ -127,6 +141,11 @@ public class DungeonLayout //Builds floor layout (How Rooms Connect with Each Ot
                 return null;
             }
 
+            if (!bossRoomInformation.HasDoor(requiredEntrance))
+            {
+                return null;
+            }
+
             selected = bossRoomInformation;
         }
 
@@ -158,6 +177,34 @@ public class DungeonLayout //Builds floor layout (How Rooms Connect with Each Ot
         }
 
         return newNode;
+    }
+
+    private bool IsShopBossCombination(RoomType a, RoomType b)
+    {
+        return (a == RoomType.Shop && b == RoomType.Boss) ||
+               (a == RoomType.Boss && b == RoomType.Shop);
+    }
+
+    private bool WouldPlaceSpecialNextToOpposite(Vector2Int position, RoomType newRoomType)
+    {
+        if (newRoomType != RoomType.Shop && newRoomType != RoomType.Boss)
+            return false;
+
+        foreach (DoorDirection dir in System.Enum.GetValues(typeof(DoorDirection)))
+        {
+            Vector2Int checkPos = position + DirectionToGridOffset(dir);
+
+            if (!grid.TryGetValue(checkPos, out RoomNode neighbor))
+                continue;
+
+            if (neighbor == null || neighbor.information == null)
+                continue;
+
+            if (IsShopBossCombination(newRoomType, neighbor.information.type))
+                return true;
+        }
+
+        return false;
     }
 
     public static DoorDirection GetOppositeDirection(DoorDirection direction) 

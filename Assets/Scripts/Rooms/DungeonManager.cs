@@ -292,17 +292,22 @@ public class DungeonManager : MonoBehaviour
                 continue;
             }
 
-            dungeonProgression.RegisterGeneratedRoom(type);
+            dungeonProgression.RegisterGeneratedRoom(newNode.information.type);
             created++;
         }
 
-        if (!dungeonProgression.HasSpawnedBoss())
+        if (!dungeonProgression.HasSpawnedShop())
+        {
+            TryForceShopSmart();
+        }
+
+        if (dungeonProgression.HasSpawnedShop() && !dungeonProgression.HasSpawnedBoss())
         {
             TryForceBossSmart();
         }
     }
-
-    private bool TryForceBossSmart()
+    //
+    private bool TryForceShopSmart()
     {
         RoomNode bestNode = null;
         float bestDistance = -1f;
@@ -310,6 +315,9 @@ public class DungeonManager : MonoBehaviour
         foreach (RoomNode node in dungeonLayout.GetAllRooms())
         {
             if (node.uniqueNodeID == "Start")
+                continue;
+
+            if (node.information.type == RoomType.Shop || node.information.type == RoomType.Boss)
                 continue;
 
             float dist = node.gridPosition.magnitude;
@@ -329,15 +337,58 @@ public class DungeonManager : MonoBehaviour
             if (bestNode.HasNeighbor(dir))
                 continue;
 
-            RoomNode newNode = dungeonLayout.CreateNextRoom(bestNode, dir, RoomType.Boss);
+            RoomNode newNode = dungeonLayout.CreateNextRoom(bestNode, dir, RoomType.Shop);
 
-            if (newNode != null)
+            if (newNode != null && newNode.information.type == RoomType.Shop)
             {
-                dungeonProgression.RegisterGeneratedRoom(RoomType.Boss);
+                dungeonProgression.RegisterGeneratedRoom(RoomType.Shop);
                 return true;
             }
         }
 
+        return false;
+    }
+
+    private bool TryForceBossSmart()
+    {
+        if (!dungeonProgression.HasSpawnedShop())
+            return false;
+
+        List<RoomNode> candidates = new List<RoomNode>();
+
+        foreach (RoomNode node in dungeonLayout.GetAllRooms())
+        {
+            if (node.uniqueNodeID == "Start")
+                continue;
+
+            if (node.information.type == RoomType.Shop || node.information.type == RoomType.Boss)
+                continue;
+
+            candidates.Add(node);
+        }
+
+        candidates.Sort((a, b) =>
+            b.gridPosition.magnitude.CompareTo(a.gridPosition.magnitude)
+        );
+
+        foreach (RoomNode node in candidates)
+        {
+            foreach (DoorDirection dir in System.Enum.GetValues(typeof(DoorDirection)))
+            {
+                if (node.HasNeighbor(dir))
+                    continue;
+
+                RoomNode newNode = dungeonLayout.CreateNextRoom(node, dir, RoomType.Boss);
+
+                if (newNode != null && newNode.information.type == RoomType.Boss)
+                {
+                    dungeonProgression.RegisterGeneratedRoom(RoomType.Boss);
+                    return true;
+                }
+            }
+        }
+
+        Debug.LogWarning("No se pudo forzar la Boss Room en ningún lugar válido.");
         return false;
     }
 
