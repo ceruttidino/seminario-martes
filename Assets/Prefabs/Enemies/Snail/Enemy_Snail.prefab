@@ -204,7 +204,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 100
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_GravityScale: 0
@@ -326,6 +326,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SlimeTrailSpawner
   slimePrefab: {fileID: 2487840858659179355, guid: 7810dde463577ef40ba4bda2ba57c33f, type: 3}
   spawnInterval: 0.5
+  maxSlimeInstances: 15
 --- !u!114 &6028116143686986758
 MonoBehaviour:
   m_ObjectHideFlags: 0
