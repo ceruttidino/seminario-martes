@@ -6,6 +6,7 @@ public class AreaAttack : MonoBehaviour, IAttack
     [SerializeField] private LayerMask enemyLayer;
     [SerializeField] private LayerMask trashLayer;
     [SerializeField] private Animator animator;
+    [SerializeField] private PlayerMovement playerMovement;
 
     [Header("Area Attack")]
     [SerializeField] private float damage = 20f;
@@ -15,6 +16,12 @@ public class AreaAttack : MonoBehaviour, IAttack
     [SerializeField] private AudioSource sfxSource;
 
     private float lastUseTime = -999f;
+
+    private void Awake()
+    {
+        if (playerMovement == null)
+            playerMovement = GetComponent<PlayerMovement>();
+    }
 
     public float CooldownRemaining
     {
@@ -49,7 +56,12 @@ public class AreaAttack : MonoBehaviour, IAttack
             sfxSource.Play();
 
         if (animator != null)
+        {
+            if (playerMovement != null)
+                playerMovement.SetAttackAnimationActive(true);
+
             animator.SetTrigger("AreaAttack");
+        }
 
         LayerMask combinedMask = enemyLayer | trashLayer;
 

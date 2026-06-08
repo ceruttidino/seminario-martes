@@ -1,13 +1,14 @@
 ﻿using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class QuickAttack : MonoBehaviour, IAttack
 {
     [Header("References")]
-    [SerializeField] private PlayerMovement playerDirection;
+    [SerializeField] private PlayerAim playerAim;
+    [SerializeField] private PlayerMovement playerMovement;
     [SerializeField] private LayerMask enemyLayer;
     [SerializeField] private LayerMask trashLayer;
     [SerializeField] private Animator animator;
+    [SerializeField] private SpriteRenderer spriteRenderer;
 
     [Header("Quick Attack")]
     [SerializeField] private float damage = 10f;
@@ -18,12 +19,18 @@ public class QuickAttack : MonoBehaviour, IAttack
     [SerializeField] private AudioSource sfxSource;
 
     private float lastUseTime = -999f;
-    private SpriteRenderer spriteRenderer;
     private Vector2 lastAttackDirection = Vector2.down;
 
     private void Awake()
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        if (playerAim == null)
+            playerAim = GetComponent<PlayerAim>();
+
+        if (playerMovement == null)
+            playerMovement = GetComponent<PlayerMovement>();
+
+        if (spriteRenderer == null)
+            spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     public float CooldownRemaining
@@ -40,41 +47,46 @@ public class QuickAttack : MonoBehaviour, IAttack
         return Time.time >= lastUseTime + cooldown;
     }
 
+    private void Update()
+    {
+        if (playerAim == null || !playerAim.IsAimingNow()) return;
+        TryPerformAttack();
+    }
+
     public void Execute()
     {
+        TryPerformAttack();
+    }
+
+    private void TryPerformAttack()
+    {
         if (!CanExecute()) return;
+        if (playerAim == null) return;
+
+        Vector2 attackDirection = playerAim.GetAttackDirection();
+        if (attackDirection == Vector2.zero) return;
 
         lastUseTime = Time.time;
+        lastAttackDirection = attackDirection;
 
         if (sfxSource != null)
             sfxSource.Play();
 
-        if (Camera.main == null || Mouse.current == null) return;
-
-        Vector2 mouseWorldPos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-        Vector2 directionToMouse = (mouseWorldPos - (Vector2)transform.position).normalized;
-
-        // direccion cardinal hacia el mouse — siempre correcta, nunca invertida
-        Vector2 attackDirection = GetCardinalDirection(directionToMouse);
-        lastAttackDirection = attackDirection;
-
         if (animator != null)
         {
-            // la animacion invierte X si el sprite esta flippeado para que se vea correcto visualmente,
-            // pero esto NO afecta al hitbox
-            Vector2 animDirection = attackDirection;
-            if (spriteRenderer != null && spriteRenderer.flipX)
-                animDirection.x *= -1;
+            if (playerMovement != null)
+                playerMovement.SetAttackAnimationActive(true);
 
-            animator.SetFloat("AttackX", animDirection.x);
-            animator.SetFloat("AttackY", animDirection.y);
+            if (spriteRenderer != null)
+                spriteRenderer.flipX = false;
+
+            animator.SetFloat("AttackX", attackDirection.x);
+            animator.SetFloat("AttackY", attackDirection.y);
             animator.SetTrigger("Attack");
         }
 
-        // el hitbox siempre va hacia donde apunta el mouse, independiente del flip visual
         Vector2 attackCenter = (Vector2)transform.position + attackDirection * attackDistance;
 
-        // si el ataque es vertical, rotar las dimensiones del box (mas alto que ancho)
         Vector2 boxSize = (attackDirection.y != 0)
             ? new Vector2(attackBoxSize.y, attackBoxSize.x)
             : attackBoxSize;
@@ -95,14 +107,6 @@ public class QuickAttack : MonoBehaviour, IAttack
                 trash.TakeHit(damage);
             }
         }
-    }
-
-    private Vector2 GetCardinalDirection(Vector2 direction)
-    {
-        if (Mathf.Abs(direction.x) > Mathf.Abs(direction.y))
-            return direction.x > 0 ? Vector2.right : Vector2.left;
-        else
-            return direction.y > 0 ? Vector2.up : Vector2.down;
     }
 
     private void OnDrawGizmosSelected()

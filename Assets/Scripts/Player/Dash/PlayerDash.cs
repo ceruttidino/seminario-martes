@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+[RequireComponent(typeof(PlayerInput))]
 public class PlayerDash : MonoBehaviour
 {
     [Header("Dash Settings")]
@@ -13,6 +14,7 @@ public class PlayerDash : MonoBehaviour
     [SerializeField] private PlayerMovement playerMovement;
     [SerializeField] private Rigidbody2D rb;
 
+    private InputAction dashAction;
     private float lastDashTime = -999f;
     private bool isDashing = false;
 
@@ -40,6 +42,8 @@ public class PlayerDash : MonoBehaviour
 
     private void Awake()
     {
+        dashAction = GetComponent<PlayerInput>().actions["Dash"];
+
         if (playerMovement == null)
             playerMovement = GetComponent<PlayerMovement>();
 
@@ -47,17 +51,42 @@ public class PlayerDash : MonoBehaviour
             rb = GetComponent<Rigidbody2D>();
     }
 
+    private void Update()
+    {
+        if (WasDashPressed())
+            TryDash();
+    }
+
     public void OnDash(InputAction.CallbackContext context)
     {
         if (!context.performed) return;
-        if (!CanDash) return;
+        TryDash();
+    }
 
+    private bool WasDashPressed()
+    {
+        if (dashAction != null && dashAction.WasPerformedThisFrame())
+            return true;
+
+        if (Keyboard.current == null)
+            return false;
+
+        return Keyboard.current.leftShiftKey.wasPressedThisFrame
+            || Keyboard.current.rightShiftKey.wasPressedThisFrame;
+    }
+
+    private void TryDash()
+    {
+        if (!CanDash) return;
         PerformDash();
     }
 
     private void PerformDash()
     {
-        Vector2 dashDirection = playerMovement.LastLookDirection;
+        Vector2 dashDirection = playerMovement.MoveDirection;
+
+        if (dashDirection == Vector2.zero)
+            dashDirection = playerMovement.LastFacingDirection;
 
         if (dashDirection == Vector2.zero)
             dashDirection = Vector2.down;

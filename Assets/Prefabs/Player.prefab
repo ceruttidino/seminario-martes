@@ -283,6 +283,7 @@ GameObject:
   - component: {fileID: 3472467327082267057}
   - component: {fileID: 7158844549291733657}
   - component: {fileID: 6225070230786402365}
+  - component: {fileID: 8123456789012345678}
   m_Layer: 9
   m_Name: Player
   m_TagString: Player
@@ -499,22 +500,6 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 5312510268511530110}
         m_TargetAssemblyTypeName: PlayerAttack, Assembly-CSharp
-        m_MethodName: OnQuickAttack
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: d898117f-247d-4868-9f17-a1363d841df4
-    m_ActionName: 'Player/QuickAttack[/Keyboard/g]'
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 5312510268511530110}
-        m_TargetAssemblyTypeName: PlayerAttack, Assembly-CSharp
         m_MethodName: OnAreaAttack
         m_Mode: 0
         m_Arguments:
@@ -526,7 +511,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: 311f26b3-dd76-4f26-aad4-6fe834621a9b
-    m_ActionName: 'Player/AreaAttack[/Keyboard/h]'
+    m_ActionName: 'Player/AreaAttack[/Keyboard/e]'
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 7840586562795469529}
@@ -626,7 +611,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   animator: {fileID: 6671336775965671393}
   spriteRenderer: {fileID: 1380491578855133914}
-  playerDash: {fileID: 0}
+  playerDash: {fileID: 5308910907278262433}
+  playerAim: {fileID: 8123456789012345678}
   moveSpeed: 5
   acceleration: 40
   deceleration: 30
@@ -659,7 +645,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cbc97f0eac2d7b449f3bde890d2a36e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::QuickAttack
-  playerDirection: {fileID: 4973168310728382421}
+  playerAim: {fileID: 8123456789012345678}
   enemyLayer:
     serializedVersion: 2
     m_Bits: 8
@@ -814,6 +800,19 @@ MonoBehaviour:
   flashColor: {r: 1, g: 0, b: 0, a: 1}
   flashDuration: 0.05
   flashCount: 2
+--- !u!114 &8123456789012345678
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7409795251022180326}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3f7a2b1c4d5869746af3e2d1c0b9a8f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerAim
+  inputDeadzone: 0.1
 --- !u!1 &8799494946763839592
 GameObject:
   m_ObjectHideFlags: 0
