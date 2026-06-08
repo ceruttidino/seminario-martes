@@ -19,6 +19,9 @@ public class ExplosiveHedgehog : MonoBehaviour
     [Header("Layers")]
     [SerializeField] private LayerMask damageLayers;
 
+    [Header("Feedback")]
+    [SerializeField] private DamageFlash damageFlash;
+
     private EnemyHealth enemyHealth;
     private Rigidbody2D rb;
     private bool hasExploded;
@@ -31,6 +34,19 @@ public class ExplosiveHedgehog : MonoBehaviour
     {
         enemyHealth = GetComponent<EnemyHealth>();
         rb = GetComponent<Rigidbody2D>();
+
+        if (damageFlash == null)
+            damageFlash = GetComponent<DamageFlash>();
+    }
+
+    public void BeginArmingFeedback()
+    {
+        damageFlash?.StartLoopFlash();
+    }
+
+    public void EndArmingFeedback()
+    {
+        damageFlash?.StopLoopFlash();
     }
 
     public void ApplyHitKnockback(Vector2 fromPosition)
@@ -48,6 +64,8 @@ public class ExplosiveHedgehog : MonoBehaviour
     {
         if (hasExploded) return;
         hasExploded = true;
+
+        EndArmingFeedback();
 
         Vector2 center = transform.position;
         Collider2D[] hits = Physics2D.OverlapCircleAll(center, explosionRadius, damageLayers);

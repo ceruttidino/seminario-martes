@@ -200,7 +200,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1acd55b0552163419170306de275025, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
-  maxHealth: 20
+  maxHealth: 35
   damageFlash: {fileID: 1100172250346497802}
 --- !u!114 &-8282421139475465496
 MonoBehaviour:
@@ -259,7 +259,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DamageFlash
   spriteRenderer: {fileID: 6455745231265445500}
   flashColor: {r: 1, g: 0, b: 0, a: 1}
-  flashDuration: 0.05
+  flashDuration: 0.15
   flashCount: 2
 --- !u!114 &8841000000000000002
 MonoBehaviour:
@@ -273,7 +273,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8d5f3a2b0145678b1c2d3e4f5a6b7c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ExplosiveHedgehog
-  armingRange: 1.5
+  armingRange: 1
   explosionRadius: 2.5
   countdownDuration: 4
   hitKnockbackDuration: 0.25
@@ -283,6 +283,7 @@ MonoBehaviour:
   damageLayers:
     serializedVersion: 2
     m_Bits: 520
+  damageFlash: {fileID: 1100172250346497802}
 --- !u!114 &8841000000000000003
 MonoBehaviour:
   m_ObjectHideFlags: 0

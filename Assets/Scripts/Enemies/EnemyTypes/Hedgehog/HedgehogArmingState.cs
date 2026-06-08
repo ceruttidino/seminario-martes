@@ -28,6 +28,7 @@ public class HedgehogArmingState : IEnemyState
         countdown = hedgehog.CountdownDuration;
         knockbackEndTime = 0f;
         movement.Move(Vector2.zero);
+        hedgehog.BeginArmingFeedback();
 
         if (enemyHealth != null)
             enemyHealth.OnDamaged += HandleDamaged;
@@ -51,6 +52,8 @@ public class HedgehogArmingState : IEnemyState
 
     public void Exit()
     {
+        hedgehog?.EndArmingFeedback();
+
         if (enemyHealth != null)
             enemyHealth.OnDamaged -= HandleDamaged;
     }

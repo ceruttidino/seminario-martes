@@ -31,11 +31,24 @@ public class BreakableTrash : MonoBehaviour
     [SerializeField] private float maxSpawnRadius = 1.3f;
 
     [Header("Visuales")]
-    [SerializeField] private GameObject destroyParticlePrefab;
+    [SerializeField] private SpriteRenderer closedSprite;
+    [SerializeField] private GameObject openVisual;
 
+    private Collider2D hitCollider;
     private int currentHits = 0;
     private int maxHits;
     private bool isDestroyed = false;
+
+    private void Awake()
+    {
+        if (closedSprite == null)
+            closedSprite = GetComponent<SpriteRenderer>();
+
+        hitCollider = GetComponent<Collider2D>();
+
+        if (openVisual != null)
+            openVisual.SetActive(false);
+    }
 
     private void Start()
     {
@@ -59,16 +72,20 @@ public class BreakableTrash : MonoBehaviour
 
         Transform roomParent = FindRoomParent();
 
-        if (destroyParticlePrefab != null)
-        {
-            GameObject visual = Instantiate(destroyParticlePrefab, transform.position, transform.rotation);
-            if (roomParent != null)
-                visual.transform.SetParent(roomParent, true);
-        }
-
+        ShowOpenVisual();
         SpawnLoot(roomParent);
+    }
 
-        Destroy(gameObject);
+    private void ShowOpenVisual()
+    {
+        if (closedSprite != null)
+            closedSprite.enabled = false;
+
+        if (openVisual != null)
+            openVisual.SetActive(true);
+
+        if (hitCollider != null)
+            hitCollider.enabled = false;
     }
 
     private void SpawnLoot(Transform roomParent)
