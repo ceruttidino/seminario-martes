@@ -9,6 +9,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     private bool isDead;
 
     public event System.Action OnDeath;
+    public event System.Action OnDamaged;
 
     public float MaxHealth => maxHealth;
     public float CurrentHealth => currentHealth;
@@ -27,6 +28,8 @@ public class EnemyHealth : MonoBehaviour, IDamageable
 
         currentHealth -= damage;
         currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
+
+        OnDamaged?.Invoke();
 
         if (damageFlash != null)
             damageFlash.Flash();

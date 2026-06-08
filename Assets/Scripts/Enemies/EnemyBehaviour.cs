@@ -10,10 +10,13 @@ public class EnemyBehaviour : MonoBehaviour
     private EnemyAttack attack;
 
     private EnemyMovement movement;
+    private ExplosiveHedgehog explosiveHedgehog;
+
     private void Awake()
     {
         movement = GetComponent<EnemyMovement>();
         attack = GetComponent<EnemyAttack>();
+        explosiveHedgehog = GetComponent<ExplosiveHedgehog>();
     }
 
     private void Update()
@@ -48,6 +51,16 @@ public class EnemyBehaviour : MonoBehaviour
 
             case EnemyType.Mole:
                 // Mole maneja su propia lógica con el componente Mole.cs
+                break;
+
+            case EnemyType.Hedgehog:
+                if (explosiveHedgehog == null)
+                {
+                    Debug.LogError($"EnemyBehaviour: {gameObject.name} necesita ExplosiveHedgehog.");
+                    break;
+                }
+
+                SetState(new HedgehogChaseState(player, movement, transform, this, explosiveHedgehog));
                 break;
 
             default:
