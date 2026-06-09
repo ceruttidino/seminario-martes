@@ -275,7 +275,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ExplosiveHedgehog
   armingRange: 1
   explosionRadius: 2.5
-  countdownDuration: 4
+  countdownDuration: 2
   hitKnockbackDuration: 0.25
   explosionDamage: 3
   hitKnockbackForce: 8
@@ -283,6 +283,9 @@ MonoBehaviour:
   damageLayers:
     serializedVersion: 2
     m_Bits: 520
+  destructibleLayers:
+    serializedVersion: 2
+    m_Bits: 65
   damageFlash: {fileID: 1100172250346497802}
 --- !u!114 &8841000000000000003
 MonoBehaviour:

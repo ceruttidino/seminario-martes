@@ -8,7 +8,7 @@ public class ExplosiveHedgehog : MonoBehaviour
     [SerializeField] private float explosionRadius = 2.5f;
 
     [Header("Timing")]
-    [SerializeField] private float countdownDuration = 4f;
+    [SerializeField] private float countdownDuration = 2f;
     [SerializeField] private float hitKnockbackDuration = 0.25f;
 
     [Header("Combat")]
@@ -18,6 +18,7 @@ public class ExplosiveHedgehog : MonoBehaviour
 
     [Header("Layers")]
     [SerializeField] private LayerMask damageLayers;
+    [SerializeField] private LayerMask destructibleLayers;
 
     [Header("Feedback")]
     [SerializeField] private DamageFlash damageFlash;
@@ -68,13 +69,14 @@ public class ExplosiveHedgehog : MonoBehaviour
         EndArmingFeedback();
 
         Vector2 center = transform.position;
-        Collider2D[] hits = Physics2D.OverlapCircleAll(center, explosionRadius, damageLayers);
+        LayerMask explosionMask = damageLayers | destructibleLayers;
+        Collider2D[] hits = Physics2D.OverlapCircleAll(center, explosionRadius, explosionMask);
         var damaged = new HashSet<IDamageable>();
         var knockedBack = new HashSet<Rigidbody2D>();
 
         foreach (Collider2D hit in hits)
         {
-            if (hit.transform.root == transform.root)
+            if (IsOwnCollider(hit))
                 continue;
 
             Vector2 knockDirection = ((Vector2)hit.transform.position - center).normalized;
@@ -85,15 +87,32 @@ public class ExplosiveHedgehog : MonoBehaviour
             if (targetRb != null && knockedBack.Add(targetRb))
                 ApplyKnockbackToRigidbody(targetRb, knockDirection, explosionKnockbackForce);
 
+            if (hit.TryGetComponent<BreakableStone>(out BreakableStone stone))
+            {
+                stone.BreakFromExplosion();
+                continue;
+            }
+
             IDamageable damageable = hit.GetComponentInParent<IDamageable>();
             if (damageable != null && damaged.Add(damageable))
+            {
                 damageable.TakeDamage(explosionDamage);
+                continue;
+            }
+
+            if (hit.TryGetComponent<BreakableTrash>(out BreakableTrash trash))
+                trash.TakeHit(explosionDamage);
         }
 
         if (enemyHealth != null)
             enemyHealth.TakeDamage(enemyHealth.MaxHealth);
         else
             Destroy(gameObject);
+    }
+
+    private bool IsOwnCollider(Collider2D hit)
+    {
+        return hit.transform == transform || hit.transform.IsChildOf(transform);
     }
 
     private static void ApplyKnockbackToRigidbody(Rigidbody2D targetRb, Vector2 direction, float force)

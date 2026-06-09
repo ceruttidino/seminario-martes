@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6407954711694033859}
   - component: {fileID: 8055892445665636318}
   - component: {fileID: 4102593762259566884}
+  - component: {fileID: 4102593762259566885}
   m_Layer: 0
   m_Name: Stone_1
   m_TagString: Untagged
@@ -138,3 +139,15 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.58618927, y: 0.49942172}
   m_EdgeRadius: 0
+--- !u!114 &4102593762259566885
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5176660654627250613}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7e3f8a2b1c4d5e6f9a0b1c2d3e4f5a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BreakableStone
