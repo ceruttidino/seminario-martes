@@ -188,7 +188,7 @@ TextureImporter:
         serializedVersion: 2
         x: 66
         y: 131
-        width: 63
+        width: 64
         height: 64
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -208,9 +208,9 @@ TextureImporter:
       name: TILEMAP - BOSS PARED_3
       rect:
         serializedVersion: 2
-        x: 130
+        x: 131
         y: 131
-        width: 65
+        width: 64
         height: 64
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -230,9 +230,9 @@ TextureImporter:
       name: TILEMAP - BOSS PARED_4
       rect:
         serializedVersion: 2
-        x: 197
+        x: 196
         y: 131
-        width: 65
+        width: 64
         height: 64
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -252,9 +252,9 @@ TextureImporter:
       name: TILEMAP - BOSS PARED_5
       rect:
         serializedVersion: 2
-        x: 263
+        x: 261
         y: 131
-        width: 63
+        width: 64
         height: 64
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -274,7 +274,7 @@ TextureImporter:
       name: TILEMAP - BOSS PARED_6
       rect:
         serializedVersion: 2
-        x: 327
+        x: 326
         y: 131
         width: 64
         height: 64
@@ -296,7 +296,7 @@ TextureImporter:
       name: TILEMAP - BOSS PARED_7
       rect:
         serializedVersion: 2
-        x: 327
+        x: 326
         y: 66
         width: 64
         height: 64
@@ -342,7 +342,7 @@ TextureImporter:
         serializedVersion: 2
         x: 66
         y: 1
-        width: 63
+        width: 64
         height: 64
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -362,9 +362,9 @@ TextureImporter:
       name: TILEMAP - BOSS PARED_10
       rect:
         serializedVersion: 2
-        x: 130
+        x: 131
         y: 1
-        width: 65
+        width: 64
         height: 64
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -384,9 +384,9 @@ TextureImporter:
       name: TILEMAP - BOSS PARED_11
       rect:
         serializedVersion: 2
-        x: 197
+        x: 196
         y: 1
-        width: 65
+        width: 64
         height: 64
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -406,9 +406,9 @@ TextureImporter:
       name: TILEMAP - BOSS PARED_12
       rect:
         serializedVersion: 2
-        x: 263
+        x: 261
         y: 1
-        width: 63
+        width: 64
         height: 64
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -428,7 +428,7 @@ TextureImporter:
       name: TILEMAP - BOSS PARED_13
       rect:
         serializedVersion: 2
-        x: 327
+        x: 326
         y: 1
         width: 64
         height: 64
@@ -450,7 +450,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 212b8e6dba3e5584cb1f20ceba33ff76
+    spriteID: c70b4b17a018c964eb1fec7b769421f2
     internalID: 0
     vertices: []
     indices: 
