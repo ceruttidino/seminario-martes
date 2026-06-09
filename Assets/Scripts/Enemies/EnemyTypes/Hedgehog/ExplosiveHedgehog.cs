@@ -71,43 +71,69 @@ public class ExplosiveHedgehog : MonoBehaviour
         Vector2 center = transform.position;
         LayerMask explosionMask = damageLayers | destructibleLayers;
         Collider2D[] hits = Physics2D.OverlapCircleAll(center, explosionRadius, explosionMask);
+
         var damaged = new HashSet<IDamageable>();
         var knockedBack = new HashSet<Rigidbody2D>();
+        var brokenStones = new HashSet<BreakableStone>();
+        var hitTrash = new HashSet<BreakableTrash>();
 
         foreach (Collider2D hit in hits)
         {
             if (IsOwnCollider(hit))
                 continue;
 
-            Vector2 knockDirection = ((Vector2)hit.transform.position - center).normalized;
-            if (knockDirection.sqrMagnitude < 0.01f)
-                knockDirection = Vector2.up;
-
-            Rigidbody2D targetRb = hit.attachedRigidbody;
-            if (targetRb != null && knockedBack.Add(targetRb))
-                ApplyKnockbackToRigidbody(targetRb, knockDirection, explosionKnockbackForce);
-
             if (hit.TryGetComponent<BreakableStone>(out BreakableStone stone))
             {
-                stone.BreakFromExplosion();
-                continue;
-            }
+                if (!IsWithinExplosionRadius(center, stone.transform.position))
+                    continue;
 
-            IDamageable damageable = hit.GetComponentInParent<IDamageable>();
-            if (damageable != null && damaged.Add(damageable))
-            {
-                damageable.TakeDamage(explosionDamage);
+                if (brokenStones.Add(stone))
+                    stone.BreakFromExplosion();
+
                 continue;
             }
 
             if (hit.TryGetComponent<BreakableTrash>(out BreakableTrash trash))
-                trash.TakeHit(explosionDamage);
+            {
+                if (!IsWithinExplosionRadius(center, trash.transform.position))
+                    continue;
+
+                if (hitTrash.Add(trash))
+                    trash.TakeHit(explosionDamage);
+
+                continue;
+            }
+
+            IDamageable damageable = hit.GetComponentInParent<IDamageable>();
+            if (damageable is not MonoBehaviour damageableBehaviour)
+                continue;
+
+            if (!IsWithinExplosionRadius(center, damageableBehaviour.transform.position))
+                continue;
+
+            if (!damaged.Add(damageable))
+                continue;
+
+            Vector2 knockDirection = ((Vector2)damageableBehaviour.transform.position - center).normalized;
+            if (knockDirection.sqrMagnitude < 0.01f)
+                knockDirection = Vector2.up;
+
+            Rigidbody2D targetRb = damageableBehaviour.GetComponent<Rigidbody2D>();
+            if (targetRb != null && knockedBack.Add(targetRb))
+                ApplyKnockbackToRigidbody(targetRb, knockDirection, explosionKnockbackForce);
+
+            damageable.TakeDamage(explosionDamage);
         }
 
         if (enemyHealth != null)
             enemyHealth.TakeDamage(enemyHealth.MaxHealth);
         else
             Destroy(gameObject);
+    }
+
+    private bool IsWithinExplosionRadius(Vector2 center, Vector2 targetPosition)
+    {
+        return (targetPosition - center).sqrMagnitude <= explosionRadius * explosionRadius;
     }
 
     private bool IsOwnCollider(Collider2D hit)
