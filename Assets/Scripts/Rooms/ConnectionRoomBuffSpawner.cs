@@ -27,7 +27,10 @@ public class ConnectionRoomBuffSpawner : MonoBehaviour
         ObjectBuffSO chosen = BuffPool.PickRandom(possibleBuffs);
         if (chosen == null) return;
 
-        GameObject pickup = Instantiate(buffPickupPrefab, spawnPos, Quaternion.identity);
+        RoomInstance room = GetComponentInParent<RoomInstance>();
+        Transform roomParent = room != null ? room.transform : transform;
+
+        GameObject pickup = Instantiate(buffPickupPrefab, spawnPos, Quaternion.identity, roomParent);
 
         UpgradePickup upgradePickup = pickup.GetComponent<UpgradePickup>();
         if (upgradePickup != null)

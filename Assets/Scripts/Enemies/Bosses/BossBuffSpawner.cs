@@ -24,7 +24,8 @@ public class BossBuffSpawner : MonoBehaviour
         if (chosen == null) return;
 
         Vector3 pos = spawnPoint != null ? spawnPoint.position : transform.position;
-        GameObject pickup = Instantiate(buffPickupPrefab, pos, Quaternion.identity);
+        Transform roomParent = GetComponentInParent<RoomInstance>()?.transform ?? transform;
+        GameObject pickup = Instantiate(buffPickupPrefab, pos, Quaternion.identity, roomParent);
 
         UpgradePickup upgradePickup = pickup.GetComponent<UpgradePickup>();
         if (upgradePickup != null)
