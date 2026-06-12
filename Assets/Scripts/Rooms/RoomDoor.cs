@@ -37,10 +37,8 @@ public class RoomDoor : MonoBehaviour
 
     private void Update()
     {
-        // Only check for input if the player is in range AND the door is currently locked
         if (playerInRange && isLocked)
         {
-            // Check if this is a shop door - you only want the 'F' to unlock logic for shops
             if (currentDoorType == RoomType.Shop && Keyboard.current.fKey.wasPressedThisFrame)
             {
                 TryUnlock();
@@ -121,11 +119,7 @@ public void SetDoorType(RoomType type, RoomNode node)
         PlayerKeys keys = currentPlayer.GetComponent<PlayerKeys>();
         if (keys != null && keys.UseKey())
         {
-            // 1. Unlock the visual state
             isLocked = false;
-
-            // 2. IMPORTANT: Update the data so it survives when the room is disabled
-            // Ensure you have a reference to the node assigned during Initialize
             if (myNode != null)
             {
                 myNode.isShopUnlocked = true;

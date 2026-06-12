@@ -343,14 +343,10 @@ public class DungeonManager : MonoBehaviour
             {
                 dungeonProgression.RegisterGeneratedRoom(RoomType.Shop);
 
-                // --- THE FIX ---
-                // If the room has already been instantiated (spawned in the world),
-                // tell it to re-configure its doors now that it knows it's a shop.
                 if (bestNode.spawnedInstance != null)
                 {
                     bestNode.spawnedInstance.ConfigureDoors(bestNode);
                 }
-                // ----------------
 
                 return true;
             }
