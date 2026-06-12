@@ -154,6 +154,6 @@ MonoBehaviour:
   direction: 2
   isLocked: 0
   spriteRenderer: {fileID: 0}
-  normalColor: {r: 1, g: 1, b: 1, a: 1}
-  shopColor: {r: 0, g: 1, b: 0, a: 1}
-  bossColor: {r: 1, g: 0, b: 0, a: 1}
+  normalDoorSprite: {fileID: 4976125646568474354, guid: 33cd2fc56208f5a4a8ee74c10ba2ad03, type: 3}
+  shopDoorSprite: {fileID: 21300000, guid: bc65ac4a1d765d0469b27cf6ad62aef5, type: 3}
+  bossDoorSprite: {fileID: 21300000, guid: 5e099f030023f7044850d7c8edf4c0c7, type: 3}

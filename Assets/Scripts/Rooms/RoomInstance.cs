@@ -82,13 +82,18 @@ public class RoomInstance : MonoBehaviour
 
             if (shouldBeActive)
             {
-                door.Initialize(direction);
+                door.Initialize(node, direction);
+
+                if (node.isShopUnlocked)
+                {
+                    door.SetLocked(false);
+                }
 
                 RoomNode neighbor = node.GetNeighbor(direction);
 
                 if (neighbor != null)
                 {
-                    door.SetDoorType(neighbor.information.type);
+                    door.SetDoorType(neighbor.information.type, neighbor);
                 }
             }
         }
@@ -173,8 +178,19 @@ public class RoomInstance : MonoBehaviour
     {
         foreach (var door in roomDoors)
         {
-            if (door != null)
+            if (door == null) continue;
+
+            // Only lock if it's a Shop door OR if you want to handle general room locking.
+            // If you only want to lock the Shop door here, add this check:
+            if (door.currentDoorType == RoomType.Shop)
+            {
                 door.SetLocked(true);
+            }
+            else
+            {
+                // Keep your existing enemy-locking logic for other doors here
+                door.SetLocked(true);
+            }
         }
     }
 
@@ -182,11 +198,18 @@ public class RoomInstance : MonoBehaviour
     {
         foreach (var door in roomDoors)
         {
-            if (door != null)
-                door.SetLocked(false);
+            if (door == null) continue;
+
+            // If it's a shop, do NOT unlock it when enemies are dead
+            if (door.currentDoorType == RoomType.Shop)
+            {
+                continue;
+            }
+
+            // Otherwise, unlock as normal
+            door.SetLocked(false);
         }
     }
-
     private void EndCombat()
     {
         UnlockDoorsInstant();

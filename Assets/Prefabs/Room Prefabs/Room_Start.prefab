@@ -1037,9 +1037,9 @@ MonoBehaviour:
   direction: 2
   isLocked: 0
   spriteRenderer: {fileID: 0}
-  normalColor: {r: 1, g: 1, b: 1, a: 1}
-  shopColor: {r: 0, g: 1, b: 0, a: 1}
-  bossColor: {r: 1, g: 0, b: 0, a: 1}
+  normalDoorSprite: {fileID: 0}
+  shopDoorSprite: {fileID: 0}
+  bossDoorSprite: {fileID: 0}
 --- !u!1 &3857411769287756706
 GameObject:
   m_ObjectHideFlags: 0
@@ -1307,9 +1307,9 @@ MonoBehaviour:
   direction: 3
   isLocked: 0
   spriteRenderer: {fileID: 0}
-  normalColor: {r: 1, g: 1, b: 1, a: 1}
-  shopColor: {r: 0, g: 1, b: 0, a: 1}
-  bossColor: {r: 1, g: 0, b: 0, a: 1}
+  normalDoorSprite: {fileID: 0}
+  shopDoorSprite: {fileID: 0}
+  bossDoorSprite: {fileID: 0}
 --- !u!1 &4878072035826389770
 GameObject:
   m_ObjectHideFlags: 0
@@ -1526,9 +1526,9 @@ MonoBehaviour:
   direction: 1
   isLocked: 0
   spriteRenderer: {fileID: 0}
-  normalColor: {r: 1, g: 1, b: 1, a: 1}
-  shopColor: {r: 0, g: 1, b: 0, a: 1}
-  bossColor: {r: 1, g: 0, b: 0, a: 1}
+  normalDoorSprite: {fileID: 0}
+  shopDoorSprite: {fileID: 0}
+  bossDoorSprite: {fileID: 0}
 --- !u!1 &5009212152718588624
 GameObject:
   m_ObjectHideFlags: 0
@@ -1873,7 +1873,7 @@ SpriteRenderer:
   m_SortingOrder: 5
   m_MaskInteraction: 0
   m_Sprite: {fileID: 4976125646568474354, guid: 33cd2fc56208f5a4a8ee74c10ba2ad03, type: 3}
-  m_Color: {r: 0.645283, g: 0.31975025, b: 0, a: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -1942,10 +1942,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RoomDoor
   direction: 0
   isLocked: 0
-  spriteRenderer: {fileID: 0}
-  normalColor: {r: 1, g: 1, b: 1, a: 1}
-  shopColor: {r: 0, g: 1, b: 0, a: 1}
-  bossColor: {r: 1, g: 0, b: 0, a: 1}
+  spriteRenderer: {fileID: 8257058992659503306}
+  normalDoorSprite: {fileID: 4976125646568474354, guid: 33cd2fc56208f5a4a8ee74c10ba2ad03, type: 3}
+  shopDoorSprite: {fileID: 21300000, guid: bc65ac4a1d765d0469b27cf6ad62aef5, type: 3}
+  bossDoorSprite: {fileID: 21300000, guid: 5e099f030023f7044850d7c8edf4c0c7, type: 3}
 --- !u!1 &6850029690147252818
 GameObject:
   m_ObjectHideFlags: 0

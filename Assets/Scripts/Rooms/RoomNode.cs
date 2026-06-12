@@ -5,6 +5,7 @@ using UnityEngine;
 public class RoomNode //Logic room inside the dungeon
 {
     public string uniqueNodeID;
+    public string name;
     public RoomInformation information;
     public Dictionary<DoorDirection, RoomNode> neighboors = new Dictionary<DoorDirection, RoomNode>();
     public Vector2Int gridPosition;
@@ -12,6 +13,7 @@ public class RoomNode //Logic room inside the dungeon
     public RoomInstance spawnedInstance;
     public bool hasBeenVisited;
     public bool isCurrentRoom;
+    public bool isShopUnlocked = false;
 
     public RoomNode(string id, RoomInformation roomInformation)
     {
