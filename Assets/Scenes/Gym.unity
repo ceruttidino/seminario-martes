@@ -4344,6 +4344,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 718493228437957988, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
+      propertyPath: m_Resource
+      value: 
+      objectReference: {fileID: 8300000, guid: bf0947dce2a4f02468b5e844e14a76cd, type: 3}
     - target: {fileID: 2442127025827706028, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
       propertyPath: m_ActionEvents.Array.data[5].m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -4376,6 +4380,14 @@ PrefabInstance:
       propertyPath: 'hearts.Array.data[5]'
       value: 
       objectReference: {fileID: 1961078270}
+    - target: {fileID: 7881586116371696920, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
+      propertyPath: m_Pitch
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7881586116371696920, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
+      propertyPath: m_Resource
+      value: 
+      objectReference: {fileID: 8300000, guid: 8a9a2642778a22d4580d363b556eb296, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
