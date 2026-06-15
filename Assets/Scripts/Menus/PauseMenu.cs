@@ -5,6 +5,8 @@ using UnityEngine.SceneManagement;
 public class PauseMenu : MonoBehaviour
 {
     [SerializeField] private GameObject pausePanel;
+    [SerializeField] private GameObject pauseMenuPanel;
+    [SerializeField] private GameObject settingsPanel;
 
     private bool isPaused = false;
 
@@ -20,6 +22,7 @@ public class PauseMenu : MonoBehaviour
 
     public void Pause()
     {
+        PauseMainMenu();
         pausePanel.SetActive(true);
         Time.timeScale = 0f;
         isPaused = true;
@@ -41,5 +44,17 @@ public class PauseMenu : MonoBehaviour
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene("Main Menu");
+    }
+
+    public void PauseSettings()
+    {
+        pauseMenuPanel.SetActive(false);
+        settingsPanel.SetActive(true);
+    }
+
+    public void PauseMainMenu()
+    {
+        pauseMenuPanel.SetActive(true);
+        settingsPanel.SetActive(false);
     }
 }

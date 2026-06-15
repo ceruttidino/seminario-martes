@@ -43,7 +43,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 8300000, guid: bb2be01da5ce8a94592fad38d15b8683, type: 3}
+  m_Resource: {fileID: 8300000, guid: bf0947dce2a4f02468b5e844e14a76cd, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 0.095
   m_Pitch: 1
@@ -172,10 +172,10 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 8300000, guid: fa5daaafb15d8224f9f4b7ba9b5a823d, type: 3}
+  m_Resource: {fileID: 8300000, guid: 8a9a2642778a22d4580d363b556eb296, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 0.095
-  m_Pitch: 1
+  m_Pitch: 2
   Loop: 0
   Mute: 0
   Spatialize: 0
@@ -592,6 +592,10 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 5596049d-b095-4142-ae5a-1cf94f4d7715
     m_ActionName: 'Player/Dash[/Keyboard/leftShift]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: f4a8c2e1-3b7d-4f9a-8e2c-1d5b6a7c8e9f
+    m_ActionName: 'Player/Aim[/Keyboard/upArrow,/Keyboard/downArrow,/Keyboard/leftArrow,/Keyboard/rightArrow]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -646,6 +650,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::QuickAttack
   playerAim: {fileID: 8123456789012345678}
+  playerMovement: {fileID: 0}
   enemyLayer:
     serializedVersion: 2
     m_Bits: 8
@@ -653,6 +658,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   animator: {fileID: 6671336775965671393}
+  spriteRenderer: {fileID: 0}
   damage: 10
   cooldown: 0.5
   attackDistance: 1
@@ -677,6 +683,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   animator: {fileID: 6671336775965671393}
+  playerMovement: {fileID: 0}
   damage: 20
   cooldown: 2
   radius: 2
@@ -754,7 +761,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerDash
   dashSpeed: 25
-  dashDuration: 0.25
+  dashDuration: 0.07
   dashCooldown: 1
   playerMovement: {fileID: 4973168310728382421}
   rb: {fileID: 2180484767479099527}

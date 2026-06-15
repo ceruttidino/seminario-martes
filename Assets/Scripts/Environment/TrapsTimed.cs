@@ -64,12 +64,17 @@ public class BaseTrap : MonoBehaviour
         {
             PlayerHealth PH = other.GetComponent<PlayerHealth>();
             touching = true;
-            if (trapState == TrapState.Active && PH != null || touching)
+            if (trapState == TrapState.Active && PH != null)
+            {
+                PH.PlayerGetHurt(damage);
+            }
+            if (trapType == TrapType.StepOnActive && PH != null && touching)
             {
                 PH.PlayerGetHurt(damage);
             }
         }
     }
+
     private void OnTriggerExit2D(Collider2D collision)
     {
         touching = false;

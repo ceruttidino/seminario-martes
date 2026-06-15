@@ -185,7 +185,7 @@ TextureImporter:
       name: Quick Attack-Izquierda_1
       rect:
         serializedVersion: 2
-        x: 64
+        x: 61
         y: 0
         width: 64
         height: 64
@@ -207,7 +207,7 @@ TextureImporter:
       name: Quick Attack-Izquierda_2
       rect:
         serializedVersion: 2
-        x: 128
+        x: 125
         y: 0
         width: 64
         height: 64
@@ -229,7 +229,7 @@ TextureImporter:
       name: Quick Attack-Izquierda_3
       rect:
         serializedVersion: 2
-        x: 192
+        x: 189
         y: 0
         width: 64
         height: 64
@@ -251,7 +251,7 @@ TextureImporter:
       name: Quick Attack-Izquierda_4
       rect:
         serializedVersion: 2
-        x: 256
+        x: 253
         y: 0
         width: 64
         height: 64
@@ -273,7 +273,7 @@ TextureImporter:
       name: Quick Attack-Izquierda_5
       rect:
         serializedVersion: 2
-        x: 320
+        x: 317
         y: 0
         width: 64
         height: 64
@@ -295,7 +295,7 @@ TextureImporter:
       name: Quick Attack-Izquierda_6
       rect:
         serializedVersion: 2
-        x: 384
+        x: 381
         y: 0
         width: 64
         height: 64
@@ -317,7 +317,7 @@ TextureImporter:
       name: Quick Attack-Izquierda_7
       rect:
         serializedVersion: 2
-        x: 448
+        x: 445
         y: 0
         width: 64
         height: 64
@@ -339,7 +339,7 @@ TextureImporter:
       name: Quick Attack-Izquierda_8
       rect:
         serializedVersion: 2
-        x: 512
+        x: 509
         y: 0
         width: 64
         height: 64
@@ -361,7 +361,7 @@ TextureImporter:
       name: Quick Attack-Izquierda_9
       rect:
         serializedVersion: 2
-        x: 576
+        x: 573
         y: 0
         width: 64
         height: 64
@@ -383,7 +383,7 @@ TextureImporter:
       name: Quick Attack-Izquierda_10
       rect:
         serializedVersion: 2
-        x: 640
+        x: 637
         y: 0
         width: 64
         height: 64
@@ -405,7 +405,7 @@ TextureImporter:
       name: Quick Attack-Izquierda_11
       rect:
         serializedVersion: 2
-        x: 704
+        x: 701
         y: 0
         width: 64
         height: 64
@@ -427,7 +427,7 @@ TextureImporter:
       name: Quick Attack-Izquierda_12
       rect:
         serializedVersion: 2
-        x: 768
+        x: 765
         y: 0
         width: 64
         height: 64
@@ -449,7 +449,7 @@ TextureImporter:
       name: Quick Attack-Izquierda_13
       rect:
         serializedVersion: 2
-        x: 832
+        x: 829
         y: 0
         width: 64
         height: 64
@@ -471,7 +471,7 @@ TextureImporter:
       name: Quick Attack-Izquierda_14
       rect:
         serializedVersion: 2
-        x: 896
+        x: 893
         y: 0
         width: 64
         height: 64
@@ -493,7 +493,7 @@ TextureImporter:
       name: Quick Attack-Izquierda_15
       rect:
         serializedVersion: 2
-        x: 960
+        x: 957
         y: 0
         width: 64
         height: 64
@@ -515,7 +515,7 @@ TextureImporter:
       name: Quick Attack-Izquierda_16
       rect:
         serializedVersion: 2
-        x: 1024
+        x: 1021
         y: 0
         width: 64
         height: 64
@@ -537,7 +537,7 @@ TextureImporter:
       name: Quick Attack-Izquierda_17
       rect:
         serializedVersion: 2
-        x: 1088
+        x: 1085
         y: 0
         width: 64
         height: 64
@@ -559,7 +559,7 @@ TextureImporter:
       name: Quick Attack-Izquierda_18
       rect:
         serializedVersion: 2
-        x: 1152
+        x: 1149
         y: 0
         width: 64
         height: 64
@@ -581,7 +581,7 @@ TextureImporter:
       name: Quick Attack-Izquierda_19
       rect:
         serializedVersion: 2
-        x: 1216
+        x: 1213
         y: 0
         width: 64
         height: 64
@@ -603,7 +603,7 @@ TextureImporter:
       name: Quick Attack-Izquierda_20
       rect:
         serializedVersion: 2
-        x: 1280
+        x: 1277
         y: 0
         width: 64
         height: 64

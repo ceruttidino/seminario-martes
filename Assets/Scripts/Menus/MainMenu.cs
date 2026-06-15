@@ -3,6 +3,8 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
+    [SerializeField] private GameObject menuCanvas;
+    [SerializeField] private GameObject settingsCanvas;
     public void StartGame()
     {
         SceneManager.LoadScene("Gym");
@@ -10,9 +12,15 @@ public class MainMenu : MonoBehaviour
 
     public void SettingsMenu()
     {
-        SceneManager.LoadScene("Settings Menu");
+        menuCanvas.SetActive(false);
+        settingsCanvas.SetActive(true);
     }
 
+    public void GoToMainMenu() 
+    {
+        menuCanvas.SetActive(true);
+        settingsCanvas.SetActive(false);
+    }
     public void QuitGame()
     {
         Application.Quit();

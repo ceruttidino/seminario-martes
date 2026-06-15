@@ -28,8 +28,8 @@ Transform:
   m_GameObject: {fileID: 3143626894951431959}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.47, y: -2.51, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1.25, y: 1.25, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -83,12 +83,12 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -7953066429286915639, guid: 6b507d41d06808948a7549e006121924, type: 3}
+  m_Sprite: {fileID: 3676925641299672207, guid: 6e8d22921190ed94fbadc4c31a5bd61a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 2.05, y: 2}
+  m_Size: {x: 0.64, y: 0.64}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -131,13 +131,13 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 2.05, y: 2}
-    newSize: {x: 2.05, y: 2}
+    oldSize: {x: 0.64, y: 0.64}
+    newSize: {x: 0.64, y: 0.64}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 2.05, y: 2}
+  m_Size: {x: 0.75, y: 0.75}
   m_EdgeRadius: 0
 --- !u!114 &5131706071498355050
 MonoBehaviour:
@@ -151,10 +151,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ce4e962c6f87384eaa25f2db4de82e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BaseTrap
-  trapType: 2
+  trapType: 1
   damage: 1
   trapStateCycleTime: 2
   trapState: 0
-  deactiveSprite: {fileID: -7953066429286915639, guid: 6b507d41d06808948a7549e006121924, type: 3}
-  inBetweenSrpite: {fileID: -1125138493230126891, guid: 6b507d41d06808948a7549e006121924, type: 3}
-  activeSprite: {fileID: 3810810977343505317, guid: 6b507d41d06808948a7549e006121924, type: 3}
+  deactiveSprite: {fileID: 3676925641299672207, guid: 6e8d22921190ed94fbadc4c31a5bd61a, type: 3}
+  inBetweenSrpite: {fileID: -1909479626155353230, guid: 6e8d22921190ed94fbadc4c31a5bd61a, type: 3}
+  activeSprite: {fileID: 5937586818718764224, guid: 6e8d22921190ed94fbadc4c31a5bd61a, type: 3}
