@@ -13,6 +13,9 @@ public class PlayerDash : MonoBehaviour
     [Header("References")]
     [SerializeField] private PlayerMovement playerMovement;
     [SerializeField] private Rigidbody2D rb;
+    [SerializeField] private Animator animator;
+
+    [SerializeField] private AudioSource sfxSource;
 
     private InputAction dashAction;
     private float lastDashTime = -999f;
@@ -49,6 +52,9 @@ public class PlayerDash : MonoBehaviour
 
         if (rb == null)
             rb = GetComponent<Rigidbody2D>();
+
+        if (animator == null)
+            animator = GetComponent<Animator> ();
     }
 
     private void Update()
@@ -96,6 +102,17 @@ public class PlayerDash : MonoBehaviour
         lastDashTime = Time.time;
         isDashing = true;
 
+        if (animator != null)
+        {
+            animator.SetBool("IsDashing", true);
+        }
+
+        if (sfxSource != null)
+        {
+            sfxSource.Play();
+        }
+            
+
         StartCoroutine(DashCoroutine(dashDirection));
     }
 
@@ -110,6 +127,11 @@ public class PlayerDash : MonoBehaviour
         }
 
         isDashing = false;
+
+        if (animator != null)
+        {
+            animator.SetBool("IsDashing", false);
+        }
         rb.linearVelocity *= 0.6f;
     }
 }

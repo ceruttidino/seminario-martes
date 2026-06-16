@@ -110,6 +110,7 @@ GameObject:
   - component: {fileID: 3955632396312354887}
   - component: {fileID: 6028116143686986758}
   - component: {fileID: 2622927903208743674}
+  - component: {fileID: 8302202950370894844}
   m_Layer: 3
   m_Name: Enemy_Snail
   m_TagString: Untagged
@@ -311,7 +312,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyMovement
   speed: 3
-  animator: {fileID: 0}
+  animator: {fileID: 8302202950370894844}
+  spriteRenderer: {fileID: 1610651138796991159}
 --- !u!114 &3955632396312354887
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -358,3 +360,25 @@ MonoBehaviour:
   flashColor: {r: 1, g: 0, b: 0, a: 1}
   flashDuration: 0.05
   flashCount: 2
+--- !u!95 &8302202950370894844
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8283417630010587146}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 6c678b0199a1aa44b9b63ccb5f6a2e2b, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

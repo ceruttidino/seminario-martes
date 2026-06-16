@@ -112,6 +112,7 @@ GameObject:
   - component: {fileID: 642305526718991060}
   - component: {fileID: -143269127697244384}
   - component: {fileID: 309619778238069551}
+  - component: {fileID: 1190308387966114794}
   m_Layer: 3
   m_Name: Enemy_Rat
   m_TagString: Untagged
@@ -368,7 +369,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyMovement
   speed: 3
-  animator: {fileID: 0}
+  animator: {fileID: 1190308387966114794}
+  spriteRenderer: {fileID: 708296504960716233}
 --- !u!114 &2378659159166680875
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -435,3 +437,25 @@ MonoBehaviour:
   flashColor: {r: 1, g: 0, b: 0, a: 1}
   flashDuration: 0.05
   flashCount: 2
+--- !u!95 &1190308387966114794
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5136333534524507215}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 3904af2e9b3448a4ba04310ed577bd32, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

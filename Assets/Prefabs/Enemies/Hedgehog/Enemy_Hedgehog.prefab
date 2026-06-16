@@ -20,6 +20,7 @@ GameObject:
   - component: {fileID: 1100172250346497802}
   - component: {fileID: 8841000000000000002}
   - component: {fileID: 8841000000000000003}
+  - component: {fileID: 3319335485734253217}
   m_Layer: 3
   m_Name: Enemy_Hedgehog
   m_TagString: Untagged
@@ -229,7 +230,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyMovement
   speed: 3
-  animator: {fileID: 0}
+  animator: {fileID: 3319335485734253217}
+  spriteRenderer: {fileID: 6455745231265445500}
 --- !u!114 &3149816341894566110
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -299,3 +301,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7c4e2f1a8934567a9b0c1d2e3f4a5b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::KnockbackReceiver
+--- !u!95 &3319335485734253217
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2596313271398130789}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 1d4499e023a02814eba476ed70571e65, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
