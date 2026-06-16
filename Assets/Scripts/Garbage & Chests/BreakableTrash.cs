@@ -39,6 +39,8 @@ public class BreakableTrash : MonoBehaviour
     private int maxHits;
     private bool isDestroyed = false;
 
+    private Vector3 openVisualInitialLocalPosition;
+
     private void Awake()
     {
         if (closedSprite == null)
@@ -47,7 +49,10 @@ public class BreakableTrash : MonoBehaviour
         hitCollider = GetComponent<Collider2D>();
 
         if (openVisual != null)
+        {
+            openVisualInitialLocalPosition = openVisual.transform.localPosition;
             openVisual.SetActive(false);
+        }
     }
 
     private void Start()
@@ -82,7 +87,10 @@ public class BreakableTrash : MonoBehaviour
             closedSprite.enabled = false;
 
         if (openVisual != null)
+        {
+            openVisual.transform.localPosition = openVisualInitialLocalPosition;
             openVisual.SetActive(true);
+        }
 
         if (hitCollider != null)
             hitCollider.enabled = false;

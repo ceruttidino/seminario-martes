@@ -48,6 +48,7 @@ GameObject:
   - component: {fileID: 7411370051583957722}
   - component: {fileID: 3878652755879115746}
   - component: {fileID: -2028867600783559451}
+  - component: {fileID: 3450848373545641744}
   m_Layer: 3
   m_Name: MutantSpiderBoss
   m_TagString: Untagged
@@ -240,7 +241,7 @@ MonoBehaviour:
   player: {fileID: 0}
   rb: {fileID: 6309420547196070923}
   spriteRenderer: {fileID: 1610626988516400734}
-  animator: {fileID: 0}
+  animator: {fileID: 3450848373545641744}
   moveSpeed: 3.8
   chaseDuration: 7
   poisonTilePrefab: {fileID: 6823943260347750578, guid: b9d866a973858a84097fd3481b418286, type: 3}
@@ -325,6 +326,28 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 0cd3857cb66cb204d9801ca2c531bbd9, type: 2}
   buffPickupPrefab: {fileID: 2885216983017933289, guid: c0c1e612fe8fa714bb37f50a67de881d, type: 3}
   spawnPoint: {fileID: 867035659880861192}
+--- !u!95 &3450848373545641744
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3734874258083350194}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 77bab6208d20d1f4083d457c2d24e0c9, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &4604647108963819298
 GameObject:
   m_ObjectHideFlags: 0

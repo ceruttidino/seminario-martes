@@ -4,14 +4,16 @@ public class SnailMoveState : IEnemyState
 {
     private IMovement movement;
     private Transform enemyTransform;
+    private EnemyAttack attack;
 
     private Vector2 direction;
     private float changeDirTimer;
 
-    public SnailMoveState(Transform player, IMovement movement, Transform transform)
+    public SnailMoveState(Transform player, IMovement movement, Transform transform, EnemyAttack attack)
     {
         this.movement = movement;
         this.enemyTransform = transform;
+        this.attack = attack;
     }
 
     public void Enter()
@@ -34,6 +36,8 @@ public class SnailMoveState : IEnemyState
         }
 
         movement.Move(direction);
+
+        attack?.TryAttack();
     }
 
     private void PickNewDirection()

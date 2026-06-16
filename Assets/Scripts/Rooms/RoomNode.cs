@@ -42,4 +42,19 @@ public class RoomNode //Logic room inside the dungeon
             neighboors.Add(direction, neighbor);
         }
     }
+
+    public int GetNeighborsCount()
+    {
+        int count = 0;
+
+        foreach (var neighbor in neighboors.Values)
+        {
+            if (neighbor != null)
+            {
+                count++;
+            }
+        }
+
+        return count;
+    }
 }

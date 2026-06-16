@@ -110,6 +110,7 @@ GameObject:
   - component: {fileID: 3955632396312354887}
   - component: {fileID: 6028116143686986758}
   - component: {fileID: 2622927903208743674}
+  - component: {fileID: 3760653420944755557}
   - component: {fileID: 8302202950370894844}
   m_Layer: 3
   m_Name: Enemy_Snail
@@ -360,6 +361,24 @@ MonoBehaviour:
   flashColor: {r: 1, g: 0, b: 0, a: 1}
   flashDuration: 0.05
   flashCount: 2
+--- !u!114 &3760653420944755557
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8283417630010587146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40521986e017e6a4183e4b4288386610, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyAttack
+  damage: 1
+  attackRange: 0.6
+  attackCooldown: 1
+  targetLayer:
+    serializedVersion: 2
+    m_Bits: 512
 --- !u!95 &8302202950370894844
 Animator:
   serializedVersion: 7

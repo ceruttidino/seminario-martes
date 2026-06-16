@@ -32,6 +32,8 @@ public class RoomInstance : MonoBehaviour
 
     public Transform DefaultSpawnPoint => defaultSpawnPoint;
 
+    private RoomNode currentNode;
+
     private void Awake()
     {
         BuildLookups();
@@ -66,6 +68,8 @@ public class RoomInstance : MonoBehaviour
 
     public void ConfigureDoors(RoomNode node, DoorDirection? forcedDoor = null)
     {
+        currentNode = node;
+
         foreach (var pair in doorLookup)
         {
             DoorDirection direction = pair.Key;
@@ -84,16 +88,20 @@ public class RoomInstance : MonoBehaviour
             {
                 door.Initialize(node, direction);
 
-                if (node.isShopUnlocked)
-                {
-                    door.SetLocked(false);
-                }
-
                 RoomNode neighbor = node.GetNeighbor(direction);
 
                 if (neighbor != null)
                 {
                     door.SetDoorType(neighbor.information.type, neighbor);
+                }
+
+                if (node.information.type == RoomType.Shop)
+                {
+                    door.SetLocked(false);
+                }
+                else if (node.isShopUnlocked)
+                {
+                    door.SetLocked(false);
                 }
             }
         }
@@ -196,13 +204,17 @@ public class RoomInstance : MonoBehaviour
         {
             if (door == null) continue;
 
-            if (door.currentDoorType == RoomType.Shop)
+            if (currentNode != null &&
+                currentNode.information.type != RoomType.Shop &&
+                door.currentDoorType == RoomType.Shop)
             {
                 continue;
             }
+
             door.SetLocked(false);
         }
     }
+
     private void EndCombat()
     {
         UnlockDoorsInstant();

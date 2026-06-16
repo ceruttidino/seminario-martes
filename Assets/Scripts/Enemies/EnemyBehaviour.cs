@@ -42,7 +42,7 @@ public class EnemyBehaviour : MonoBehaviour
                 break;
 
             case EnemyType.Snail:
-                SetState(new SnailMoveState(player, movement, transform));
+                SetState(new SnailMoveState(player, movement, transform, attack));
                 break;
 
             case EnemyType.Ant:

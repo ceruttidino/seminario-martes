@@ -208,6 +208,11 @@ public class DungeonManager : MonoBehaviour
                 currentRoomInstance.LockDoors();
             }
 
+            if (node.information.type == RoomType.Shop)
+            {
+                currentRoomInstance.UnlockDoorsInstant();
+            }
+
             node.hasBeenVisited = true;
         }
         else
@@ -246,6 +251,11 @@ public class DungeonManager : MonoBehaviour
 
     private void GenerateConnections(RoomNode node)
     {
+        if (node.information.type == RoomType.Shop || node.information.type == RoomType.Boss)
+        {
+            return;
+        }
+
         int maxNewRooms = Random.Range(2, 4);
 
         List<DoorDirection> directions = new List<DoorDirection>()

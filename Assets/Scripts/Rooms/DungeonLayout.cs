@@ -58,6 +58,11 @@ public class DungeonLayout //Builds floor layout (How Rooms Connect with Each Ot
             return existingNeighbor;
         }
 
+        if (fromNode.information.type == RoomType.Shop || fromNode.information.type == RoomType.Boss)
+        {
+            return null;
+        }
+
         Vector2Int newPosition = fromNode.gridPosition + DirectionToGridOffset(exitDirection);
 
         if (WouldPlaceSpecialNextToOpposite(newPosition, roomType))
@@ -71,6 +76,13 @@ public class DungeonLayout //Builds floor layout (How Rooms Connect with Each Ot
 
             if (existing == null || existing.information == null)
                 return null;
+
+            if ((existing.information.type == RoomType.Shop ||
+                existing.information.type == RoomType.Boss) &&
+                existing.GetNeighborsCount() >= 1)
+            {
+                return null;
+            }
 
             if (IsShopBossCombination(fromNode.information.type, existing.information.type))
                 return null;

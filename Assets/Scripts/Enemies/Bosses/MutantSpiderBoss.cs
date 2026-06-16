@@ -49,6 +49,8 @@ public class MutantSpiderBoss : BossBase
     private int sameAttackCounter = 0;
     private bool hasLastAttack = false;
 
+    private Vector2 lastMoveDirection = Vector2.down;
+
     private void Awake()
     {
         if (rb == null)
@@ -121,6 +123,8 @@ public class MutantSpiderBoss : BossBase
             Vector2 direction = toPlayer.normalized;
             rb.linearVelocity = direction * moveSpeed;
 
+            UpdateMovementAnimation(direction);
+
             timer += Time.deltaTime;
             yield return null;
         }
@@ -129,6 +133,41 @@ public class MutantSpiderBoss : BossBase
             animator.SetBool("IsMoving", false);
 
         StopMovement();
+    }
+
+    private void UpdateMovementAnimation(Vector2 direction)
+    {
+        if (animator == null)
+        {
+            Debug.LogError("Animator es NULL");
+            return;
+        }
+
+        if (direction.sqrMagnitude <= 0.01f)
+            return;
+
+        direction.Normalize();
+
+        Vector2 animDirection;
+
+        if (Mathf.Abs(direction.x) > Mathf.Abs(direction.y))
+        {
+            animDirection = direction.x > 0 ? Vector2.right : Vector2.left;
+        }
+        else
+        {
+            animDirection = direction.y > 0 ? Vector2.up : Vector2.down;
+        }
+
+        lastMoveDirection = animDirection;
+
+        animator.SetBool("IsMoving", true);
+        animator.SetFloat("MoveX", lastMoveDirection.x);
+        animator.SetFloat("MoveY", lastMoveDirection.y);
+
+        Debug.Log("ANIM BOSS -> IsMoving: " + animator.GetBool("IsMoving") +
+                  " MoveX: " + animator.GetFloat("MoveX") +
+                  " MoveY: " + animator.GetFloat("MoveY"));
     }
 
     private BossAttackType ChooseNextAttack()
@@ -300,6 +339,11 @@ public class MutantSpiderBoss : BossBase
         {
             rb.linearVelocity = Vector2.zero;
             rb.angularVelocity = 0f;
+        }
+
+        if (animator != null)
+        {
+            animator.SetBool("IsMoving", false);
         }
     }
 
