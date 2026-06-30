@@ -50,9 +50,13 @@ public class MutantSpiderBoss : BossBase
     private bool hasLastAttack = false;
 
     private Vector2 lastMoveDirection = Vector2.down;
+    private bool isContactingPlayer = false;
+    private int playerLayerIndex;
 
     private void Awake()
     {
+        playerLayerIndex = LayerMask.NameToLayer("Player");
+
         if (rb == null)
             rb = GetComponent<Rigidbody2D>();
 
@@ -96,6 +100,24 @@ public class MutantSpiderBoss : BossBase
         }
     }
 
+    private void FixedUpdate()
+    {
+        if (isContactingPlayer && rb != null)
+            rb.linearVelocity = Vector2.zero;
+    }
+
+    private void OnCollisionEnter2D(Collision2D col)
+    {
+        if (col.gameObject.layer == playerLayerIndex)
+            isContactingPlayer = true;
+    }
+
+    private void OnCollisionExit2D(Collision2D col)
+    {
+        if (col.gameObject.layer == playerLayerIndex)
+            isContactingPlayer = false;
+    }
+
     private IEnumerator ChasePlayer()
     {
         float timer = 0f;
@@ -110,7 +132,7 @@ public class MutantSpiderBoss : BossBase
             Vector2 toPlayer = (Vector2)player.position - rb.position;
             float distanceToPlayer = toPlayer.magnitude;
 
-            if (distanceToPlayer <= stoppingDistance)
+            if (distanceToPlayer <= stoppingDistance || isContactingPlayer)
             {
                 StopMovement();
 

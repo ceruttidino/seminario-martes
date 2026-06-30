@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class LeafParticleSystem : MonoBehaviour
@@ -18,13 +19,25 @@ public class LeafParticleSystem : MonoBehaviour
     [SerializeField] private float maxLifetime = 14f;
 
     private float spawnTimer = 0f;
-    private int activeLeaves = 0;
+    private readonly Queue<GameObject> pool = new Queue<GameObject>();
+
+    private void Start()
+    {
+        if (leafPrefab == null) return;
+
+        for (int i = 0; i < maxLeaves; i++)
+        {
+            GameObject leaf = Instantiate(leafPrefab, transform);
+            leaf.SetActive(false);
+            pool.Enqueue(leaf);
+        }
+    }
 
     private void Update()
     {
         spawnTimer += Time.deltaTime;
 
-        if (spawnTimer >= spawnRate && activeLeaves < maxLeaves)
+        if (spawnTimer >= spawnRate && pool.Count > 0)
         {
             SpawnLeaf();
             spawnTimer = 0f;
@@ -33,12 +46,15 @@ public class LeafParticleSystem : MonoBehaviour
 
     private void SpawnLeaf()
     {
-        if (leafPrefab == null) return;
+        if (pool.Count == 0) return;
 
-        float randomX = Random.Range(-spawnWidth / 2, spawnWidth / 2);
-        Vector3 spawnPosition = new Vector3(randomX, spawnHeight, 0);
+        float randomX = Random.Range(-spawnWidth / 2f, spawnWidth / 2f);
+        Vector3 spawnPosition = new Vector3(randomX, spawnHeight, 0f);
 
-        GameObject leaf = Instantiate(leafPrefab, spawnPosition, Quaternion.identity);
+        GameObject leaf = pool.Dequeue();
+        leaf.transform.position = spawnPosition;
+        leaf.transform.rotation = Quaternion.identity;
+        leaf.SetActive(true);
 
         LeafMovement leafMovement = leaf.GetComponent<LeafMovement>();
         if (leafMovement == null)
@@ -48,19 +64,13 @@ public class LeafParticleSystem : MonoBehaviour
         float rotationSpeed = Random.Range(minRotationSpeed, maxRotationSpeed);
         float lifetime = Random.Range(minLifetime, maxLifetime);
 
-        leafMovement.Initialize(fallSpeed, rotationSpeed, lifetime);
-
-        activeLeaves++;
-        Destroy(leaf, lifetime + 2f);
-
-        // decrements the counter when the leaf is destroyed
-        StartCoroutine(DecrementOnDestroy(lifetime + 2f));
+        leafMovement.Initialize(fallSpeed, rotationSpeed, lifetime, () => ReturnToPool(leaf));
     }
 
-    private System.Collections.IEnumerator DecrementOnDestroy(float delay)
+    private void ReturnToPool(GameObject leaf)
     {
-        yield return new WaitForSeconds(delay);
-        activeLeaves--;
+        leaf.SetActive(false);
+        pool.Enqueue(leaf);
     }
 
     public void SetActive(bool active)
