@@ -64,4 +64,13 @@ public class DungeonProgression : MonoBehaviour
         return bossSpawned;
     }
 
+    // Usado al pasar de piso: reinicia el conteo de rooms para que el nuevo
+    // piso vuelva a generar su propia tienda y su propio jefe.
+    public void ResetProgression()
+    {
+        currentNormalRoomsCount = 0;
+        shopSpawned = false;
+        bossSpawned = false;
+    }
+
 }

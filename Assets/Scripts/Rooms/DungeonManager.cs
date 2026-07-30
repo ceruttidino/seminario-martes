@@ -28,6 +28,9 @@ public class DungeonManager : MonoBehaviour
     private RoomNode currentNode;
     private RoomInstance currentRoomInstance;
     private bool isTransitioning;
+    private int currentFloor = 1;
+
+    public int CurrentFloor => currentFloor;
 
     private void Awake()
     {
@@ -48,6 +51,16 @@ public class DungeonManager : MonoBehaviour
 
     private void InitializeDungeon()
     {
+        BuildNewDungeon();
+
+        if (minimapUI != null)
+        {
+            minimapUI.Initialize(this);
+        }
+    }
+
+    private void BuildNewDungeon()
+    {
         dungeonLayout = new DungeonLayout();
         dungeonLayout.Build(startRoomInformation, normalRoomInformations, shopRoomInformation, bossRoomInformation);
 
@@ -62,11 +75,59 @@ public class DungeonManager : MonoBehaviour
         {
             currentNode.spawnedInstance.ConfigureDoors(currentNode);
         }
+    }
+
+    // Llamado desde VictoryManager al elegir continuar la run tras matar al jefe.
+    // Genera un piso completamente nuevo (nueva Start Room, nuevas rooms normales,
+    // nueva tienda y nuevo jefe), reutilizando el mismo sistema de generación
+    // de dungeons. Los buffs ya recogidos NO se resetean (BuffPool.Reset() no
+    // se llama), asi que el pool de PowerUps sigue siendo compartido entre pisos.
+    public void StartNextFloor()
+    {
+        if (isTransitioning) return;
+
+        StartCoroutine(NextFloorRoutine());
+    }
+
+    private IEnumerator NextFloorRoutine()
+    {
+        isTransitioning = true;
+
+        if (screenFader != null)
+            yield return StartCoroutine(screenFader.FadeOut());
+
+        DestroyCurrentDungeon();
+
+        currentFloor++;
+        dungeonProgression.ResetProgression();
+
+        BuildNewDungeon();
 
         if (minimapUI != null)
         {
             minimapUI.Initialize(this);
         }
+
+        if (screenFader != null)
+            yield return StartCoroutine(screenFader.FadeIn());
+
+        isTransitioning = false;
+    }
+
+    private void DestroyCurrentDungeon()
+    {
+        if (dungeonLayout == null) return;
+
+        foreach (RoomNode node in dungeonLayout.GetAllRooms())
+        {
+            if (node.spawnedInstance != null)
+            {
+                Destroy(node.spawnedInstance.gameObject);
+            }
+        }
+
+        currentRoomInstance = null;
+        currentNode = null;
     }
 
     public void TryMoveToNextRoom(DoorDirection exitDirection)
@@ -214,15 +275,18 @@ public class DungeonManager : MonoBehaviour
             }
 
             node.hasBeenVisited = true;
+
+            // Solo se generan nuevas conexiones/puertas la PRIMERA vez que se
+            // visita una room. Antes esto se ejecutaba en cada reingreso, lo que
+            // podia crear rooms y puertas nuevas en una room ya explorada.
+            if (node.uniqueNodeID != "Start")
+            {
+                GenerateConnections(node);
+            }
         }
         else
         {
             currentRoomInstance.UnlockDoorsInstant();
-        }
-
-        if (node.uniqueNodeID != "Start")
-        {
-            GenerateConnections(node);
         }
     }
 
