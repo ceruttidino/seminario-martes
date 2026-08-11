@@ -685,10 +685,13 @@ MonoBehaviour:
   - {fileID: 11400000, guid: c741746624bb2194fa40e9d3a3b67737, type: 2}
   - {fileID: 11400000, guid: 02b0535623519164cb161f5472bcbb8e, type: 2}
   - {fileID: 11400000, guid: 2852f53f959d3b54eb397aa30de2ebb8, type: 2}
+  - {fileID: 11400000, guid: 47e2b07e41677aa4ab38c6c2aa4d87c8, type: 2}
+  - {fileID: 11400000, guid: e4408e277d2206245b9bf077a4159002, type: 2}
   - {fileID: 11400000, guid: f2999fc0799c61245afdf8442d03ed64, type: 2}
   - {fileID: 11400000, guid: eef3bb7b2dfaa21438824868e160e312, type: 2}
   - {fileID: 11400000, guid: 34e2a51e15b7e9f4e8ab017a9862996b, type: 2}
   - {fileID: 11400000, guid: 4c93875aafc807a428b3fb1292432aa4, type: 2}
+  - {fileID: 11400000, guid: 3cb33acea98c94442bd96ee11abfd591, type: 2}
   - {fileID: 11400000, guid: b63792a1e2b70cd41b105758415b4535, type: 2}
   shopRoomInformation: {fileID: 11400000, guid: 5d7cc0080f540034a80ec39e4a3a0a05, type: 2}
   bossRoomInformation: {fileID: 11400000, guid: 9ffd6e2afc21c844f9849da92ebe2889, type: 2}
