@@ -312,7 +312,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36f78df000705794abe22ca857d7f07e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyMovement
-  speed: 5
+  speed: 3
   animator: {fileID: 8302202950370894844}
   spriteRenderer: {fileID: 1610651138796991159}
 --- !u!114 &3955632396312354887

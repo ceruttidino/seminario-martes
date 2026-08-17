@@ -7,7 +7,6 @@ public class SnakeAttackState : IEnemyState
     private readonly Transform self;
     private readonly EnemyBehaviour behaviour;
     private readonly PoisonousSnake snake;
-    private readonly Animator animator;
 
     private float windupTimer;
 
@@ -18,16 +17,13 @@ public class SnakeAttackState : IEnemyState
         this.self = self;
         this.behaviour = behaviour;
         this.snake = snake;
-        animator = self.GetComponent<Animator>();
     }
 
     public void Enter()
     {
         windupTimer = snake.WindupDuration;
         movement.Move(Vector2.zero);
-
-        if (animator != null)
-            animator.SetBool("IsWindingUp", true);
+        snake.BeginWindupFeedback();
     }
 
     public void Tick()
@@ -43,7 +39,6 @@ public class SnakeAttackState : IEnemyState
 
     public void Exit()
     {
-        if (animator != null)
-            animator.SetBool("IsWindingUp", false);
+        snake.EndWindupFeedback();
     }
 }

@@ -11,6 +11,7 @@ public class PoisonousSnake : MonoBehaviour
     [Header("Attack")]
     [SerializeField] private float windupDuration = 0.5f;
     [SerializeField] private float attackDamage = 1f; // media vida de corazon
+    [SerializeField] private DamageFlash damageFlash;
 
     [Header("Flee")]
     [SerializeField] private float fleeSpeed = 4f;
@@ -26,6 +27,25 @@ public class PoisonousSnake : MonoBehaviour
     public float WindupDuration => windupDuration;
     public float FleeSpeed => fleeSpeed;
     public float FleeDuration => fleeDuration;
+
+    private void Awake()
+    {
+        if (damageFlash == null)
+            damageFlash = GetComponent<DamageFlash>();
+    }
+
+    // Aviso visual de que esta preparando el ataque (mismo mecanismo que usa
+    // ExplosiveHedgehog para su estado de armado), en vez de un estado extra
+    // en el Animator.
+    public void BeginWindupFeedback()
+    {
+        damageFlash?.StartLoopFlash();
+    }
+
+    public void EndWindupFeedback()
+    {
+        damageFlash?.StopLoopFlash();
+    }
 
     // Se llama al finalizar el windup. Vuelve a chequear el rango por si el jugador escapo mientras se preparaba.
     public void PerformAttack(Transform player)
