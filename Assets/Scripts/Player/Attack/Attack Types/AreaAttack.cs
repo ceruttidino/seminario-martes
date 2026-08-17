@@ -69,6 +69,15 @@ public class AreaAttack : MonoBehaviour, IAttack
 
         foreach (Collider2D hit in hits)
         {
+            // El shell no se "daña": se empuja alejándolo del centro de la explosión.
+            TurtleShell shell = hit.GetComponentInParent<TurtleShell>();
+            if (shell != null)
+            {
+                Vector2 pushDirection = (Vector2)hit.transform.position - (Vector2)transform.position;
+                shell.Push(pushDirection);
+                continue;
+            }
+
             IDamageable damageable = hit.GetComponentInParent<IDamageable>();
 
             if (damageable != null)

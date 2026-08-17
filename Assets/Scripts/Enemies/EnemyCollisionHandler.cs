@@ -15,8 +15,12 @@ public class EnemyCollisionHandler : MonoBehaviour
     {
         if ((wallLayer.value & (1 << collision.gameObject.layer)) != 0)
         {
-            ContactPoint2D contact = collision.contacts[0];
-            Vector2 normal = contact.normal;
+            Vector2 normal = Vector2.zero;
+            for (int i = 0; i < collision.contacts.Length; i++)
+            {
+                normal += collision.contacts[i].normal;
+            }
+            normal = (normal / collision.contacts.Length).normalized;
 
             behaviour.OnWallHit(normal);
         }

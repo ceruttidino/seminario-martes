@@ -6,5 +6,6 @@ public enum EnemyType
     Snail,
     Ant,
     Mole,
-    Hedgehog
+    Hedgehog,
+    Turtle
 }

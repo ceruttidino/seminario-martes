@@ -11,12 +11,14 @@ public class EnemyBehaviour : MonoBehaviour
 
     private EnemyMovement movement;
     private ExplosiveHedgehog explosiveHedgehog;
+    private SpikyTurtle spikyTurtle;
 
     private void Awake()
     {
         movement = GetComponent<EnemyMovement>();
         attack = GetComponent<EnemyAttack>();
         explosiveHedgehog = GetComponent<ExplosiveHedgehog>();
+        spikyTurtle = GetComponent<SpikyTurtle>();
     }
 
     private void Update()
@@ -63,6 +65,16 @@ public class EnemyBehaviour : MonoBehaviour
                 SetState(new HedgehogChaseState(player, movement, transform, this, explosiveHedgehog));
                 break;
 
+            case EnemyType.Turtle:
+                if (spikyTurtle == null)
+                {
+                    Debug.LogError($"EnemyBehaviour: {gameObject.name} necesita SpikyTurtle.");
+                    break;
+                }
+
+                SetState(new TurtleWanderState(player, movement, transform, this, spikyTurtle));
+                break;
+
             default:
                 Debug.LogWarning($"EnemyBehaviour: no hay estado implementado para el tipo '{enemyType}' en {gameObject.name}.");
                 break;
@@ -81,6 +93,11 @@ public class EnemyBehaviour : MonoBehaviour
         currentState?.Tick();
     }
 
+    public bool CurrentStateIs<T>() where T : class, IEnemyState
+    {
+        return currentState is T;
+    }
+
     public void OnWallHit(Vector2 normal)
     {
         if (currentState is SnailMoveState snail)
@@ -90,6 +107,15 @@ public class EnemyBehaviour : MonoBehaviour
         if (currentState is AntMoveState ant)
         {
             ant.OnWallHit(normal);
+        }
+
+        if (currentState is TurtleWanderState turtleWander)
+        {
+            turtleWander.OnWallHit(normal);
+        }
+        if (currentState is TurtleChargeState turtleCharge)
+        {
+            turtleCharge.OnWallHit(normal);
         }
     }
 }

@@ -28,7 +28,12 @@ public class EnemyMovement : MonoBehaviour, IMovement
 
     public void Move(Vector2 direction)
     {
-        rb.linearVelocity = direction * speed;
+        Move(direction, speed);
+    }
+
+    public void Move(Vector2 direction, float speedOverride)
+    {
+        rb.linearVelocity = direction * speedOverride;
 
         UpdateAnimator(direction);
     }

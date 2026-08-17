@@ -96,6 +96,14 @@ public class QuickAttack : MonoBehaviour, IAttack
 
         foreach (Collider2D hit in hits)
         {
+            // El shell no se "daña": se empuja en la dirección del golpe.
+            TurtleShell shell = hit.GetComponentInParent<TurtleShell>();
+            if (shell != null)
+            {
+                shell.Push(attackDirection);
+                continue;
+            }
+
             IDamageable damageable = hit.GetComponentInParent<IDamageable>();
 
             if (damageable != null)

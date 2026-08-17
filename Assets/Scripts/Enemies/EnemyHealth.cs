@@ -8,11 +8,14 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     private float currentHealth;
     private bool isDead;
 
+    private bool canTakeDamage = true;
+
     public event System.Action OnDeath;
     public event System.Action OnDamaged;
 
     public float MaxHealth => maxHealth;
     public float CurrentHealth => currentHealth;
+    public bool CanTakeDamage => canTakeDamage;
 
     private void Awake()
     {
@@ -25,6 +28,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     public void TakeDamage(float damage)
     {
         if (isDead) return;
+        if (!canTakeDamage) return;
 
         currentHealth -= damage;
         currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
@@ -50,5 +54,10 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     public void SetCurrentHealth(float value)
     {
         currentHealth = Mathf.Clamp(value, 0f, maxHealth);
+    }
+
+    public void SetDamageable(bool value)
+    {
+        canTakeDamage = value;
     }
 }
