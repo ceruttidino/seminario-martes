@@ -12,6 +12,7 @@ public class EnemyBehaviour : MonoBehaviour
     private EnemyMovement movement;
     private ExplosiveHedgehog explosiveHedgehog;
     private SpikyTurtle spikyTurtle;
+    private PoisonousSnake poisonousSnake;
 
     private void Awake()
     {
@@ -19,6 +20,7 @@ public class EnemyBehaviour : MonoBehaviour
         attack = GetComponent<EnemyAttack>();
         explosiveHedgehog = GetComponent<ExplosiveHedgehog>();
         spikyTurtle = GetComponent<SpikyTurtle>();
+        poisonousSnake = GetComponent<PoisonousSnake>();
     }
 
     private void Update()
@@ -75,6 +77,16 @@ public class EnemyBehaviour : MonoBehaviour
                 SetState(new TurtleWanderState(player, movement, transform, this, spikyTurtle));
                 break;
 
+            case EnemyType.Snake:
+                if (poisonousSnake == null)
+                {
+                    Debug.LogError($"EnemyBehaviour: {gameObject.name} necesita PoisonousSnake.");
+                    break;
+                }
+
+                SetState(new SnakeChaseState(player, movement, transform, this, poisonousSnake));
+                break;
+
             default:
                 Debug.LogWarning($"EnemyBehaviour: no hay estado implementado para el tipo '{enemyType}' en {gameObject.name}.");
                 break;
@@ -116,6 +128,11 @@ public class EnemyBehaviour : MonoBehaviour
         if (currentState is TurtleChargeState turtleCharge)
         {
             turtleCharge.OnWallHit(normal);
+        }
+
+        if (currentState is SnakeFleeState snakeFlee)
+        {
+            snakeFlee.OnWallHit(normal);
         }
     }
 }

@@ -151,5 +151,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a964ddfafee56a044bacb180940f551a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SlimeTile
-  lifetime: 4
-  damage: 2
+  lifetime: 3
+  damage: 1

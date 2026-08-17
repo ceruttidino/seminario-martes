@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class SlimeTile : MonoBehaviour
 {
-    [SerializeField] private float lifetime = 4f;
-    [SerializeField] private float damage = 0.5f;
+    [SerializeField] private float lifetime = 3f;
+    [SerializeField] private float damage = 1f;
 
     private void Start()
     {
