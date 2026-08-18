@@ -15,4 +15,5 @@ MonoBehaviour:
   roomID: Spike_Room_1
   type: 1
   prefab: {fileID: 5081486977560716221, guid: 128c38c1feb17b343a5357187cfadb50, type: 3}
+  level: 2
   availableDoors: 00000000010000000200000003000000

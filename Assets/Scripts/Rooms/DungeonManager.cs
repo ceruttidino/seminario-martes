@@ -21,6 +21,10 @@ public class DungeonManager : MonoBehaviour
     [Header("Transition")]
     [SerializeField] private float transitionDelay = 0.5f;
 
+    [Header("Progression")]
+    [Tooltip("Último nivel jugable. Al matar el boss en este nivel, el juego termina en vez de generar el siguiente piso.")]
+    [SerializeField] private int maxFloor = 3;
+
     [Header("UI")]
     [SerializeField] private MinimapUI minimapUI;
 
@@ -31,6 +35,8 @@ public class DungeonManager : MonoBehaviour
     private int currentFloor = 1;
 
     public int CurrentFloor => currentFloor;
+    public int MaxFloor => maxFloor;
+    public bool IsFinalFloor => currentFloor >= maxFloor;
 
     private void Awake()
     {
@@ -59,10 +65,27 @@ public class DungeonManager : MonoBehaviour
         }
     }
 
+    private List<RoomInformation> GetNormalRoomsForFloor(int floor)
+    {
+        List<RoomInformation> filtered = normalRoomInformations.FindAll(
+            r => r != null && r.level == floor
+        );
+
+        if (filtered.Count == 0)
+        {
+            Debug.LogWarning($"No hay Room Informations normales configuradas para el nivel {floor}. Se usará el pool completo como fallback.");
+            return new List<RoomInformation>(normalRoomInformations);
+        }
+
+        return filtered;
+    }
+
     private void BuildNewDungeon()
     {
+        List<RoomInformation> floorRooms = GetNormalRoomsForFloor(currentFloor);
+
         dungeonLayout = new DungeonLayout();
-        dungeonLayout.Build(startRoomInformation, normalRoomInformations, shopRoomInformation, bossRoomInformation);
+        dungeonLayout.Build(startRoomInformation, floorRooms, shopRoomInformation, bossRoomInformation);
 
         currentNode = dungeonLayout.StartNode;
         currentNode.isCurrentRoom = true;
@@ -85,6 +108,7 @@ public class DungeonManager : MonoBehaviour
     public void StartNextFloor()
     {
         if (isTransitioning) return;
+        if (IsFinalFloor) return;
 
         StartCoroutine(NextFloorRoutine());
     }

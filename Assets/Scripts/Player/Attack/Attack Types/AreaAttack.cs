@@ -7,20 +7,28 @@ public class AreaAttack : MonoBehaviour, IAttack
     [SerializeField] private LayerMask trashLayer;
     [SerializeField] private Animator animator;
     [SerializeField] private PlayerMovement playerMovement;
+    [SerializeField] private PlayerDash playerDash;
 
     [Header("Area Attack")]
     [SerializeField] private float damage = 20f;
     [SerializeField] private float cooldown = 2f;
     [SerializeField] private float radius = 2f;
+    [SerializeField] private float attackActiveDuration = 0.3f;
 
     [SerializeField] private AudioSource sfxSource;
 
     private float lastUseTime = -999f;
+    private bool isAttacking = false;
+
+    public bool IsAttacking => isAttacking;
 
     private void Awake()
     {
         if (playerMovement == null)
             playerMovement = GetComponent<PlayerMovement>();
+
+        if (playerDash == null)
+            playerDash = GetComponent<PlayerDash>();
     }
 
     public float CooldownRemaining
@@ -43,6 +51,7 @@ public class AreaAttack : MonoBehaviour, IAttack
 
     public bool CanExecute()
     {
+        if (playerDash != null && playerDash.IsDashing) return false;
         return Time.time >= lastUseTime + cooldown;
     }
 
@@ -51,6 +60,10 @@ public class AreaAttack : MonoBehaviour, IAttack
         if (!CanExecute()) return;
 
         lastUseTime = Time.time;
+
+        isAttacking = true;
+        CancelInvoke(nameof(EndAttackWindow));
+        Invoke(nameof(EndAttackWindow), attackActiveDuration);
 
         if (sfxSource != null)
             sfxSource.Play();
@@ -89,6 +102,11 @@ public class AreaAttack : MonoBehaviour, IAttack
                 trash.TakeHit(damage);
             }
         }
+    }
+
+    private void EndAttackWindow()
+    {
+        isAttacking = false;
     }
 
     private void OnDrawGizmosSelected()

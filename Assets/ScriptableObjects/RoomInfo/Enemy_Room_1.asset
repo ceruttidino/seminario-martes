@@ -15,4 +15,5 @@ MonoBehaviour:
   roomID: Enemy_Room_1
   type: 1
   prefab: {fileID: 5081486977560716221, guid: 5507c2b20577bd94795d717bf817debf, type: 3}
+  level: 2
   availableDoors: 00000000010000000200000003000000

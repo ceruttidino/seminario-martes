@@ -9,10 +9,17 @@ public class VictoryManager : MonoBehaviour
     [SerializeField] private Button mainMenuButton;
     [SerializeField] private Button continueButton;
 
+    [Header("Final Victory UI (opcional)")]
+    [Tooltip("Si lo asignás, se activa solo cuando se vence al boss del último nivel (ej: texto 'Juego Completado').")]
+    [SerializeField] private GameObject finalVictoryExtras;
+
     private void Awake()
     {
         if (victoryScreen != null)
             victoryScreen.SetActive(false);
+
+        if (finalVictoryExtras != null)
+            finalVictoryExtras.SetActive(false);
     }
 
     private void Start()
@@ -26,11 +33,19 @@ public class VictoryManager : MonoBehaviour
 
     public void TriggerVictory()
     {
-        if (victoryScreen != null)
-        {
-            victoryScreen.SetActive(true);
-            victoryScreen.transform.SetAsLastSibling();
-        }
+        if (victoryScreen == null) return;
+
+        bool isFinalFloor = DungeonManager.Instance != null && DungeonManager.Instance.IsFinalFloor;
+
+        // En el último nivel no tiene sentido ofrecer "continuar": se acaba el juego acá.
+        if (continueButton != null)
+            continueButton.gameObject.SetActive(!isFinalFloor);
+
+        if (finalVictoryExtras != null)
+            finalVictoryExtras.SetActive(isFinalFloor);
+
+        victoryScreen.SetActive(true);
+        victoryScreen.transform.SetAsLastSibling();
     }
 
     public void GoToMainMenu()
@@ -42,6 +57,9 @@ public class VictoryManager : MonoBehaviour
     // victoria y le pide al DungeonManager que genere un nuevo piso.
     public void ContinueRun()
     {
+        if (DungeonManager.Instance != null && DungeonManager.Instance.IsFinalFloor)
+            return;
+
         if (victoryScreen != null)
             victoryScreen.SetActive(false);
 

@@ -5,6 +5,7 @@ public class QuickAttack : MonoBehaviour, IAttack
     [Header("References")]
     [SerializeField] private PlayerAim playerAim;
     [SerializeField] private PlayerMovement playerMovement;
+    [SerializeField] private PlayerDash playerDash;
     [SerializeField] private LayerMask enemyLayer;
     [SerializeField] private LayerMask trashLayer;
     [SerializeField] private Animator animator;
@@ -15,11 +16,15 @@ public class QuickAttack : MonoBehaviour, IAttack
     [SerializeField] private float cooldown = 0.5f;
     [SerializeField] private float attackDistance = 1f;
     [SerializeField] private Vector2 attackBoxSize = new Vector2(1.2f, 0.8f);
+    [SerializeField] private float attackActiveDuration = 0.25f;
 
     [SerializeField] private AudioSource sfxSource;
 
     private float lastUseTime = -999f;
     private Vector2 lastAttackDirection = Vector2.down;
+    private bool isAttacking = false;
+
+    public bool IsAttacking => isAttacking;
 
     private void Awake()
     {
@@ -28,6 +33,9 @@ public class QuickAttack : MonoBehaviour, IAttack
 
         if (playerMovement == null)
             playerMovement = GetComponent<PlayerMovement>();
+
+        if (playerDash == null)
+            playerDash = GetComponent<PlayerDash>();
 
         if (spriteRenderer == null)
             spriteRenderer = GetComponent<SpriteRenderer>();
@@ -44,6 +52,7 @@ public class QuickAttack : MonoBehaviour, IAttack
 
     public bool CanExecute()
     {
+        if (playerDash != null && playerDash.IsDashing) return false;
         return Time.time >= lastUseTime + cooldown;
     }
 
@@ -68,6 +77,10 @@ public class QuickAttack : MonoBehaviour, IAttack
 
         lastUseTime = Time.time;
         lastAttackDirection = attackDirection;
+
+        isAttacking = true;
+        CancelInvoke(nameof(EndAttackWindow));
+        Invoke(nameof(EndAttackWindow), attackActiveDuration);
 
         if (sfxSource != null)
             sfxSource.Play();
@@ -115,6 +128,11 @@ public class QuickAttack : MonoBehaviour, IAttack
                 trash.TakeHit(damage);
             }
         }
+    }
+
+    private void EndAttackWindow()
+    {
+        isAttacking = false;
     }
 
     private void OnDrawGizmosSelected()

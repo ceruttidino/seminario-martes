@@ -9,6 +9,10 @@ public class RoomInformation : ScriptableObject //Save Room ID, Type, Prefab, Do
     public RoomType type = RoomType.Normal;
     public RoomInstance prefab;
 
+    [Header("Progression")]
+    [Tooltip("A qué nivel/piso pertenece esta room normal. Se ignora para Shop/Boss, que son fijas.")]
+    public int level = 1;
+
     [Header("Doors")]
     public List<DoorDirection> availableDoors = new List<DoorDirection>();
 

@@ -14,6 +14,8 @@ public class PlayerDash : MonoBehaviour
     [SerializeField] private PlayerMovement playerMovement;
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private Animator animator;
+    [SerializeField] private QuickAttack quickAttack;
+    [SerializeField] private AreaAttack areaAttack;
 
     [SerializeField] private AudioSource sfxSource;
 
@@ -41,7 +43,13 @@ public class PlayerDash : MonoBehaviour
         }
     }
 
-    public bool CanDash => CooldownRemaining <= 0f && !isDashing;
+    public bool CanDash => CooldownRemaining <= 0f && !isDashing && !IsAnyAttackActive();
+
+    private bool IsAnyAttackActive()
+    {
+        return (quickAttack != null && quickAttack.IsAttacking)
+            || (areaAttack != null && areaAttack.IsAttacking);
+    }
 
     private void Awake()
     {
@@ -55,6 +63,12 @@ public class PlayerDash : MonoBehaviour
 
         if (animator == null)
             animator = GetComponent<Animator> ();
+
+        if (quickAttack == null)
+            quickAttack = GetComponent<QuickAttack>();
+
+        if (areaAttack == null)
+            areaAttack = GetComponent<AreaAttack>();
     }
 
     private void Update()
