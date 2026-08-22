@@ -33,6 +33,9 @@ public class PlayerUpgradeManager : MonoBehaviour
 
         collectedUpgrades.Add(upgrade);
         upgrade.Apply(this);
+
+        if (UpgradePopupUI.Instance != null)
+            UpgradePopupUI.Instance.Show(upgrade); // dispara el cartelito
     }
 
     public List<UpgradeSO> GetCollectedUpgrades() => collectedUpgrades;
