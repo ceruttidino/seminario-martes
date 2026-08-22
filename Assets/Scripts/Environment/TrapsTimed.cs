@@ -82,9 +82,9 @@ public class BaseTrap : MonoBehaviour
 
     private void CycleState()
         {
-            if (trapState == TrapState.Hidden) { trapState = TrapState.InBetween; Debug.Log(trapState); return; }
-            if (trapState == TrapState.InBetween) { trapState = TrapState.Active; Debug.Log(trapState); return; }
-            if (trapState == TrapState.Active) { trapState = TrapState.Hidden; Debug.Log(trapState); return; }
+            if (trapState == TrapState.Hidden) { trapState = TrapState.InBetween; return; }
+            if (trapState == TrapState.InBetween) { trapState = TrapState.Active; return; }
+            if (trapState == TrapState.Active) { trapState = TrapState.Hidden; return; }
 
         }
     private void CycleState(TrapState ts)

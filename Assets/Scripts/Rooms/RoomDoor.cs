@@ -163,6 +163,18 @@ public class RoomDoor : MonoBehaviour
         if (isUnlocking) return;
 
         isLocked = false;
+
+        // Una puerta sin vecino en esa direccion queda inactiva (ver
+        // RoomInstance.ConfigureDoors). Unity no permite iniciar corutinas en
+        // GameObjects inactivos: en ese caso aplicamos el estado final directo,
+        // sin animacion, ya que el jugador no puede verla de todos modos.
+        if (!gameObject.activeInHierarchy)
+        {
+            UpdateDoorVisual();
+            onComplete?.Invoke();
+            return;
+        }
+
         isUnlocking = true;
         unlockRoutine = StartCoroutine(UnlockAnimationRoutine(onComplete));
     }

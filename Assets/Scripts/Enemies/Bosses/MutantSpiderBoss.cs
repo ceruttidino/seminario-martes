@@ -186,10 +186,6 @@ public class MutantSpiderBoss : BossBase
         animator.SetBool("IsMoving", true);
         animator.SetFloat("MoveX", lastMoveDirection.x);
         animator.SetFloat("MoveY", lastMoveDirection.y);
-
-        Debug.Log("ANIM BOSS -> IsMoving: " + animator.GetBool("IsMoving") +
-                  " MoveX: " + animator.GetFloat("MoveX") +
-                  " MoveY: " + animator.GetFloat("MoveY"));
     }
 
     private BossAttackType ChooseNextAttack()

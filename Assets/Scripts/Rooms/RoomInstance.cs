@@ -140,9 +140,18 @@ public class RoomInstance : MonoBehaviour
     {
         if (enemiesSpawned) return;
 
+        // Muchos tipos de room (Start, Shop, Boss, Treasure, Spike, Connection) no
+        // tienen enemigos a proposito, asi que esto no es un error: no logueamos
+        // nada salvo que la configuracion este a medias (prefab si pero sin puntos
+        // de spawn, o viceversa), que ahi si es indicio de una room mal configurada.
+        if (enemyPrefab == null && (enemySpawnPoints == null || enemySpawnPoints.Length == 0))
+        {
+            return;
+        }
+
         if (enemyPrefab == null || enemySpawnPoints == null || enemySpawnPoints.Length == 0)
         {
-            Debug.LogWarning("No hay configuración de enemigos en esta room");
+            Debug.LogWarning($"Configuración de enemigos incompleta en la room '{gameObject.name}': falta el prefab o los puntos de spawn.");
             return;
         }
 
