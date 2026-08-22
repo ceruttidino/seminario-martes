@@ -110,7 +110,7 @@ GameObject:
   - component: {fileID: 6898505885081546488}
   - component: {fileID: 2378659159166680875}
   - component: {fileID: 642305526718991060}
-  - component: {fileID: -143269127697244384}
+  - component: {fileID: 1285934711303894677}
   - component: {fileID: 309619778238069551}
   - component: {fileID: 1190308387966114794}
   m_Layer: 3
@@ -403,7 +403,7 @@ MonoBehaviour:
   wallLayer:
     serializedVersion: 2
     m_Bits: 1024
---- !u!114 &-143269127697244384
+--- !u!114 &1285934711303894677
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -412,15 +412,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 5136333534524507215}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 40521986e017e6a4183e4b4288386610, type: 3}
+  m_Script: {fileID: 11500000, guid: 0cb6ebd142860548785c6d09f4f2cc7d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyAttack
-  damage: 1
-  attackRange: 1.6
-  attackCooldown: 1
-  targetLayer:
-    serializedVersion: 2
-    m_Bits: 512
+  m_EditorClassIdentifier: Assembly-CSharp::RegeneratingRat
+  attackTriggerRange: 0.75
+  attackHitRange: 0.85
+  attackDuration: 1
+  hitTiming: 0.5
+  attackDamage: 1
+  damageFlash: {fileID: 309619778238069551}
 --- !u!114 &309619778238069551
 MonoBehaviour:
   m_ObjectHideFlags: 0

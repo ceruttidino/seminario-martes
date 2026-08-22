@@ -5,17 +5,18 @@ public class RatChaseState : IEnemyState
     private Transform player;
     private EnemyMovement movement;
     private Transform enemy;
-    private EnemyAttack attack;
+    private EnemyBehaviour behaviour;
+    private RegeneratingRat rat;
 
-    private float stopDistance = 0.59f;
     private float slowDownDistance = 1.5f;
 
-    public RatChaseState(Transform player, EnemyMovement movement, Transform enemy, EnemyAttack attack)
+    public RatChaseState(Transform player, EnemyMovement movement, Transform enemy, EnemyBehaviour behaviour, RegeneratingRat rat)
     {
         this.player = player;
         this.movement = movement;
         this.enemy = enemy;
-        this.attack = attack;
+        this.behaviour = behaviour;
+        this.rat = rat;
     }
 
     public void Enter(){ }
@@ -30,11 +31,12 @@ public class RatChaseState : IEnemyState
 
         Vector2 toPlayer = player.position - enemy.position;
         float distance = toPlayer.magnitude;
+        float stopDistance = rat.AttackTriggerRange;
 
         if (distance <= stopDistance)
         {
             movement.Move(Vector2.zero);
-            attack.TryAttack();
+            behaviour.SetState(new RatAttackState(player, movement, enemy, behaviour, rat));
             return;
         }
 

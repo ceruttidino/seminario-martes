@@ -13,6 +13,7 @@ public class EnemyBehaviour : MonoBehaviour
     private ExplosiveHedgehog explosiveHedgehog;
     private SpikyTurtle spikyTurtle;
     private PoisonousSnake poisonousSnake;
+    private RegeneratingRat regeneratingRat;
 
     private void Awake()
     {
@@ -21,6 +22,7 @@ public class EnemyBehaviour : MonoBehaviour
         explosiveHedgehog = GetComponent<ExplosiveHedgehog>();
         spikyTurtle = GetComponent<SpikyTurtle>();
         poisonousSnake = GetComponent<PoisonousSnake>();
+        regeneratingRat = GetComponent<RegeneratingRat>();
     }
 
     private void Update()
@@ -42,7 +44,13 @@ public class EnemyBehaviour : MonoBehaviour
         switch (enemyType)
         {
             case EnemyType.Rat:
-                SetState(new RatChaseState(player, movement, transform, attack));
+                if (regeneratingRat == null)
+                {
+                    Debug.LogError($"EnemyBehaviour: {gameObject.name} necesita RegeneratingRat.");
+                    break;
+                }
+
+                SetState(new RatChaseState(player, movement, transform, this, regeneratingRat));
                 break;
 
             case EnemyType.Snail:
