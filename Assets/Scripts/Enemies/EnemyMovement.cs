@@ -9,6 +9,22 @@ public class EnemyMovement : MonoBehaviour, IMovement
     [SerializeField] private Animator animator;
     [SerializeField] private SpriteRenderer spriteRenderer;
 
+    [Header("Obstacle Avoidance")]
+    [Tooltip("Capas solidas (paredes, piedras, bolsas de basura, etc.) que el enemigo esquiva en vez de empujar contra ellas. Los triggers (puertas, zonas de interaccion) se ignoran siempre, sin importar la capa.")]
+    [SerializeField] private LayerMask obstacleLayers = 1088; // Wall (1024) + Trash (64)
+    [Tooltip("Radio del sondeo circular usado para detectar obstaculos por delante.")]
+    [SerializeField] private float avoidanceRadius = 0.3f;
+    [Tooltip("Distancia hacia adelante que se sondea antes de moverse.")]
+    [SerializeField] private float avoidanceLookahead = 0.6f;
+
+    // Angulos de sondeo en abanico, alternando lados, para encontrar el desvio
+    // mas chico posible respecto de la direccion deseada original.
+    private static readonly float[] AvoidanceProbeAngles =
+        { 0f, 20f, -20f, 40f, -40f, 60f, -60f, 80f, -80f, 100f, -100f };
+
+    private static readonly RaycastHit2D[] AvoidanceHitBuffer = new RaycastHit2D[1];
+
+    private ContactFilter2D obstacleFilter;
     private Vector2 lastFacingDirection = Vector2.down;
 
     private void Awake()
@@ -24,18 +40,75 @@ public class EnemyMovement : MonoBehaviour, IMovement
         {
             spriteRenderer = GetComponent<SpriteRenderer>();
         }
+
+        // useTriggers=false es clave: puertas y zonas de interaccion son triggers
+        // en la capa Wall y NO deben tratarse como obstaculos a esquivar.
+        obstacleFilter = new ContactFilter2D();
+        obstacleFilter.useTriggers = false;
+        obstacleFilter.SetLayerMask(obstacleLayers);
     }
 
     public void Move(Vector2 direction)
     {
-        Move(direction, speed);
+        Move(direction, speed, true);
     }
 
     public void Move(Vector2 direction, float speedOverride)
     {
-        rb.linearVelocity = direction * speedOverride;
+        Move(direction, speedOverride, true);
+    }
 
-        UpdateAnimator(direction);
+    // avoidObstacles=false preserva el comportamiento fisico "crudo" para casos
+    // donde chocar/rebotar contra el entorno es parte intencional del ataque
+    // (ej. la embestida del Turtle, que rebota con OnWallHit a proposito).
+    public void Move(Vector2 direction, float speedOverride, bool avoidObstacles)
+    {
+        Vector2 finalDirection = avoidObstacles ? ApplyObstacleAvoidance(direction) : direction;
+
+        rb.linearVelocity = finalDirection * speedOverride;
+
+        UpdateAnimator(finalDirection);
+    }
+
+    // Desvia la direccion pedida por el estado del enemigo (perseguir, huir,
+    // deambular, acercarse) para esquivar paredes/piedras/objetos solidos ANTES
+    // de chocar, en vez de quedar empujando en vano contra el obstaculo. Esto NO
+    // cambia a quien persigue o ataca cada enemigo, solo como se traduce esa
+    // decision en movimiento fisico real.
+    private Vector2 ApplyObstacleAvoidance(Vector2 desiredDirection)
+    {
+        float magnitude = desiredDirection.magnitude;
+        if (magnitude < 0.0001f || obstacleLayers.value == 0)
+            return desiredDirection;
+
+        Vector2 baseDirection = desiredDirection / magnitude;
+        Vector2 origin = rb != null ? rb.position : (Vector2)transform.position;
+
+        foreach (float angle in AvoidanceProbeAngles)
+        {
+            Vector2 probeDirection = RotateVector(baseDirection, angle);
+
+            int hitCount = Physics2D.CircleCast(origin, avoidanceRadius, probeDirection, obstacleFilter, AvoidanceHitBuffer, avoidanceLookahead);
+            if (hitCount == 0)
+                return probeDirection * magnitude;
+        }
+
+        // Rodeado por todos lados: mejor frenar que seguir empujando contra el obstaculo.
+        return Vector2.zero;
+    }
+
+    private static Vector2 RotateVector(Vector2 vector, float degrees)
+    {
+        if (degrees == 0f) return vector;
+
+        float radians = degrees * Mathf.Deg2Rad;
+        float cos = Mathf.Cos(radians);
+        float sin = Mathf.Sin(radians);
+
+        return new Vector2(
+            vector.x * cos - vector.y * sin,
+            vector.x * sin + vector.y * cos
+        );
     }
 
     private void UpdateAnimator(Vector2 direction)
