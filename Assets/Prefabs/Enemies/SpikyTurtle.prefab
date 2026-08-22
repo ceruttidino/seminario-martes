@@ -211,13 +211,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a34e949238e10ad46b3d45d716c69d7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpikyTurtle
-  chargeWindup: 0.5
-  chargeDuration: 3
+  chargeWindup: 0.8
+  chargeDuration: 1.5
   chargeSpeed: 8
   chargeDamage: 1
   detectionRange: 4
   upsideDownDuration: 1
   shellPrefab: {fileID: 3205007439386167376, guid: 95dcde0c5e44a854085f304056e6473b, type: 3}
+  spriteRenderer: {fileID: 3728724055600635049}
+  damageFlash: {fileID: 909962840964883186}
 --- !u!114 &909962840964883186
 MonoBehaviour:
   m_ObjectHideFlags: 0

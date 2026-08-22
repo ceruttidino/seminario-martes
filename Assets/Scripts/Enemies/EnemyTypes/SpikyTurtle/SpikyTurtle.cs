@@ -6,8 +6,10 @@ using UnityEngine;
 public class SpikyTurtle : MonoBehaviour
 {
     [Header("Charge Settings")]
-    [SerializeField] private float chargeWindup = 0.5f;
-    [SerializeField] private float chargeDuration = 3f;
+    [Tooltip("Tiempo de preparacion antes de arrancar la embestida (GDD: 0.8s).")]
+    [SerializeField] private float chargeWindup = 0.8f;
+    [Tooltip("Duracion de la embestida en si (GDD: 1.5s).")]
+    [SerializeField] private float chargeDuration = 1.5f;
     [SerializeField] private float chargeSpeed = 8f;
     [SerializeField] private float chargeDamage = 15f;
     [SerializeField] private float detectionRange = 4f;
@@ -17,6 +19,10 @@ public class SpikyTurtle : MonoBehaviour
 
     [Header("Shell")]
     [SerializeField] private GameObject shellPrefab;
+
+    [Header("Feedback")]
+    [SerializeField] private SpriteRenderer spriteRenderer;
+    [SerializeField] private DamageFlash damageFlash;
 
     private EnemyHealth health;
     private EnemyBehaviour behaviour;
@@ -33,6 +39,12 @@ public class SpikyTurtle : MonoBehaviour
     {
         health = GetComponent<EnemyHealth>();
         behaviour = GetComponent<EnemyBehaviour>();
+
+        if (spriteRenderer == null)
+            spriteRenderer = GetComponent<SpriteRenderer>();
+
+        if (damageFlash == null)
+            damageFlash = GetComponent<DamageFlash>();
     }
 
     private void Start()
@@ -54,6 +66,23 @@ public class SpikyTurtle : MonoBehaviour
         IsUpsideDown = value;
         health?.SetDamageable(value);
 
+        // No hay sprite/animacion especifica de "boca arriba" todavia: se vuelca
+        // el mismo sprite verticalmente para que el jugador pueda distinguir a
+        // simple vista cuando la tortuga es vulnerable.
+        if (spriteRenderer != null)
+            spriteRenderer.flipY = value;
+    }
+
+    // Aviso visual de que esta por embestir (mismo mecanismo que usan
+    // PoisonousSnake/ExplosiveHedgehog/RegeneratingRat para telegrafiar su ataque).
+    public void BeginWindupFeedback()
+    {
+        damageFlash?.StartLoopFlash();
+    }
+
+    public void EndWindupFeedback()
+    {
+        damageFlash?.StopLoopFlash();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

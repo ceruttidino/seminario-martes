@@ -55,7 +55,13 @@ public class TurtleWanderState : IEnemyState
         }
     }
 
-    public void Exit() { }
+    public void Exit()
+    {
+        // Defensivo: si algun dia se sale del wander por otro motivo mientras
+        // esta en pleno windup, evita que el flash quede pegado.
+        if (isWindingUp)
+            turtle.EndWindupFeedback();
+    }
 
     public void OnWallHit(Vector2 normal)
     {
@@ -73,6 +79,7 @@ public class TurtleWanderState : IEnemyState
         isWindingUp = true;
         windupTimer = turtle.ChargeWindup;
         movement.Move(Vector2.zero);
+        turtle.BeginWindupFeedback();
     }
 
     private void TickWindup()
@@ -82,6 +89,8 @@ public class TurtleWanderState : IEnemyState
 
         if (windupTimer <= 0f)
         {
+            turtle.EndWindupFeedback();
+
             Vector2 direction = (player.position - self.position);
             if (direction.sqrMagnitude < 0.0001f) direction = Vector2.down;
 
