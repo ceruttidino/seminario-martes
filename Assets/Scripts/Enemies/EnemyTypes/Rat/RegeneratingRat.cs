@@ -9,9 +9,9 @@ public class RegeneratingRat : MonoBehaviour
 {
     [Header("Ataque (mordisco)")]
     [Tooltip("Distancia a la que la rata se detiene y comienza el ataque.")]
-    [SerializeField] private float attackTriggerRange = 0.75f;
+    [SerializeField] private float attackTriggerRange = 1.1f;
     [Tooltip("Distancia maxima a la que el mordisco puede conectar (un poco mayor a attackTriggerRange para tolerar el movimiento durante el windup).")]
-    [SerializeField] private float attackHitRange = 0.85f;
+    [SerializeField] private float attackHitRange = 1.25f;
     [Tooltip("Duracion total de la animacion de ataque.")]
     [SerializeField] private float attackDuration = 1f;
     [Tooltip("Momento (dentro de attackDuration) en el que el mordisco realmente hace daño.")]
