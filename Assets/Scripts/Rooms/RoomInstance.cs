@@ -215,9 +215,30 @@ public class RoomInstance : MonoBehaviour
         }
     }
 
+    // Igual que UnlockDoorsInstant, pero reproduciendo la animacion de la cadena
+    // rompiendose en cada puerta en vez de dejarlas abiertas de golpe. Se usa al
+    // limpiar la sala de enemigos, que es el unico caso donde el desbloqueo
+    // ocurre con el jugador mirando (a diferencia de al entrar/reingresar a la room).
+    public void UnlockDoorsAnimated()
+    {
+        foreach (var door in roomDoors)
+        {
+            if (door == null) continue;
+
+            if (currentNode != null &&
+                currentNode.information.type != RoomType.Shop &&
+                door.currentDoorType == RoomType.Shop)
+            {
+                continue;
+            }
+
+            door.PlayUnlockAnimation();
+        }
+    }
+
     private void EndCombat()
     {
-        UnlockDoorsInstant();
+        UnlockDoorsAnimated();
     }
 
     public void HandleEnemyDeath()
