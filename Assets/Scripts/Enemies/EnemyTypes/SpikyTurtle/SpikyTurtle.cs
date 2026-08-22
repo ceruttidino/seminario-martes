@@ -97,9 +97,15 @@ public class SpikyTurtle : MonoBehaviour
 
     private void DropShell()
     {
-        if (shellPrefab != null)
-        {
-            Instantiate(shellPrefab, transform.position, Quaternion.identity);
-        }
+        if (shellPrefab == null) return;
+
+        // Sin padre, el caparazon queda en la raiz de la escena: al cambiar de
+        // room solo se desactiva el RoomInstance de la sala anterior, y como el
+        // caparazon no es hijo de ese RoomInstance queda activo y "sigue" al
+        // jugador a la siguiente sala. Lo parenteamos a la room actual (misma
+        // logica que ya se usa para los buffs dejados en el piso) para que se
+        // desactive junto con ella al salir y quede solo en la sala donde cayo.
+        Transform roomParent = GetComponentInParent<RoomInstance>()?.transform ?? transform.parent;
+        Instantiate(shellPrefab, transform.position, Quaternion.identity, roomParent);
     }
 }
