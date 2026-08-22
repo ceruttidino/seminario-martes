@@ -17,6 +17,12 @@ public class EnemyMovement : MonoBehaviour, IMovement
     [Tooltip("Distancia hacia adelante que se sondea antes de moverse.")]
     [SerializeField] private float avoidanceLookahead = 0.6f;
 
+    [Header("Stuck Escape")]
+    [Tooltip("Si el enemigo intenta moverse pero avanza menos que esto en StuckTimeWindow segundos, se lo considera trabado (tipico entre grupos de rocas) y se fuerza una direccion de escape distinta a la habitual.")]
+    [SerializeField] private float stuckDistanceThreshold = 0.15f;
+    [SerializeField] private float stuckTimeWindow = 0.4f;
+    [SerializeField] private float escapeDuration = 0.5f;
+
     // Angulos de sondeo en abanico, alternando lados, para encontrar el desvio
     // mas chico posible respecto de la direccion deseada original. Cubre los
     // 360 grados (no solo +-100) para que, si el camino directo esta bloqueado,
@@ -32,6 +38,15 @@ public class EnemyMovement : MonoBehaviour, IMovement
 
     private ContactFilter2D obstacleFilter;
     private Vector2 lastFacingDirection = Vector2.down;
+
+    // Deteccion de "trabado": si hay poco avance real pese a intentar moverse
+    // (comun al quedar encajonado entre varias rocas juntas, donde el sondeo en
+    // abanico encuentra una mejora minima cada frame pero nunca una salida real),
+    // se fuerza durante un rato una direccion de escape distinta a la habitual.
+    private Vector2 stuckWindowStartPos;
+    private float stuckWindowTimer;
+    private float escapeTimer;
+    private float escapeAngleJitter;
 
     private void Awake()
     {
@@ -52,6 +67,8 @@ public class EnemyMovement : MonoBehaviour, IMovement
         obstacleFilter = new ContactFilter2D();
         obstacleFilter.useTriggers = false;
         obstacleFilter.SetLayerMask(obstacleLayers);
+
+        stuckWindowStartPos = rb != null ? rb.position : (Vector2)transform.position;
     }
 
     public void Move(Vector2 direction)
@@ -74,6 +91,38 @@ public class EnemyMovement : MonoBehaviour, IMovement
         rb.linearVelocity = finalDirection * speedOverride;
 
         UpdateAnimator(finalDirection);
+
+        if (avoidObstacles)
+        {
+            UpdateStuckTracking(direction);
+        }
+    }
+
+    // Mide el avance real cada StuckTimeWindow segundos. Si el enemigo estaba
+    // intentando moverse (direccion deseada no nula) pero se desplazo menos que
+    // stuckDistanceThreshold en toda la ventana, arma un escape: durante
+    // escapeDuration se rota la direccion base antes de buscar el angulo libre,
+    // en vez de repetir siempre el mismo orden de sondeo que lo dejo trabado.
+    private void UpdateStuckTracking(Vector2 desiredDirection)
+    {
+        Vector2 currentPos = rb != null ? rb.position : (Vector2)transform.position;
+
+        stuckWindowTimer += Time.deltaTime;
+
+        if (stuckWindowTimer < stuckTimeWindow)
+            return;
+
+        bool wasTryingToMove = desiredDirection.magnitude > 0.1f;
+        float traveled = Vector2.Distance(currentPos, stuckWindowStartPos);
+
+        if (wasTryingToMove && traveled < stuckDistanceThreshold)
+        {
+            escapeTimer = escapeDuration;
+            escapeAngleJitter = UnityEngine.Random.Range(60f, 150f) * (UnityEngine.Random.value < 0.5f ? 1f : -1f);
+        }
+
+        stuckWindowStartPos = currentPos;
+        stuckWindowTimer = 0f;
     }
 
     // Desvia la direccion pedida por el estado del enemigo (perseguir, huir,
@@ -88,6 +137,13 @@ public class EnemyMovement : MonoBehaviour, IMovement
             return desiredDirection;
 
         Vector2 baseDirection = desiredDirection / magnitude;
+
+        if (escapeTimer > 0f)
+        {
+            escapeTimer -= Time.deltaTime;
+            baseDirection = RotateVector(baseDirection, escapeAngleJitter);
+        }
+
         Vector2 origin = rb != null ? rb.position : (Vector2)transform.position;
 
         Vector2 bestDirection = Vector2.zero;

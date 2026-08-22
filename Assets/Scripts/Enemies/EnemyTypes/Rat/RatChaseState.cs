@@ -8,8 +8,6 @@ public class RatChaseState : IEnemyState
     private EnemyBehaviour behaviour;
     private RegeneratingRat rat;
 
-    private float slowDownDistance = 1.5f;
-
     public RatChaseState(Transform player, EnemyMovement movement, Transform enemy, EnemyBehaviour behaviour, RegeneratingRat rat)
     {
         this.player = player;
@@ -40,11 +38,12 @@ public class RatChaseState : IEnemyState
             return;
         }
 
-        Vector2 dir = toPlayer.normalized;
-
-        float speedMultiplier = Mathf.Clamp01((distance - stopDistance) / (slowDownDistance - stopDistance));
-
-        movement.Move(dir * speedMultiplier);
+        // Siempre a velocidad completa (sin frenado gradual): un multiplicador que
+        // se acerca a 0 a medida que distance -> stopDistance hacia un jugador
+        // quieto genera una desaceleracion exponencial que nunca llega a cruzar
+        // el umbral en la practica (la rata se "cuelga" justo afuera del rango de
+        // ataque para siempre). Full speed hasta cruzar el umbral evita ese caso.
+        movement.Move(toPlayer.normalized);
     }
 
     public void Exit() { }
