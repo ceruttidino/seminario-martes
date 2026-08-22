@@ -279,6 +279,7 @@ MonoBehaviour:
   explosionRadius: 2.5
   countdownDuration: 2
   hitKnockbackDuration: 0.25
+  armingMoveSpeed: 1
   explosionDamage: 3
   hitKnockbackForce: 8
   explosionKnockbackForce: 10

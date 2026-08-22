@@ -11,6 +11,10 @@ public class ExplosiveHedgehog : MonoBehaviour
     [SerializeField] private float countdownDuration = 2f;
     [SerializeField] private float hitKnockbackDuration = 0.25f;
 
+    [Header("Arming Movement")]
+    [Tooltip("Velocidad reducida a la que el erizo sigue avanzando hacia el jugador mientras arma la explosion.")]
+    [SerializeField] private float armingMoveSpeed = 1f;
+
     [Header("Combat")]
     [SerializeField] private float explosionDamage = 3f;
     [SerializeField] private float hitKnockbackForce = 8f;
@@ -30,6 +34,7 @@ public class ExplosiveHedgehog : MonoBehaviour
     public float ArmingRange => armingRange;
     public float CountdownDuration => countdownDuration;
     public float HitKnockbackDuration => hitKnockbackDuration;
+    public float ArmingMoveSpeed => armingMoveSpeed;
 
     private void Awake()
     {

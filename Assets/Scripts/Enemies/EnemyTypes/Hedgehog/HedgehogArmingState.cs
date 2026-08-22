@@ -4,6 +4,7 @@ public class HedgehogArmingState : IEnemyState
 {
     private readonly Transform player;
     private readonly EnemyMovement movement;
+    private readonly Transform enemyTransform;
     private readonly ExplosiveHedgehog hedgehog;
 
     private EnemyHealth enemyHealth;
@@ -19,6 +20,7 @@ public class HedgehogArmingState : IEnemyState
     {
         this.player = player;
         this.movement = movement;
+        this.enemyTransform = enemy;
         this.hedgehog = hedgehog;
         enemyHealth = enemy.GetComponent<EnemyHealth>();
     }
@@ -27,7 +29,7 @@ public class HedgehogArmingState : IEnemyState
     {
         countdown = hedgehog.CountdownDuration;
         knockbackEndTime = 0f;
-        movement.Move(Vector2.zero);
+        ApproachPlayerSlowly();
         hedgehog.BeginArmingFeedback();
 
         if (enemyHealth != null)
@@ -41,7 +43,7 @@ public class HedgehogArmingState : IEnemyState
         countdown -= Time.deltaTime;
 
         if (Time.time >= knockbackEndTime)
-            movement.Move(Vector2.zero);
+            ApproachPlayerSlowly();
 
         if (countdown <= 0f)
         {
@@ -56,6 +58,27 @@ public class HedgehogArmingState : IEnemyState
 
         if (enemyHealth != null)
             enemyHealth.OnDamaged -= HandleDamaged;
+    }
+
+    // Sigue avanzando hacia el jugador, pero mucho mas lento que en la persecucion
+    // normal, para que la explosion no sea trivial de esquivar quedandose quieto.
+    private void ApproachPlayerSlowly()
+    {
+        if (player == null || enemyTransform == null)
+        {
+            movement.Move(Vector2.zero);
+            return;
+        }
+
+        Vector2 toPlayer = (Vector2)player.position - (Vector2)enemyTransform.position;
+
+        if (toPlayer.sqrMagnitude < 0.01f)
+        {
+            movement.Move(Vector2.zero);
+            return;
+        }
+
+        movement.Move(toPlayer.normalized, hedgehog.ArmingMoveSpeed);
     }
 
     private void HandleDamaged()

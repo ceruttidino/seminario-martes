@@ -124,6 +124,15 @@ public void SetDoorType(RoomType type, RoomNode node)
             {
                 myNode.isShopUnlocked = true;
             }
+
+            // El jugador ya esta parado sobre la puerta al usar la ganzua: pasar
+            // directo a la siguiente room en vez de esperar a que salga y vuelva
+            // a entrar en el trigger para recien ahi cambiar de habitacion.
+            if (playerInRange && canTrigger)
+            {
+                canTrigger = false;
+                DungeonManager.Instance.TryMoveToNextRoom(direction);
+            }
         }
     }
 

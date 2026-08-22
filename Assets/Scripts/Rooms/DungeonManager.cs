@@ -334,6 +334,15 @@ public class DungeonManager : MonoBehaviour
         if (spawnPoint != null) 
         {
             player.position = spawnPoint.position;
+
+            // El proyecto tiene Physics2D.autoSyncTransforms desactivado (por rendimiento),
+            // asi que al reposicionar al jugador directamente por Transform, el motor de
+            // fisica sigue "viendo" su posicion anterior hasta el proximo movimiento suyo.
+            // Esto hacia que los enemigos (que detectan/atacan via Physics2D.OverlapCircle)
+            // no detectaran al jugador en el primer contacto si este todavia no se habia
+            // movido desde que entro a la room. Forzamos la sincronizacion aca para que la
+            // deteccion sea correcta desde el primer instante.
+            Physics2D.SyncTransforms();
         }
     }
 
