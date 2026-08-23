@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Xml.XPath;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -19,29 +18,44 @@ public class RoomDoor : MonoBehaviour
     [SerializeField] private Sprite shopDoorSprite;
     [SerializeField] private Sprite bossDoorSprite;
 
-    [Header("Locked Door (Candado)")]
-    [Tooltip("Sprite estatico mostrado mientras la puerta esta bloqueada (encadenada).")]
+    [Header("Shop Locked Door (Candado)")]
+    [Tooltip("Sprite estatico del candado. Solo se usa en puertas que llevan a la Shop.")]
     [SerializeField] private Sprite lockedDoorSprite;
-    [Tooltip("Secuencia de frames que se reproduce al desbloquear la puerta (cadena rompiendose y puerta abriendose).")]
+    [Tooltip("Animacion de la ganzua / candado rompiendose. Solo se usa en la Shop.")]
     [SerializeField] private Sprite[] unlockAnimationFrames;
     [SerializeField] private float unlockFrameRate = 14f;
+
+    [Header("Combat Door")]
+    [Tooltip("Puerta cerrada sin candado. Se muestra mientras hay enemigos en la room.")]
+    [SerializeField] private Sprite combatClosedSprite;
+    [Tooltip("Puerta abierta. Se muestra cuando la room esta limpia.")]
+    [SerializeField] private Sprite combatOpenSprite;
+    [Tooltip("Animacion de abrir (al reves se usa para cerrar). No incluye candado.")]
+    [SerializeField] private Sprite[] combatAnimationFrames;
+    [SerializeField] private float combatFrameRate = 14f;
 
     private RoomNode myNode;
 
     private bool canTrigger = true;
-    private bool isUnlocking = false;
-    private Coroutine unlockRoutine;
+    private bool isAnimating = false;
+    private Coroutine doorAnimRoutine;
 
     private bool playerInRange = false;
     private GameObject currentPlayer;
 
     public DoorDirection Direction => direction;
 
+    private bool IsShopDoor => currentDoorType == RoomType.Shop;
+
     private void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
 
-        if (spriteRenderer.sprite == null && normalDoorSprite != null)
+        if (spriteRenderer.sprite == null && combatOpenSprite != null)
+        {
+            spriteRenderer.sprite = combatOpenSprite;
+        }
+        else if (spriteRenderer.sprite == null && normalDoorSprite != null)
         {
             spriteRenderer.sprite = normalDoorSprite;
         }
@@ -49,9 +63,9 @@ public class RoomDoor : MonoBehaviour
 
     private void Update()
     {
-        if (playerInRange && isLocked && !isUnlocking)
+        if (playerInRange && isLocked && !isAnimating)
         {
-            if (currentDoorType == RoomType.Shop && Keyboard.current.fKey.wasPressedThisFrame)
+            if (IsShopDoor && Keyboard.current.fKey.wasPressedThisFrame)
             {
                 TryUnlock();
             }
@@ -59,12 +73,12 @@ public class RoomDoor : MonoBehaviour
     }
 
     // Si la room se desactiva (ej. al salir hacia otra room) Unity corta la
-    // corutina de desbloqueo sin avisar. Sin esto, isUnlocking podria quedar
-    // trabado en true para siempre y la puerta nunca mas respondería a la ganzua.
+    // corutina de animacion sin avisar. Sin esto, isAnimating podria quedar
+    // trabado en true y la puerta de la Shop no responderia mas a la ganzua.
     private void OnDisable()
     {
-        isUnlocking = false;
-        unlockRoutine = null;
+        isAnimating = false;
+        doorAnimRoutine = null;
     }
 
     public void Initialize(RoomNode node, DoorDirection newDirection)
@@ -96,7 +110,7 @@ public class RoomDoor : MonoBehaviour
 
     public void SetLocked(bool locked)
     {
-        CancelUnlockAnimation();
+        CancelDoorAnimation();
         isLocked = locked;
         UpdateDoorVisual();
     }
@@ -107,37 +121,53 @@ public class RoomDoor : MonoBehaviour
         if (currentDoorType == RoomType.Boss && type == RoomType.Normal) return;
 
         if (spriteRenderer == null) return;
-        
-        spriteRenderer.color = Color.white; 
+
+        spriteRenderer.color = Color.white;
         myNode = node;
-        currentDoorType = type; 
+        currentDoorType = type;
 
         if (type == RoomType.Shop)
         {
             isLocked = !node.isShopUnlocked;
         }
 
-        CancelUnlockAnimation();
+        CancelDoorAnimation();
         UpdateDoorVisual();
     }
 
-    // Aplica el sprite correspondiente al estado actual: si esta bloqueada muestra
-    // el candado/cadena; si no, el sprite propio del tipo de puerta (Normal/Shop/Boss).
+    // Shop bloqueada: candado. Cualquier otra puerta bloqueada: version cerrada
+    // de combate (sin candado). Desbloqueada: cartel de Shop o puerta abierta.
     private void UpdateDoorVisual()
     {
         if (spriteRenderer == null) return;
 
         if (isLocked)
         {
-            if (lockedDoorSprite != null) spriteRenderer.sprite = lockedDoorSprite;
+            if (IsShopDoor)
+            {
+                if (lockedDoorSprite != null) spriteRenderer.sprite = lockedDoorSprite;
+            }
+            else if (combatClosedSprite != null)
+            {
+                spriteRenderer.sprite = combatClosedSprite;
+            }
+            return;
+        }
+
+        if (IsShopDoor)
+        {
+            if (shopDoorSprite != null) spriteRenderer.sprite = shopDoorSprite;
+            return;
+        }
+
+        if (combatOpenSprite != null)
+        {
+            spriteRenderer.sprite = combatOpenSprite;
             return;
         }
 
         switch (currentDoorType)
         {
-            case RoomType.Shop:
-                if (shopDoorSprite != null) spriteRenderer.sprite = shopDoorSprite;
-                break;
             case RoomType.Boss:
                 if (bossDoorSprite != null) spriteRenderer.sprite = bossDoorSprite;
                 break;
@@ -148,9 +178,8 @@ public class RoomDoor : MonoBehaviour
         }
     }
 
-    // Desbloquea la puerta reproduciendo la animacion de la cadena rompiendose
-    // antes de dejarla en el sprite abierto correspondiente a su tipo. Se usa
-    // tanto cuando se limpia la sala de enemigos como cuando se usa una ganzua.
+    // Abre la puerta con animacion. Shop: ganzua / candado. El resto: hoja de
+    // combate hacia adelante. Se usa al limpiar la sala y al usar una ganzua.
     public void PlayUnlockAnimation(Action onComplete = null)
     {
         if (!isLocked)
@@ -160,14 +189,10 @@ public class RoomDoor : MonoBehaviour
             return;
         }
 
-        if (isUnlocking) return;
+        if (isAnimating) return;
 
         isLocked = false;
 
-        // Una puerta sin vecino en esa direccion queda inactiva (ver
-        // RoomInstance.ConfigureDoors). Unity no permite iniciar corutinas en
-        // GameObjects inactivos: en ese caso aplicamos el estado final directo,
-        // sin animacion, ya que el jugador no puede verla de todos modos.
         if (!gameObject.activeInHierarchy)
         {
             UpdateDoorVisual();
@@ -175,37 +200,80 @@ public class RoomDoor : MonoBehaviour
             return;
         }
 
-        isUnlocking = true;
-        unlockRoutine = StartCoroutine(UnlockAnimationRoutine(onComplete));
+        Sprite[] frames = IsShopDoor ? unlockAnimationFrames : combatAnimationFrames;
+        float frameRate = IsShopDoor ? unlockFrameRate : combatFrameRate;
+
+        isAnimating = true;
+        doorAnimRoutine = StartCoroutine(PlaySpriteAnimation(frames, frameRate, reverse: false, onComplete));
     }
 
-    private IEnumerator UnlockAnimationRoutine(Action onComplete)
+    // Cierra la puerta con animacion de combate (hoja al reves). La Shop no se
+    // anima: queda en el candado de golpe, porque el candado no tiene cierre.
+    public void PlayLockAnimation()
     {
-        if (unlockAnimationFrames != null && unlockAnimationFrames.Length > 0 && spriteRenderer != null)
+        if (IsShopDoor)
         {
-            float frameDuration = 1f / Mathf.Max(1f, unlockFrameRate);
+            SetLocked(true);
+            return;
+        }
 
-            foreach (Sprite frame in unlockAnimationFrames)
+        if (isLocked && !isAnimating)
+        {
+            UpdateDoorVisual();
+            return;
+        }
+
+        CancelDoorAnimation();
+        isLocked = true;
+
+        if (!gameObject.activeInHierarchy)
+        {
+            UpdateDoorVisual();
+            return;
+        }
+
+        isAnimating = true;
+        doorAnimRoutine = StartCoroutine(PlaySpriteAnimation(combatAnimationFrames, combatFrameRate, reverse: true, null));
+    }
+
+    private IEnumerator PlaySpriteAnimation(Sprite[] frames, float frameRate, bool reverse, Action onComplete)
+    {
+        if (frames != null && frames.Length > 0 && spriteRenderer != null)
+        {
+            float frameDuration = 1f / Mathf.Max(1f, frameRate);
+
+            if (reverse)
             {
-                if (frame != null) spriteRenderer.sprite = frame;
-                yield return new WaitForSeconds(frameDuration);
+                for (int i = frames.Length - 1; i >= 0; i--)
+                {
+                    if (frames[i] != null) spriteRenderer.sprite = frames[i];
+                    yield return new WaitForSeconds(frameDuration);
+                }
+            }
+            else
+            {
+                for (int i = 0; i < frames.Length; i++)
+                {
+                    if (frames[i] != null) spriteRenderer.sprite = frames[i];
+                    yield return new WaitForSeconds(frameDuration);
+                }
             }
         }
 
-        isUnlocking = false;
-        unlockRoutine = null;
+        isAnimating = false;
+        doorAnimRoutine = null;
         UpdateDoorVisual();
         onComplete?.Invoke();
     }
 
-    private void CancelUnlockAnimation()
+    private void CancelDoorAnimation()
     {
-        if (unlockRoutine != null)
+        if (doorAnimRoutine != null)
         {
-            StopCoroutine(unlockRoutine);
-            unlockRoutine = null;
+            StopCoroutine(doorAnimRoutine);
+            doorAnimRoutine = null;
         }
-        isUnlocking = false;
+        isAnimating = false;
     }
 
     public void RefreshFromNeighbor(RoomNode neighbor)
@@ -228,9 +296,8 @@ public class RoomDoor : MonoBehaviour
             }
 
             // El jugador ya esta parado sobre la puerta al usar la ganzua: primero se
-            // reproduce la animacion de desbloqueo (cadena rompiendose) y, al terminar,
-            // se pasa directo a la siguiente room en vez de esperar a que salga y vuelva
-            // a entrar en el trigger para recien ahi cambiar de habitacion.
+            // reproduce la animacion de desbloqueo (candado) y, al terminar, se pasa
+            // directo a la siguiente room.
             PlayUnlockAnimation(() =>
             {
                 if (playerInRange && canTrigger)

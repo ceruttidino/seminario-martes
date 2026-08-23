@@ -196,14 +196,7 @@ public class RoomInstance : MonoBehaviour
         foreach (var door in roomDoors)
         {
             if (door == null) continue;
-            if (door.currentDoorType == RoomType.Shop)
-            {
-                door.SetLocked(true);
-            }
-            else
-            {
-                door.SetLocked(true);
-            }
+            door.PlayLockAnimation();
         }
     }
 
@@ -224,10 +217,10 @@ public class RoomInstance : MonoBehaviour
         }
     }
 
-    // Igual que UnlockDoorsInstant, pero reproduciendo la animacion de la cadena
-    // rompiendose en cada puerta en vez de dejarlas abiertas de golpe. Se usa al
-    // limpiar la sala de enemigos, que es el unico caso donde el desbloqueo
-    // ocurre con el jugador mirando (a diferencia de al entrar/reingresar a la room).
+    // Igual que UnlockDoorsInstant, pero reproduciendo la animacion de apertura
+    // (combate, sin candado). Se usa al limpiar la sala de enemigos, que es el
+    // unico caso donde el desbloqueo ocurre con el jugador mirando. La Shop no
+    // se abre aca: sigue pidiendo ganzua.
     public void UnlockDoorsAnimated()
     {
         foreach (var door in roomDoors)

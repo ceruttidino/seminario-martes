@@ -171,3 +171,14 @@ MonoBehaviour:
   - {fileID: 6230632149091481354, guid: 6dc5eb9bea0a093655825043236956e4, type: 3}
   - {fileID: 7910843980716336141, guid: 6dc5eb9bea0a093655825043236956e4, type: 3}
   unlockFrameRate: 14
+  combatClosedSprite: {fileID: 21300000, guid: e87a8ddbe89d0ce3d6b43de1cf771f31, type: 3}
+  combatOpenSprite: {fileID: 21300000, guid: cf39080d283bdacd0a843bfeaa31a08b, type: 3}
+  combatAnimationFrames:
+  - {fileID: 4080526057290102790, guid: 5a7c5f92fd6548a740aa36af814e3c4a, type: 3}
+  - {fileID: 6046332545478708424, guid: 5a7c5f92fd6548a740aa36af814e3c4a, type: 3}
+  - {fileID: 8503191319984185913, guid: 5a7c5f92fd6548a740aa36af814e3c4a, type: 3}
+  - {fileID: 6885732976865106245, guid: 5a7c5f92fd6548a740aa36af814e3c4a, type: 3}
+  - {fileID: 5529247662342504775, guid: 5a7c5f92fd6548a740aa36af814e3c4a, type: 3}
+  - {fileID: 684301459878942580, guid: 5a7c5f92fd6548a740aa36af814e3c4a, type: 3}
+  - {fileID: 7063991225237906224, guid: 5a7c5f92fd6548a740aa36af814e3c4a, type: 3}
+  combatFrameRate: 14
