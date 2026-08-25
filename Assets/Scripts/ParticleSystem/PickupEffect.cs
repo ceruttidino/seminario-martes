@@ -14,8 +14,13 @@ public class PickupEffect : MonoBehaviour
     private float startTime;
     private bool isBeingCollected = false;
 
+    private LootPopMover popMover;
+    private bool syncedAfterPop = false;
+
     private void Start()
     {
+        popMover = GetComponent<LootPopMover>();
+
         originalPosition = transform.localPosition;
         originalScale = transform.localScale;
         startTime = Time.time;
@@ -43,6 +48,15 @@ public class PickupEffect : MonoBehaviour
     private void Update()
     {
         if (isBeingCollected) return;
+
+        if (popMover != null && popMover.IsPopping) return;
+
+        if (popMover != null && !syncedAfterPop)
+        {
+            originalPosition = transform.localPosition;
+            startTime = Time.time;
+            syncedAfterPop = true;
+        }
 
         float floatOffset = Mathf.Sin((Time.time - startTime) * floatSpeed) * floatAmplitude;
         transform.localPosition = originalPosition + new Vector3(0, floatOffset, 0);

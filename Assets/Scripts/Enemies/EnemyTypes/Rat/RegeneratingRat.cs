@@ -23,10 +23,28 @@ public class RegeneratingRat : MonoBehaviour
     public float AttackDuration => attackDuration;
     public float HitTiming => hitTiming;
 
+    [Header("Revivir")]
+    [SerializeField] private Animator animator;
+    [SerializeField] private float reviveDuration = 1f;
+    [SerializeField] private Collider2D hitCollider;
+
+    private EnemyBehaviour behaviour;
+    private EnemyMovement movement;
+
     private void Awake()
     {
         if (damageFlash == null)
             damageFlash = GetComponent<DamageFlash>();
+
+        behaviour = GetComponent<EnemyBehaviour>();
+        movement = GetComponent<EnemyMovement>();
+        if (animator == null)
+            animator = GetComponent<Animator>();
+    }
+
+    public void BeginRevive()
+    {
+        StartCoroutine(ReviveRoutine());
     }
 
     // Aviso visual de que esta con la boca preparada para morder (mismo mecanismo
@@ -53,5 +71,30 @@ public class RegeneratingRat : MonoBehaviour
 
         IDamageable damageable = player.GetComponent<IDamageable>();
         damageable?.TakeDamage(attackDamage);
+    }
+
+    public void OnReviveAnimationComplete()
+    {
+        if (hitCollider != null) hitCollider.enabled = true;
+        if (behaviour != null) behaviour.enabled = true;
+    }
+
+    private System.Collections.IEnumerator ReviveRoutine()
+    {
+        if (behaviour != null) behaviour.enabled = false;
+
+        movement?.Move(Vector2.zero);
+        if (hitCollider != null) hitCollider.enabled = false;
+
+        if (animator != null)
+        {
+            animator.Play("RatReviving", 0, 0f);
+            animator.Update(0f); // fuerza a mostrar el primer frame de RatReviving YA, sin pasar por Move
+        }
+
+        yield return new WaitForSeconds(reviveDuration);
+
+        if (hitCollider != null) hitCollider.enabled = true;
+        if (behaviour != null) behaviour.enabled = true;
     }
 }

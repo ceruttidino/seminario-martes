@@ -41,12 +41,16 @@ public class BreakableTrash : MonoBehaviour
 
     private Vector3 openVisualInitialLocalPosition;
 
+    private Bounds trashBounds;
+
     private void Awake()
     {
         if (closedSprite == null)
             closedSprite = GetComponent<SpriteRenderer>();
 
         hitCollider = GetComponent<Collider2D>();
+        if (hitCollider != null)
+            trashBounds = hitCollider.bounds;
 
         if (openVisual != null)
         {
@@ -104,32 +108,43 @@ public class BreakableTrash : MonoBehaviour
         if (keyDrop.prefab != null) options.Add(keyDrop);
         if (scrapDrop.prefab != null) options.Add(scrapDrop);
 
+        var lootToSpawn = new List<DropEntry>();
         if (options.Count > 0)
         {
-            // elegir UN tipo y spawnear 1-maxItems del mismo, sin mezclar
             DropEntry chosen = options[Random.Range(0, options.Count)];
             int amount = Random.Range(1, maxItems + 1);
-
             for (int i = 0; i < amount; i++)
-                SpawnPickup(chosen.prefab, chosen.lootItem, roomParent);
+                lootToSpawn.Add(chosen);
         }
 
-        // solo GreenContainer tiene chance de dropear un buff upgrade
+        ObjectBuffSO chosenUpgrade = null;
         if (trashType == TrashType.GreenContainer)
-            TrySpawnUpgrade(roomParent);
+            chosenUpgrade = TryRollUpgrade();
+
+        int totalCount = lootToSpawn.Count + (chosenUpgrade != null ? 1 : 0);
+        if (totalCount == 0) return;
+
+        Vector3[] positions = GetSpawnPositions(totalCount);
+        int index = 0;
+
+        foreach (DropEntry entry in lootToSpawn)
+            SpawnPickup(entry.prefab, entry.lootItem, roomParent, positions[index++]);
+
+        if (chosenUpgrade != null)
+            SpawnUpgrade(chosenUpgrade, roomParent, positions[index++]);
     }
 
-    private void TrySpawnUpgrade(Transform roomParent)
+    private ObjectBuffSO TryRollUpgrade()
     {
-        if (buffPickupPrefab == null) return;
-        if (possibleUpgrades == null || possibleUpgrades.Count == 0) return;
-        if (Random.Range(0f, 100f) > upgradeDropChance) return;
+        if (buffPickupPrefab == null) return null;
+        if (possibleUpgrades == null || possibleUpgrades.Count == 0) return null;
+        if (Random.Range(0f, 100f) > upgradeDropChance) return null;
+        return BuffPool.PickRandom(possibleUpgrades);
+    }
 
-        ObjectBuffSO chosen = BuffPool.PickRandom(possibleUpgrades);
-        if (chosen == null) return;
-
-        Vector3 pos = GetRandomSpawnPos();
-        GameObject pickup = Instantiate(buffPickupPrefab, pos, Quaternion.identity);
+    private void SpawnUpgrade(ObjectBuffSO chosen, Transform roomParent, Vector3 targetPos)
+    {
+        GameObject pickup = Instantiate(buffPickupPrefab, transform.position, Quaternion.identity);
 
         UpgradePickup upgradePickup = pickup.GetComponent<UpgradePickup>();
         if (upgradePickup != null)
@@ -143,13 +158,41 @@ public class BreakableTrash : MonoBehaviour
 
         if (roomParent != null)
             pickup.transform.SetParent(roomParent, true);
+
+        LaunchPickup(pickup, targetPos);
     }
 
-    private void SpawnPickup(GameObject prefab, LootItem lootItem, Transform roomParent)
+    //private void TrySpawnUpgrade(Transform roomParent)
+    //{
+    //    if (buffPickupPrefab == null) return;
+    //    if (possibleUpgrades == null || possibleUpgrades.Count == 0) return;
+    //    if (Random.Range(0f, 100f) > upgradeDropChance) return;
+
+    //    ObjectBuffSO chosen = BuffPool.PickRandom(possibleUpgrades);
+    //    if (chosen == null) return;
+
+    //    Vector3 pos = GetRandomSpawnPos();
+    //    GameObject pickup = Instantiate(buffPickupPrefab, pos, Quaternion.identity);
+
+    //    UpgradePickup upgradePickup = pickup.GetComponent<UpgradePickup>();
+    //    if (upgradePickup != null)
+    //        upgradePickup.SetUpgrade(chosen);
+
+    //    if (chosen.icon != null)
+    //    {
+    //        SpriteRenderer sr = pickup.GetComponentInChildren<SpriteRenderer>();
+    //        if (sr != null) sr.sprite = chosen.icon;
+    //    }
+
+    //    if (roomParent != null)
+    //        pickup.transform.SetParent(roomParent, true);
+    //}
+
+    private void SpawnPickup(GameObject prefab, LootItem lootItem, Transform roomParent, Vector3 targetPos)
     {
         if (prefab == null) return;
 
-        GameObject spawned = Instantiate(prefab, GetRandomSpawnPos(), Quaternion.identity);
+        GameObject spawned = Instantiate(prefab, transform.position, Quaternion.identity);
 
         LootPickup pickup = spawned.GetComponent<LootPickup>();
         if (pickup != null && lootItem != null)
@@ -157,14 +200,54 @@ public class BreakableTrash : MonoBehaviour
 
         if (roomParent != null)
             spawned.transform.SetParent(roomParent, true);
+
+        LaunchPickup(spawned, targetPos);
     }
 
-    private Vector3 GetRandomSpawnPos()
+    private void LaunchPickup(GameObject spawned, Vector3 targetPos)
     {
-        Vector2 dir = Random.insideUnitCircle.normalized;
-        float dist = Random.Range(minSpawnRadius, maxSpawnRadius);
-        return transform.position + new Vector3(dir.x, dir.y, 0f) * dist;
+        LootPopMover mover = spawned.GetComponent<LootPopMover>();
+        if (mover == null)
+            mover = spawned.AddComponent<LootPopMover>();
+
+        mover.Launch(targetPos, hitCollider);
     }
+
+    private Vector3[] GetSpawnPositions(int count)
+    {
+        Vector3[] positions = new Vector3[count];
+
+        float safeRadius = GetSafeMinRadius();
+        float extraRange = Mathf.Max(0.1f, maxSpawnRadius - minSpawnRadius);
+        float baseAngle = Random.Range(0f, 360f);
+        float angleStep = 360f / count;
+
+        for (int i = 0; i < count; i++)
+        {
+            float jitter = Random.Range(-angleStep * 0.25f, angleStep * 0.25f);
+            float angleRad = (baseAngle + angleStep * i + jitter) * Mathf.Deg2Rad;
+
+            Vector2 dir = new Vector2(Mathf.Cos(angleRad), Mathf.Sin(angleRad));
+            float dist = safeRadius + Random.Range(0f, extraRange);
+
+            positions[i] = transform.position + new Vector3(dir.x, dir.y, 0f) * dist;
+        }
+
+        return positions;
+    }
+
+    private float GetSafeMinRadius()
+    {
+        float halfDiagonal = new Vector2(trashBounds.extents.x, trashBounds.extents.y).magnitude;
+        return Mathf.Max(minSpawnRadius, halfDiagonal + 0.15f); // margen extra
+    }
+
+    //private Vector3 GetRandomSpawnPos()
+    //{
+    //    Vector2 dir = Random.insideUnitCircle.normalized;
+    //    float dist = Random.Range(minSpawnRadius, maxSpawnRadius);
+    //    return transform.position + new Vector3(dir.x, dir.y, 0f) * dist;
+    //}
 
     private Transform FindRoomParent()
     {

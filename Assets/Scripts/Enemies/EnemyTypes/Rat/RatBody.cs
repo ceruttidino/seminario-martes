@@ -44,6 +44,9 @@ public class RatBody : MonoBehaviour, IDamageable
             if (room != null)
                 health.OnDeath += room.HandleEnemyDeath;
         }
+
+        RegeneratingRat reviveScript = newRat.GetComponent<RegeneratingRat>();
+        reviveScript?.BeginRevive();
     }
 
     public void TakeDamage(float dmg)
