@@ -781,6 +781,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::QuickAttack
   playerAim: {fileID: 8123456789012345678}
   playerMovement: {fileID: 0}
+  playerDash: {fileID: 0}
   enemyLayer:
     serializedVersion: 2
     m_Bits: 8
@@ -793,6 +794,7 @@ MonoBehaviour:
   cooldown: 0.5
   attackDistance: 1
   attackBoxSize: {x: 1.2, y: 0.8}
+  attackActiveDuration: 0.25
   sfxSource: {fileID: 7881586116371696920}
 --- !u!114 &1785173488312657902
 MonoBehaviour:
@@ -814,9 +816,11 @@ MonoBehaviour:
     m_Bits: 64
   animator: {fileID: 6671336775965671393}
   playerMovement: {fileID: 0}
+  playerDash: {fileID: 0}
   damage: 20
   cooldown: 2
   radius: 2
+  attackActiveDuration: 0.3
   sfxSource: {fileID: 718493228437957988}
 --- !u!114 &7840586562795469529
 MonoBehaviour:
@@ -890,12 +894,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ea93b6a8bbc3be42a7d011fa19f4c0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerDash
-  dashSpeed: 25
+  dashSpeed: 20
   dashDuration: 0.15
   dashCooldown: 1
   playerMovement: {fileID: 4973168310728382421}
   rb: {fileID: 2180484767479099527}
   animator: {fileID: 0}
+  quickAttack: {fileID: 0}
+  areaAttack: {fileID: 0}
   sfxSource: {fileID: 8949550198128302494}
 --- !u!114 &3472467327082267057
 MonoBehaviour:
