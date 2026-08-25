@@ -4,6 +4,7 @@ using UnityEngine.UI;
 public class MinimapRoomIcon : MonoBehaviour
 {
     [SerializeField] private Image roomImage;
+    [SerializeField] private GameObject playerIndicator;
 
     [Header("Colors")]
     [SerializeField] private Color currentRoomColor = Color.white;
@@ -22,8 +23,9 @@ public class MinimapRoomIcon : MonoBehaviour
         }
 
         gameObject.SetActive(true);
+        playerIndicator.SetActive(node.isCurrentRoom);
 
-        if(!node.hasBeenVisited && showAsAdjacent)
+        if (!node.hasBeenVisited && showAsAdjacent)
         {
             roomImage.color = adjacentRoomColor;
             return;

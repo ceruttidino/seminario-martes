@@ -12,11 +12,14 @@ public class DungeonManager : MonoBehaviour
     [SerializeField] private ScreenFader screenFader;
     [SerializeField] private DungeonProgression dungeonProgression;
 
+    private bool challengeSpawned = false;
+
     [Header("Dungeon Configuration")]
     [SerializeField] private RoomInformation startRoomInformation;
     [SerializeField] private List<RoomInformation> normalRoomInformations = new List<RoomInformation>();
     [SerializeField] private RoomInformation shopRoomInformation;
     [SerializeField] private RoomInformation bossRoomInformation;
+    [SerializeField] private List<RoomInformation> challengeRoomInformations = new List<RoomInformation>();
 
     [Header("Transition")]
     [SerializeField] private float transitionDelay = 0.5f;
@@ -82,10 +85,12 @@ public class DungeonManager : MonoBehaviour
 
     private void BuildNewDungeon()
     {
+        challengeSpawned = false;
+
         List<RoomInformation> floorRooms = GetNormalRoomsForFloor(currentFloor);
 
         dungeonLayout = new DungeonLayout();
-        dungeonLayout.Build(startRoomInformation, floorRooms, shopRoomInformation, bossRoomInformation);
+        dungeonLayout.Build(startRoomInformation, floorRooms, shopRoomInformation, bossRoomInformation, challengeRoomInformations);
 
         currentNode = dungeonLayout.StartNode;
         currentNode.isCurrentRoom = true;
@@ -98,6 +103,7 @@ public class DungeonManager : MonoBehaviour
         {
             currentNode.spawnedInstance.ConfigureDoors(currentNode);
         }
+
     }
 
     // Llamado desde VictoryManager al elegir continuar la run tras matar al jefe.
@@ -298,6 +304,17 @@ public class DungeonManager : MonoBehaviour
                 currentRoomInstance.UnlockDoorsInstant();
             }
 
+            if (node.information.type == RoomType.Challenge)
+            {
+                ChallengeRoomController challenge =
+                    currentRoomInstance.GetComponentInChildren<ChallengeRoomController>();
+
+                if (challenge != null)
+                {
+                    challenge.StartChallenge();
+                }
+            }
+
             node.hasBeenVisited = true;
 
             // Solo se generan nuevas conexiones/puertas la PRIMERA vez que se
@@ -348,7 +365,7 @@ public class DungeonManager : MonoBehaviour
 
     private void GenerateConnections(RoomNode node)
     {
-        if (node.information.type == RoomType.Shop || node.information.type == RoomType.Boss)
+        if (node.information.type == RoomType.Shop || node.information.type == RoomType.Boss || node.information.type == RoomType.Challenge)
         {
             return;
         }
@@ -412,8 +429,13 @@ public class DungeonManager : MonoBehaviour
         {
             TryForceBossSmart();
         }
+
+        if (!challengeSpawned)
+        {
+            TryForceChallengeSmart();
+        }
     }
-    //
+   
     private bool TryForceShopSmart()
     {
         RoomNode bestNode = null;
@@ -501,6 +523,89 @@ public class DungeonManager : MonoBehaviour
         }
 
         Debug.LogWarning("No se pudo forzar la Boss Room en ningún lugar válido.");
+        return false;
+    }
+
+    private bool TryForceChallengeSmart()
+    {
+        if (challengeSpawned)
+            return false;
+
+        List<RoomNode> candidates = new List<RoomNode>();
+
+        foreach (RoomNode node in dungeonLayout.GetAllRooms())
+        {
+            if (node == null || node.information == null)
+                continue;
+
+            if (node.uniqueNodeID == "Start")
+                continue;
+
+            if (node.information.type != RoomType.Normal)
+                continue;
+
+            candidates.Add(node);
+        }
+
+        // Mezclamos los candidatos para que la posición sea random
+        for (int i = 0; i < candidates.Count; i++)
+        {
+            int randomIndex = Random.Range(i, candidates.Count);
+
+            RoomNode temp = candidates[i];
+            candidates[i] = candidates[randomIndex];
+            candidates[randomIndex] = temp;
+        }
+
+        foreach (RoomNode node in candidates)
+        {
+            List<DoorDirection> directions = new List<DoorDirection>()
+        {
+            DoorDirection.Up,
+            DoorDirection.Down,
+            DoorDirection.Left,
+            DoorDirection.Right
+        };
+
+            // Shuffle
+            for (int i = 0; i < directions.Count; i++)
+            {
+                int randomIndex = Random.Range(i, directions.Count);
+
+                DoorDirection temp = directions[i];
+                directions[i] = directions[randomIndex];
+                directions[randomIndex] = temp;
+            }
+
+            foreach (DoorDirection dir in directions)
+            {
+                if (node.HasNeighbor(dir))
+                    continue;
+
+                RoomNode challengeNode =
+                    dungeonLayout.CreateNextRoom(
+                        node,
+                        dir,
+                        RoomType.Challenge
+                    );
+
+                if (challengeNode != null &&
+                    challengeNode.information.type == RoomType.Challenge)
+                {
+                    challengeSpawned = true;
+
+                    if (node.spawnedInstance != null)
+                    {
+                        node.spawnedInstance.ConfigureDoors(node);
+                    }
+
+                    Debug.Log("Challenge Room generada.");
+
+                    return true;
+                }
+            }
+        }
+
         return false;
     }
 

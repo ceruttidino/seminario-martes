@@ -5,5 +5,6 @@ public enum RoomType
     Start,
     Normal,
     Shop,
-    Boss
+    Boss,
+    Challenge
 }

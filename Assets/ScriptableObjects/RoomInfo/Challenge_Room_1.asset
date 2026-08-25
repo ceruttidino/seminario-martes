@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0fafb5f288fe4d543b32ecddd7f96428, type: 3}
-  m_Name: Enemy_Room_1
+  m_Name: Challenge_Room_1
   m_EditorClassIdentifier: Assembly-CSharp::RoomInformation
-  roomID: Enemy_Room_1
-  type: 1
-  prefab: {fileID: 5081486977560716221, guid: 5507c2b20577bd94795d717bf817debf, type: 3}
-  level: 2
+  roomID: Challenge_1
+  type: 4
+  prefab: {fileID: 5081486977560716221, guid: cffd4a416bc0b3c449b62fafdb81d36d, type: 3}
+  level: 1
   availableDoors: 00000000010000000200000003000000

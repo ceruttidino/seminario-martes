@@ -8,14 +8,20 @@ public class DungeonLayout //Builds floor layout (How Rooms Connect with Each Ot
 
     private Dictionary<Vector2Int, RoomNode> grid = new Dictionary<Vector2Int, RoomNode>();
 
+    [Header("Room Information")]
     private RoomInformation shopRoomInformation;
     private RoomInformation bossRoomInformation;
+    private List<RoomInformation> challengeRoomInformations = new List<RoomInformation>();
+
+    [Header("Booleans")]
     private bool shopAlreadyGenerated = false;
     private bool bossAlreadyGenerated = false;
 
+    private bool challengeAlreadyGenerated = false;
+
     public RoomNode StartNode { get; private set; }
 
-    public void Build(RoomInformation startRoom, List<RoomInformation> normalRooms, RoomInformation shopRoom, RoomInformation bossRoom)
+    public void Build(RoomInformation startRoom, List<RoomInformation> normalRooms, RoomInformation shopRoom, RoomInformation bossRoom, List<RoomInformation> challengeRooms)
     {
         generatedRooms.Clear();
         grid.Clear();
@@ -23,8 +29,11 @@ public class DungeonLayout //Builds floor layout (How Rooms Connect with Each Ot
 
         this.shopRoomInformation = shopRoom;
         this.bossRoomInformation = bossRoom;
+        this.challengeRoomInformations = new List<RoomInformation>(challengeRooms);
+
         shopAlreadyGenerated = false;
         bossAlreadyGenerated = false;
+        challengeAlreadyGenerated = false;
 
         StartNode = new RoomNode("Start", startRoom);
         StartNode.gridPosition = Vector2Int.zero;
@@ -58,7 +67,7 @@ public class DungeonLayout //Builds floor layout (How Rooms Connect with Each Ot
             return existingNeighbor;
         }
 
-        if (fromNode.information.type == RoomType.Shop || fromNode.information.type == RoomType.Boss)
+        if (fromNode.information.type == RoomType.Shop || fromNode.information.type == RoomType.Boss || fromNode.information.type == RoomType.Challenge)
         {
             return null;
         }
@@ -84,8 +93,10 @@ public class DungeonLayout //Builds floor layout (How Rooms Connect with Each Ot
                 return null;
             }
 
-            if (IsShopBossCombination(fromNode.information.type, existing.information.type))
+            if (AreIncompatibleSpecialRooms(fromNode.information.type, existing.information.type))
+            {
                 return null;
+            }
 
             if (roomType != RoomType.Normal && existing.information.type != roomType)
                 return null;
@@ -161,6 +172,38 @@ public class DungeonLayout //Builds floor layout (How Rooms Connect with Each Ot
             selected = bossRoomInformation;
         }
 
+        else if (roomType == RoomType.Challenge)
+        {
+            if (challengeAlreadyGenerated ||
+                challengeRoomInformations == null ||
+                challengeRoomInformations.Count == 0)
+            {
+                return null;
+            }
+
+            List<RoomInformation> validChallenges = new List<RoomInformation>();
+
+            foreach (RoomInformation challengeRoom in challengeRoomInformations)
+            {
+                if (challengeRoom == null)
+                    continue;
+
+                if (challengeRoom.HasDoor(requiredEntrance))
+                {
+                    validChallenges.Add(challengeRoom);
+                }
+            }
+
+            if (validChallenges.Count == 0)
+            {
+                return null;
+            }
+
+            int randomIndex = Random.Range(0, validChallenges.Count);
+
+            selected = validChallenges[randomIndex];
+        }
+
         if (selected == null)
         {
             return null;
@@ -188,23 +231,43 @@ public class DungeonLayout //Builds floor layout (How Rooms Connect with Each Ot
             bossAlreadyGenerated = true;
         }
 
+        else if (roomType == RoomType.Challenge)
+        {
+            challengeAlreadyGenerated = true;
+        }
+
         return newNode;
     }
 
-    private bool IsShopBossCombination(RoomType a, RoomType b)
+    private bool AreIncompatibleSpecialRooms(RoomType a, RoomType b)
     {
-        return (a == RoomType.Shop && b == RoomType.Boss) ||
-               (a == RoomType.Boss && b == RoomType.Shop);
+        bool aSpecial =
+            a == RoomType.Shop ||
+            a == RoomType.Boss ||
+            a == RoomType.Challenge;
+
+        bool bSpecial =
+            b == RoomType.Shop ||
+            b == RoomType.Boss ||
+            b == RoomType.Challenge;
+
+        return aSpecial && bSpecial;
     }
 
-    private bool WouldPlaceSpecialNextToOpposite(Vector2Int position, RoomType newRoomType)
+    private bool WouldPlaceSpecialNextToOpposite(Vector2Int position,RoomType newRoomType)
     {
-        if (newRoomType != RoomType.Shop && newRoomType != RoomType.Boss)
+        bool isSpecial =
+            newRoomType == RoomType.Shop ||
+            newRoomType == RoomType.Boss ||
+            newRoomType == RoomType.Challenge;
+
+        if (!isSpecial)
             return false;
 
         foreach (DoorDirection dir in System.Enum.GetValues(typeof(DoorDirection)))
         {
-            Vector2Int checkPos = position + DirectionToGridOffset(dir);
+            Vector2Int checkPos =
+                position + DirectionToGridOffset(dir);
 
             if (!grid.TryGetValue(checkPos, out RoomNode neighbor))
                 continue;
@@ -212,8 +275,12 @@ public class DungeonLayout //Builds floor layout (How Rooms Connect with Each Ot
             if (neighbor == null || neighbor.information == null)
                 continue;
 
-            if (IsShopBossCombination(newRoomType, neighbor.information.type))
+            if (AreIncompatibleSpecialRooms(
+                newRoomType,
+                neighbor.information.type))
+            {
                 return true;
+            }
         }
 
         return false;
