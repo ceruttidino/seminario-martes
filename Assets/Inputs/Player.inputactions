@@ -77,6 +77,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "CheatConsole",
+                    "type": "Button",
+                    "id": "cc1cca0b-3e3e-4e9e-8a00-6753210c9abd",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -409,6 +418,17 @@
                     "action": "Aim",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "2efbe28d-5798-47e8-8751-0558af578c62",
+                    "path": "<Keyboard>/backquote",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CheatConsole",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }
