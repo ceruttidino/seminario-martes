@@ -51,40 +51,110 @@ public class Cheats : MonoBehaviour
 
         switch (command[0])
         {
+
             case "help":
-                Debug.Log("Available commands: givescrap [amount], givepick [amount], givehealth, skiplevel");
-                consoleText.GetComponent<TextMeshProUGUI>().text = "Available commands: givescrap [amount], givepick [amount], givehealth, skiplevel";
+                consoleText.GetComponent<TextMeshProUGUI>().text = "Please respect Capital Letters";
                 break;
-            case "givescrap":
-                if (command.Length >= 1)
+            case "Help": //help le mustra al usuario todos los commandos
+                if (command.Length > 1)
                 {
-                    if (int.TryParse(command[1], out int scrapAmount))
+                    switch (command[1])
                     {
-                        player.GetComponent<PlayerScrap>().AddScrap(scrapAmount);
+                        case "Help":
+                            consoleText.GetComponent<TextMeshProUGUI>().text = "Shows all available commands when empty\nExplains what a commands does when placed behind it";
+                            break;
+                        case "GiveScrap":
+                            consoleText.GetComponent<TextMeshProUGUI>().text = "Gives scrap to the player";
+                            break;
+                        case "GivePick":
+                            consoleText.GetComponent<TextMeshProUGUI>().text = "Gives the specified ammount fo lockpicks to the player";
+                            break;
+                        case "GiveHealth":
+                            consoleText.GetComponent<TextMeshProUGUI>().text = "heals the player the requested ammount ";
+                            break;
+                        case "AddHearts":
+                            consoleText.GetComponent<TextMeshProUGUI>().text = "Increases the player's max health";
+                            break;
+                        case "SkipLevel":
+                            consoleText.GetComponent<TextMeshProUGUI>().text = "Makes the player win, thus allowing to skip the level";
+                            break;
+                        default:
+                            consoleText.GetComponent<TextMeshProUGUI>().text = "Command not recognized, Please remember to respect Capital Letters";
+                            break;
                     }
-                    else { Debug.Log("Invalid amount specified"); }
                 }
-                else { Debug.Log("no specified ammount"); }
-                break; 
+                else { consoleText.GetComponent<TextMeshProUGUI>().text = "Available commands: WARNING ALL COMMANDS ARE CASE SENSITIVE\nHelp [command] \nGiveScrap [amount]\nGivePick [amount]\nGiveHealth [amount]\nAddHearts [amount]\nSkipLevel"; }
+                    break;
+            case "GiveScrap"://entrega scrap (dinero) al jugador
+                if (command.Length > 1)
+                {
+                    if (int.TryParse(command[1], out int Amount))
+                    {
+                        player.GetComponent<PlayerScrap>().AddScrap(Amount);
+                        consoleText.GetComponent<TextMeshProUGUI>().text = "Adding " + Amount + " Scrap";
+                    }                
+                    else { consoleText.GetComponent<TextMeshProUGUI>().text = "Invalid amount specified"; }
+                }
+                else { consoleText.GetComponent<TextMeshProUGUI>().text = "no specified ammount"; }
+        break; 
 
-            case "givepick":
-                if (command.Length >= 1)
+            case "GivePick": //entrega Lockpicks (llaves) al jugador
+                if (command.Length > 1)
                 {
-                    if (int.TryParse(command[1], out int keyAmount))
+                    if (int.TryParse(command[1], out int Amount))
                     {
-                        player.GetComponent<PlayerKeys>().AddKeys(keyAmount);
+                        player.GetComponent<PlayerKeys>().AddKeys(Amount);
+                        consoleText.GetComponent<TextMeshProUGUI>().text = "Adding " + Amount + " Lockpicks";
                     }
-                    else { Debug.Log("Invalid amount specified"); }
+                    else { consoleText.GetComponent<TextMeshProUGUI>().text = "Invalid amount specified"; }
                 }
-                else { Debug.Log("no specified ammount"); }
+                else { consoleText.GetComponent<TextMeshProUGUI>().text = "no specified ammount"; }
                 break;
-            case "givehealth":
-                Debug.Log("Cheat activated: health");
+            case "GiveHealth": //cura al jugador
+                if (command.Length > 1)
+                {
+                    if (int.TryParse(command[1], out int Amount))
+                    {
+                        player.GetComponent<PlayerHealth>().PlayerHeal(Amount);
+                        Debug.Log("Healing " + Amount + " hearts of healt");
+                        consoleText.GetComponent<TextMeshProUGUI>().text = "Healing " + Amount + " hearts of healt";
+                    }
+                    else { consoleText.GetComponent<TextMeshProUGUI>().text = "Invalid amount specified"; }
+                }
+                else { consoleText.GetComponent<TextMeshProUGUI>().text = "no specified ammount"; }
                 break;
-            case "skiplevel":
+            case "AddHearts": //aumenta la salud maxima del jugador
+                if (command.Length > 1)
+                {
+                    if (int.TryParse(command[1], out int Amount))
+                    {
+                        if (Amount <= 3)
+                        {
+                            player.GetComponent<PlayerHealth>().PlayerAddHeart(Amount);
+                            consoleText.GetComponent<TextMeshProUGUI>().text = "Adding " + Amount + " hearts to player";
+                        }
+                        else
+                        {
+                            player.GetComponent<PlayerHealth>().PlayerAddHeart(3);
+                            consoleText.GetComponent<TextMeshProUGUI>().text = "Amount exceeds Health Cap, adding max ammount of hearts";
+                        }
+                    }
+                    else { consoleText.GetComponent<TextMeshProUGUI>().text = "Invalid amount specified"; }
+                }
+                else { consoleText.GetComponent<TextMeshProUGUI>().text = "no specified ammount"; }
+                break;
+            case "SkipLevel": //saltea el nivel
                 Debug.Log("Skipping level");
+
+                VictoryManager victoryManager = FindFirstObjectByType<VictoryManager>();
+                victoryManager.ContinueRun();
+
+                consoleText.GetComponent<TextMeshProUGUI>().text = "Skiping to next level";
                 break;
 
+            default:
+                consoleText.GetComponent<TextMeshProUGUI>().text = "Command not recognized\nPlease remember to respect Capital Letters\nUse 'HELP' to check all available commands";
+                break;
         }
     }
 }

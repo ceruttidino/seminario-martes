@@ -92,7 +92,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     {
         canGetHurt = true;
     }
-
+    /*
     // teclas de debug para testear en el editor
     public void Heal(InputAction.CallbackContext context)
     {
@@ -110,7 +110,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     {
         if (!context.performed) return;
         PlayerAddHeart(false);
-    }
+    }*/
 
     public void PlayerGetHurt()
     {
