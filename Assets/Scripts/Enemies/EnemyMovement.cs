@@ -98,6 +98,26 @@ public class EnemyMovement : MonoBehaviour, IMovement
         }
     }
 
+    // Orienta al enemigo (flip + parametros del Animator) sin moverlo.
+    public void Face(Vector2 direction)
+    {
+        if (direction.sqrMagnitude < 0.0001f) return;
+
+        lastFacingDirection = direction.normalized;
+
+        if (spriteRenderer != null)
+        {
+            if (direction.x > 0) spriteRenderer.flipX = true;
+            else if (direction.x < 0) spriteRenderer.flipX = false;
+        }
+
+        if (animator != null)
+        {
+            animator.SetFloat("X", lastFacingDirection.x);
+            animator.SetFloat("Y", lastFacingDirection.y);
+        }
+    }
+
     // Mide el avance real cada StuckTimeWindow segundos. Si el enemigo estaba
     // intentando moverse (direccion deseada no nula) pero se desplazo menos que
     // stuckDistanceThreshold en toda la ventana, arma un escape: durante

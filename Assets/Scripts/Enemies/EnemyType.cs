@@ -8,5 +8,6 @@ public enum EnemyType
     Mole,
     Hedgehog,
     Turtle,
-    Snake
+    Snake,
+    Owl
 }

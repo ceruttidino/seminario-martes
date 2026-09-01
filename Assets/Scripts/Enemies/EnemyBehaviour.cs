@@ -14,6 +14,7 @@ public class EnemyBehaviour : MonoBehaviour
     private SpikyTurtle spikyTurtle;
     private PoisonousSnake poisonousSnake;
     private RegeneratingRat regeneratingRat;
+    private VanishingOwl vanishingOwl;
 
     private void Awake()
     {
@@ -23,6 +24,7 @@ public class EnemyBehaviour : MonoBehaviour
         spikyTurtle = GetComponent<SpikyTurtle>();
         poisonousSnake = GetComponent<PoisonousSnake>();
         regeneratingRat = GetComponent<RegeneratingRat>();
+        vanishingOwl = GetComponent<VanishingOwl>();
     }
 
     private void Update()
@@ -93,6 +95,16 @@ public class EnemyBehaviour : MonoBehaviour
                 }
 
                 SetState(new SnakeChaseState(player, movement, transform, this, poisonousSnake));
+                break;
+
+            case EnemyType.Owl:
+                if (vanishingOwl == null)
+                {
+                    Debug.Log($"EnemyBehaviour: {gameObject.name} necesita VanishingOwl.");
+                    break;
+                }
+
+                SetState(new OwlStalkState(player, transform, this, vanishingOwl));
                 break;
 
             default:
