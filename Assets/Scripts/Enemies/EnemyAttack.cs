@@ -23,7 +23,7 @@ public class EnemyAttack : MonoBehaviour
 
         if (hit != null)
         {
-            IDamageable damageable = hit.GetComponent<IDamageable>();
+            IDamageable damageable = hit.GetComponentInParent<IDamageable>();
 
             if (damageable != null)
             {

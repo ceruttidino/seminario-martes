@@ -51,6 +51,7 @@ public class AreaAttack : MonoBehaviour, IAttack
 
     public bool CanExecute()
     {
+        if (GamePause.IsGameplayFrozen) return false;
         if (playerDash != null && playerDash.IsDashing) return false;
         return Time.time >= lastUseTime + cooldown;
     }

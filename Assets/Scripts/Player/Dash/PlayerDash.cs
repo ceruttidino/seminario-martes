@@ -43,7 +43,7 @@ public class PlayerDash : MonoBehaviour
         }
     }
 
-    public bool CanDash => CooldownRemaining <= 0f && !isDashing && !IsAnyAttackActive();
+    public bool CanDash => CooldownRemaining <= 0f && !isDashing && !IsAnyAttackActive() && !GamePause.IsGameplayFrozen;
 
     private bool IsAnyAttackActive()
     {
@@ -71,8 +71,20 @@ public class PlayerDash : MonoBehaviour
             areaAttack = GetComponent<AreaAttack>();
     }
 
+    private void OnEnable()
+    {
+        GamePause.GameplayFrozen += CancelDash;
+    }
+
+    private void OnDisable()
+    {
+        GamePause.GameplayFrozen -= CancelDash;
+    }
+
     private void Update()
     {
+        if (GamePause.IsGameplayFrozen) return;
+
         if (WasDashPressed())
             TryDash();
     }
@@ -80,6 +92,7 @@ public class PlayerDash : MonoBehaviour
     public void OnDash(InputAction.CallbackContext context)
     {
         if (!context.performed) return;
+        if (GamePause.IsGameplayFrozen) return;
         TryDash();
     }
 
@@ -132,20 +145,43 @@ public class PlayerDash : MonoBehaviour
 
     private IEnumerator DashCoroutine(Vector2 direction)
     {
-        float startTime = Time.time;
+        float elapsed = 0f;
 
-        while (Time.time < startTime + dashDuration)
+        while (elapsed < dashDuration)
         {
+            if (GamePause.IsGameplayFrozen)
+            {
+                CancelDash();
+                yield break;
+            }
+
+            elapsed += Time.deltaTime;
             rb.linearVelocity = direction * dashSpeed;
             yield return null;
         }
 
+        EndDash(keepMomentum: true);
+    }
+
+    private void CancelDash()
+    {
+        if (!isDashing) return;
+        StopAllCoroutines();
+        EndDash(keepMomentum: false);
+    }
+
+    private void EndDash(bool keepMomentum)
+    {
         isDashing = false;
 
         if (animator != null)
-        {
             animator.SetBool("IsDashing", false);
-        }
-        rb.linearVelocity *= 0.6f;
+
+        if (rb == null) return;
+
+        if (keepMomentum)
+            rb.linearVelocity *= 0.6f;
+        else
+            rb.linearVelocity = Vector2.zero;
     }
 }

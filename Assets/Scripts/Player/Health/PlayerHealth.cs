@@ -55,6 +55,8 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         if (damageFlash != null)
             damageFlash.Flash();
 
+        CameraShake.Play();
+
         if (playerHealth <= 0)
         {
             Die();

@@ -7,7 +7,9 @@ public class PlayerShopInteraction : MonoBehaviour
 
     private void Update()
     {
-        if (currentItem != null && Keyboard.current.eKey.wasPressedThisFrame)
+        if (GamePause.IsGameplayFrozen) return;
+
+        if (currentItem != null && Keyboard.current != null && Keyboard.current.eKey.wasPressedThisFrame)
             currentItem.TryBuy(GetComponent<PlayerScrap>(), gameObject);
     }
 

@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using UnityEngine;
@@ -24,7 +25,8 @@ public class RoomInstance : MonoBehaviour
     private EnemyBehaviour[] currentEnemies;
 
     private bool enemiesSpawned = false;
-    private int enemiesAlive;
+    private bool combatActive = false;
+    private bool checkingCombatClear = false;
 
 
     private Dictionary<DoorDirection, Transform> spawnPointLookup = new Dictionary<DoorDirection, Transform>();
@@ -90,7 +92,12 @@ public class RoomInstance : MonoBehaviour
 
                 RoomNode neighbor = node.GetNeighbor(direction);
 
-                if (neighbor != null)
+                if (node.information.type == RoomType.Boss)
+                {
+                    door.SetDoorType(RoomType.Boss, neighbor != null ? neighbor : node);
+                    door.SetLocked(true);
+                }
+                else if (neighbor != null)
                 {
                     door.SetDoorType(neighbor.information.type, neighbor);
                 }
@@ -104,6 +111,12 @@ public class RoomInstance : MonoBehaviour
                     door.SetLocked(false);
                 }
             }
+        }
+
+        if (combatActive || HasLivingEnemies())
+        {
+            combatActive = true;
+            LockDoors(instant: true);
         }
 
         GenerateDiggingSpots();
@@ -140,63 +153,64 @@ public class RoomInstance : MonoBehaviour
     {
         if (enemiesSpawned) return;
 
-        // Muchos tipos de room (Start, Shop, Boss, Treasure, Spike, Connection) no
-        // tienen enemigos a proposito, asi que esto no es un error: no logueamos
-        // nada salvo que la configuracion este a medias (prefab si pero sin puntos
-        // de spawn, o viceversa), que ahi si es indicio de una room mal configurada.
-        if (enemyPrefab == null && (enemySpawnPoints == null || enemySpawnPoints.Length == 0))
-        {
-            return;
-        }
-
+        // Start, Shop, Boss, Connection y Challenge no spawnean enemigos por este
+        // sistema. Si el prefab o los puntos faltan / están vacíos, simplemente no
+        // hay combate: no es un error.
         if (enemyPrefab == null || enemySpawnPoints == null || enemySpawnPoints.Length == 0)
-        {
-            Debug.LogWarning($"Configuración de enemigos incompleta en la room '{gameObject.name}': falta el prefab o los puntos de spawn.");
             return;
-        }
-
-        enemiesAlive = 0;
 
         foreach (Transform point in enemySpawnPoints)
         {
             if (point == null)
-            {
-                Debug.LogError("Enemy Spawn Point vacío en la room: " + gameObject.name);
                 continue;
-            }
-
 
             GameObject enemyGO = Instantiate(enemyPrefab, point.position, Quaternion.identity, transform);
-
-            EnemyHealth enemyHealth = enemyGO.GetComponent<EnemyHealth>();
-            RatRegeneration regen = enemyGO.GetComponent<RatRegeneration>();
-
-            if (enemyHealth != null)
-            {
-                enemiesAlive++;
-
-                // las ratas no se suscriben directamente porque usan RatBody para manejar su muerte
-                if (regen == null)
-                {
-                    enemyHealth.OnDeath += HandleEnemyDeath;
-                }
-            }
+            RegisterEnemy(enemyGO);
         }
+
+        foreach (EnemyHealth existing in GetComponentsInChildren<EnemyHealth>(true))
+            RegisterEnemy(existing);
 
         enemiesSpawned = true;
 
-        if (enemiesAlive > 0)
+        if (HasLivingEnemies())
         {
+            combatActive = true;
             LockDoors();
         }
     }
 
+    private void RegisterEnemy(GameObject enemyGO)
+    {
+        if (enemyGO == null) return;
+
+        foreach (EnemyHealth health in enemyGO.GetComponentsInChildren<EnemyHealth>(true))
+            RegisterEnemy(health);
+    }
+
+    private void RegisterEnemy(EnemyHealth enemyHealth)
+    {
+        if (enemyHealth == null) return;
+
+        enemyHealth.OnDeath -= HandleEnemyDeath;
+        enemyHealth.OnDeath += HandleEnemyDeath;
+    }
+
     public void LockDoors()
+    {
+        LockDoors(false);
+    }
+
+    public void LockDoors(bool instant)
     {
         foreach (var door in roomDoors)
         {
             if (door == null) continue;
-            door.PlayLockAnimation();
+
+            if (instant)
+                door.SetLocked(true);
+            else
+                door.PlayLockAnimation();
         }
     }
 
@@ -223,6 +237,9 @@ public class RoomInstance : MonoBehaviour
     // se abre aca: sigue pidiendo ganzua.
     public void UnlockDoorsAnimated()
     {
+        if (HasLivingEnemies())
+            return;
+
         foreach (var door in roomDoors)
         {
             if (door == null) continue;
@@ -240,17 +257,42 @@ public class RoomInstance : MonoBehaviour
 
     private void EndCombat()
     {
+        if (HasLivingEnemies())
+            return;
+
+        combatActive = false;
         UnlockDoorsAnimated();
     }
 
     public void HandleEnemyDeath()
     {
-        enemiesAlive--;
+        if (checkingCombatClear) return;
+        StartCoroutine(CheckCombatClearedNextFrame());
+    }
 
-        if (enemiesAlive <= 0)
-        {
+    private IEnumerator CheckCombatClearedNextFrame()
+    {
+        checkingCombatClear = true;
+        yield return null;
+        checkingCombatClear = false;
+
+        if (!HasLivingEnemies())
             EndCombat();
+    }
+
+    public bool HasLivingEnemies()
+    {
+        EnemyHealth[] healths = GetComponentsInChildren<EnemyHealth>(true);
+        foreach (EnemyHealth health in healths)
+        {
+            if (health != null && !health.IsDead)
+                return true;
         }
+
+        if (GetComponentInChildren<RatBody>(true) != null)
+            return true;
+
+        return false;
     }
 
     private void OnDrawGizmos()

@@ -49,9 +49,31 @@ public class PlayerMovement : MonoBehaviour
             playerAim = GetComponent<PlayerAim>();
     }
 
+    private void OnEnable()
+    {
+        GamePause.GameplayFrozen += FreezeMovement;
+    }
+
+    private void OnDisable()
+    {
+        GamePause.GameplayFrozen -= FreezeMovement;
+    }
+
     void FixedUpdate()
     {
         HandleMovement();
+    }
+
+    private void FreezeMovement()
+    {
+        moveInput = Vector2.zero;
+        moveDirection = Vector2.zero;
+
+        if (rb != null)
+            rb.linearVelocity = Vector2.zero;
+
+        if (animator != null)
+            animator.SetFloat("Speed", 0f);
     }
 
     void LateUpdate()
@@ -61,6 +83,13 @@ public class PlayerMovement : MonoBehaviour
 
     public void Move(InputAction.CallbackContext context)
     {
+        if (GamePause.IsGameplayFrozen)
+        {
+            moveInput = Vector2.zero;
+            moveDirection = Vector2.zero;
+            return;
+        }
+
         moveInput = context.ReadValue<Vector2>();
 
         if (moveInput.magnitude < inputDeadzone)
@@ -71,6 +100,12 @@ public class PlayerMovement : MonoBehaviour
 
     private void HandleMovement()
     {
+        if (GamePause.IsGameplayFrozen)
+        {
+            FreezeMovement();
+            return;
+        }
+
         if (playerDash != null && playerDash.IsDashing)
             return;
 

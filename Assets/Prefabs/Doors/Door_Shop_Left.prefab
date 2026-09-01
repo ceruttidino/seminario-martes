@@ -156,7 +156,7 @@ MonoBehaviour:
   spriteRenderer: {fileID: 0}
   normalDoorSprite: {fileID: 4976125646568474354, guid: 33cd2fc56208f5a4a8ee74c10ba2ad03, type: 3}
   shopDoorSprite: {fileID: 21300000, guid: bc65ac4a1d765d0469b27cf6ad62aef5, type: 3}
-  bossDoorSprite: {fileID: 21300000, guid: 5e099f030023f7044850d7c8edf4c0c7, type: 3}
+  bossDoorSprite: {fileID: 3665462171512673733, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
   lockedDoorSprite: {fileID: 1485597978798215358, guid: 6dc5eb9bea0a093655825043236956e4, type: 3}
   unlockAnimationFrames:
   - {fileID: 1485597978798215358, guid: 6dc5eb9bea0a093655825043236956e4, type: 3}
@@ -181,3 +181,28 @@ MonoBehaviour:
   - {fileID: 684301459878942580, guid: 5a7c5f92fd6548a740aa36af814e3c4a, type: 3}
   - {fileID: 7063991225237906224, guid: 5a7c5f92fd6548a740aa36af814e3c4a, type: 3}
   combatFrameRate: 14
+  bossAnimationFrames:
+  - {fileID: 5455672826101213740, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 6220317414516730830, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 3386425644568655062, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 6544532065620147190, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 6678410267484366994, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 4236219880146474134, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 4127091066607998351, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 3285200430428055505, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 7809233305820273348, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 6481021006274147244, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 4734748028723493564, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 4563975013101261209, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 8770968762409294562, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 3114370678236206410, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 2387783231220195377, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 6523722699820296394, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 2091233763135615264, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 3678726852199940603, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 8114771059260095009, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 6345987224208413885, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 3757799029200383541, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 3665462171512673733, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  bossAnimSheet: {fileID: 2800000, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  bossFrameRate: 16

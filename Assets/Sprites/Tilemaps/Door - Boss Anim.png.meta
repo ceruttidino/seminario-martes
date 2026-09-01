@@ -1,0 +1,579 @@
+fileFormatVersion: 2
+guid: ecc4c04ccef671fb6c9004cc977e9269
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 5455672826101213740
+    second: Door - Boss Anim_0
+  - first:
+      213: 6220317414516730830
+    second: Door - Boss Anim_1
+  - first:
+      213: 3386425644568655062
+    second: Door - Boss Anim_2
+  - first:
+      213: 6544532065620147190
+    second: Door - Boss Anim_3
+  - first:
+      213: 6678410267484366994
+    second: Door - Boss Anim_4
+  - first:
+      213: 4236219880146474134
+    second: Door - Boss Anim_5
+  - first:
+      213: 4127091066607998351
+    second: Door - Boss Anim_6
+  - first:
+      213: 3285200430428055505
+    second: Door - Boss Anim_7
+  - first:
+      213: 7809233305820273348
+    second: Door - Boss Anim_8
+  - first:
+      213: 6481021006274147244
+    second: Door - Boss Anim_9
+  - first:
+      213: 4734748028723493564
+    second: Door - Boss Anim_10
+  - first:
+      213: 4563975013101261209
+    second: Door - Boss Anim_11
+  - first:
+      213: 8770968762409294562
+    second: Door - Boss Anim_12
+  - first:
+      213: 3114370678236206410
+    second: Door - Boss Anim_13
+  - first:
+      213: 2387783231220195377
+    second: Door - Boss Anim_14
+  - first:
+      213: 6523722699820296394
+    second: Door - Boss Anim_15
+  - first:
+      213: 2091233763135615264
+    second: Door - Boss Anim_16
+  - first:
+      213: 3678726852199940603
+    second: Door - Boss Anim_17
+  - first:
+      213: 8114771059260095009
+    second: Door - Boss Anim_18
+  - first:
+      213: 6345987224208413885
+    second: Door - Boss Anim_19
+  - first:
+      213: 3757799029200383541
+    second: Door - Boss Anim_20
+  - first:
+      213: 3665462171512673733
+    second: Door - Boss Anim_21
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 1
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 4096
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 0
+  spriteMeshType: 0
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 128
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Door - Boss Anim_0
+      rect: {serializedVersion: 2, x: 0, y: 0, width: 138, height: 92}
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c0b100119e7cfc440800000000000000
+      internalID: 5455672826101213740
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Door - Boss Anim_1
+      rect: {serializedVersion: 2, x: 138, y: 0, width: 138, height: 92}
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c0b101119e7cfc440800000000000000
+      internalID: 6220317414516730830
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Door - Boss Anim_2
+      rect: {serializedVersion: 2, x: 276, y: 0, width: 138, height: 92}
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c0b102119e7cfc440800000000000000
+      internalID: 3386425644568655062
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Door - Boss Anim_3
+      rect: {serializedVersion: 2, x: 414, y: 0, width: 138, height: 92}
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c0b103119e7cfc440800000000000000
+      internalID: 6544532065620147190
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Door - Boss Anim_4
+      rect: {serializedVersion: 2, x: 552, y: 0, width: 138, height: 92}
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c0b104119e7cfc440800000000000000
+      internalID: 6678410267484366994
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Door - Boss Anim_5
+      rect: {serializedVersion: 2, x: 690, y: 0, width: 138, height: 92}
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c0b105119e7cfc440800000000000000
+      internalID: 4236219880146474134
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Door - Boss Anim_6
+      rect: {serializedVersion: 2, x: 828, y: 0, width: 138, height: 92}
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c0b106119e7cfc440800000000000000
+      internalID: 4127091066607998351
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Door - Boss Anim_7
+      rect: {serializedVersion: 2, x: 966, y: 0, width: 138, height: 92}
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c0b107119e7cfc440800000000000000
+      internalID: 3285200430428055505
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Door - Boss Anim_8
+      rect: {serializedVersion: 2, x: 1104, y: 0, width: 138, height: 92}
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c0b108119e7cfc440800000000000000
+      internalID: 7809233305820273348
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Door - Boss Anim_9
+      rect: {serializedVersion: 2, x: 1242, y: 0, width: 138, height: 92}
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c0b109119e7cfc440800000000000000
+      internalID: 6481021006274147244
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Door - Boss Anim_10
+      rect: {serializedVersion: 2, x: 1380, y: 0, width: 138, height: 92}
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c0b10a119e7cfc440800000000000000
+      internalID: 4734748028723493564
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Door - Boss Anim_11
+      rect: {serializedVersion: 2, x: 1518, y: 0, width: 138, height: 92}
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c0b10b119e7cfc440800000000000000
+      internalID: 4563975013101261209
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Door - Boss Anim_12
+      rect: {serializedVersion: 2, x: 1656, y: 0, width: 138, height: 92}
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c0b10c119e7cfc440800000000000000
+      internalID: 8770968762409294562
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Door - Boss Anim_13
+      rect: {serializedVersion: 2, x: 1794, y: 0, width: 138, height: 92}
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c0b10d119e7cfc440800000000000000
+      internalID: 3114370678236206410
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Door - Boss Anim_14
+      rect: {serializedVersion: 2, x: 1932, y: 0, width: 138, height: 92}
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c0b10e119e7cfc440800000000000000
+      internalID: 2387783231220195377
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Door - Boss Anim_15
+      rect: {serializedVersion: 2, x: 2070, y: 0, width: 138, height: 92}
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c0b10f119e7cfc440800000000000000
+      internalID: 6523722699820296394
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Door - Boss Anim_16
+      rect: {serializedVersion: 2, x: 2208, y: 0, width: 138, height: 92}
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c0b110119e7cfc440800000000000000
+      internalID: 2091233763135615264
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Door - Boss Anim_17
+      rect: {serializedVersion: 2, x: 2346, y: 0, width: 138, height: 92}
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c0b111119e7cfc440800000000000000
+      internalID: 3678726852199940603
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Door - Boss Anim_18
+      rect: {serializedVersion: 2, x: 2484, y: 0, width: 138, height: 92}
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c0b112119e7cfc440800000000000000
+      internalID: 8114771059260095009
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Door - Boss Anim_19
+      rect: {serializedVersion: 2, x: 2622, y: 0, width: 138, height: 92}
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c0b113119e7cfc440800000000000000
+      internalID: 6345987224208413885
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Door - Boss Anim_20
+      rect: {serializedVersion: 2, x: 2760, y: 0, width: 138, height: 92}
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c0b114119e7cfc440800000000000000
+      internalID: 3757799029200383541
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Door - Boss Anim_21
+      rect: {serializedVersion: 2, x: 2898, y: 0, width: 138, height: 92}
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c0b115119e7cfc440800000000000000
+      internalID: 3665462171512673733
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Door - Boss Anim_0: 5455672826101213740
+      Door - Boss Anim_1: 6220317414516730830
+      Door - Boss Anim_2: 3386425644568655062
+      Door - Boss Anim_3: 6544532065620147190
+      Door - Boss Anim_4: 6678410267484366994
+      Door - Boss Anim_5: 4236219880146474134
+      Door - Boss Anim_6: 4127091066607998351
+      Door - Boss Anim_7: 3285200430428055505
+      Door - Boss Anim_8: 7809233305820273348
+      Door - Boss Anim_9: 6481021006274147244
+      Door - Boss Anim_10: 4734748028723493564
+      Door - Boss Anim_11: 4563975013101261209
+      Door - Boss Anim_12: 8770968762409294562
+      Door - Boss Anim_13: 3114370678236206410
+      Door - Boss Anim_14: 2387783231220195377
+      Door - Boss Anim_15: 6523722699820296394
+      Door - Boss Anim_16: 2091233763135615264
+      Door - Boss Anim_17: 3678726852199940603
+      Door - Boss Anim_18: 8114771059260095009
+      Door - Boss Anim_19: 6345987224208413885
+      Door - Boss Anim_20: 3757799029200383541
+      Door - Boss Anim_21: 3665462171512673733
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

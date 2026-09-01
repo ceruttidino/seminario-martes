@@ -19,8 +19,6 @@ public class ChallengeRoomController : MonoBehaviour
 
         challengeStarted = true;
 
-        Debug.Log("CHALLENGE STARTED");
-
         if (roomInstance != null)
         {
             roomInstance.LockDoors();
@@ -33,8 +31,6 @@ public class ChallengeRoomController : MonoBehaviour
             return;
 
         challengeCompleted = true;
-
-        Debug.Log("CHALLENGE COMPLETED!");
 
         if (roomInstance != null)
         {

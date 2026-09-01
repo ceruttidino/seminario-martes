@@ -4,6 +4,8 @@ using UnityEngine.UI;
 
 public class VictoryManager : MonoBehaviour
 {
+    public static bool IsOpen { get; private set; }
+
     [Header("Victory UI")]
     [SerializeField] private GameObject victoryScreen;
     [SerializeField] private Button mainMenuButton;
@@ -15,6 +17,8 @@ public class VictoryManager : MonoBehaviour
 
     private void Awake()
     {
+        IsOpen = false;
+
         if (victoryScreen != null)
             victoryScreen.SetActive(false);
 
@@ -25,7 +29,7 @@ public class VictoryManager : MonoBehaviour
     private void Start()
     {
         if (mainMenuButton != null)
-            mainMenuButton.onClick.AddListener(GoToMainMenu);
+            mainMenuButton.onClick.AddListener(RestartRun);
 
         if (continueButton != null)
             continueButton.onClick.AddListener(ContinueRun);
@@ -34,10 +38,12 @@ public class VictoryManager : MonoBehaviour
     public void TriggerVictory()
     {
         if (victoryScreen == null) return;
+        if (IsOpen) return;
+
+        IsOpen = true;
 
         bool isFinalFloor = DungeonManager.Instance != null && DungeonManager.Instance.IsFinalFloor;
 
-        // En el último nivel no tiene sentido ofrecer "continuar": se acaba el juego acá.
         if (continueButton != null)
             continueButton.gameObject.SetActive(!isFinalFloor);
 
@@ -46,24 +52,35 @@ public class VictoryManager : MonoBehaviour
 
         victoryScreen.SetActive(true);
         victoryScreen.transform.SetAsLastSibling();
+
+        GamePause.SetPaused(true);
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
-    public void GoToMainMenu()
+    public void RestartRun()
     {
-        SceneManager.LoadScene("Main Menu");
+        CloseVictoryHold();
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
-    // Permite seguir jugando tras vencer al jefe: oculta la pantalla de
-    // victoria y le pide al DungeonManager que genere un nuevo piso.
     public void ContinueRun()
     {
         if (DungeonManager.Instance != null && DungeonManager.Instance.IsFinalFloor)
             return;
+
+        CloseVictoryHold();
 
         if (victoryScreen != null)
             victoryScreen.SetActive(false);
 
         if (DungeonManager.Instance != null)
             DungeonManager.Instance.StartNextFloor();
+    }
+
+    private void CloseVictoryHold()
+    {
+        IsOpen = false;
+        GamePause.SetPaused(false);
     }
 }

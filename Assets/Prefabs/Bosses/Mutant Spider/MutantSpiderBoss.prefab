@@ -175,7 +175,7 @@ CircleCollider2D:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 512
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
@@ -242,7 +242,7 @@ MonoBehaviour:
   rb: {fileID: 6309420547196070923}
   spriteRenderer: {fileID: 1610626988516400734}
   animator: {fileID: 3450848373545641744}
-  moveSpeed: 3.8
+  moveSpeed: 3.55
   chaseDuration: 7
   poisonTilePrefab: {fileID: 6823943260347750578, guid: b9d866a973858a84097fd3481b418286, type: 3}
   poisonSpawnPoints:
@@ -276,7 +276,7 @@ MonoBehaviour:
   minWebShots: 8
   maxWebShots: 10
   delayBetweenWebShots: 0.5
-  enemyAttack: {fileID: 0}
+  enemyAttack: {fileID: 3878652755879115746}
   victoryDoorPrefab: {fileID: 7851148841807350584, guid: 9bca1745f4537654287a6d501dd14786, type: 3}
   doorSpawnPoint: {fileID: 8855914108497674385, guid: 0e62d717706e383438c199d4e620ef41, type: 3}
   stoppingDistance: 1.4
@@ -293,8 +293,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAttack
   damage: 1
-  attackRange: 1.4
-  attackCooldown: 2
+  attackRange: 1.2
+  attackCooldown: 0.8
   targetLayer:
     serializedVersion: 2
     m_Bits: 512

@@ -2950,7 +2950,7 @@ GameObject:
   - component: {fileID: 245908909205730912}
   - component: {fileID: 904293447243707842}
   - component: {fileID: 1237818656150308209}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Door_Left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2967,7 +2967,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -8.5, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 2, z: 1}
+  m_LocalScale: {x: 3, y: 3, z: 3}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3961969874413745895}
@@ -3021,8 +3021,8 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.645283, g: 0.31975025, b: 0, a: 1}
+  m_Sprite: {fileID: 5455672826101213740, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -3090,12 +3090,61 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RoomDoor
   direction: 2
-  isLocked: 0
+  isLocked: 1
   spriteRenderer: {fileID: 0}
-  currentDoorType: 0
-  normalDoorSprite: {fileID: 0}
-  shopDoorSprite: {fileID: 0}
-  bossDoorSprite: {fileID: 0}
+  currentDoorType: 3
+  normalDoorSprite: {fileID: 4976125646568474354, guid: 33cd2fc56208f5a4a8ee74c10ba2ad03, type: 3}
+  shopDoorSprite: {fileID: 21300000, guid: bc65ac4a1d765d0469b27cf6ad62aef5, type: 3}
+  bossDoorSprite: {fileID: 3665462171512673733, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  lockedDoorSprite: {fileID: 1485597978798215358, guid: 6dc5eb9bea0a093655825043236956e4, type: 3}
+  unlockAnimationFrames:
+  - {fileID: 1485597978798215358, guid: 6dc5eb9bea0a093655825043236956e4, type: 3}
+  - {fileID: 1324486748257066509, guid: 6dc5eb9bea0a093655825043236956e4, type: 3}
+  - {fileID: 8030575848040544379, guid: 6dc5eb9bea0a093655825043236956e4, type: 3}
+  - {fileID: 837235943433480653, guid: 6dc5eb9bea0a093655825043236956e4, type: 3}
+  - {fileID: 571702687195007944, guid: 6dc5eb9bea0a093655825043236956e4, type: 3}
+  - {fileID: 2193909398176122955, guid: 6dc5eb9bea0a093655825043236956e4, type: 3}
+  - {fileID: 8613132840813151097, guid: 6dc5eb9bea0a093655825043236956e4, type: 3}
+  - {fileID: 1366136358252832673, guid: 6dc5eb9bea0a093655825043236956e4, type: 3}
+  - {fileID: 6230632149091481354, guid: 6dc5eb9bea0a093655825043236956e4, type: 3}
+  - {fileID: 7910843980716336141, guid: 6dc5eb9bea0a093655825043236956e4, type: 3}
+  unlockFrameRate: 14
+  combatClosedSprite: {fileID: 21300000, guid: e87a8ddbe89d0ce3d6b43de1cf771f31, type: 3}
+  combatOpenSprite: {fileID: 21300000, guid: cf39080d283bdacd0a843bfeaa31a08b, type: 3}
+  combatAnimationFrames:
+  - {fileID: 4080526057290102790, guid: 5a7c5f92fd6548a740aa36af814e3c4a, type: 3}
+  - {fileID: 6046332545478708424, guid: 5a7c5f92fd6548a740aa36af814e3c4a, type: 3}
+  - {fileID: 8503191319984185913, guid: 5a7c5f92fd6548a740aa36af814e3c4a, type: 3}
+  - {fileID: 6885732976865106245, guid: 5a7c5f92fd6548a740aa36af814e3c4a, type: 3}
+  - {fileID: 5529247662342504775, guid: 5a7c5f92fd6548a740aa36af814e3c4a, type: 3}
+  - {fileID: 684301459878942580, guid: 5a7c5f92fd6548a740aa36af814e3c4a, type: 3}
+  - {fileID: 7063991225237906224, guid: 5a7c5f92fd6548a740aa36af814e3c4a, type: 3}
+  combatFrameRate: 14
+  bossAnimationFrames:
+  - {fileID: 5455672826101213740, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 6220317414516730830, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 3386425644568655062, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 6544532065620147190, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 6678410267484366994, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 4236219880146474134, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 4127091066607998351, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 3285200430428055505, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 7809233305820273348, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 6481021006274147244, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 4734748028723493564, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 4563975013101261209, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 8770968762409294562, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 3114370678236206410, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 2387783231220195377, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 6523722699820296394, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 2091233763135615264, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 3678726852199940603, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 8114771059260095009, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 6345987224208413885, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 3757799029200383541, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 3665462171512673733, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  bossAnimSheet: {fileID: 2800000, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  bossFrameRate: 16
 --- !u!1 &3370562557351053508
 GameObject:
   m_ObjectHideFlags: 0
@@ -3444,7 +3493,7 @@ GameObject:
   - component: {fileID: 8715959603020859714}
   - component: {fileID: 6536132075907608102}
   - component: {fileID: 8024582676868195165}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Door_Right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3461,7 +3510,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 8.5, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 2, z: 1}
+  m_LocalScale: {x: 3, y: 3, z: 3}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3961969874413745895}
@@ -3515,8 +3564,8 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.645283, g: 0.31975025, b: 0, a: 1}
+  m_Sprite: {fileID: 5455672826101213740, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -3584,12 +3633,61 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RoomDoor
   direction: 3
-  isLocked: 0
+  isLocked: 1
   spriteRenderer: {fileID: 0}
-  currentDoorType: 0
-  normalDoorSprite: {fileID: 0}
-  shopDoorSprite: {fileID: 0}
-  bossDoorSprite: {fileID: 0}
+  currentDoorType: 3
+  normalDoorSprite: {fileID: 4976125646568474354, guid: 33cd2fc56208f5a4a8ee74c10ba2ad03, type: 3}
+  shopDoorSprite: {fileID: 21300000, guid: bc65ac4a1d765d0469b27cf6ad62aef5, type: 3}
+  bossDoorSprite: {fileID: 3665462171512673733, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  lockedDoorSprite: {fileID: 1485597978798215358, guid: 6dc5eb9bea0a093655825043236956e4, type: 3}
+  unlockAnimationFrames:
+  - {fileID: 1485597978798215358, guid: 6dc5eb9bea0a093655825043236956e4, type: 3}
+  - {fileID: 1324486748257066509, guid: 6dc5eb9bea0a093655825043236956e4, type: 3}
+  - {fileID: 8030575848040544379, guid: 6dc5eb9bea0a093655825043236956e4, type: 3}
+  - {fileID: 837235943433480653, guid: 6dc5eb9bea0a093655825043236956e4, type: 3}
+  - {fileID: 571702687195007944, guid: 6dc5eb9bea0a093655825043236956e4, type: 3}
+  - {fileID: 2193909398176122955, guid: 6dc5eb9bea0a093655825043236956e4, type: 3}
+  - {fileID: 8613132840813151097, guid: 6dc5eb9bea0a093655825043236956e4, type: 3}
+  - {fileID: 1366136358252832673, guid: 6dc5eb9bea0a093655825043236956e4, type: 3}
+  - {fileID: 6230632149091481354, guid: 6dc5eb9bea0a093655825043236956e4, type: 3}
+  - {fileID: 7910843980716336141, guid: 6dc5eb9bea0a093655825043236956e4, type: 3}
+  unlockFrameRate: 14
+  combatClosedSprite: {fileID: 21300000, guid: e87a8ddbe89d0ce3d6b43de1cf771f31, type: 3}
+  combatOpenSprite: {fileID: 21300000, guid: cf39080d283bdacd0a843bfeaa31a08b, type: 3}
+  combatAnimationFrames:
+  - {fileID: 4080526057290102790, guid: 5a7c5f92fd6548a740aa36af814e3c4a, type: 3}
+  - {fileID: 6046332545478708424, guid: 5a7c5f92fd6548a740aa36af814e3c4a, type: 3}
+  - {fileID: 8503191319984185913, guid: 5a7c5f92fd6548a740aa36af814e3c4a, type: 3}
+  - {fileID: 6885732976865106245, guid: 5a7c5f92fd6548a740aa36af814e3c4a, type: 3}
+  - {fileID: 5529247662342504775, guid: 5a7c5f92fd6548a740aa36af814e3c4a, type: 3}
+  - {fileID: 684301459878942580, guid: 5a7c5f92fd6548a740aa36af814e3c4a, type: 3}
+  - {fileID: 7063991225237906224, guid: 5a7c5f92fd6548a740aa36af814e3c4a, type: 3}
+  combatFrameRate: 14
+  bossAnimationFrames:
+  - {fileID: 5455672826101213740, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 6220317414516730830, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 3386425644568655062, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 6544532065620147190, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 6678410267484366994, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 4236219880146474134, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 4127091066607998351, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 3285200430428055505, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 7809233305820273348, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 6481021006274147244, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 4734748028723493564, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 4563975013101261209, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 8770968762409294562, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 3114370678236206410, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 2387783231220195377, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 6523722699820296394, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 2091233763135615264, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 3678726852199940603, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 8114771059260095009, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 6345987224208413885, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 3757799029200383541, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 3665462171512673733, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  bossAnimSheet: {fileID: 2800000, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  bossFrameRate: 16
 --- !u!1 &4224606127198630856
 GameObject:
   m_ObjectHideFlags: 0
@@ -3940,7 +4038,7 @@ GameObject:
   - component: {fileID: 2345359953076024937}
   - component: {fileID: 4788174062378213053}
   - component: {fileID: 2136561010566634888}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Door_Down
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3957,7 +4055,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -4.66, z: 0}
-  m_LocalScale: {x: 2, y: 1, z: 1}
+  m_LocalScale: {x: 3, y: 3, z: 3}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3961969874413745895}
@@ -4011,8 +4109,8 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.645283, g: 0.31975025, b: 0, a: 1}
+  m_Sprite: {fileID: 5455672826101213740, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -4080,12 +4178,61 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RoomDoor
   direction: 1
-  isLocked: 0
+  isLocked: 1
   spriteRenderer: {fileID: 0}
-  currentDoorType: 0
-  normalDoorSprite: {fileID: 0}
-  shopDoorSprite: {fileID: 0}
-  bossDoorSprite: {fileID: 0}
+  currentDoorType: 3
+  normalDoorSprite: {fileID: 4976125646568474354, guid: 33cd2fc56208f5a4a8ee74c10ba2ad03, type: 3}
+  shopDoorSprite: {fileID: 21300000, guid: bc65ac4a1d765d0469b27cf6ad62aef5, type: 3}
+  bossDoorSprite: {fileID: 3665462171512673733, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  lockedDoorSprite: {fileID: 1485597978798215358, guid: 6dc5eb9bea0a093655825043236956e4, type: 3}
+  unlockAnimationFrames:
+  - {fileID: 1485597978798215358, guid: 6dc5eb9bea0a093655825043236956e4, type: 3}
+  - {fileID: 1324486748257066509, guid: 6dc5eb9bea0a093655825043236956e4, type: 3}
+  - {fileID: 8030575848040544379, guid: 6dc5eb9bea0a093655825043236956e4, type: 3}
+  - {fileID: 837235943433480653, guid: 6dc5eb9bea0a093655825043236956e4, type: 3}
+  - {fileID: 571702687195007944, guid: 6dc5eb9bea0a093655825043236956e4, type: 3}
+  - {fileID: 2193909398176122955, guid: 6dc5eb9bea0a093655825043236956e4, type: 3}
+  - {fileID: 8613132840813151097, guid: 6dc5eb9bea0a093655825043236956e4, type: 3}
+  - {fileID: 1366136358252832673, guid: 6dc5eb9bea0a093655825043236956e4, type: 3}
+  - {fileID: 6230632149091481354, guid: 6dc5eb9bea0a093655825043236956e4, type: 3}
+  - {fileID: 7910843980716336141, guid: 6dc5eb9bea0a093655825043236956e4, type: 3}
+  unlockFrameRate: 14
+  combatClosedSprite: {fileID: 21300000, guid: e87a8ddbe89d0ce3d6b43de1cf771f31, type: 3}
+  combatOpenSprite: {fileID: 21300000, guid: cf39080d283bdacd0a843bfeaa31a08b, type: 3}
+  combatAnimationFrames:
+  - {fileID: 4080526057290102790, guid: 5a7c5f92fd6548a740aa36af814e3c4a, type: 3}
+  - {fileID: 6046332545478708424, guid: 5a7c5f92fd6548a740aa36af814e3c4a, type: 3}
+  - {fileID: 8503191319984185913, guid: 5a7c5f92fd6548a740aa36af814e3c4a, type: 3}
+  - {fileID: 6885732976865106245, guid: 5a7c5f92fd6548a740aa36af814e3c4a, type: 3}
+  - {fileID: 5529247662342504775, guid: 5a7c5f92fd6548a740aa36af814e3c4a, type: 3}
+  - {fileID: 684301459878942580, guid: 5a7c5f92fd6548a740aa36af814e3c4a, type: 3}
+  - {fileID: 7063991225237906224, guid: 5a7c5f92fd6548a740aa36af814e3c4a, type: 3}
+  combatFrameRate: 14
+  bossAnimationFrames:
+  - {fileID: 5455672826101213740, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 6220317414516730830, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 3386425644568655062, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 6544532065620147190, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 6678410267484366994, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 4236219880146474134, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 4127091066607998351, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 3285200430428055505, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 7809233305820273348, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 6481021006274147244, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 4734748028723493564, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 4563975013101261209, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 8770968762409294562, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 3114370678236206410, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 2387783231220195377, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 6523722699820296394, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 2091233763135615264, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 3678726852199940603, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 8114771059260095009, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 6345987224208413885, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 3757799029200383541, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 3665462171512673733, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  bossAnimSheet: {fileID: 2800000, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  bossFrameRate: 16
 --- !u!1 &4977744461868410013
 GameObject:
   m_ObjectHideFlags: 0
@@ -4408,7 +4555,7 @@ GameObject:
   - component: {fileID: 8257058992659503306}
   - component: {fileID: 5148775225275273679}
   - component: {fileID: 7029026482553641474}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Door_Up
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4425,7 +4572,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 4.66, z: 0}
-  m_LocalScale: {x: 2, y: 1, z: 1}
+  m_LocalScale: {x: 3, y: 3, z: 3}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3961969874413745895}
@@ -4479,8 +4626,8 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.645283, g: 0.31975025, b: 0, a: 1}
+  m_Sprite: {fileID: 5455672826101213740, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -4548,12 +4695,61 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RoomDoor
   direction: 0
-  isLocked: 0
+  isLocked: 1
   spriteRenderer: {fileID: 0}
-  currentDoorType: 0
-  normalDoorSprite: {fileID: 0}
-  shopDoorSprite: {fileID: 0}
-  bossDoorSprite: {fileID: 0}
+  currentDoorType: 3
+  normalDoorSprite: {fileID: 4976125646568474354, guid: 33cd2fc56208f5a4a8ee74c10ba2ad03, type: 3}
+  shopDoorSprite: {fileID: 21300000, guid: bc65ac4a1d765d0469b27cf6ad62aef5, type: 3}
+  bossDoorSprite: {fileID: 3665462171512673733, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  lockedDoorSprite: {fileID: 1485597978798215358, guid: 6dc5eb9bea0a093655825043236956e4, type: 3}
+  unlockAnimationFrames:
+  - {fileID: 1485597978798215358, guid: 6dc5eb9bea0a093655825043236956e4, type: 3}
+  - {fileID: 1324486748257066509, guid: 6dc5eb9bea0a093655825043236956e4, type: 3}
+  - {fileID: 8030575848040544379, guid: 6dc5eb9bea0a093655825043236956e4, type: 3}
+  - {fileID: 837235943433480653, guid: 6dc5eb9bea0a093655825043236956e4, type: 3}
+  - {fileID: 571702687195007944, guid: 6dc5eb9bea0a093655825043236956e4, type: 3}
+  - {fileID: 2193909398176122955, guid: 6dc5eb9bea0a093655825043236956e4, type: 3}
+  - {fileID: 8613132840813151097, guid: 6dc5eb9bea0a093655825043236956e4, type: 3}
+  - {fileID: 1366136358252832673, guid: 6dc5eb9bea0a093655825043236956e4, type: 3}
+  - {fileID: 6230632149091481354, guid: 6dc5eb9bea0a093655825043236956e4, type: 3}
+  - {fileID: 7910843980716336141, guid: 6dc5eb9bea0a093655825043236956e4, type: 3}
+  unlockFrameRate: 14
+  combatClosedSprite: {fileID: 21300000, guid: e87a8ddbe89d0ce3d6b43de1cf771f31, type: 3}
+  combatOpenSprite: {fileID: 21300000, guid: cf39080d283bdacd0a843bfeaa31a08b, type: 3}
+  combatAnimationFrames:
+  - {fileID: 4080526057290102790, guid: 5a7c5f92fd6548a740aa36af814e3c4a, type: 3}
+  - {fileID: 6046332545478708424, guid: 5a7c5f92fd6548a740aa36af814e3c4a, type: 3}
+  - {fileID: 8503191319984185913, guid: 5a7c5f92fd6548a740aa36af814e3c4a, type: 3}
+  - {fileID: 6885732976865106245, guid: 5a7c5f92fd6548a740aa36af814e3c4a, type: 3}
+  - {fileID: 5529247662342504775, guid: 5a7c5f92fd6548a740aa36af814e3c4a, type: 3}
+  - {fileID: 684301459878942580, guid: 5a7c5f92fd6548a740aa36af814e3c4a, type: 3}
+  - {fileID: 7063991225237906224, guid: 5a7c5f92fd6548a740aa36af814e3c4a, type: 3}
+  combatFrameRate: 14
+  bossAnimationFrames:
+  - {fileID: 5455672826101213740, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 6220317414516730830, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 3386425644568655062, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 6544532065620147190, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 6678410267484366994, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 4236219880146474134, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 4127091066607998351, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 3285200430428055505, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 7809233305820273348, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 6481021006274147244, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 4734748028723493564, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 4563975013101261209, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 8770968762409294562, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 3114370678236206410, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 2387783231220195377, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 6523722699820296394, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 2091233763135615264, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 3678726852199940603, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 8114771059260095009, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 6345987224208413885, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 3757799029200383541, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  - {fileID: 3665462171512673733, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  bossAnimSheet: {fileID: 2800000, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
+  bossFrameRate: 16
 --- !u!1 &6850029690147252818
 GameObject:
   m_ObjectHideFlags: 0

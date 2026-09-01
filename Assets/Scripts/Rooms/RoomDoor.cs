@@ -6,6 +6,10 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(Collider2D))]
 public class RoomDoor : MonoBehaviour
 {
+    private const int BossFrameWidth = 138;
+    private const int BossFrameHeight = 92;
+    private const float BossPixelsPerUnit = 128f;
+
     [SerializeField] private DoorDirection direction;
     [SerializeField] private bool isLocked;
     [SerializeField] private SpriteRenderer spriteRenderer;
@@ -19,20 +23,23 @@ public class RoomDoor : MonoBehaviour
     [SerializeField] private Sprite bossDoorSprite;
 
     [Header("Shop Locked Door (Candado)")]
-    [Tooltip("Sprite estatico del candado. Solo se usa en puertas que llevan a la Shop.")]
     [SerializeField] private Sprite lockedDoorSprite;
-    [Tooltip("Animacion de la ganzua / candado rompiendose. Solo se usa en la Shop.")]
     [SerializeField] private Sprite[] unlockAnimationFrames;
     [SerializeField] private float unlockFrameRate = 14f;
 
     [Header("Combat Door")]
-    [Tooltip("Puerta cerrada sin candado. Se muestra mientras hay enemigos en la room.")]
     [SerializeField] private Sprite combatClosedSprite;
-    [Tooltip("Puerta abierta. Se muestra cuando la room esta limpia.")]
     [SerializeField] private Sprite combatOpenSprite;
-    [Tooltip("Animacion de abrir (al reves se usa para cerrar). No incluye candado.")]
     [SerializeField] private Sprite[] combatAnimationFrames;
     [SerializeField] private float combatFrameRate = 14f;
+
+    [Header("Boss Door")]
+    [Tooltip("Tira PUERTAV2jefe anim. Frame 0 = cerrada, ultimo = abierta con calavera.")]
+    [SerializeField] private Sprite[] bossAnimationFrames;
+    [SerializeField] private Texture2D bossAnimSheet;
+    [SerializeField] private float bossFrameRate = 16f;
+
+    private Sprite[] runtimeBossFrames;
 
     private RoomNode myNode;
 
@@ -44,37 +51,30 @@ public class RoomDoor : MonoBehaviour
     private GameObject currentPlayer;
 
     public DoorDirection Direction => direction;
+    public bool IsLocked => isLocked;
 
     private bool IsShopDoor => currentDoorType == RoomType.Shop;
+    private bool IsBossDoor => currentDoorType == RoomType.Boss;
 
     private void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
-
-        if (spriteRenderer.sprite == null && combatOpenSprite != null)
-        {
-            spriteRenderer.sprite = combatOpenSprite;
-        }
-        else if (spriteRenderer.sprite == null && normalDoorSprite != null)
-        {
-            spriteRenderer.sprite = normalDoorSprite;
-        }
+        EnsureBossFrames();
     }
 
     private void Update()
     {
+        if (GamePause.IsGameplayFrozen) return;
+
         if (playerInRange && isLocked && !isAnimating)
         {
-            if (IsShopDoor && Keyboard.current.fKey.wasPressedThisFrame)
+            if (IsShopDoor && Keyboard.current != null && Keyboard.current.fKey.wasPressedThisFrame)
             {
                 TryUnlock();
             }
         }
     }
 
-    // Si la room se desactiva (ej. al salir hacia otra room) Unity corta la
-    // corutina de animacion sin avisar. Sin esto, isAnimating podria quedar
-    // trabado en true y la puerta de la Shop no responderia mas a la ganzua.
     private void OnDisable()
     {
         isAnimating = false;
@@ -87,6 +87,7 @@ public class RoomDoor : MonoBehaviour
         direction = newDirection;
         canTrigger = true;
         RotateDoorVisuals(direction);
+        EnsureBossFrames();
     }
 
     private void RotateDoorVisuals(DoorDirection dir)
@@ -135,8 +136,70 @@ public class RoomDoor : MonoBehaviour
         UpdateDoorVisual();
     }
 
-    // Shop bloqueada: candado. Cualquier otra puerta bloqueada: version cerrada
-    // de combate (sin candado). Desbloqueada: cartel de Shop o puerta abierta.
+    private Sprite[] GetBossFrames()
+    {
+        EnsureBossFrames();
+
+        if (HasSerializedBossFrames())
+            return bossAnimationFrames;
+
+        return runtimeBossFrames;
+    }
+
+    private bool HasSerializedBossFrames()
+    {
+        return bossAnimationFrames != null
+            && bossAnimationFrames.Length > 1
+            && bossAnimationFrames[0] != null
+            && bossAnimationFrames[bossAnimationFrames.Length - 1] != null;
+    }
+
+    private void EnsureBossFrames()
+    {
+        if (HasSerializedBossFrames())
+            return;
+
+        if (runtimeBossFrames != null && runtimeBossFrames.Length > 0)
+            return;
+
+        if (bossAnimSheet == null) return;
+
+        int count = Mathf.Max(1, bossAnimSheet.width / BossFrameWidth);
+        runtimeBossFrames = new Sprite[count];
+
+        for (int i = 0; i < count; i++)
+        {
+            runtimeBossFrames[i] = Sprite.Create(
+                bossAnimSheet,
+                new Rect(i * BossFrameWidth, 0f, BossFrameWidth, BossFrameHeight),
+                new Vector2(0.5f, 0.5f),
+                BossPixelsPerUnit,
+                0,
+                SpriteMeshType.FullRect);
+        }
+    }
+
+    private Sprite GetBossClosedSprite()
+    {
+        Sprite[] frames = GetBossFrames();
+        if (frames != null && frames.Length > 0 && frames[0] != null)
+            return frames[0];
+
+        return combatClosedSprite;
+    }
+
+    private Sprite GetBossOpenSprite()
+    {
+        Sprite[] frames = GetBossFrames();
+        if (frames != null && frames.Length > 0)
+        {
+            Sprite last = frames[frames.Length - 1];
+            if (last != null) return last;
+        }
+
+        return bossDoorSprite != null ? bossDoorSprite : combatOpenSprite;
+    }
+
     private void UpdateDoorVisual()
     {
         if (spriteRenderer == null) return;
@@ -146,6 +209,11 @@ public class RoomDoor : MonoBehaviour
             if (IsShopDoor)
             {
                 if (lockedDoorSprite != null) spriteRenderer.sprite = lockedDoorSprite;
+            }
+            else if (IsBossDoor)
+            {
+                Sprite closed = GetBossClosedSprite();
+                if (closed != null) spriteRenderer.sprite = closed;
             }
             else if (combatClosedSprite != null)
             {
@@ -160,26 +228,22 @@ public class RoomDoor : MonoBehaviour
             return;
         }
 
+        if (IsBossDoor)
+        {
+            Sprite open = GetBossOpenSprite();
+            if (open != null) spriteRenderer.sprite = open;
+            return;
+        }
+
         if (combatOpenSprite != null)
         {
             spriteRenderer.sprite = combatOpenSprite;
             return;
         }
 
-        switch (currentDoorType)
-        {
-            case RoomType.Boss:
-                if (bossDoorSprite != null) spriteRenderer.sprite = bossDoorSprite;
-                break;
-            case RoomType.Normal:
-            default:
-                if (normalDoorSprite != null) spriteRenderer.sprite = normalDoorSprite;
-                break;
-        }
+        if (normalDoorSprite != null) spriteRenderer.sprite = normalDoorSprite;
     }
 
-    // Abre la puerta con animacion. Shop: ganzua / candado. El resto: hoja de
-    // combate hacia adelante. Se usa al limpiar la sala y al usar una ganzua.
     public void PlayUnlockAnimation(Action onComplete = null)
     {
         if (!isLocked)
@@ -200,15 +264,31 @@ public class RoomDoor : MonoBehaviour
             return;
         }
 
-        Sprite[] frames = IsShopDoor ? unlockAnimationFrames : combatAnimationFrames;
-        float frameRate = IsShopDoor ? unlockFrameRate : combatFrameRate;
-
         isAnimating = true;
-        doorAnimRoutine = StartCoroutine(PlaySpriteAnimation(frames, frameRate, reverse: false, onComplete));
+        doorAnimRoutine = StartCoroutine(UnlockAnimationRoutine(onComplete));
     }
 
-    // Cierra la puerta con animacion de combate (hoja al reves). La Shop no se
-    // anima: queda en el candado de golpe, porque el candado no tiene cierre.
+    private IEnumerator UnlockAnimationRoutine(Action onComplete)
+    {
+        if (IsShopDoor)
+        {
+            yield return PlaySpriteFrames(unlockAnimationFrames, unlockFrameRate, reverse: false);
+        }
+        else if (IsBossDoor)
+        {
+            yield return PlaySpriteFrames(GetBossFrames(), bossFrameRate, reverse: false);
+        }
+        else
+        {
+            yield return PlaySpriteFrames(combatAnimationFrames, combatFrameRate, reverse: false);
+        }
+
+        isAnimating = false;
+        doorAnimRoutine = null;
+        UpdateDoorVisual();
+        onComplete?.Invoke();
+    }
+
     public void PlayLockAnimation()
     {
         if (IsShopDoor)
@@ -233,37 +313,44 @@ public class RoomDoor : MonoBehaviour
         }
 
         isAnimating = true;
-        doorAnimRoutine = StartCoroutine(PlaySpriteAnimation(combatAnimationFrames, combatFrameRate, reverse: true, null));
+        doorAnimRoutine = StartCoroutine(LockAnimationRoutine());
     }
 
-    private IEnumerator PlaySpriteAnimation(Sprite[] frames, float frameRate, bool reverse, Action onComplete)
+    private IEnumerator LockAnimationRoutine()
     {
-        if (frames != null && frames.Length > 0 && spriteRenderer != null)
-        {
-            float frameDuration = 1f / Mathf.Max(1f, frameRate);
-
-            if (reverse)
-            {
-                for (int i = frames.Length - 1; i >= 0; i--)
-                {
-                    if (frames[i] != null) spriteRenderer.sprite = frames[i];
-                    yield return new WaitForSeconds(frameDuration);
-                }
-            }
-            else
-            {
-                for (int i = 0; i < frames.Length; i++)
-                {
-                    if (frames[i] != null) spriteRenderer.sprite = frames[i];
-                    yield return new WaitForSeconds(frameDuration);
-                }
-            }
-        }
+        if (IsBossDoor)
+            yield return PlaySpriteFrames(GetBossFrames(), bossFrameRate, reverse: true);
+        else
+            yield return PlaySpriteFrames(combatAnimationFrames, combatFrameRate, reverse: true);
 
         isAnimating = false;
         doorAnimRoutine = null;
         UpdateDoorVisual();
-        onComplete?.Invoke();
+    }
+
+    private IEnumerator PlaySpriteFrames(Sprite[] frames, float frameRate, bool reverse)
+    {
+        if (frames == null || frames.Length == 0 || spriteRenderer == null)
+            yield break;
+
+        float frameDuration = 1f / Mathf.Max(1f, frameRate);
+
+        if (reverse)
+        {
+            for (int i = frames.Length - 1; i >= 0; i--)
+            {
+                if (frames[i] != null) spriteRenderer.sprite = frames[i];
+                yield return new WaitForSeconds(frameDuration);
+            }
+        }
+        else
+        {
+            for (int i = 0; i < frames.Length; i++)
+            {
+                if (frames[i] != null) spriteRenderer.sprite = frames[i];
+                yield return new WaitForSeconds(frameDuration);
+            }
+        }
     }
 
     private void CancelDoorAnimation()
@@ -295,9 +382,6 @@ public class RoomDoor : MonoBehaviour
                 myNode.isShopUnlocked = true;
             }
 
-            // El jugador ya esta parado sobre la puerta al usar la ganzua: primero se
-            // reproduce la animacion de desbloqueo (candado) y, al terminar, se pasa
-            // directo a la siguiente room.
             PlayUnlockAnimation(() =>
             {
                 if (playerInRange && canTrigger)
@@ -315,6 +399,8 @@ public class RoomDoor : MonoBehaviour
 
         playerInRange = true;
         currentPlayer = other.gameObject;
+
+        if (GamePause.IsGameplayFrozen) return;
 
         if (!canTrigger || isLocked)
         {

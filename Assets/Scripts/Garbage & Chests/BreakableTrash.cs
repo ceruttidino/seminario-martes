@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class BreakableTrash : MonoBehaviour
@@ -35,6 +36,7 @@ public class BreakableTrash : MonoBehaviour
     [SerializeField] private GameObject openVisual;
 
     private Collider2D hitCollider;
+    private HitShake hitShake;
     private int currentHits = 0;
     private int maxHits;
     private bool isDestroyed = false;
@@ -57,6 +59,10 @@ public class BreakableTrash : MonoBehaviour
             openVisualInitialLocalPosition = openVisual.transform.localPosition;
             openVisual.SetActive(false);
         }
+
+        hitShake = GetComponent<HitShake>();
+        if (hitShake == null)
+            hitShake = gameObject.AddComponent<HitShake>();
     }
 
     private void Start()
@@ -70,15 +76,22 @@ public class BreakableTrash : MonoBehaviour
 
         currentHits++;
 
+        if (hitShake != null)
+            hitShake.Play();
+
         if (currentHits >= maxHits)
-            DestroyTrash();
+            StartCoroutine(BreakAfterShake());
+    }
+
+    private IEnumerator BreakAfterShake()
+    {
+        isDestroyed = true;
+        yield return new WaitForSeconds(0.08f);
+        DestroyTrash();
     }
 
     private void DestroyTrash()
     {
-        if (isDestroyed) return;
-        isDestroyed = true;
-
         Transform roomParent = FindRoomParent();
 
         ShowOpenVisual();
@@ -229,11 +242,58 @@ public class BreakableTrash : MonoBehaviour
 
             Vector2 dir = new Vector2(Mathf.Cos(angleRad), Mathf.Sin(angleRad));
             float dist = safeRadius + Random.Range(0f, extraRange);
+            Vector3 desired = transform.position + new Vector3(dir.x, dir.y, 0f) * dist;
 
-            positions[i] = transform.position + new Vector3(dir.x, dir.y, 0f) * dist;
+            positions[i] = FindReachablePosition(desired);
         }
 
         return positions;
+    }
+
+    private Vector3 FindReachablePosition(Vector3 desired)
+    {
+        Vector3 origin = transform.position;
+        if (!IsPositionBlocked(desired))
+            return desired;
+
+        for (int step = 8; step >= 1; step--)
+        {
+            Vector3 candidate = Vector3.Lerp(origin, desired, step / 8f);
+            if (!IsPositionBlocked(candidate))
+                return candidate;
+        }
+
+        Vector2[] fallbackDirs =
+        {
+            Vector2.up, Vector2.down, Vector2.left, Vector2.right,
+            new Vector2(1, 1).normalized, new Vector2(-1, 1).normalized,
+            new Vector2(1, -1).normalized, new Vector2(-1, -1).normalized
+        };
+
+        float radius = GetSafeMinRadius();
+        foreach (Vector2 dir in fallbackDirs)
+        {
+            Vector3 candidate = origin + (Vector3)(dir * radius);
+            if (!IsPositionBlocked(candidate))
+                return candidate;
+        }
+
+        return origin;
+    }
+
+    private bool IsPositionBlocked(Vector3 worldPos)
+    {
+        Collider2D[] hits = Physics2D.OverlapCircleAll(worldPos, 0.18f);
+        foreach (Collider2D hit in hits)
+        {
+            if (hit == null || hit.isTrigger) continue;
+            if (hit == hitCollider) continue;
+            if (hit.GetComponent<LootPickup>() != null) continue;
+            if (hit.GetComponent<UpgradePickup>() != null) continue;
+            return true;
+        }
+
+        return false;
     }
 
     private float GetSafeMinRadius()

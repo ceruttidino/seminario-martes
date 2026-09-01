@@ -292,7 +292,8 @@ public class DungeonManager : MonoBehaviour
 
         if (firstVisit)
         {
-            currentRoomInstance.SpawnEnemies();
+            if (node.information.type != RoomType.Challenge)
+                currentRoomInstance.SpawnEnemies();
 
             if (node.information.type == RoomType.Boss)
             {
@@ -598,8 +599,6 @@ public class DungeonManager : MonoBehaviour
                     {
                         node.spawnedInstance.ConfigureDoors(node);
                     }
-
-                    Debug.Log("Challenge Room generada.");
 
                     return true;
                 }

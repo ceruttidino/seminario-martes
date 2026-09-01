@@ -10,6 +10,7 @@ public class PlayerAttack : MonoBehaviour
     public void OnAreaAttack(InputAction.CallbackContext context)
     {
         if (!context.performed) return;
+        if (GamePause.IsGameplayFrozen) return;
         if (areaAttack != null) areaAttack.Execute();
     }
 }

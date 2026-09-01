@@ -4,9 +4,19 @@ using UnityEngine.UI;
 
 public class GameOverManager : MonoBehaviour
 {
+    public static bool IsOpen { get; private set; }
+
     [Header("Game Over UI")]
     [SerializeField] private GameObject gameOverScreen;
     [SerializeField] private Button restartButton;
+
+    private void Awake()
+    {
+        IsOpen = false;
+
+        if (gameOverScreen != null)
+            gameOverScreen.SetActive(false);
+    }
 
     private void Start()
     {
@@ -15,8 +25,6 @@ public class GameOverManager : MonoBehaviour
             Debug.LogError("GameOverManager: gameOverScreen no está asignado en el Inspector.");
             return;
         }
-
-        gameOverScreen.SetActive(false);
 
         PlayerHealth ph = FindFirstObjectByType<PlayerHealth>();
         if (ph != null)
@@ -29,15 +37,21 @@ public class GameOverManager : MonoBehaviour
     private void ShowGameOverScreen()
     {
         if (gameOverScreen == null) return;
+        if (IsOpen) return;
 
+        IsOpen = true;
         gameOverScreen.SetActive(true);
         gameOverScreen.transform.SetAsLastSibling();
-        Time.timeScale = 0f;
+
+        GamePause.SetPaused(true);
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
     public void RestartLevel()
     {
-        Time.timeScale = 1f;
+        IsOpen = false;
+        GamePause.SetPaused(false);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }

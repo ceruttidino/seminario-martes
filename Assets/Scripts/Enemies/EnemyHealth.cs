@@ -13,6 +13,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     public event System.Action OnDeath;
     public event System.Action OnDamaged;
 
+    public bool IsDead => isDead;
     public float MaxHealth => maxHealth;
     public float CurrentHealth => currentHealth;
     public bool CanTakeDamage => canTakeDamage;

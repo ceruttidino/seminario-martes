@@ -2009,7 +2009,7 @@ MonoBehaviour:
   - {fileID: 7368240045080889273}
   diggingSpotPrefab: {fileID: 3611433241170528407, guid: 7367a0a007b04e74d875d4e74d4a5fa3, type: 3}
   chanceToHaveDiggingSpots: 35
-  enemyPrefab: {fileID: 8283417630010587146, guid: 93c36bf4b30107349ba48fa2a8110986, type: 3}
+  enemyPrefab: {fileID: 0}
   enemySpawnPoints: []
 --- !u!1 &5413412434907751617
 GameObject:

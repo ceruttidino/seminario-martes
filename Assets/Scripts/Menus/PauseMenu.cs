@@ -13,6 +13,7 @@ public class PauseMenu : MonoBehaviour
     public void OnPause(InputAction.CallbackContext context)
     {
         if (!context.performed) return;
+        if (!isPaused && GamePause.IsGameplayFrozen) return;
 
         if (isPaused)
             Resume();
@@ -24,7 +25,7 @@ public class PauseMenu : MonoBehaviour
     {
         PauseMainMenu();
         pausePanel.SetActive(true);
-        Time.timeScale = 0f;
+        GamePause.SetPaused(true);
         isPaused = true;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
@@ -33,7 +34,7 @@ public class PauseMenu : MonoBehaviour
     public void Resume()
     {
         pausePanel.SetActive(false);
-        Time.timeScale = 1f;
+        GamePause.SetPaused(false);
         isPaused = false;
 
         Cursor.lockState = CursorLockMode.None;
@@ -42,7 +43,7 @@ public class PauseMenu : MonoBehaviour
 
     public void QuitToMenu()
     {
-        Time.timeScale = 1f;
+        GamePause.SetPaused(false);
         SceneManager.LoadScene("Main Menu");
     }
 

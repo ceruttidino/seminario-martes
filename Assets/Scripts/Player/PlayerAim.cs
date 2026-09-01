@@ -37,6 +37,7 @@ public class PlayerAim : MonoBehaviour
 
     public bool IsAimingNow()
     {
+        if (GamePause.IsGameplayFrozen) return false;
         ReadAimInput();
         return aimInput != Vector2.zero;
     }

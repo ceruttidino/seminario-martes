@@ -52,12 +52,14 @@ public class QuickAttack : MonoBehaviour, IAttack
 
     public bool CanExecute()
     {
+        if (GamePause.IsGameplayFrozen) return false;
         if (playerDash != null && playerDash.IsDashing) return false;
         return Time.time >= lastUseTime + cooldown;
     }
 
     private void Update()
     {
+        if (GamePause.IsGameplayFrozen) return;
         if (playerAim == null || !playerAim.IsAimingNow()) return;
         TryPerformAttack();
     }

@@ -14,9 +14,10 @@ public class PlayerInteraction : MonoBehaviour
 
     private void Update()
     {
+        if (GamePause.IsGameplayFrozen) return;
+
         CheckNearbyInteractables();
 
-        
         if (Keyboard.current != null && Keyboard.current.fKey.wasPressedThisFrame && currentInteractable != null)
         {
             currentInteractable.Interact();
