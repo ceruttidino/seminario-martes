@@ -25,7 +25,7 @@ public class ShopSlot : MonoBehaviour
 
     private void Update()
     {
-        if (playerInRange && Keyboard.current.eKey.wasPressedThisFrame)
+        if (playerInRange && Keyboard.current.fKey.wasPressedThisFrame)
             TryBuy();
     }
 

@@ -413,6 +413,7 @@ MonoBehaviour:
   attackRadius: 1.9
   windupTime: 0.7
   recoverTime: 0.6
+  attackCooldown: 1
   heartDamage: 2
   bodyRenderer: {fileID: 8208979293606837074}
   eyeGlow: {fileID: 4325644021146076500}

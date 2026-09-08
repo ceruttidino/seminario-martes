@@ -13,8 +13,10 @@ public class VanishingOwl : MonoBehaviour
     [SerializeField] private float attackRadius = 1.9f;
 
     [Header("Timing")]
-    [SerializeField] private float windupTime = 0.7f;
+    [SerializeField] private float windupTime = 0.4f;
     [SerializeField] private float recoverTime = 0.6f;
+    [SerializeField] private float attackCooldown = 1.5f;
+    public float AttackCooldown => attackCooldown;
 
     [Header("Damage")]
     [Tooltip("2 = un corazon entero (en tu PlayerHealth 1 corazon = 2 puntos).")]
@@ -67,6 +69,11 @@ public class VanishingOwl : MonoBehaviour
     {
         if (animator != null) animator.SetTrigger("Attack");
     }
+
+    public void ResetAttackTrigger()
+{
+    if (animator != null) animator.ResetTrigger("Attack");
+}
 
     // --- Visuales ---
 
