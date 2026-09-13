@@ -23,6 +23,8 @@ public class RatRegeneration : MonoBehaviour
 
     private void HandleDeath()
     {
+        if (!isRegenerating || !enabled) return;
+
         GameObject body = Instantiate(bodyPrefab, transform.position, Quaternion.identity, transform.parent);
 
         RatBody bodyScript = body.GetComponent<RatBody>();

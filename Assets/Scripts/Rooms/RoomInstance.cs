@@ -250,6 +250,10 @@ public class RoomInstance : MonoBehaviour
 
     private void EndCombat()
     {
+        ChallengeRoomController challenge = GetComponent<ChallengeRoomController>();
+        if (challenge != null && challenge.HoldsDoorsLocked)
+            return;
+
         if (HasLivingEnemies())
             return;
 

@@ -36,6 +36,9 @@ public class EnemyBehaviour : MonoBehaviour
 
     private void Start()
     {
+        if (GetComponent<ChallengeContainerHunter>() != null)
+            return;
+
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
         if (playerObj == null)
         {

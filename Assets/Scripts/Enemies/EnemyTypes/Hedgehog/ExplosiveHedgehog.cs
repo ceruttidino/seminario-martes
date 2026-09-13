@@ -17,6 +17,7 @@ public class ExplosiveHedgehog : MonoBehaviour
 
     [Header("Combat")]
     [SerializeField] private float explosionDamage = 3f;
+    public float ExplosionDamage => explosionDamage;
     [SerializeField] private float hitKnockbackForce = 8f;
     [SerializeField] private float explosionKnockbackForce = 10f;
 

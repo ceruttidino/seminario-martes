@@ -14,6 +14,7 @@ public class RegeneratingRat : MonoBehaviour
     [Tooltip("Momento (dentro de attackDuration) en el que el mordisco realmente hace daño.")]
     [SerializeField] private float hitTiming = 0.5f;
     [SerializeField] private float attackDamage = 1f;
+    public float AttackDamage => attackDamage;
     [SerializeField] private DamageFlash damageFlash;
 
     public float AttackTriggerRange => attackTriggerRange;

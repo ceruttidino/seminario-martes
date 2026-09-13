@@ -4,6 +4,7 @@ using UnityEngine;
 public class EnemyMovement : MonoBehaviour, IMovement
 {
     [SerializeField] private float speed = 3f;
+    public float Speed => speed;
     private Rigidbody2D rb;
 
     [SerializeField] private Animator animator;

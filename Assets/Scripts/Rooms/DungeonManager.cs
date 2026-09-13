@@ -51,6 +51,7 @@ public class DungeonManager : MonoBehaviour
 
         Instance = this;
         BuffPool.Reset();
+        ChallengeRunState.Reset();
     }
 
     private void Start()
@@ -518,6 +519,9 @@ public class DungeonManager : MonoBehaviour
     private bool TryForceChallengeSmart()
     {
         if (challengeSpawned)
+            return false;
+
+        if (ChallengeRunState.WasCompleted(ChallengeRunState.Supercontainer))
             return false;
 
         List<RoomNode> candidates = new List<RoomNode>();

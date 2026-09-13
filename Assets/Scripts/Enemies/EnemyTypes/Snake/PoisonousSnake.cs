@@ -11,6 +11,7 @@ public class PoisonousSnake : MonoBehaviour
     [Header("Attack")]
     [SerializeField] private float windupDuration = 0.5f;
     [SerializeField] private float attackDamage = 1f;
+    public float AttackDamage => attackDamage;
     [SerializeField] private DamageFlash damageFlash;
 
     [Header("Flee")]

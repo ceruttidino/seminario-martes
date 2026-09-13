@@ -12,6 +12,7 @@ public class SpikyTurtle : MonoBehaviour
     [SerializeField] private float chargeDuration = 1.5f;
     [SerializeField] private float chargeSpeed = 8f;
     [SerializeField] private float chargeDamage = 15f;
+    public float ChargeDamage => chargeDamage;
     [SerializeField] private float detectionRange = 4f;
 
     [Header("Upside Down")]

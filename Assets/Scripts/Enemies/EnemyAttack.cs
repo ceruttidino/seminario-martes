@@ -6,6 +6,10 @@ public class EnemyAttack : MonoBehaviour
     [SerializeField] private float damage = 10f;
     [SerializeField] private float attackRange = 1f;
     [SerializeField] private float attackCooldown = 1f;
+
+    public float Damage => damage;
+    public float AttackRange => attackRange;
+    public float AttackCooldown => attackCooldown;
     [SerializeField] private LayerMask targetLayer;
 
     private float lastAttackTime;
