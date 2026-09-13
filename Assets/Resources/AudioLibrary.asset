@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7d2e9f14a8c4b3e9d0f2c1a5e6b7d8c, type: 3}
   m_Name: AudioLibrary
   m_EditorClassIdentifier: Assembly-CSharp::AudioLibrary
+  sfxMixGain: 0.12
+  musicMixGain: 0.4
   menuMusic: {fileID: 0}
   dungeonMusic: {fileID: 0}
   shopMusic: {fileID: 0}

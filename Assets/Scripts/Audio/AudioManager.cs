@@ -73,8 +73,7 @@ public class AudioManager : MonoBehaviour
         {
             float clamped = Mathf.Clamp01(value);
             PlayerPrefs.SetFloat(MusicPref, clamped);
-            if (musicSource != null)
-                musicSource.volume = clamped;
+            ApplyMusicVolume();
         }
     }
 
@@ -85,8 +84,7 @@ public class AudioManager : MonoBehaviour
         {
             float clamped = Mathf.Clamp01(value);
             PlayerPrefs.SetFloat(SfxPref, clamped);
-            if (sfxSource != null)
-                sfxSource.volume = clamped;
+            ApplySfxVolume();
         }
     }
 
@@ -123,8 +121,8 @@ public class AudioManager : MonoBehaviour
         sfxSource.ignoreListenerPause = true;
 
         AudioListener.volume = MasterVolume;
-        musicSource.volume = MusicVolume;
-        sfxSource.volume = SfxVolume;
+        ApplyMusicVolume();
+        ApplySfxVolume();
 
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
@@ -223,8 +221,12 @@ public class AudioManager : MonoBehaviour
     {
         yield return new WaitForSecondsRealtime(SecondSwingDelay);
 
+        AudioClip first = library != null ? library.GetSfx(GameSfx.QuickAttack) : fallback;
         AudioClip second = library != null ? library.GetSfx(GameSfx.QuickAttackSecond) : null;
-        PlayClip(second != null ? second : (library != null ? library.GetSfx(GameSfx.QuickAttack) : fallback));
+        if (second == null || second == first)
+            yield break;
+
+        PlayClip(second);
     }
 
     private void PlaySfxInternal(GameSfx id, AudioClip fallback)
@@ -233,9 +235,24 @@ public class AudioManager : MonoBehaviour
         PlayClip(clip != null ? clip : fallback);
     }
 
+    private void ApplySfxVolume()
+    {
+        if (sfxSource == null) return;
+        float gain = library != null ? library.sfxMixGain : 0.12f;
+        sfxSource.volume = Mathf.Clamp01(SfxVolume * gain);
+    }
+
+    private void ApplyMusicVolume()
+    {
+        if (musicSource == null) return;
+        float gain = library != null ? library.musicMixGain : 0.4f;
+        musicSource.volume = Mathf.Clamp01(MusicVolume * gain);
+    }
+
     private void PlayClip(AudioClip clip)
     {
         if (clip == null || sfxSource == null) return;
+        ApplySfxVolume();
         sfxSource.PlayOneShot(clip);
     }
 
@@ -302,7 +319,8 @@ public class AudioManager : MonoBehaviour
         musicSource.Play();
 
         float fadeIn = 0f;
-        float target = MusicVolume;
+        float musicGain = library != null ? library.musicMixGain : 0.4f;
+        float target = Mathf.Clamp01(MusicVolume * musicGain);
         while (fadeIn < MusicFadeTime)
         {
             fadeIn += Time.unscaledDeltaTime;

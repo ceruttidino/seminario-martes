@@ -3,6 +3,10 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "AudioLibrary", menuName = "Audio/Audio Library")]
 public class AudioLibrary : ScriptableObject
 {
+    [Header("Volumen")]
+    [Range(0f, 1f)] public float sfxMixGain = 0.12f;
+    [Range(0f, 1f)] public float musicMixGain = 0.4f;
+
     [Header("Música — GDD")]
     [Tooltip("Main Menu")]
     public AudioClip menuMusic;
