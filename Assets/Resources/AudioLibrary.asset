@@ -30,7 +30,9 @@ MonoBehaviour:
   sneakersUpgrade: {fileID: 11400000, guid: aebf8a7492942e44b95ff2fa5c20d2c6, type: 2}
   defaultUpgradePickup: {fileID: 8300000, guid: abed21376994ebf47a1d16d7beefa28a, type: 3}
   quickAttack: {fileID: 8300000, guid: 8a9a2642778a22d4580d363b556eb296, type: 3}
+  quickAttackPitch: 2
   quickAttackSecond: {fileID: 0}
+  quickAttackSecondPitch: 2
   areaAttack: {fileID: 8300000, guid: bf0947dce2a4f02468b5e844e14a76cd, type: 3}
   dash: {fileID: 8300000, guid: 9356e93bee8a72143a1dd57325be9a6e, type: 3}
   playerHit: {fileID: 8300000, guid: 268af91c918fb8743a22d74193ccd242, type: 3}

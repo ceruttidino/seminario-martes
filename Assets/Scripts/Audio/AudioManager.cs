@@ -226,13 +226,14 @@ public class AudioManager : MonoBehaviour
         if (second == null || second == first)
             yield break;
 
-        PlayClip(second);
+        PlayClip(second, library.GetSfxPitch(GameSfx.QuickAttackSecond));
     }
 
     private void PlaySfxInternal(GameSfx id, AudioClip fallback)
     {
         AudioClip clip = library != null ? library.GetSfx(id) : null;
-        PlayClip(clip != null ? clip : fallback);
+        float pitch = library != null ? library.GetSfxPitch(id) : 1f;
+        PlayClip(clip != null ? clip : fallback, pitch);
     }
 
     private void ApplySfxVolume()
@@ -249,11 +250,13 @@ public class AudioManager : MonoBehaviour
         musicSource.volume = Mathf.Clamp01(MusicVolume * gain);
     }
 
-    private void PlayClip(AudioClip clip)
+    private void PlayClip(AudioClip clip, float pitch = 1f)
     {
         if (clip == null || sfxSource == null) return;
         ApplySfxVolume();
+        sfxSource.pitch = pitch <= 0f ? 1f : pitch;
         sfxSource.PlayOneShot(clip);
+        sfxSource.pitch = 1f;
     }
 
     private void PlayMusicInternal(GameMusic track, bool fallbackToDungeon = false)

@@ -43,8 +43,10 @@ public class AudioLibrary : ScriptableObject
     [Header("Player")]
     [Tooltip("High-pitch swoosh 1 of the double claw swing")]
     public AudioClip quickAttack;
+    [Range(0.1f, 3f)] public float quickAttackPitch = 2f;
     [Tooltip("High-pitch swoosh 2. If empty, the first swoosh plays again")]
     public AudioClip quickAttackSecond;
+    [Range(0.1f, 3f)] public float quickAttackSecondPitch = 2f;
     [Tooltip("One lower-pitch, heavier swoosh")]
     public AudioClip areaAttack;
     public AudioClip dash;
@@ -121,6 +123,16 @@ public class AudioLibrary : ScriptableObject
             case GameSfx.OwlHurt: return owlHurt;
             case GameSfx.BossHurt: return bossHurt;
             default: return null;
+        }
+    }
+
+    public float GetSfxPitch(GameSfx id)
+    {
+        switch (id)
+        {
+            case GameSfx.QuickAttack: return quickAttackPitch;
+            case GameSfx.QuickAttackSecond: return quickAttackSecondPitch;
+            default: return 1f;
         }
     }
 
