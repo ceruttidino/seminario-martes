@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ObjectBuffSO
   upgradeName: MisteryPotion
   description: Increases speed by 40%.
+  aColor: {r: 1, g: 1, b: 0, a: 1}
   icon: {fileID: -9064446687474135519, guid: 1e87b4b867b54a640af12bd11c39a434, type: 3}
   heartsToAdd: 0
   speedPercentChange: 40

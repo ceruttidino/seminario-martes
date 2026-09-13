@@ -7,6 +7,10 @@ public abstract class UpgradeSO : ScriptableObject
     public string upgradeName = "Nueva Mejora";
     [TextArea(3, 6)] public string description = "Descripción de la mejora";
 
+
+    [Header("Color de Aura")]
+    [SerializeField] public Color aColor;
+
     public Sprite icon;
 
     public abstract void Apply(PlayerUpgradeManager manager);

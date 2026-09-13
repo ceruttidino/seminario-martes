@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ObjectBuffSO
   upgradeName: Moose Antlers
   description: Increases damage by 25% but reduces speed by 5%.
+  aColor: {r: 1, g: 0, b: 0, a: 1}
   icon: {fileID: -5438701882248235152, guid: 5f3388229041e9644af2f95488c4baff, type: 3}
   heartsToAdd: 0
   speedPercentChange: -5

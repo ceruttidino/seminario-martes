@@ -605,7 +605,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -22.2057, y: -17.603516}
+  m_AnchoredPosition: {x: -22.20581, y: -17.603516}
   m_SizeDelta: {x: 377.1092, y: 289.9858}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &484437380
@@ -4670,7 +4670,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 11.657349, y: 416}
+  m_AnchoredPosition: {x: 11.657227, y: 416}
   m_SizeDelta: {x: -920, y: -890}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1492430713
@@ -7534,6 +7534,10 @@ PrefabInstance:
       propertyPath: 'hearts.Array.data[5]'
       value: 
       objectReference: {fileID: 1961078270}
+    - target: {fileID: 7858921322861327637, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
+      propertyPath: A
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

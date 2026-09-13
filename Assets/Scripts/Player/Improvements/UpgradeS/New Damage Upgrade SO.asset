@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DamageUpgradeSO
   upgradeName: Damage Up
   description: "Descripci\xF3n de la mejora"
+  aColor: {r: 1, g: 0, b: 0, a: 1}
   icon: {fileID: 0}
   damageIncrease: 10
   affectQuickAttack: 1

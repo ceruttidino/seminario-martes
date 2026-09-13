@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ObjectBuffSO
   upgradeName: Strawberry Ice Cream
   description: Increases health by 1 heart.
+  aColor: {r: 0, g: 1, b: 0, a: 1}
   icon: {fileID: 280227657336061379, guid: 4fb3878eaa7ecb8479d8da962323b3c9, type: 3}
   heartsToAdd: 1
   speedPercentChange: 0

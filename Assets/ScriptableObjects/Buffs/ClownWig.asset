@@ -16,6 +16,7 @@ MonoBehaviour:
   description: 'Increases range by 10% but reduces damage by 5%.
 
 '
+  aColor: {r: 0, g: 0, b: 1, a: 1}
   icon: {fileID: -136636158363380763, guid: 3cd170987fd39884e8cdece45dfb4250, type: 3}
   heartsToAdd: 0
   speedPercentChange: 0

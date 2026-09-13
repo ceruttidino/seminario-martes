@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ObjectBuffSO
   upgradeName: Tree Root
   description: Increases damage by 20%.
+  aColor: {r: 1, g: 0, b: 0, a: 1}
   icon: {fileID: 4871324679943367734, guid: b4bad7928c3db3e47bbea60e182a2184, type: 3}
   heartsToAdd: 0
   speedPercentChange: 0

@@ -18,6 +18,7 @@ public class ObjectBuffSO : UpgradeSO
     [Tooltip("Porcentaje: 10 = +10%, -7 = -7%")]
     [SerializeField] private float rangePercentChange = 0f;
 
+
     public override void Apply(PlayerUpgradeManager manager)
     {
         if (heartsToAdd != 0 && manager.playerHealth != null)

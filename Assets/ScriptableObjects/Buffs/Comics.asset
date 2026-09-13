@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ObjectBuffSO
   upgradeName: Comics
   description: Increases range by 15%.
+  aColor: {r: 0, g: 0, b: 1, a: 1}
   icon: {fileID: -2405366503545782369, guid: 36a011f34d34b9e4ba43726f2164071f, type: 3}
   heartsToAdd: 0
   speedPercentChange: 0

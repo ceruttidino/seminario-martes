@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HealthUpgradeSO
   upgradeName: Extra Heart
   description: "Descripci\xF3n de la mejora"
+  aColor: {r: 0, g: 1, b: 0, a: 1}
   icon: {fileID: 0}
   heartsToAdd: 1
   fillNewHearts: 1
