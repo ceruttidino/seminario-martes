@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,11 +7,22 @@ public class AudioSlider : MonoBehaviour
 
     private void Awake()
     {
-        vSlider.value = AudioListener.volume;
+        if (vSlider == null) return;
+
+        float volume = AudioManager.Instance != null
+            ? AudioManager.Instance.MasterVolume
+            : AudioListener.volume;
+
+        vSlider.SetValueWithoutNotify(volume);
     }
 
     public void changeVolume()
     {
-        AudioListener.volume = vSlider.value;
+        if (vSlider == null) return;
+
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.MasterVolume = vSlider.value;
+        else
+            AudioListener.volume = vSlider.value;
     }
 }

@@ -134,10 +134,7 @@ public class PlayerDash : MonoBehaviour
             animator.SetBool("IsDashing", true);
         }
 
-        if (sfxSource != null)
-        {
-            sfxSource.Play();
-        }
+        AudioManager.PlaySfx(GameSfx.Dash, sfxSource != null ? sfxSource.clip : null);
             
 
         StartCoroutine(DashCoroutine(dashDirection));

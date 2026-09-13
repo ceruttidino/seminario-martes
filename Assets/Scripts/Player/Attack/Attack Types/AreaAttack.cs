@@ -66,8 +66,7 @@ public class AreaAttack : MonoBehaviour, IAttack
         CancelInvoke(nameof(EndAttackWindow));
         Invoke(nameof(EndAttackWindow), attackActiveDuration);
 
-        if (sfxSource != null)
-            sfxSource.Play();
+        AudioManager.PlaySfx(GameSfx.AreaAttack, sfxSource != null ? sfxSource.clip : null);
 
         if (animator != null)
         {

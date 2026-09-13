@@ -44,6 +44,7 @@ public class GameOverManager : MonoBehaviour
         BringToFront(gameOverScreen);
 
         GamePause.SetPaused(true);
+        AudioManager.PlayMusic(GameMusic.GameOver);
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
     }

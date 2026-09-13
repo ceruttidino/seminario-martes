@@ -28,10 +28,7 @@ public class UpgradePickup : MonoBehaviour
         if (manager != null)
         {
 
-            if (sfxSource != null)
-            {
-                sfxSource.Play();
-            }
+            AudioManager.PlaySfx(GameSfx.UpgradePickup, sfxSource != null ? sfxSource.clip : null);
 
             manager.CollectUpgrade(upgradeToGrant);
 

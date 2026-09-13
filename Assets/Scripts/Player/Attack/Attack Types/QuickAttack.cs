@@ -84,8 +84,7 @@ public class QuickAttack : MonoBehaviour, IAttack
         CancelInvoke(nameof(EndAttackWindow));
         Invoke(nameof(EndAttackWindow), attackActiveDuration);
 
-        if (sfxSource != null)
-            sfxSource.Play();
+        AudioManager.PlaySfx(GameSfx.QuickAttack, sfxSource != null ? sfxSource.clip : null);
 
         if (animator != null)
         {

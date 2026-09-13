@@ -40,10 +40,7 @@ public class LootPickup : MonoBehaviour
 
         if (collected)
         {
-            if (pickupSfx != null)
-            {
-                pickupSfx.Play();
-            }
+            AudioManager.PlaySfx(GameSfx.LootPickup, pickupSfx != null ? pickupSfx.clip : null);
 
             PickupEffect effect = GetComponent<PickupEffect>();
             if (effect != null)

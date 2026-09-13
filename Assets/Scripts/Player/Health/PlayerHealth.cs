@@ -41,10 +41,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     {
         if (!canGetHurt || playerHealth <= 0) return;
 
-        if (sfxSource != null)
-        {
-            sfxSource.Play();
-        }
+        AudioManager.PlaySfx(GameSfx.PlayerHit, sfxSource != null ? sfxSource.clip : null);
 
         canGetHurt = false;
         playerHealth -= Mathf.RoundToInt(damage);

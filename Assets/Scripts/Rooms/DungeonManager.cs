@@ -323,6 +323,8 @@ public class DungeonManager : MonoBehaviour
         {
             currentRoomInstance.UnlockDoorsInstant();
         }
+
+        AudioManager.PlayMusicForRoom(node.information.type);
     }
 
     private void MovePlayerToCorrectSpawn(DoorDirection? entryDirection)

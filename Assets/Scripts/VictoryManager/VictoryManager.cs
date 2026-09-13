@@ -54,6 +54,7 @@ public class VictoryManager : MonoBehaviour
         BringToFront(victoryScreen);
 
         GamePause.SetPaused(true);
+        AudioManager.PlayMusic(GameMusic.Victory);
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
     }
