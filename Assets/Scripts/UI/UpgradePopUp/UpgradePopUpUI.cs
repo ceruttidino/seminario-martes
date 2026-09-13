@@ -16,7 +16,7 @@ public class UpgradePopupUI : MonoBehaviour
     [SerializeField] private TMP_Text descriptionText;
 
     [Header("Animación")]
-    [SerializeField] private float slideDistance = 200f; // cuánto sube al aparecer
+    [SerializeField] private float slideDistance = 200f;
     [SerializeField] private float fadeInTime = 0.25f;
     [SerializeField] private float holdTime = 2.5f;
     [SerializeField] private float fadeOutTime = 0.4f;
@@ -31,12 +31,24 @@ public class UpgradePopupUI : MonoBehaviour
         if (Instance != null && Instance != this) { Destroy(gameObject); return; }
         Instance = this;
 
-        // Guarda la posición visible y calcula la oculta (más abajo)
         shownPos = panel.anchoredPosition;
         hiddenPos = shownPos - new Vector2(0f, slideDistance);
 
         panel.anchoredPosition = hiddenPos;
         canvasGroup.alpha = 0f;
+        canvasGroup.interactable = false;
+        canvasGroup.blocksRaycasts = false;
+
+        // Toast only: never steal clicks from Pause / Victory / Game Over.
+        Graphic[] graphics = GetComponentsInChildren<Graphic>(true);
+        for (int i = 0; i < graphics.Length; i++)
+            graphics[i].raycastTarget = false;
+    }
+
+    private void OnDestroy()
+    {
+        if (Instance == this)
+            Instance = null;
     }
 
     public void Show(UpgradeSO upgrade)
@@ -59,13 +71,30 @@ public class UpgradePopupUI : MonoBehaviour
         if (iconImage != null)
         {
             iconImage.sprite = upgrade.icon;
-            iconImage.enabled = upgrade.icon != null; // evita el cuadro blanco si no hay ícono
+            iconImage.enabled = upgrade.icon != null;
         }
         if (nameText != null) nameText.text = upgrade.upgradeName;
         if (descriptionText != null) descriptionText.text = upgrade.description;
 
         yield return Animate(hiddenPos, shownPos, 0f, 1f, fadeInTime);
-        yield return new WaitForSeconds(holdTime);
+
+        float held = 0f;
+        while (held < holdTime)
+        {
+            if (ShouldHideForMenus())
+            {
+                canvasGroup.alpha = 0f;
+                yield return null;
+                continue;
+            }
+
+            if (canvasGroup.alpha < 1f)
+                canvasGroup.alpha = 1f;
+
+            held += Time.unscaledDeltaTime;
+            yield return null;
+        }
+
         yield return Animate(shownPos, hiddenPos, 1f, 0f, fadeOutTime);
     }
 
@@ -74,13 +103,27 @@ public class UpgradePopupUI : MonoBehaviour
         float t = 0f;
         while (t < duration)
         {
-            t += Time.unscaledDeltaTime; // unscaled: funciona aunque pauses con timeScale = 0
-            float k = Mathf.SmoothStep(0f, 1f, t / duration);
+            if (ShouldHideForMenus())
+            {
+                canvasGroup.alpha = 0f;
+                yield return null;
+                continue;
+            }
+
+            t += Time.unscaledDeltaTime;
+            float k = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(t / duration));
             panel.anchoredPosition = Vector2.Lerp(fromPos, toPos, k);
             canvasGroup.alpha = Mathf.Lerp(fromA, toA, k);
             yield return null;
         }
         panel.anchoredPosition = toPos;
-        canvasGroup.alpha = toA;
+        canvasGroup.alpha = ShouldHideForMenus() ? 0f : toA;
+    }
+
+    private static bool ShouldHideForMenus()
+    {
+        return GamePause.IsGameplayFrozen
+            || GameOverManager.IsOpen
+            || VictoryManager.IsOpen;
     }
 }

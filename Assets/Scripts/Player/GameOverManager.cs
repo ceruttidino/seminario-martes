@@ -41,7 +41,7 @@ public class GameOverManager : MonoBehaviour
 
         IsOpen = true;
         gameOverScreen.SetActive(true);
-        gameOverScreen.transform.SetAsLastSibling();
+        BringToFront(gameOverScreen);
 
         GamePause.SetPaused(true);
         Cursor.lockState = CursorLockMode.None;
@@ -53,5 +53,13 @@ public class GameOverManager : MonoBehaviour
         IsOpen = false;
         GamePause.SetPaused(false);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    private static void BringToFront(GameObject screen)
+    {
+        if (screen == null) return;
+        screen.transform.SetAsLastSibling();
+        if (screen.transform.parent != null)
+            screen.transform.parent.SetAsLastSibling();
     }
 }

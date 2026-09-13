@@ -51,7 +51,7 @@ public class VictoryManager : MonoBehaviour
             finalVictoryExtras.SetActive(isFinalFloor);
 
         victoryScreen.SetActive(true);
-        victoryScreen.transform.SetAsLastSibling();
+        BringToFront(victoryScreen);
 
         GamePause.SetPaused(true);
         Cursor.lockState = CursorLockMode.None;
@@ -82,5 +82,13 @@ public class VictoryManager : MonoBehaviour
     {
         IsOpen = false;
         GamePause.SetPaused(false);
+    }
+
+    private static void BringToFront(GameObject screen)
+    {
+        if (screen == null) return;
+        screen.transform.SetAsLastSibling();
+        if (screen.transform.parent != null)
+            screen.transform.parent.SetAsLastSibling();
     }
 }

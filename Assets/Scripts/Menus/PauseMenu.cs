@@ -13,6 +13,7 @@ public class PauseMenu : MonoBehaviour
     public void OnPause(InputAction.CallbackContext context)
     {
         if (!context.performed) return;
+        if (GameOverManager.IsOpen || VictoryManager.IsOpen) return;
         if (!isPaused && GamePause.IsGameplayFrozen) return;
 
         if (isPaused)
@@ -23,8 +24,11 @@ public class PauseMenu : MonoBehaviour
 
     public void Pause()
     {
+        if (GameOverManager.IsOpen || VictoryManager.IsOpen) return;
+
         PauseMainMenu();
         pausePanel.SetActive(true);
+        pausePanel.transform.SetAsLastSibling();
         GamePause.SetPaused(true);
         isPaused = true;
         Cursor.lockState = CursorLockMode.None;
@@ -33,7 +37,10 @@ public class PauseMenu : MonoBehaviour
 
     public void Resume()
     {
+        if (GameOverManager.IsOpen || VictoryManager.IsOpen) return;
+
         pausePanel.SetActive(false);
+        PauseMainMenu();
         GamePause.SetPaused(false);
         isPaused = false;
 
