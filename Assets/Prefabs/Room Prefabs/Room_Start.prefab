@@ -186,7 +186,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 2
-      m_TileSpriteIndex: 11
+      m_TileSpriteIndex: 14
       m_TileMatrixIndex: 1
       m_TileColorIndex: 13
       m_TileObjectToInstantiateIndex: 65535
@@ -626,9 +626,9 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 10
-      m_TileSpriteIndex: 15
+      m_TileSpriteIndex: 11
       m_TileMatrixIndex: 2
-      m_TileColorIndex: 14
+      m_TileColorIndex: 16
       m_TileObjectToInstantiateIndex: 65535
       dummyAlignment: 0
       m_AllTileFlags: 1073741827
@@ -636,9 +636,9 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 10
-      m_TileSpriteIndex: 15
+      m_TileSpriteIndex: 11
       m_TileMatrixIndex: 2
-      m_TileColorIndex: 14
+      m_TileColorIndex: 16
       m_TileObjectToInstantiateIndex: 65535
       dummyAlignment: 0
       m_AllTileFlags: 1073741827
@@ -716,7 +716,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 3
-      m_TileSpriteIndex: 12
+      m_TileSpriteIndex: 15
       m_TileMatrixIndex: 1
       m_TileColorIndex: 13
       m_TileObjectToInstantiateIndex: 65535
@@ -785,16 +785,16 @@ Tilemap:
     m_Data: {fileID: -4428599492126535051, guid: ef4909214b055d44fa5b5cbf6c394433, type: 3}
   - m_RefCount: 4
     m_Data: {fileID: 1530954242053478090, guid: ef4909214b055d44fa5b5cbf6c394433, type: 3}
+  - m_RefCount: 2
+    m_Data: {fileID: 0}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
+  - m_RefCount: 6
+    m_Data: {fileID: 3075466786343887021, guid: ef4909214b055d44fa5b5cbf6c394433, type: 3}
   - m_RefCount: 1
     m_Data: {fileID: -8835613925571237586, guid: ef4909214b055d44fa5b5cbf6c394433, type: 3}
   - m_RefCount: 1
     m_Data: {fileID: -3211424670756881740, guid: ef4909214b055d44fa5b5cbf6c394433, type: 3}
-  - m_RefCount: 6
-    m_Data: {fileID: 3075466786343887021, guid: ef4909214b055d44fa5b5cbf6c394433, type: 3}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
-  - m_RefCount: 2
-    m_Data: {fileID: 0}
   - m_RefCount: 1
     m_Data: {fileID: 2631222350673172329, guid: ef4909214b055d44fa5b5cbf6c394433, type: 3}
   - m_RefCount: 1
@@ -893,12 +893,12 @@ Tilemap:
     m_Data: {r: 1.67e-43, g: 1.67e-43, b: 1.67e-43, a: 1.67e-43}
   - m_RefCount: 52
     m_Data: {r: 1, g: 1, b: 1, a: 1}
+  - m_RefCount: 0
+    m_Data: {r: 1.67e-43, g: 1.67e-43, b: 1.67e-43, a: 1.67e-43}
+  - m_RefCount: 0
+    m_Data: {r: 1.67e-43, g: 1.67e-43, b: 1.67e-43, a: 1.67e-43}
   - m_RefCount: 2
-    m_Data: {r: 0.7678927, g: 0.39585182, b: 0.51831627, a: 1}
-  - m_RefCount: 0
-    m_Data: {r: 1.67e-43, g: 1.67e-43, b: 1.67e-43, a: 1.67e-43}
-  - m_RefCount: 0
-    m_Data: {r: 1.67e-43, g: 1.67e-43, b: 1.67e-43, a: 1.67e-43}
+    m_Data: {r: 0.9790586, g: 0.64452124, b: 0.65395427, a: 1}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -1137,6 +1137,16 @@ MonoBehaviour:
   normalDoorSprite: {fileID: 0}
   shopDoorSprite: {fileID: 0}
   bossDoorSprite: {fileID: 0}
+  lockedDoorSprite: {fileID: 0}
+  unlockAnimationFrames: []
+  unlockFrameRate: 14
+  combatClosedSprite: {fileID: 0}
+  combatOpenSprite: {fileID: 0}
+  combatAnimationFrames: []
+  combatFrameRate: 14
+  bossAnimationFrames: []
+  bossAnimSheet: {fileID: 0}
+  bossFrameRate: 16
 --- !u!1 &3857411769287756706
 GameObject:
   m_ObjectHideFlags: 0
@@ -1408,6 +1418,16 @@ MonoBehaviour:
   normalDoorSprite: {fileID: 0}
   shopDoorSprite: {fileID: 0}
   bossDoorSprite: {fileID: 0}
+  lockedDoorSprite: {fileID: 0}
+  unlockAnimationFrames: []
+  unlockFrameRate: 14
+  combatClosedSprite: {fileID: 0}
+  combatOpenSprite: {fileID: 0}
+  combatAnimationFrames: []
+  combatFrameRate: 14
+  bossAnimationFrames: []
+  bossAnimSheet: {fileID: 0}
+  bossFrameRate: 16
 --- !u!1 &4878072035826389770
 GameObject:
   m_ObjectHideFlags: 0
@@ -1628,6 +1648,16 @@ MonoBehaviour:
   normalDoorSprite: {fileID: 0}
   shopDoorSprite: {fileID: 0}
   bossDoorSprite: {fileID: 0}
+  lockedDoorSprite: {fileID: 0}
+  unlockAnimationFrames: []
+  unlockFrameRate: 14
+  combatClosedSprite: {fileID: 0}
+  combatOpenSprite: {fileID: 0}
+  combatAnimationFrames: []
+  combatFrameRate: 14
+  bossAnimationFrames: []
+  bossAnimSheet: {fileID: 0}
+  bossFrameRate: 16
 --- !u!1 &5009212152718588624
 GameObject:
   m_ObjectHideFlags: 0
@@ -1917,7 +1947,7 @@ Transform:
   m_GameObject: {fileID: 6838967271370988914}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.25, y: 4.7, z: 0}
+  m_LocalPosition: {x: 0.25, y: 4.97, z: 0}
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -1972,12 +2002,12 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 5
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 4976125646568474354, guid: 33cd2fc56208f5a4a8ee74c10ba2ad03, type: 3}
+  m_Sprite: {fileID: 21300000, guid: cf39080d283bdacd0a843bfeaa31a08b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1.078125, y: 0.71875}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -2016,17 +2046,17 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.012315035, y: 0.1605668}
+  m_Offset: {x: -0.012315035, y: 0.08873439}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 0.59375}
-    newSize: {x: 1, y: 1}
+    oldSize: {x: 1.078125, y: 0.71875}
+    newSize: {x: 1.078125, y: 0.71875}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.50413036, y: 0.6788664}
+  m_Size: {x: 0.50413036, y: 0.8225312}
   m_EdgeRadius: 0
 --- !u!114 &7029026482553641474
 MonoBehaviour:
@@ -2044,9 +2074,19 @@ MonoBehaviour:
   isLocked: 0
   spriteRenderer: {fileID: 8257058992659503306}
   currentDoorType: 0
-  normalDoorSprite: {fileID: 4976125646568474354, guid: 33cd2fc56208f5a4a8ee74c10ba2ad03, type: 3}
+  normalDoorSprite: {fileID: 21300000, guid: cf39080d283bdacd0a843bfeaa31a08b, type: 3}
   shopDoorSprite: {fileID: 21300000, guid: bc65ac4a1d765d0469b27cf6ad62aef5, type: 3}
   bossDoorSprite: {fileID: 21300000, guid: 5e099f030023f7044850d7c8edf4c0c7, type: 3}
+  lockedDoorSprite: {fileID: 0}
+  unlockAnimationFrames: []
+  unlockFrameRate: 14
+  combatClosedSprite: {fileID: 0}
+  combatOpenSprite: {fileID: 0}
+  combatAnimationFrames: []
+  combatFrameRate: 14
+  bossAnimationFrames: []
+  bossAnimSheet: {fileID: 0}
+  bossFrameRate: 16
 --- !u!1 &6850029690147252818
 GameObject:
   m_ObjectHideFlags: 0
@@ -2237,7 +2277,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 6
-      m_TileSpriteIndex: 9
+      m_TileSpriteIndex: 11
       m_TileMatrixIndex: 0
       m_TileColorIndex: 9
       m_TileObjectToInstantiateIndex: 65535
@@ -3667,7 +3707,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 4
-      m_TileSpriteIndex: 7
+      m_TileSpriteIndex: 9
       m_TileMatrixIndex: 0
       m_TileColorIndex: 9
       m_TileObjectToInstantiateIndex: 65535
@@ -3718,16 +3758,16 @@ Tilemap:
     m_Data: {fileID: 0}
   - m_RefCount: 4
     m_Data: {fileID: -7101979838172000221, guid: ef4909214b055d44fa5b5cbf6c394433, type: 3}
-  - m_RefCount: 1
-    m_Data: {fileID: -2913862563515950456, guid: ef4909214b055d44fa5b5cbf6c394433, type: 3}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
   - m_RefCount: 4
     m_Data: {fileID: -1014186484340029935, guid: ef4909214b055d44fa5b5cbf6c394433, type: 3}
   - m_RefCount: 1
-    m_Data: {fileID: -6640195231231853265, guid: ef4909214b055d44fa5b5cbf6c394433, type: 3}
+    m_Data: {fileID: -2913862563515950456, guid: ef4909214b055d44fa5b5cbf6c394433, type: 3}
   - m_RefCount: 7
     m_Data: {fileID: 8624945264132463290, guid: ef4909214b055d44fa5b5cbf6c394433, type: 3}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
+  - m_RefCount: 1
+    m_Data: {fileID: -6640195231231853265, guid: ef4909214b055d44fa5b5cbf6c394433, type: 3}
   - m_RefCount: 10
     m_Data: {fileID: 3730121026227328614, guid: ef4909214b055d44fa5b5cbf6c394433, type: 3}
   - m_RefCount: 1
