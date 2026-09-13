@@ -4,12 +4,26 @@ using UnityEngine.SceneManagement;
 
 public enum GameSfx
 {
+    HealPickup,
+    ScrapPickup,
+    KeyPickup,
+    BoxingGlovePickup,
+    SneakersPickup,
+    UpgradePickup,
+    QuickAttack,
+    QuickAttackSecond,
+    AreaAttack,
     Dash,
     PlayerHit,
-    QuickAttack,
-    AreaAttack,
-    LootPickup,
-    UpgradePickup
+    RatHurt,
+    AntHurt,
+    SnailHurt,
+    MoleHurt,
+    HedgehogHurt,
+    TurtleHurt,
+    SnakeHurt,
+    OwlHurt,
+    BossHurt
 }
 
 public enum GameMusic
@@ -18,8 +32,8 @@ public enum GameMusic
     Menu,
     Dungeon,
     Shop,
+    UpgradeRoom,
     Boss,
-    Challenge,
     Victory,
     GameOver
 }
@@ -32,11 +46,13 @@ public class AudioManager : MonoBehaviour
     private const string MusicPref = "audio.musicVolume";
     private const string SfxPref = "audio.sfxVolume";
     private const float MusicFadeTime = 0.35f;
+    private const float SecondSwingDelay = 0.12f;
 
     private AudioLibrary library;
     private AudioSource musicSource;
     private AudioSource sfxSource;
     private GameMusic currentMusic = GameMusic.None;
+    private AudioClip currentMusicClip;
     private Coroutine musicFade;
 
     public float MasterVolume
@@ -137,34 +153,89 @@ public class AudioManager : MonoBehaviour
         Instance.PlaySfxInternal(id, fallback);
     }
 
+    public static void PlayLoot(LootType lootType, UpgradeSO upgrade = null, AudioClip fallback = null)
+    {
+        if (Instance == null) return;
+
+        if (lootType == LootType.Upgrade)
+        {
+            PlayUpgrade(upgrade, fallback);
+            return;
+        }
+
+        AudioClip clip = Instance.library != null ? Instance.library.GetLootSfx(lootType) : null;
+        Instance.PlayClip(clip != null ? clip : fallback);
+    }
+
+    public static void PlayUpgrade(UpgradeSO upgrade, AudioClip fallback = null)
+    {
+        if (Instance == null) return;
+
+        AudioClip clip = Instance.library != null ? Instance.library.GetUpgradeSfx(upgrade) : null;
+        Instance.PlayClip(clip != null ? clip : fallback);
+    }
+
+    public static void PlayQuickAttack(AudioClip fallback = null)
+    {
+        if (Instance == null) return;
+
+        Instance.PlaySfxInternal(GameSfx.QuickAttack, fallback);
+        Instance.StartCoroutine(Instance.PlaySecondSwing(fallback));
+    }
+
+    public static void PlayEnemyHurt(EnemyType enemyType)
+    {
+        if (Instance == null) return;
+
+        AudioClip clip = Instance.library != null ? Instance.library.GetEnemyHurtSfx(enemyType) : null;
+        Instance.PlayClip(clip);
+    }
+
+    public static void PlayBossHurt()
+    {
+        PlaySfx(GameSfx.BossHurt);
+    }
+
     public static void PlayMusic(GameMusic track)
     {
         if (Instance == null) return;
         Instance.PlayMusicInternal(track);
     }
 
-    public static void PlayMusicForRoom(RoomType roomType)
+    public static void PlayMusicForRoom(RoomType roomType, RoomInstance room = null)
     {
         if (Instance == null) return;
 
-        GameMusic track = roomType switch
-        {
-            RoomType.Shop => GameMusic.Shop,
-            RoomType.Boss => GameMusic.Boss,
-            RoomType.Challenge => GameMusic.Challenge,
-            _ => GameMusic.Dungeon
-        };
+        GameMusic track;
+        if (room != null && room.GetComponentInChildren<ConnectionRoomBuffSpawner>(true) != null)
+            track = GameMusic.UpgradeRoom;
+        else if (roomType == RoomType.Shop)
+            track = GameMusic.Shop;
+        else if (roomType == RoomType.Boss)
+            track = GameMusic.Boss;
+        else
+            track = GameMusic.Dungeon;
 
         Instance.PlayMusicInternal(track, fallbackToDungeon: true);
+    }
+
+    private IEnumerator PlaySecondSwing(AudioClip fallback)
+    {
+        yield return new WaitForSecondsRealtime(SecondSwingDelay);
+
+        AudioClip second = library != null ? library.GetSfx(GameSfx.QuickAttackSecond) : null;
+        PlayClip(second != null ? second : (library != null ? library.GetSfx(GameSfx.QuickAttack) : fallback));
     }
 
     private void PlaySfxInternal(GameSfx id, AudioClip fallback)
     {
         AudioClip clip = library != null ? library.GetSfx(id) : null;
-        if (clip == null)
-            clip = fallback;
-        if (clip == null) return;
+        PlayClip(clip != null ? clip : fallback);
+    }
 
+    private void PlayClip(AudioClip clip)
+    {
+        if (clip == null || sfxSource == null) return;
         sfxSource.PlayOneShot(clip);
     }
 
@@ -176,18 +247,21 @@ public class AudioManager : MonoBehaviour
             return;
         }
 
-        AudioClip clip = library != null ? library.GetMusic(track) : null;
+        int floor = DungeonManager.Instance != null ? DungeonManager.Instance.CurrentFloor : 1;
+        AudioClip clip = library != null ? library.GetMusic(track, floor) : null;
+
         if (clip == null && fallbackToDungeon && track != GameMusic.Dungeon)
         {
             track = GameMusic.Dungeon;
-            clip = library != null ? library.GetMusic(track) : null;
+            clip = library != null ? library.GetMusic(track, floor) : null;
         }
 
         if (clip == null) return;
-        if (currentMusic == track && musicSource.clip == clip && musicSource.isPlaying)
+        if (currentMusic == track && currentMusicClip == clip && musicSource.isPlaying)
             return;
 
         currentMusic = track;
+        currentMusicClip = clip;
 
         if (musicFade != null)
             StopCoroutine(musicFade);
@@ -198,6 +272,7 @@ public class AudioManager : MonoBehaviour
     private void StopMusic()
     {
         currentMusic = GameMusic.None;
+        currentMusicClip = null;
 
         if (musicFade != null)
             StopCoroutine(musicFade);

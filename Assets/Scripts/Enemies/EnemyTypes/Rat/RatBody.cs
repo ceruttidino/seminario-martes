@@ -50,6 +50,8 @@ public class RatBody : MonoBehaviour, IDamageable
 
     public void TakeDamage(float dmg)
     {
+        AudioManager.PlayEnemyHurt(EnemyType.Rat);
+
         RoomInstance room = GetComponentInParent<RoomInstance>();
         if (room != null)
             room.HandleEnemyDeath();

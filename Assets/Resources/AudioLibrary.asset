@@ -15,13 +15,29 @@ MonoBehaviour:
   menuMusic: {fileID: 0}
   dungeonMusic: {fileID: 0}
   shopMusic: {fileID: 0}
-  bossMusic: {fileID: 0}
-  challengeMusic: {fileID: 0}
+  upgradeRoomMusic: {fileID: 0}
+  bossMusicByFloor: []
   victoryMusic: {fileID: 0}
   gameOverMusic: {fileID: 0}
+  healPickup: {fileID: 0}
+  scrapPickup: {fileID: 8300000, guid: f1456b57e19a50e4aabb95d5d94cf1ff, type: 3}
+  keyPickup: {fileID: 0}
+  boxingGlovePickup: {fileID: 0}
+  boxingGloveUpgrade: {fileID: 11400000, guid: 6e1dfd62d1a564f46adf26cd11f31943, type: 2}
+  sneakersPickup: {fileID: 0}
+  sneakersUpgrade: {fileID: 11400000, guid: aebf8a7492942e44b95ff2fa5c20d2c6, type: 2}
+  defaultUpgradePickup: {fileID: 8300000, guid: abed21376994ebf47a1d16d7beefa28a, type: 3}
+  quickAttack: {fileID: 8300000, guid: 8a9a2642778a22d4580d363b556eb296, type: 3}
+  quickAttackSecond: {fileID: 0}
+  areaAttack: {fileID: 8300000, guid: bf0947dce2a4f02468b5e844e14a76cd, type: 3}
   dash: {fileID: 8300000, guid: 9356e93bee8a72143a1dd57325be9a6e, type: 3}
   playerHit: {fileID: 8300000, guid: 268af91c918fb8743a22d74193ccd242, type: 3}
-  quickAttack: {fileID: 8300000, guid: 8a9a2642778a22d4580d363b556eb296, type: 3}
-  areaAttack: {fileID: 8300000, guid: bf0947dce2a4f02468b5e844e14a76cd, type: 3}
-  lootPickup: {fileID: 8300000, guid: f1456b57e19a50e4aabb95d5d94cf1ff, type: 3}
-  upgradePickup: {fileID: 8300000, guid: abed21376994ebf47a1d16d7beefa28a, type: 3}
+  ratHurt: {fileID: 0}
+  antHurt: {fileID: 0}
+  snailHurt: {fileID: 0}
+  moleHurt: {fileID: 0}
+  hedgehogHurt: {fileID: 0}
+  turtleHurt: {fileID: 0}
+  snakeHurt: {fileID: 0}
+  owlHurt: {fileID: 0}
+  bossHurt: {fileID: 0}

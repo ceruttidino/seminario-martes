@@ -6,6 +6,8 @@ public class EnemyBehaviour : MonoBehaviour
 
     [SerializeField] private EnemyType enemyType;
 
+    public EnemyType Type => enemyType;
+
     [SerializeField] private Transform player;
     private EnemyAttack attack;
 

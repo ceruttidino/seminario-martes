@@ -35,6 +35,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
 
         OnDamaged?.Invoke();
+        PlayHurtSfx();
 
         if (damageFlash != null)
             damageFlash.Flash();
@@ -60,5 +61,18 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     public void SetDamageable(bool value)
     {
         canTakeDamage = value;
+    }
+
+    private void PlayHurtSfx()
+    {
+        if (GetComponent<BossBase>() != null)
+        {
+            AudioManager.PlayBossHurt();
+            return;
+        }
+
+        EnemyBehaviour behaviour = GetComponent<EnemyBehaviour>();
+        if (behaviour != null)
+            AudioManager.PlayEnemyHurt(behaviour.Type);
     }
 }
