@@ -1,6 +1,6 @@
 using UnityEngine;
 
-// Solo rompible por explosiones (ej. Hedgehog), no por ataques del jugador.
+// Solo las explosiones la rompen, no los ataques del jugador.
 public class BreakableStone : MonoBehaviour
 {
     public void BreakFromExplosion()

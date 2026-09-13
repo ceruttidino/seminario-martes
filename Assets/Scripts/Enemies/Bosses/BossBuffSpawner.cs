@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// Adjuntar al boss. Escucha OnDeath y spawnea un buff random no repetido durante la run.
 public class BossBuffSpawner : MonoBehaviour
 {
     [SerializeField] private List<ObjectBuffSO> possibleBuffs;

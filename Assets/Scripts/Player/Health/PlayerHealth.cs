@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class PlayerHealth : MonoBehaviour, IDamageable
@@ -92,26 +91,6 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     {
         canGetHurt = true;
     }
-    /*
-    // teclas de debug para testear en el editor
-    public void Heal(InputAction.CallbackContext context)
-    {
-        if (!context.performed) return;
-        PlayerHeal();
-    }
-
-    public void Hurt(InputAction.CallbackContext context)
-    {
-        if (!context.performed) return;
-        PlayerGetHurt();
-    }
-
-    public void AddHeart(InputAction.CallbackContext context)
-    {
-        if (!context.performed) return;
-        PlayerAddHeart(false);
-    }*/
-
     public void PlayerGetHurt()
     {
         TakeDamage(1);

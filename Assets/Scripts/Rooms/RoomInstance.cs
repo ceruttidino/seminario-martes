@@ -153,9 +153,6 @@ public class RoomInstance : MonoBehaviour
     {
         if (enemiesSpawned) return;
 
-        // Start, Shop, Boss, Connection y Challenge no spawnean enemigos por este
-        // sistema. Si el prefab o los puntos faltan / están vacíos, simplemente no
-        // hay combate: no es un error.
         if (enemyPrefab == null || enemySpawnPoints == null || enemySpawnPoints.Length == 0)
             return;
 
@@ -231,10 +228,6 @@ public class RoomInstance : MonoBehaviour
         }
     }
 
-    // Igual que UnlockDoorsInstant, pero reproduciendo la animacion de apertura
-    // (combate, sin candado). Se usa al limpiar la sala de enemigos, que es el
-    // unico caso donde el desbloqueo ocurre con el jugador mirando. La Shop no
-    // se abre aca: sigue pidiendo ganzua.
     public void UnlockDoorsAnimated()
     {
         if (HasLivingEnemies())

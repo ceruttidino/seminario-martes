@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "RoomInformation", menuName = "Dungeon/Room Information")]
-public class RoomInformation : ScriptableObject //Save Room ID, Type, Prefab, Doors, Etc. (Existing Rooms)
+public class RoomInformation : ScriptableObject
 {
     [Header("Info")]
     public string roomID;

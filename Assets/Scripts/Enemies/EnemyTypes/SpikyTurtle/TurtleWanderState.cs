@@ -57,8 +57,6 @@ public class TurtleWanderState : IEnemyState
 
     public void Exit()
     {
-        // Defensivo: si algun dia se sale del wander por otro motivo mientras
-        // esta en pleno windup, evita que el flash quede pegado.
         if (isWindingUp)
             turtle.EndWindupFeedback();
     }

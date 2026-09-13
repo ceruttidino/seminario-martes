@@ -28,8 +28,7 @@ public class TurtleChargeState : IEnemyState
 
     public void Tick()
     {
-        // La embestida NO debe esquivar obstaculos: es un ataque que choca y
-        // rebota a proposito contra paredes/piedras (ver OnWallHit mas abajo).
+        // Sin evasión: la embestida tiene que chocar y rebotar.
         movement.Move(direction, turtle.ChargeSpeed, avoidObstacles: false);
 
         chargeTimer -= Time.deltaTime;

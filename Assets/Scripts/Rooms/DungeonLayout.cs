@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DungeonLayout //Builds floor layout (How Rooms Connect with Each Other)
+public class DungeonLayout
 {
     private List<RoomInformation> remainingNormalRooms = new List<RoomInformation>();
     private List<RoomNode> generatedRooms = new List<RoomNode>();

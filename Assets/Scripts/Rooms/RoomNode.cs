@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class RoomNode //Logic room inside the dungeon
+public class RoomNode
 {
     public string uniqueNodeID;
     public string name;

@@ -45,8 +45,6 @@ public class VanishingOwl : MonoBehaviour
         if (bodyRenderer == null) bodyRenderer = GetComponentInChildren<SpriteRenderer>();
     }
 
-    // --- Movimiento (via EnemyMovement: corre fly-anim, flip y X/Y) ---
-
     public void MoveTowards(Vector2 target)
     {
         if (movement == null) return;
@@ -56,7 +54,7 @@ public class VanishingOwl : MonoBehaviour
 
     public void Stop()
     {
-        if (movement != null) movement.Move(Vector2.zero); // frena y pone AnimSpeed a 0
+        if (movement != null) movement.Move(Vector2.zero);
     }
 
     public void FaceTarget(Vector2 target)
@@ -74,8 +72,6 @@ public class VanishingOwl : MonoBehaviour
 {
     if (animator != null) animator.ResetTrigger("Attack");
 }
-
-    // --- Visuales ---
 
     public void EnterStealth()
     {

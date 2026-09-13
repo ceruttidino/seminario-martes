@@ -65,7 +65,6 @@ public class DiggingSpot : MonoBehaviour, IInteractable
 
         if (spriteRenderer != null) spriteRenderer.color = originalColor;
 
-        // pequeña chance de que aparezca un Topo en lugar de loot
         if (molePrefab != null && Random.Range(0f, 100f) <= moleSpawnChance)
         {
             Transform roomParent = GetComponentInParent<RoomInstance>()?.transform;
@@ -84,7 +83,6 @@ public class DiggingSpot : MonoBehaviour, IInteractable
 
     private void SpawnLoot()
     {
-        // armar lista de drops disponibles (ignorar los no asignados en el inspector)
         var options = new List<DropEntry>();
         if (heartDrop.prefab != null) options.Add(heartDrop);
         if (keyDrop.prefab != null) options.Add(keyDrop);
@@ -92,7 +90,6 @@ public class DiggingSpot : MonoBehaviour, IInteractable
 
         if (options.Count == 0) return;
 
-        // elegir UN tipo y spawnear 1-maxItems del mismo (sin mezclar)
         DropEntry chosen = options[Random.Range(0, options.Count)];
         int amount = Random.Range(1, maxItems + 1);
 
@@ -104,7 +101,6 @@ public class DiggingSpot : MonoBehaviour, IInteractable
             Vector3 pos = spawnPoint.position + new Vector3(offset.x, offset.y, 0f);
             GameObject spawned = Instantiate(chosen.prefab, pos, Quaternion.identity);
 
-            // pasar el LootItem al pickup para que sepa qué efecto aplicar
             LootPickup pickup = spawned.GetComponent<LootPickup>();
             if (pickup != null && chosen.lootItem != null)
                 pickup.SetLootItem(chosen.lootItem);

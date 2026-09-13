@@ -54,7 +54,6 @@ public class MinimapUI : MonoBehaviour
             roomIcons.Add(node, icon);
         }
 
-        // desactiva los que sobraron
         foreach (MinimapRoomIcon leftover in pool)
             leftover.gameObject.SetActive(false);
     }

@@ -1,13 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// Adjuntar al Connection_Room. Reemplaza el pickup fijo por un buff random no repetido.
 public class ConnectionRoomBuffSpawner : MonoBehaviour
 {
     [SerializeField] private List<ObjectBuffSO> possibleBuffs;
     [SerializeField] private GameObject buffPickupPrefab;
 
-    // Arrastrar el UpgradePickup_Health que ya esta en el prefab del ConnectionRoom
     [SerializeField] private GameObject existingPickup;
 
     private void Awake()

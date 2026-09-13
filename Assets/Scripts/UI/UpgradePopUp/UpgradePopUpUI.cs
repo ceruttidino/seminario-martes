@@ -39,7 +39,6 @@ public class UpgradePopupUI : MonoBehaviour
         canvasGroup.interactable = false;
         canvasGroup.blocksRaycasts = false;
 
-        // Toast only: never steal clicks from Pause / Victory / Game Over.
         Graphic[] graphics = GetComponentsInChildren<Graphic>(true);
         for (int i = 0; i < graphics.Length; i++)
             graphics[i].raycastTarget = false;

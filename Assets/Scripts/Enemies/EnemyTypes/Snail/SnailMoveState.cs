@@ -2,13 +2,13 @@ using UnityEngine;
 
 public class SnailMoveState : IEnemyState
 {
-    // Ciclo del rastro de baba: activo 4s, pausado 2.5s, se repite mientras viva el caracol.
     private const float TrailActiveDuration = 4f;
     private const float TrailPausedDuration = 2.5f;
     private const float TrailCycleDuration = TrailActiveDuration + TrailPausedDuration;
 
     private IMovement movement;
     private Transform enemyTransform;
+    // El caracol no hace daño por contacto: solo el rastro de baba.
     private EnemyAttack attack;
     private SlimeTrailSpawner slimeTrailSpawner;
 
@@ -52,8 +52,6 @@ public class SnailMoveState : IEnemyState
         movement.Move(direction);
 
         UpdateTrailCycle();
-
-        // Este enemigo no hace daño por contacto (ver GDD): solo su rastro de baba daña al jugador.
     }
 
     private void UpdateTrailCycle()

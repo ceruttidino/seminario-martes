@@ -47,7 +47,7 @@ public class PlayerInteraction : MonoBehaviour
 
             if (currentInteractable != null)
             {
-                currentInteractable.ShowHighlight(true); // resalta el objeto
+                currentInteractable.ShowHighlight(true);
             }
         }
     }

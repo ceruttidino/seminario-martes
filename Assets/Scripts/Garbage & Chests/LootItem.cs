@@ -13,7 +13,7 @@ public class LootItem : ScriptableObject
 {
     public string itemName;
     public Sprite icon;
-    public GameObject prefab;           // prefab del pickup (corazón, chatarra, upgrade, etc.)
+    public GameObject prefab;
 
     [Header("TipoDeLoot")]
     public LootType lootType;
@@ -25,5 +25,5 @@ public class LootItem : ScriptableObject
 
     [Header("Si es mejora")]
     public bool isUpgrade = false;
-    public UpgradeSO upgradeSO;         // solo si isUpgrade = true
+    public UpgradeSO upgradeSO;
 }

@@ -23,11 +23,6 @@ public class EnemyMovement : MonoBehaviour, IMovement
     [SerializeField] private float stuckTimeWindow = 0.4f;
     [SerializeField] private float escapeDuration = 0.5f;
 
-    // Angulos de sondeo en abanico, alternando lados, para encontrar el desvio
-    // mas chico posible respecto de la direccion deseada original. Cubre los
-    // 360 grados (no solo +-100) para que, si el camino directo esta bloqueado,
-    // siempre haya alguna direccion (aunque sea hacia atras) para no quedar
-    // parado en seco contra rocas/paredes agrupadas.
     private static readonly float[] AvoidanceProbeAngles =
         {
             0f, 20f, -20f, 40f, -40f, 60f, -60f, 80f, -80f,
@@ -39,10 +34,6 @@ public class EnemyMovement : MonoBehaviour, IMovement
     private ContactFilter2D obstacleFilter;
     private Vector2 lastFacingDirection = Vector2.down;
 
-    // Deteccion de "trabado": si hay poco avance real pese a intentar moverse
-    // (comun al quedar encajonado entre varias rocas juntas, donde el sondeo en
-    // abanico encuentra una mejora minima cada frame pero nunca una salida real),
-    // se fuerza durante un rato una direccion de escape distinta a la habitual.
     private Vector2 stuckWindowStartPos;
     private float stuckWindowTimer;
     private float escapeTimer;
@@ -62,8 +53,7 @@ public class EnemyMovement : MonoBehaviour, IMovement
             spriteRenderer = GetComponent<SpriteRenderer>();
         }
 
-        // useTriggers=false es clave: puertas y zonas de interaccion son triggers
-        // en la capa Wall y NO deben tratarse como obstaculos a esquivar.
+        // Las puertas son triggers en capa Wall: si las contamos, los enemigos las "esquivan" y no cruzan.
         obstacleFilter = new ContactFilter2D();
         obstacleFilter.useTriggers = false;
         obstacleFilter.SetLayerMask(obstacleLayers);
@@ -81,9 +71,6 @@ public class EnemyMovement : MonoBehaviour, IMovement
         Move(direction, speedOverride, true);
     }
 
-    // avoidObstacles=false preserva el comportamiento fisico "crudo" para casos
-    // donde chocar/rebotar contra el entorno es parte intencional del ataque
-    // (ej. la embestida del Turtle, que rebota con OnWallHit a proposito).
     public void Move(Vector2 direction, float speedOverride, bool avoidObstacles)
     {
         Vector2 finalDirection = avoidObstacles ? ApplyObstacleAvoidance(direction) : direction;
@@ -98,7 +85,6 @@ public class EnemyMovement : MonoBehaviour, IMovement
         }
     }
 
-    // Orienta al enemigo (flip + parametros del Animator) sin moverlo.
     public void Face(Vector2 direction)
     {
         if (direction.sqrMagnitude < 0.0001f) return;
@@ -118,11 +104,6 @@ public class EnemyMovement : MonoBehaviour, IMovement
         }
     }
 
-    // Mide el avance real cada StuckTimeWindow segundos. Si el enemigo estaba
-    // intentando moverse (direccion deseada no nula) pero se desplazo menos que
-    // stuckDistanceThreshold en toda la ventana, arma un escape: durante
-    // escapeDuration se rota la direccion base antes de buscar el angulo libre,
-    // en vez de repetir siempre el mismo orden de sondeo que lo dejo trabado.
     private void UpdateStuckTracking(Vector2 desiredDirection)
     {
         Vector2 currentPos = rb != null ? rb.position : (Vector2)transform.position;
@@ -145,11 +126,6 @@ public class EnemyMovement : MonoBehaviour, IMovement
         stuckWindowTimer = 0f;
     }
 
-    // Desvia la direccion pedida por el estado del enemigo (perseguir, huir,
-    // deambular, acercarse) para esquivar paredes/piedras/objetos solidos ANTES
-    // de chocar, en vez de quedar empujando en vano contra el obstaculo. Esto NO
-    // cambia a quien persigue o ataca cada enemigo, solo como se traduce esa
-    // decision en movimiento fisico real.
     private Vector2 ApplyObstacleAvoidance(Vector2 desiredDirection)
     {
         float magnitude = desiredDirection.magnitude;
@@ -185,11 +161,6 @@ public class EnemyMovement : MonoBehaviour, IMovement
             }
         }
 
-        // Ningun angulo esta completamente libre (tipico entre rocas agrupadas o
-        // rodeado por otros enemigos): en vez de frenar en seco y quedar trabado
-        // en el lugar, avanza despacio hacia el angulo menos obstruido, siempre
-        // que haya un minimo de margen real. Si esta realmente encajonado (casi
-        // sin margen en ninguna direccion), ahi si se detiene.
         if (bestClearance > avoidanceRadius * 0.5f)
         {
             return bestDirection * magnitude * 0.5f;
@@ -225,7 +196,6 @@ public class EnemyMovement : MonoBehaviour, IMovement
         {
             lastFacingDirection = direction.normalized;
 
-            // Flip the sprite based on horizontal direction
             if (spriteRenderer != null)
             {
                 if (direction.x > 0) spriteRenderer.flipX = true;

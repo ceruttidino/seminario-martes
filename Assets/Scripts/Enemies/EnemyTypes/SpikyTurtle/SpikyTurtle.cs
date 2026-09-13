@@ -66,15 +66,10 @@ public class SpikyTurtle : MonoBehaviour
         IsUpsideDown = value;
         health?.SetDamageable(value);
 
-        // No hay sprite/animacion especifica de "boca arriba" todavia: se vuelca
-        // el mismo sprite verticalmente para que el jugador pueda distinguir a
-        // simple vista cuando la tortuga es vulnerable.
         if (spriteRenderer != null)
             spriteRenderer.flipY = value;
     }
 
-    // Aviso visual de que esta por embestir (mismo mecanismo que usan
-    // PoisonousSnake/ExplosiveHedgehog/RegeneratingRat para telegrafiar su ataque).
     public void BeginWindupFeedback()
     {
         damageFlash?.StartLoopFlash();
@@ -99,12 +94,7 @@ public class SpikyTurtle : MonoBehaviour
     {
         if (shellPrefab == null) return;
 
-        // Sin padre, el caparazon queda en la raiz de la escena: al cambiar de
-        // room solo se desactiva el RoomInstance de la sala anterior, y como el
-        // caparazon no es hijo de ese RoomInstance queda activo y "sigue" al
-        // jugador a la siguiente sala. Lo parenteamos a la room actual (misma
-        // logica que ya se usa para los buffs dejados en el piso) para que se
-        // desactive junto con ella al salir y quede solo en la sala donde cayo.
+        // Si no es hijo de la room, al cambiar de sala el caparazón queda suelto y sigue al jugador.
         Transform roomParent = GetComponentInParent<RoomInstance>()?.transform ?? transform.parent;
         Instantiate(shellPrefab, transform.position, Quaternion.identity, roomParent);
     }

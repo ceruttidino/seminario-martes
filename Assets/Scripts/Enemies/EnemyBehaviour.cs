@@ -64,7 +64,6 @@ public class EnemyBehaviour : MonoBehaviour
                 break;
 
             case EnemyType.Mole:
-                // Mole maneja su propia lógica con el componente Mole.cs
                 break;
 
             case EnemyType.Hedgehog:

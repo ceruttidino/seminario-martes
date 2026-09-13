@@ -60,8 +60,6 @@ public class HedgehogArmingState : IEnemyState
             enemyHealth.OnDamaged -= HandleDamaged;
     }
 
-    // Sigue avanzando hacia el jugador, pero mucho mas lento que en la persecucion
-    // normal, para que la explosion no sea trivial de esquivar quedandose quieto.
     private void ApproachPlayerSlowly()
     {
         if (player == null || enemyTransform == null)

@@ -1,8 +1,5 @@
 using UnityEngine;
 
-// Contiene la configuracion y logica del mordisco de la Regenerating Rat.
-// El mecanismo de regeneracion (RatRegeneration/RatBody) es independiente de
-// este componente y no se ve afectado por el estado de ataque.
 [RequireComponent(typeof(EnemyHealth))]
 [RequireComponent(typeof(EnemyBehaviour))]
 public class RegeneratingRat : MonoBehaviour
@@ -47,8 +44,6 @@ public class RegeneratingRat : MonoBehaviour
         StartCoroutine(ReviveRoutine());
     }
 
-    // Aviso visual de que esta con la boca preparada para morder (mismo mecanismo
-    // que usan ExplosiveHedgehog y PoisonousSnake para telegrafiar su ataque).
     public void BeginAttackFeedback()
     {
         damageFlash?.StartLoopFlash();
@@ -59,9 +54,6 @@ public class RegeneratingRat : MonoBehaviour
         damageFlash?.StopLoopFlash();
     }
 
-    // Se llama en el momento exacto del mordisco (hitTiming). Vuelve a chequear
-    // la distancia por si el jugador esquivo alejandose durante el windup: en
-    // ese caso el ataque falla y no hace daño.
     public void TryStrike(Transform player)
     {
         if (player == null) return;
@@ -89,7 +81,7 @@ public class RegeneratingRat : MonoBehaviour
         if (animator != null)
         {
             animator.Play("RatReviving", 0, 0f);
-            animator.Update(0f); // fuerza a mostrar el primer frame de RatReviving YA, sin pasar por Move
+            animator.Update(0f);
         }
 
         yield return new WaitForSeconds(reviveDuration);

@@ -55,7 +55,7 @@ public class Cheats : MonoBehaviour
             case "help":
                 consoleText.GetComponent<TextMeshProUGUI>().text = "Please respect Capital Letters";
                 break;
-            case "Help": //help le mustra al usuario todos los commandos
+            case "Help":
                 if (command.Length > 1)
                 {
                     switch (command[1])
@@ -85,7 +85,7 @@ public class Cheats : MonoBehaviour
                 }
                 else { consoleText.GetComponent<TextMeshProUGUI>().text = "Available commands: WARNING ALL COMMANDS ARE CASE SENSITIVE\nHelp [command] \nGiveScrap [amount]\nGivePick [amount]\nGiveHealth [amount]\nAddHearts [amount]\nSkipLevel"; }
                     break;
-            case "GiveScrap"://entrega scrap (dinero) al jugador
+            case "GiveScrap":
                 if (command.Length > 1)
                 {
                     if (int.TryParse(command[1], out int Amount))
@@ -98,7 +98,7 @@ public class Cheats : MonoBehaviour
                 else { consoleText.GetComponent<TextMeshProUGUI>().text = "no specified ammount"; }
         break; 
 
-            case "GivePick": //entrega Lockpicks (llaves) al jugador
+            case "GivePick":
                 if (command.Length > 1)
                 {
                     if (int.TryParse(command[1], out int Amount))
@@ -110,7 +110,7 @@ public class Cheats : MonoBehaviour
                 }
                 else { consoleText.GetComponent<TextMeshProUGUI>().text = "no specified ammount"; }
                 break;
-            case "GiveHealth": //cura al jugador
+            case "GiveHealth":
                 if (command.Length > 1)
                 {
                     if (int.TryParse(command[1], out int Amount))
@@ -123,7 +123,7 @@ public class Cheats : MonoBehaviour
                 }
                 else { consoleText.GetComponent<TextMeshProUGUI>().text = "no specified ammount"; }
                 break;
-            case "AddHearts": //aumenta la salud maxima del jugador
+            case "AddHearts":
                 if (command.Length > 1)
                 {
                     if (int.TryParse(command[1], out int Amount))
@@ -143,7 +143,7 @@ public class Cheats : MonoBehaviour
                 }
                 else { consoleText.GetComponent<TextMeshProUGUI>().text = "no specified ammount"; }
                 break;
-            case "SkipLevel": //saltea el nivel
+            case "SkipLevel":
                 Debug.Log("Skipping level");
 
                 VictoryManager victoryManager = FindFirstObjectByType<VictoryManager>();

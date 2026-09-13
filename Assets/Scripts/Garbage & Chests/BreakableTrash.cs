@@ -115,7 +115,6 @@ public class BreakableTrash : MonoBehaviour
 
     private void SpawnLoot(Transform roomParent)
     {
-        // armar lista con los drops disponibles
         var options = new List<DropEntry>();
         if (heartDrop.prefab != null) options.Add(heartDrop);
         if (keyDrop.prefab != null) options.Add(keyDrop);
@@ -174,32 +173,6 @@ public class BreakableTrash : MonoBehaviour
 
         LaunchPickup(pickup, targetPos);
     }
-
-    //private void TrySpawnUpgrade(Transform roomParent)
-    //{
-    //    if (buffPickupPrefab == null) return;
-    //    if (possibleUpgrades == null || possibleUpgrades.Count == 0) return;
-    //    if (Random.Range(0f, 100f) > upgradeDropChance) return;
-
-    //    ObjectBuffSO chosen = BuffPool.PickRandom(possibleUpgrades);
-    //    if (chosen == null) return;
-
-    //    Vector3 pos = GetRandomSpawnPos();
-    //    GameObject pickup = Instantiate(buffPickupPrefab, pos, Quaternion.identity);
-
-    //    UpgradePickup upgradePickup = pickup.GetComponent<UpgradePickup>();
-    //    if (upgradePickup != null)
-    //        upgradePickup.SetUpgrade(chosen);
-
-    //    if (chosen.icon != null)
-    //    {
-    //        SpriteRenderer sr = pickup.GetComponentInChildren<SpriteRenderer>();
-    //        if (sr != null) sr.sprite = chosen.icon;
-    //    }
-
-    //    if (roomParent != null)
-    //        pickup.transform.SetParent(roomParent, true);
-    //}
 
     private void SpawnPickup(GameObject prefab, LootItem lootItem, Transform roomParent, Vector3 targetPos)
     {
@@ -299,15 +272,8 @@ public class BreakableTrash : MonoBehaviour
     private float GetSafeMinRadius()
     {
         float halfDiagonal = new Vector2(trashBounds.extents.x, trashBounds.extents.y).magnitude;
-        return Mathf.Max(minSpawnRadius, halfDiagonal + 0.15f); // margen extra
+        return Mathf.Max(minSpawnRadius, halfDiagonal + 0.15f);
     }
-
-    //private Vector3 GetRandomSpawnPos()
-    //{
-    //    Vector2 dir = Random.insideUnitCircle.normalized;
-    //    float dist = Random.Range(minSpawnRadius, maxSpawnRadius);
-    //    return transform.position + new Vector3(dir.x, dir.y, 0f) * dist;
-    //}
 
     private Transform FindRoomParent()
     {

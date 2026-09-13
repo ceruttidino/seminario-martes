@@ -14,7 +14,7 @@ public class BaseTrap : MonoBehaviour
     }
     [SerializeField] TrapType trapType;
     [SerializeField] int damage = 1;
-    [SerializeField] int trapStateCycleTime;  // tiempo que la trampa pasa desactivada/activada
+    [SerializeField] int trapStateCycleTime;
     float timer = 0;
     [SerializeField] TrapState trapState;
     [SerializeField] Sprite deactiveSprite;

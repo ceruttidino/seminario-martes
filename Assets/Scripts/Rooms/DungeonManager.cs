@@ -106,11 +106,7 @@ public class DungeonManager : MonoBehaviour
 
     }
 
-    // Llamado desde VictoryManager al elegir continuar la run tras matar al jefe.
-    // Genera un piso completamente nuevo (nueva Start Room, nuevas rooms normales,
-    // nueva tienda y nuevo jefe), reutilizando el mismo sistema de generación
-    // de dungeons. Los buffs ya recogidos NO se resetean (BuffPool.Reset() no
-    // se llama), asi que el pool de PowerUps sigue siendo compartido entre pisos.
+    // BuffPool no se resetea: los power-ups ya usados no vuelven a salir en el piso siguiente.
     public void StartNextFloor()
     {
         if (isTransitioning) return;
@@ -318,9 +314,6 @@ public class DungeonManager : MonoBehaviour
 
             node.hasBeenVisited = true;
 
-            // Solo se generan nuevas conexiones/puertas la PRIMERA vez que se
-            // visita una room. Antes esto se ejecutaba en cada reingreso, lo que
-            // podia crear rooms y puertas nuevas en una room ya explorada.
             if (node.uniqueNodeID != "Start")
             {
                 GenerateConnections(node);
@@ -353,13 +346,7 @@ public class DungeonManager : MonoBehaviour
         {
             player.position = spawnPoint.position;
 
-            // El proyecto tiene Physics2D.autoSyncTransforms desactivado (por rendimiento),
-            // asi que al reposicionar al jugador directamente por Transform, el motor de
-            // fisica sigue "viendo" su posicion anterior hasta el proximo movimiento suyo.
-            // Esto hacia que los enemigos (que detectan/atacan via Physics2D.OverlapCircle)
-            // no detectaran al jugador en el primer contacto si este todavia no se habia
-            // movido desde que entro a la room. Forzamos la sincronizacion aca para que la
-            // deteccion sea correcta desde el primer instante.
+            // autoSyncTransforms está off: sin esto la física sigue en la posición vieja y los enemigos no detectan al jugador.
             Physics2D.SyncTransforms();
         }
     }
@@ -381,7 +368,6 @@ public class DungeonManager : MonoBehaviour
         DoorDirection.Right
     };
 
-        // shuffle
         for (int i = 0; i < directions.Count; i++)
         {
             DoorDirection temp = directions[i];
@@ -548,7 +534,6 @@ public class DungeonManager : MonoBehaviour
             candidates.Add(node);
         }
 
-        // Mezclamos los candidatos para que la posición sea random
         for (int i = 0; i < candidates.Count; i++)
         {
             int randomIndex = Random.Range(i, candidates.Count);
@@ -568,7 +553,6 @@ public class DungeonManager : MonoBehaviour
             DoorDirection.Right
         };
 
-            // Shuffle
             for (int i = 0; i < directions.Count; i++)
             {
                 int randomIndex = Random.Range(i, directions.Count);

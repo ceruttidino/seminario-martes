@@ -1,8 +1,5 @@
 using UnityEngine;
 
-// La rata se detiene y realiza un mordisco que dura AttackDuration segundos.
-// El jugador puede esquivar alejandose antes de HitTiming, y puede golpear a
-// la rata durante toda la animacion (no es invulnerable mientras ataca).
 public class RatAttackState : IEnemyState
 {
     private readonly Transform player;

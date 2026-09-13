@@ -38,11 +38,6 @@ public class RatChaseState : IEnemyState
             return;
         }
 
-        // Siempre a velocidad completa (sin frenado gradual): un multiplicador que
-        // se acerca a 0 a medida que distance -> stopDistance hacia un jugador
-        // quieto genera una desaceleracion exponencial que nunca llega a cruzar
-        // el umbral en la practica (la rata se "cuelga" justo afuera del rango de
-        // ataque para siempre). Full speed hasta cruzar el umbral evita ese caso.
         movement.Move(toPlayer.normalized);
     }
 
