@@ -4,7 +4,7 @@ using UnityEngine;
 public class AudioLibrary : ScriptableObject
 {
     [Header("Volumen")]
-    [Range(0f, 1f)] public float sfxMixGain = 0.12f;
+    [Range(0f, 1f)] public float sfxMixGain = 1f;
     [Range(0f, 1f)] public float musicMixGain = 0.4f;
 
     [Header("Música — GDD")]
@@ -41,16 +41,18 @@ public class AudioLibrary : ScriptableObject
     public AudioClip defaultUpgradePickup;
 
     [Header("Player")]
-    [Tooltip("High-pitch swoosh 1 of the double claw swing")]
     public AudioClip quickAttack;
     [Range(0.1f, 3f)] public float quickAttackPitch = 2f;
-    [Tooltip("High-pitch swoosh 2. If empty, the first swoosh plays again")]
+    [Range(0f, 1f)] public float quickAttackVolume = 0.095f;
     public AudioClip quickAttackSecond;
     [Range(0.1f, 3f)] public float quickAttackSecondPitch = 2f;
-    [Tooltip("One lower-pitch, heavier swoosh")]
+    [Range(0f, 1f)] public float quickAttackSecondVolume = 0.095f;
     public AudioClip areaAttack;
+    [Range(0f, 1f)] public float areaAttackVolume = 0.095f;
     public AudioClip dash;
+    [Range(0f, 1f)] public float dashVolume = 1f;
     public AudioClip playerHit;
+    [Range(0f, 1f)] public float playerHitVolume = 0.095f;
 
     [Header("Enemies (hurt)")]
     public AudioClip ratHurt;
@@ -132,6 +134,19 @@ public class AudioLibrary : ScriptableObject
         {
             case GameSfx.QuickAttack: return quickAttackPitch;
             case GameSfx.QuickAttackSecond: return quickAttackSecondPitch;
+            default: return 1f;
+        }
+    }
+
+    public float GetSfxVolume(GameSfx id)
+    {
+        switch (id)
+        {
+            case GameSfx.QuickAttack: return quickAttackVolume;
+            case GameSfx.QuickAttackSecond: return quickAttackSecondVolume;
+            case GameSfx.AreaAttack: return areaAttackVolume;
+            case GameSfx.Dash: return dashVolume;
+            case GameSfx.PlayerHit: return playerHitVolume;
             default: return 1f;
         }
     }

@@ -1970,7 +1970,6 @@ MonoBehaviour:
   enemiesPerWave: 4
   delayBetweenWaves: 1.75
   enemySpeedMultiplier: 0.6
-  spawnRadius: 5.5
   waveEnemyPrefabs:
   - {fileID: 5136333534524507215, guid: 1010f75008e5eec49a330b3df2c0c32a, type: 3}
   - {fileID: 8734249323408576011, guid: 23b9ec134f2fcab418d04cee4d163d96, type: 3}

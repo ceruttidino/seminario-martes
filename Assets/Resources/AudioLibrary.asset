@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7d2e9f14a8c4b3e9d0f2c1a5e6b7d8c, type: 3}
   m_Name: AudioLibrary
   m_EditorClassIdentifier: Assembly-CSharp::AudioLibrary
-  sfxMixGain: 0.12
+  sfxMixGain: 1
   musicMixGain: 0.4
   menuMusic: {fileID: 0}
   dungeonMusic: {fileID: 0}
@@ -31,11 +31,16 @@ MonoBehaviour:
   defaultUpgradePickup: {fileID: 8300000, guid: abed21376994ebf47a1d16d7beefa28a, type: 3}
   quickAttack: {fileID: 8300000, guid: 8a9a2642778a22d4580d363b556eb296, type: 3}
   quickAttackPitch: 2
+  quickAttackVolume: 0.095
   quickAttackSecond: {fileID: 0}
   quickAttackSecondPitch: 2
+  quickAttackSecondVolume: 0.095
   areaAttack: {fileID: 8300000, guid: bf0947dce2a4f02468b5e844e14a76cd, type: 3}
+  areaAttackVolume: 0.095
   dash: {fileID: 8300000, guid: 9356e93bee8a72143a1dd57325be9a6e, type: 3}
+  dashVolume: 1
   playerHit: {fileID: 8300000, guid: 268af91c918fb8743a22d74193ccd242, type: 3}
+  playerHitVolume: 0.095
   ratHurt: {fileID: 0}
   antHurt: {fileID: 0}
   snailHurt: {fileID: 0}

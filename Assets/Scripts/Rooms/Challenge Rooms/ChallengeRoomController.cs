@@ -9,7 +9,6 @@ public class ChallengeRoomController : MonoBehaviour
     [SerializeField] private int enemiesPerWave = 4;
     [SerializeField] private float delayBetweenWaves = 1.75f;
     [SerializeField] private float enemySpeedMultiplier = 0.6f;
-    [SerializeField] private float spawnRadius = 5.5f;
     [SerializeField] private List<GameObject> waveEnemyPrefabs = new List<GameObject>();
 
     [Header("Rewards")]
@@ -105,15 +104,13 @@ public class ChallengeRoomController : MonoBehaviour
         GameObject prefab = remainingEnemyPrefabs[index];
         remainingEnemyPrefabs.RemoveAt(index);
 
-        Vector3 center = container.transform.position;
-        float startAngle = Random.Range(0f, 360f);
+        Transform parent = roomInstance != null ? roomInstance.transform : transform;
+        Vector3[] spawnPositions = GetInsideSpawnPositions(enemiesPerWave);
 
         for (int i = 0; i < enemiesPerWave; i++)
         {
-            float angle = (startAngle + 360f * i / enemiesPerWave) * Mathf.Deg2Rad;
-            Vector3 offset = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f) * spawnRadius;
-            Transform parent = roomInstance != null ? roomInstance.transform : transform;
-            GameObject enemy = Instantiate(prefab, center + offset, Quaternion.identity, parent);
+            Vector3 spawnPos = spawnPositions[i];
+            GameObject enemy = Instantiate(prefab, spawnPos, Quaternion.identity, parent);
 
             ChallengeContainerHunter hunter = enemy.GetComponent<ChallengeContainerHunter>();
             if (hunter == null)
@@ -126,6 +123,75 @@ public class ChallengeRoomController : MonoBehaviour
             if (health != null)
                 health.OnDeath += OnEnemyDied;
         }
+    }
+
+    private Vector3[] GetInsideSpawnPositions(int count)
+    {
+        Vector3 center = container.transform.position;
+        List<Vector3> anchors = new List<Vector3>();
+
+        if (roomInstance != null)
+        {
+            AddInsetSpawn(anchors, roomInstance.GetSpawnPointFromEntry(DoorDirection.Up), center);
+            AddInsetSpawn(anchors, roomInstance.GetSpawnPointFromEntry(DoorDirection.Down), center);
+            AddInsetSpawn(anchors, roomInstance.GetSpawnPointFromEntry(DoorDirection.Left), center);
+            AddInsetSpawn(anchors, roomInstance.GetSpawnPointFromEntry(DoorDirection.Right), center);
+        }
+
+        if (anchors.Count == 0)
+        {
+            anchors.Add(center + Vector3.up * 2.2f);
+            anchors.Add(center + Vector3.down * 2.2f);
+            anchors.Add(center + Vector3.left * 5f);
+            anchors.Add(center + Vector3.right * 5f);
+        }
+
+        Vector3[] positions = new Vector3[count];
+        int start = Random.Range(0, anchors.Count);
+
+        for (int i = 0; i < count; i++)
+            positions[i] = PullInsideIfBlocked(anchors[(start + i) % anchors.Count], center);
+
+        return positions;
+    }
+
+    private static void AddInsetSpawn(List<Vector3> anchors, Transform spawn, Vector3 center)
+    {
+        if (spawn == null) return;
+
+        Vector3 pos = Vector3.Lerp(spawn.position, center, 0.22f);
+        if ((pos - center).sqrMagnitude < 1f)
+            return;
+
+        anchors.Add(pos);
+    }
+
+    private static Vector3 PullInsideIfBlocked(Vector3 desired, Vector3 center)
+    {
+        Vector3 pos = desired;
+        for (int step = 0; step < 6; step++)
+        {
+            if (!IsBlocked(pos))
+                return pos;
+
+            pos = Vector3.Lerp(pos, center, 0.25f);
+        }
+
+        return pos;
+    }
+
+    private static bool IsBlocked(Vector3 worldPos)
+    {
+        Collider2D[] hits = Physics2D.OverlapCircleAll(worldPos, 0.35f);
+        foreach (Collider2D hit in hits)
+        {
+            if (hit == null || hit.isTrigger) continue;
+            if (hit.GetComponent<Supercontainer>() != null) continue;
+            if (hit.GetComponent<EnemyHealth>() != null) continue;
+            return true;
+        }
+
+        return false;
     }
 
     private void OnEnemyDied()

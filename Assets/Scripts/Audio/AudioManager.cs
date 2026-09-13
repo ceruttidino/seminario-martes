@@ -47,10 +47,11 @@ public class AudioManager : MonoBehaviour
     private const string SfxPref = "audio.sfxVolume";
     private const float MusicFadeTime = 0.35f;
     private const float SecondSwingDelay = 0.12f;
+    private const int SfxVoiceCount = 8;
 
     private AudioLibrary library;
     private AudioSource musicSource;
-    private AudioSource sfxSource;
+    private AudioSource[] sfxVoices;
     private GameMusic currentMusic = GameMusic.None;
     private AudioClip currentMusicClip;
     private Coroutine musicFade;
@@ -84,7 +85,6 @@ public class AudioManager : MonoBehaviour
         {
             float clamped = Mathf.Clamp01(value);
             PlayerPrefs.SetFloat(SfxPref, clamped);
-            ApplySfxVolume();
         }
     }
 
@@ -110,19 +110,13 @@ public class AudioManager : MonoBehaviour
 
         library = Resources.Load<AudioLibrary>("AudioLibrary");
 
-        musicSource = gameObject.AddComponent<AudioSource>();
-        musicSource.playOnAwake = false;
-        musicSource.loop = true;
-        musicSource.ignoreListenerPause = true;
-
-        sfxSource = gameObject.AddComponent<AudioSource>();
-        sfxSource.playOnAwake = false;
-        sfxSource.loop = false;
-        sfxSource.ignoreListenerPause = true;
+        musicSource = CreateVoice(loop: true);
+        sfxVoices = new AudioSource[SfxVoiceCount];
+        for (int i = 0; i < SfxVoiceCount; i++)
+            sfxVoices[i] = CreateVoice(loop: false);
 
         AudioListener.volume = MasterVolume;
         ApplyMusicVolume();
-        ApplySfxVolume();
 
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
@@ -161,16 +155,18 @@ public class AudioManager : MonoBehaviour
             return;
         }
 
-        AudioClip clip = Instance.library != null ? Instance.library.GetLootSfx(lootType) : null;
-        Instance.PlayClip(clip != null ? clip : fallback);
+        GameSfx id = lootType == LootType.Health ? GameSfx.HealPickup
+            : lootType == LootType.Key ? GameSfx.KeyPickup
+            : GameSfx.ScrapPickup;
+        Instance.PlaySfxInternal(id, fallback);
     }
 
     public static void PlayUpgrade(UpgradeSO upgrade, AudioClip fallback = null)
     {
         if (Instance == null) return;
 
-        AudioClip clip = Instance.library != null ? Instance.library.GetUpgradeSfx(upgrade) : null;
-        Instance.PlayClip(clip != null ? clip : fallback);
+        AudioClip clip = Instance.library != null ? Instance.library.GetUpgradeSfx(upgrade) : fallback;
+        Instance.PlayClip(clip, 1f, 1f);
     }
 
     public static void PlayQuickAttack(AudioClip fallback = null)
@@ -186,7 +182,7 @@ public class AudioManager : MonoBehaviour
         if (Instance == null) return;
 
         AudioClip clip = Instance.library != null ? Instance.library.GetEnemyHurtSfx(enemyType) : null;
-        Instance.PlayClip(clip);
+        Instance.PlayClip(clip, 1f, 1f);
     }
 
     public static void PlayBossHurt()
@@ -226,21 +222,41 @@ public class AudioManager : MonoBehaviour
         if (second == null || second == first)
             yield break;
 
-        PlayClip(second, library.GetSfxPitch(GameSfx.QuickAttackSecond));
+        PlaySfxInternal(GameSfx.QuickAttackSecond, null);
     }
 
     private void PlaySfxInternal(GameSfx id, AudioClip fallback)
     {
         AudioClip clip = library != null ? library.GetSfx(id) : null;
+        if (clip == null)
+            clip = fallback;
+        if (clip == null) return;
+
         float pitch = library != null ? library.GetSfxPitch(id) : 1f;
-        PlayClip(clip != null ? clip : fallback, pitch);
+        float volume = library != null ? library.GetSfxVolume(id) : 1f;
+        PlayClip(clip, volume, pitch);
     }
 
-    private void ApplySfxVolume()
+    private AudioSource CreateVoice(bool loop)
     {
-        if (sfxSource == null) return;
-        float gain = library != null ? library.sfxMixGain : 0.12f;
-        sfxSource.volume = Mathf.Clamp01(SfxVolume * gain);
+        AudioSource source = gameObject.AddComponent<AudioSource>();
+        source.playOnAwake = false;
+        source.loop = loop;
+        source.spatialBlend = 0f;
+        source.dopplerLevel = 0f;
+        source.ignoreListenerPause = true;
+        return source;
+    }
+
+    private AudioSource GetFreeVoice()
+    {
+        for (int i = 0; i < sfxVoices.Length; i++)
+        {
+            if (!sfxVoices[i].isPlaying)
+                return sfxVoices[i];
+        }
+
+        return sfxVoices[0];
     }
 
     private void ApplyMusicVolume()
@@ -250,13 +266,17 @@ public class AudioManager : MonoBehaviour
         musicSource.volume = Mathf.Clamp01(MusicVolume * gain);
     }
 
-    private void PlayClip(AudioClip clip, float pitch = 1f)
+    private void PlayClip(AudioClip clip, float volume, float pitch)
     {
-        if (clip == null || sfxSource == null) return;
-        ApplySfxVolume();
-        sfxSource.pitch = pitch <= 0f ? 1f : pitch;
-        sfxSource.PlayOneShot(clip);
-        sfxSource.pitch = 1f;
+        if (clip == null || sfxVoices == null) return;
+
+        AudioSource voice = GetFreeVoice();
+        voice.Stop();
+        voice.clip = clip;
+        voice.pitch = pitch > 0f ? pitch : 1f;
+        float mix = library != null ? library.sfxMixGain : 1f;
+        voice.volume = Mathf.Clamp01(SfxVolume * volume * mix);
+        voice.Play();
     }
 
     private void PlayMusicInternal(GameMusic track, bool fallbackToDungeon = false)
