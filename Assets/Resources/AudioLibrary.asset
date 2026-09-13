@@ -19,9 +19,9 @@ MonoBehaviour:
   bossMusicByFloor: []
   victoryMusic: {fileID: 0}
   gameOverMusic: {fileID: 0}
-  healPickup: {fileID: 0}
+  healPickup: {fileID: 8300000, guid: f1456b57e19a50e4aabb95d5d94cf1ff, type: 3}
   scrapPickup: {fileID: 8300000, guid: f1456b57e19a50e4aabb95d5d94cf1ff, type: 3}
-  keyPickup: {fileID: 0}
+  keyPickup: {fileID: 8300000, guid: f1456b57e19a50e4aabb95d5d94cf1ff, type: 3}
   boxingGlovePickup: {fileID: 0}
   boxingGloveUpgrade: {fileID: 11400000, guid: 6e1dfd62d1a564f46adf26cd11f31943, type: 2}
   sneakersPickup: {fileID: 0}
