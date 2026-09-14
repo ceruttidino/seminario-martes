@@ -1,13 +1,14 @@
 using UnityEngine;
 
-public class OwlStalkState : IEnemyState
+public class OwlInvisibleState : IEnemyState
 {
     private readonly Transform player;
     private readonly Transform self;
     private readonly EnemyBehaviour behaviour;
     private readonly VanishingOwl owl;
+    private float timer;
 
-    public OwlStalkState(Transform player, Transform self, EnemyBehaviour behaviour, VanishingOwl owl)
+    public OwlInvisibleState(Transform player, Transform self, EnemyBehaviour behaviour, VanishingOwl owl)
     {
         this.player = player;
         this.self = self;
@@ -15,16 +16,71 @@ public class OwlStalkState : IEnemyState
         this.owl = owl;
     }
 
-    public void Enter() => owl.EnterStealth();
+    public void Enter()
+    {
+        owl.EnterInvisible();
+        timer = owl.InvisibleDuration;
+    }
 
     public void Tick()
     {
         if (player == null) return;
 
+        timer -= Time.deltaTime;
+
         owl.MoveTowards(player.position);
 
         if (Vector2.Distance(self.position, player.position) <= owl.RevealDistance)
+        {
             behaviour.SetState(new OwlWindupState(player, self, behaviour, owl));
+            return;
+        }
+
+        if (timer <= 0f)
+            behaviour.SetState(new OwlShadowState(player, self, behaviour, owl));
+    }
+
+    public void Exit() { }
+}
+
+public class OwlShadowState : IEnemyState
+{
+    private readonly Transform player;
+    private readonly Transform self;
+    private readonly EnemyBehaviour behaviour;
+    private readonly VanishingOwl owl;
+    private float timer;
+
+    public OwlShadowState(Transform player, Transform self, EnemyBehaviour behaviour, VanishingOwl owl)
+    {
+        this.player = player;
+        this.self = self;
+        this.behaviour = behaviour;
+        this.owl = owl;
+    }
+
+    public void Enter()
+    {
+        owl.EnterShadow();
+        timer = owl.ShadowChaseDuration;
+    }
+
+    public void Tick()
+    {
+        if (player == null) return;
+
+        timer -= Time.deltaTime;
+
+        owl.MoveTowards(player.position);
+
+        if (Vector2.Distance(self.position, player.position) <= owl.RevealDistance)
+        {
+            behaviour.SetState(new OwlWindupState(player, self, behaviour, owl));
+            return;
+        }
+
+        if (timer <= 0f)
+            behaviour.SetState(new OwlInvisibleState(player, self, behaviour, owl));
     }
 
     public void Exit() { }
@@ -98,7 +154,7 @@ public class OwlAttackState : IEnemyState
     {
         timer -= Time.deltaTime;
         if (timer <= 0f)
-            behaviour.SetState(new OwlStalkState(player, self, behaviour, owl));
+            behaviour.SetState(new OwlInvisibleState(player, self, behaviour, owl));
     }
 
     public void Exit() { }

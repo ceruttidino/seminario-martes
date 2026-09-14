@@ -108,7 +108,7 @@ public class EnemyBehaviour : MonoBehaviour
                     break;
                 }
 
-                SetState(new OwlStalkState(player, transform, this, vanishingOwl));
+                SetState(new OwlInvisibleState(player, transform, this, vanishingOwl));
                 break;
 
             default:

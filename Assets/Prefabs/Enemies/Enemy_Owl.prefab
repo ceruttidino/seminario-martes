@@ -58,7 +58,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -162,7 +162,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -413,12 +413,14 @@ MonoBehaviour:
   attackRadius: 1.9
   windupTime: 0.7
   recoverTime: 0.6
-  attackCooldown: 1
+  invisibleDuration: 3
+  shadowChaseDuration: 2.5
   heartDamage: 2
   bodyRenderer: {fileID: 8208979293606837074}
-  eyeGlow: {fileID: 4325644021146076500}
+  shadowFormObject: {fileID: 4325644021146076500}
+  projectedShadow: {fileID: 8871834171099964277}
   animator: {fileID: 161573808956338407}
-  movement: {fileID: 0}
+  movement: {fileID: 2366819222791710392}
 --- !u!1 &8871834171099964277
 GameObject:
   m_ObjectHideFlags: 0
