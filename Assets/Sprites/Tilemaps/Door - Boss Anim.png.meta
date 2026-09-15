@@ -65,9 +65,6 @@ TextureImporter:
   - first:
       213: 3757799029200383541
     second: Door - Boss Anim_20
-  - first:
-      213: 3665462171512673733
-    second: Door - Boss Anim_21
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -519,23 +516,6 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
-    - serializedVersion: 2
-      name: Door - Boss Anim_21
-      rect: {serializedVersion: 2, x: 2898, y: 0, width: 138, height: 92}
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: c0b115119e7cfc440800000000000000
-      internalID: 3665462171512673733
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -571,7 +551,6 @@ TextureImporter:
       Door - Boss Anim_18: 8114771059260095009
       Door - Boss Anim_19: 6345987224208413885
       Door - Boss Anim_20: 3757799029200383541
-      Door - Boss Anim_21: 3665462171512673733
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
