@@ -52,6 +52,7 @@ public class RoomDoor : MonoBehaviour
 
     public DoorDirection Direction => direction;
     public bool IsLocked => isLocked;
+    public bool UsesBranchUnlockSfx => currentDoorType != RoomType.Shop && currentDoorType != RoomType.Boss;
 
     private bool IsShopDoor => currentDoorType == RoomType.Shop;
     private bool IsBossDoor => currentDoorType == RoomType.Boss;
@@ -375,12 +376,14 @@ public class RoomDoor : MonoBehaviour
         if (currentPlayer == null) return;
 
         PlayerKeys keys = currentPlayer.GetComponent<PlayerKeys>();
-        if (keys != null && keys.UseKey())
+            if (keys != null && keys.UseKey())
         {
             if (myNode != null)
             {
                 myNode.isShopUnlocked = true;
             }
+
+            AudioManager.PlaySfx(GameSfx.ShopLockpick);
 
             PlayUnlockAnimation(() =>
             {

@@ -14,11 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AudioLibrary
   sfxMixGain: 1
   musicMixGain: 0.4
-  menuMusic: {fileID: 0}
-  dungeonMusic: {fileID: 0}
-  shopMusic: {fileID: 0}
+  menuMusic: {fileID: 8300000, guid: 376a89fc5902e3b46bb09d6d9b3233ae, type: 3}
+  dungeonMusic: {fileID: 8300000, guid: 763168525455a874980d1b678164768b, type: 3}
+  shopMusic: {fileID: 8300000, guid: a9c3e7b1d4f24608b5e1c0a7d3f9e246, type: 3}
   upgradeRoomMusic: {fileID: 0}
-  bossMusicByFloor: []
+  bossMusicByFloor:
+  - {fileID: 8300000, guid: 6f1da446eec11974a95327107d01d559, type: 3}
   victoryMusic: {fileID: 0}
   gameOverMusic: {fileID: 0}
   healPickup: {fileID: 8300000, guid: f1456b57e19a50e4aabb95d5d94cf1ff, type: 3}
@@ -50,3 +51,11 @@ MonoBehaviour:
   snakeHurt: {fileID: 0}
   owlHurt: {fileID: 0}
   bossHurt: {fileID: 0}
+  doorUnlock: {fileID: 8300000, guid: 99a81f68d9f3efb4d88879547d12a55f, type: 3}
+  shopLockpick: {fileID: 8300000, guid: 3214c6758d8feb5489c87b515f2ca2f3, type: 3}
+  spiderMelee1: {fileID: 8300000, guid: 3f552cd1401e8bc4e94d9ef8f7211810, type: 3}
+  spiderMelee2: {fileID: 8300000, guid: 4bc25f5f03fddff4bbc6f802c5b2050d, type: 3}
+  spiderWebShot: {fileID: 8300000, guid: 5bd66d3d598d744448a7cddc9b9dbbb2, type: 3}
+  spiderWalk: {fileID: 8300000, guid: 183fa353c9265ed4a8eae95a765dfb5f, type: 3}
+  spiderWalkVolume: 0.35
+  spiderPoisonFloor: {fileID: 8300000, guid: dc07a3321eb38ec4b9096e9544431eb0, type: 3}

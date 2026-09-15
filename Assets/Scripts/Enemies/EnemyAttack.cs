@@ -19,9 +19,9 @@ public class EnemyAttack : MonoBehaviour
         return Time.time >= lastAttackTime + attackCooldown;
     }
 
-    public void TryAttack()
+    public bool TryAttack()
     {
-        if (!CanAttack()) return;
+        if (!CanAttack()) return false;
 
         Collider2D hit = Physics2D.OverlapCircle(transform.position, attackRange, targetLayer);
 
@@ -33,8 +33,11 @@ public class EnemyAttack : MonoBehaviour
             {
                 damageable.TakeDamage(damage);
                 lastAttackTime = Time.time;
+                return true;
             }
         }
+
+        return false;
     }
 
     private void OnDrawGizmosSelected()

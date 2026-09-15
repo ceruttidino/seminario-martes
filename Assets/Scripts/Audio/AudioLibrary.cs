@@ -67,6 +67,18 @@ public class AudioLibrary : ScriptableObject
     [Header("Bosses")]
     public AudioClip bossHurt;
 
+    [Header("Doors")]
+    public AudioClip doorUnlock;
+    public AudioClip shopLockpick;
+
+    [Header("Boss — Mutant Spider")]
+    public AudioClip spiderMelee1;
+    public AudioClip spiderMelee2;
+    public AudioClip spiderWebShot;
+    public AudioClip spiderWalk;
+    [Range(0f, 1f)] public float spiderWalkVolume = 0.35f;
+    public AudioClip spiderPoisonFloor;
+
     public AudioClip GetMusic(GameMusic track, int floor = 1)
     {
         switch (track)
@@ -124,6 +136,13 @@ public class AudioLibrary : ScriptableObject
             case GameSfx.SnakeHurt: return snakeHurt;
             case GameSfx.OwlHurt: return owlHurt;
             case GameSfx.BossHurt: return bossHurt;
+            case GameSfx.DoorUnlock: return doorUnlock;
+            case GameSfx.ShopLockpick: return shopLockpick;
+            case GameSfx.SpiderMelee1: return spiderMelee1;
+            case GameSfx.SpiderMelee2: return spiderMelee2;
+            case GameSfx.SpiderWebShot: return spiderWebShot;
+            case GameSfx.SpiderWalk: return spiderWalk;
+            case GameSfx.SpiderPoisonFloor: return spiderPoisonFloor;
             default: return null;
         }
     }
@@ -147,6 +166,7 @@ public class AudioLibrary : ScriptableObject
             case GameSfx.AreaAttack: return areaAttackVolume;
             case GameSfx.Dash: return dashVolume;
             case GameSfx.PlayerHit: return playerHitVolume;
+            case GameSfx.SpiderWalk: return spiderWalkVolume;
             default: return 1f;
         }
     }

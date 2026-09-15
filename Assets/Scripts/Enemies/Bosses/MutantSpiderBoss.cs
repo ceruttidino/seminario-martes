@@ -136,9 +136,15 @@ public class MutantSpiderBoss : BossBase
         if (animator != null)
             animator.SetBool("IsMoving", true);
 
+        AudioManager.PlayLoop(GameSfx.SpiderWalk);
+
         while (timer < chaseDuration && !isDead)
         {
-            if (player == null) yield break;
+            if (player == null)
+            {
+                AudioManager.StopLoop();
+                yield break;
+            }
 
             Vector2 toPlayer = (Vector2)player.position - rb.position;
             Vector2 direction = toPlayer.sqrMagnitude > 0.001f ? toPlayer.normalized : lastMoveDirection;
@@ -146,12 +152,14 @@ public class MutantSpiderBoss : BossBase
             rb.linearVelocity = direction * moveSpeed;
             UpdateMovementAnimation(direction);
 
-            if (enemyAttack != null && !isOnCeiling)
-                enemyAttack.TryAttack();
+            if (enemyAttack != null && !isOnCeiling && enemyAttack.TryAttack())
+                AudioManager.PlaySpiderMelee();
 
             timer += Time.deltaTime;
             yield return null;
         }
+
+        AudioManager.StopLoop();
 
         if (animator != null)
             animator.SetBool("IsMoving", false);
@@ -338,6 +346,9 @@ public class MutantSpiderBoss : BossBase
                 chosenPoints.Add(shuffledPoints[i]);
         }
 
+        if (chosenPoints.Count == 0)
+            yield break;
+
         if (poisonWarningPrefab != null)
         {
             for (int i = 0; i < chosenPoints.Count; i++)
@@ -355,6 +366,8 @@ public class MutantSpiderBoss : BossBase
 
             yield return new WaitForSeconds(warningDuration);
         }
+
+        AudioManager.PlaySfx(GameSfx.SpiderPoisonFloor);
 
         for (int i = 0; i < chosenPoints.Count; i++)
         {
@@ -398,6 +411,8 @@ public class MutantSpiderBoss : BossBase
             Vector2 direction = ((Vector2)player.position - (Vector2)spawnPosition).normalized;
             projectile.Initialize(direction);
         }
+
+        AudioManager.PlaySfx(GameSfx.SpiderWebShot);
     }
 
     private Transform[] ShuffleSpawnPoints(Transform[] original)
@@ -430,6 +445,7 @@ public class MutantSpiderBoss : BossBase
 
     private void HandleDeath()
     {
+        AudioManager.StopLoop();
         StopBoss();
         StopMovement();
 

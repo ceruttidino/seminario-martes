@@ -242,6 +242,26 @@ public class RoomInstance : MonoBehaviour
         if (HasLivingEnemies())
             return;
 
+        bool playBranchUnlock = false;
+
+        foreach (var door in roomDoors)
+        {
+            if (door == null) continue;
+
+            if (currentNode != null &&
+                currentNode.information.type != RoomType.Shop &&
+                door.currentDoorType == RoomType.Shop)
+            {
+                continue;
+            }
+
+            if (door.IsLocked && door.UsesBranchUnlockSfx)
+                playBranchUnlock = true;
+        }
+
+        if (playBranchUnlock)
+            AudioManager.PlaySfx(GameSfx.DoorUnlock);
+
         foreach (var door in roomDoors)
         {
             if (door == null) continue;

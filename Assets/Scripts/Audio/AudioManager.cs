@@ -23,7 +23,14 @@ public enum GameSfx
     TurtleHurt,
     SnakeHurt,
     OwlHurt,
-    BossHurt
+    BossHurt,
+    DoorUnlock,
+    ShopLockpick,
+    SpiderMelee1,
+    SpiderMelee2,
+    SpiderWebShot,
+    SpiderWalk,
+    SpiderPoisonFloor
 }
 
 public enum GameMusic
@@ -51,10 +58,12 @@ public class AudioManager : MonoBehaviour
 
     private AudioLibrary library;
     private AudioSource musicSource;
+    private AudioSource loopSource;
     private AudioSource[] sfxVoices;
     private GameMusic currentMusic = GameMusic.None;
     private AudioClip currentMusicClip;
     private Coroutine musicFade;
+    private int lastSpiderMelee = -1;
 
     public float MasterVolume
     {
@@ -111,6 +120,7 @@ public class AudioManager : MonoBehaviour
         library = Resources.Load<AudioLibrary>("AudioLibrary");
 
         musicSource = CreateVoice(loop: true);
+        loopSource = CreateVoice(loop: true);
         sfxVoices = new AudioSource[SfxVoiceCount];
         for (int i = 0; i < SfxVoiceCount; i++)
             sfxVoices[i] = CreateVoice(loop: false);
@@ -190,9 +200,41 @@ public class AudioManager : MonoBehaviour
         PlaySfx(GameSfx.BossHurt);
     }
 
+    public static void PlaySpiderMelee()
+    {
+        if (Instance == null) return;
+
+        int pick;
+        if (Instance.lastSpiderMelee == 0)
+            pick = 1;
+        else if (Instance.lastSpiderMelee == 1)
+            pick = 0;
+        else
+            pick = Random.Range(0, 2);
+
+        Instance.lastSpiderMelee = pick;
+        PlaySfx(pick == 0 ? GameSfx.SpiderMelee1 : GameSfx.SpiderMelee2);
+    }
+
+    public static void PlayLoop(GameSfx id)
+    {
+        if (Instance == null) return;
+        Instance.PlayLoopInternal(id);
+    }
+
+    public static void StopLoop()
+    {
+        if (Instance == null) return;
+        Instance.StopLoopInternal();
+    }
+
     public static void PlayMusic(GameMusic track)
     {
         if (Instance == null) return;
+
+        if (track == GameMusic.Menu || track == GameMusic.GameOver || track == GameMusic.Victory)
+            Instance.StopLoopInternal();
+
         Instance.PlayMusicInternal(track);
     }
 
@@ -201,14 +243,15 @@ public class AudioManager : MonoBehaviour
         if (Instance == null) return;
 
         GameMusic track;
-        if (room != null && room.GetComponentInChildren<ConnectionRoomBuffSpawner>(true) != null)
-            track = GameMusic.UpgradeRoom;
-        else if (roomType == RoomType.Shop)
+        if (roomType == RoomType.Shop)
             track = GameMusic.Shop;
         else if (roomType == RoomType.Boss)
             track = GameMusic.Boss;
         else
             track = GameMusic.Dungeon;
+
+        if (track != GameMusic.Boss)
+            Instance.StopLoopInternal();
 
         Instance.PlayMusicInternal(track, fallbackToDungeon: true);
     }
@@ -264,6 +307,35 @@ public class AudioManager : MonoBehaviour
         if (musicSource == null) return;
         float gain = library != null ? library.musicMixGain : 0.4f;
         musicSource.volume = Mathf.Clamp01(MusicVolume * gain);
+    }
+
+    private void PlayLoopInternal(GameSfx id)
+    {
+        if (loopSource == null) return;
+
+        AudioClip clip = library != null ? library.GetSfx(id) : null;
+        if (clip == null) return;
+
+        if (loopSource.isPlaying && loopSource.clip == clip)
+            return;
+
+        float pitch = library != null ? library.GetSfxPitch(id) : 1f;
+        float volume = library != null ? library.GetSfxVolume(id) : 1f;
+        float mix = library != null ? library.sfxMixGain : 1f;
+
+        loopSource.Stop();
+        loopSource.clip = clip;
+        loopSource.pitch = pitch > 0f ? pitch : 1f;
+        loopSource.volume = Mathf.Clamp01(SfxVolume * volume * mix);
+        loopSource.Play();
+    }
+
+    private void StopLoopInternal()
+    {
+        if (loopSource == null) return;
+
+        loopSource.Stop();
+        loopSource.clip = null;
     }
 
     private void PlayClip(AudioClip clip, float volume, float pitch)
