@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class MutantSpiderBoss : BossBase
 {
@@ -30,6 +31,8 @@ public class MutantSpiderBoss : BossBase
     [SerializeField] private float disappearDuration = 0.4f;
     [SerializeField] private float reappearDuration = 0.4f;
     [SerializeField] private float ceilingHeight = 8f;
+    [SerializeField] private GameObject poisonWarningPrefab;
+    [SerializeField] private float warningDuration = 0.8f;
 
     [Header("Web Attack")]
     [SerializeField] private GameObject webProjectilePrefab;
@@ -328,15 +331,36 @@ public class MutantSpiderBoss : BossBase
         Transform[] shuffledPoints = ShuffleSpawnPoints(poisonSpawnPoints);
         Transform roomParent = FindRoomParent();
 
-        for (int i = 0; i < amount; i++)
+        List<Transform> chosenPoints = new List<Transform>(amount);
+        for (int i = 0; i < shuffledPoints.Length && chosenPoints.Count < amount; i++)
         {
-            if (shuffledPoints[i] == null) continue;
+            if (shuffledPoints[i] != null)
+                chosenPoints.Add(shuffledPoints[i]);
+        }
 
-            GameObject tile = Instantiate(poisonTilePrefab, shuffledPoints[i].position, Quaternion.identity);
+        if (poisonWarningPrefab != null)
+        {
+            for (int i = 0; i < chosenPoints.Count; i++)
+            {
+                GameObject warning = Instantiate(poisonWarningPrefab, chosenPoints[i].position, Quaternion.identity);
+                if (roomParent != null)
+                    warning.transform.SetParent(roomParent, true);
+
+                PoisonWarning warningScript = warning.GetComponent<PoisonWarning>();
+                if (warningScript != null)
+                    warningScript.Play(warningDuration);
+
+                yield return new WaitForSeconds(0.03f);
+            }
+
+            yield return new WaitForSeconds(warningDuration);
+        }
+
+        for (int i = 0; i < chosenPoints.Count; i++)
+        {
+            GameObject tile = Instantiate(poisonTilePrefab, chosenPoints[i].position, Quaternion.identity);
             if (roomParent != null)
                 tile.transform.SetParent(roomParent, true);
-
-            yield return new WaitForSeconds(0.03f);
         }
     }
 

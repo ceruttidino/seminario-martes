@@ -1945,6 +1945,7 @@ Transform:
   - {fileID: 5582182234710786644}
   - {fileID: 275742505849886240}
   - {fileID: 4572118633241601104}
+  - {fileID: 3433356471583780192}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5081486977560716221
@@ -1982,6 +1983,10 @@ MonoBehaviour:
   - {fileID: 3471704183191795967}
   - {fileID: 6337749241437438592}
   - {fileID: 5164564913664960502}
+  rewardSpawnPoint: {fileID: 3433356471583780192}
+  possibleRewards: []
+  chanceToSpawnReward: 40
+  possibleRewardBuffs: []
 --- !u!1 &5413412434907751617
 GameObject:
   m_ObjectHideFlags: 0
@@ -2096,6 +2101,37 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.5789509, y: 10.026318}
   m_EdgeRadius: 0
+--- !u!1 &6611708469080434157
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3433356471583780192}
+  m_Layer: 0
+  m_Name: RewardSpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3433356471583780192
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6611708469080434157}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 1.5, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8855914108497674385}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6850029690147252818
 GameObject:
   m_ObjectHideFlags: 0

@@ -22,6 +22,15 @@ public class RoomInstance : MonoBehaviour
     [SerializeField] private GameObject enemyPrefab;
     [SerializeField] private Transform[] enemySpawnPoints;
 
+    [Header("Room Clear Reward")]
+    [SerializeField] private Transform rewardSpawnPoint;
+    [SerializeField] private List<RoomReward> possibleRewards = new List<RoomReward>();
+    [SerializeField][Range(0f, 100f)] private float chanceToSpawnReward = 40f;
+    [Tooltip("Opcional: si el prefab elegido tiene UpgradePickup, se le asigna un buff random de esta lista.")]
+    [SerializeField] private List<ObjectBuffSO> possibleRewardBuffs = new List<ObjectBuffSO>();
+
+    private bool rewardSpawned = false;
+
     private EnemyBehaviour[] currentEnemies;
 
     private bool enemiesSpawned = false;
@@ -258,6 +267,9 @@ public class RoomInstance : MonoBehaviour
             return;
 
         combatActive = false;
+
+        TrySpawnClearReward();
+
         UnlockDoorsAnimated();
     }
 
@@ -292,6 +304,94 @@ public class RoomInstance : MonoBehaviour
         return false;
     }
 
+    private void TrySpawnClearReward()
+    {
+        if (rewardSpawned) return;
+        rewardSpawned = true;
+
+        if (currentNode != null && currentNode.information != null)
+        {
+            RoomType type = currentNode.information.type;
+            if (type != RoomType.Normal && type != RoomType.Start)
+                return;
+        }
+
+        if (possibleRewards == null || possibleRewards.Count == 0)
+            return;
+
+        if (Random.value * 100f > chanceToSpawnReward)
+            return;
+
+        GameObject prefab = PickWeightedReward();
+        if (prefab == null) return;
+
+        Vector3 spawnPosition = rewardSpawnPoint != null
+            ? rewardSpawnPoint.position
+            : transform.position;
+
+        GameObject spawned = Instantiate(prefab, spawnPosition, Quaternion.identity, transform);
+
+        ConfigureRewardBuff(spawned);
+    }
+
+    private GameObject PickWeightedReward()
+    {
+        float totalWeight = 0f;
+
+        foreach (RoomReward reward in possibleRewards)
+        {
+            if (reward == null || reward.prefab == null) continue;
+            totalWeight += Mathf.Max(0f, reward.weight);
+        }
+
+        if (totalWeight <= 0f) return null;
+
+        float roll = Random.Range(0f, totalWeight);
+
+        foreach (RoomReward reward in possibleRewards)
+        {
+            if (reward == null || reward.prefab == null) continue;
+
+            float weight = Mathf.Max(0f, reward.weight);
+            if (weight <= 0f) continue;
+
+            if (roll < weight)
+                return reward.prefab;
+
+            roll -= weight;
+        }
+
+        return null;
+    }
+
+    private void ConfigureRewardBuff(GameObject spawned)
+    {
+        if (spawned == null) return;
+
+        UpgradePickup pickup = spawned.GetComponent<UpgradePickup>();
+        if (pickup == null) return;
+
+        if (possibleRewardBuffs == null || possibleRewardBuffs.Count == 0)
+            return;
+
+        ObjectBuffSO chosen = BuffPool.PickRandom(possibleRewardBuffs);
+
+        if (chosen == null)
+        {
+            Destroy(spawned);
+            return;
+        }
+
+        pickup.SetUpgrade(chosen);
+
+        if (chosen.icon != null)
+        {
+            SpriteRenderer sr = spawned.GetComponentInChildren<SpriteRenderer>();
+            if (sr != null)
+                sr.sprite = chosen.icon;
+        }
+    }
+
     private void OnDrawGizmos()
     {
         if (defaultSpawnPoint != null)
@@ -324,6 +424,12 @@ public class RoomInstance : MonoBehaviour
                     Gizmos.DrawSphere(spot.position, 0.12f);
                 }
             }
+        }
+
+        if (rewardSpawnPoint != null)
+        {
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawWireSphere(rewardSpawnPoint.position, 0.25f);
         }
     }
 }
