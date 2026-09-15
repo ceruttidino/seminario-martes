@@ -309,7 +309,7 @@ public class DungeonManager : MonoBehaviour
 
                 if (challenge != null)
                 {
-                    challenge.StartChallenge();
+                    challenge.Prepare();
                 }
             }
 

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class ChallengeContainerHunter : MonoBehaviour
 {
-    [SerializeField] private float attackRange = 1.15f;
+    [SerializeField] private float attackRange = 1.45f;
     [SerializeField] private float attackCooldown = 1f;
     [SerializeField] private float speedMultiplier = 0.6f;
 
@@ -18,7 +18,7 @@ public class ChallengeContainerHunter : MonoBehaviour
         speedMultiplier = slowMultiplier;
         movement = GetComponent<EnemyMovement>();
         damage = ResolveDamage();
-        DisablePlayerAttacks();
+        DisableSpecialAttacks();
         IgnorePlayerCollision();
         ready = true;
     }
@@ -37,7 +37,7 @@ public class ChallengeContainerHunter : MonoBehaviour
         if (distance > attackRange)
         {
             float speed = movement != null ? movement.Speed * speedMultiplier : 1.5f;
-            movement?.Move(toContainer.normalized, speed);
+            movement?.Move(toContainer.normalized, speed, false);
             return;
         }
 
@@ -61,9 +61,9 @@ public class ChallengeContainerHunter : MonoBehaviour
         if (snake != null)
             return snake.AttackDamage;
 
-        ExplosiveHedgehog hedgehog = GetComponent<ExplosiveHedgehog>();
-        if (hedgehog != null)
-            return hedgehog.ExplosionDamage;
+        VanishingOwl owl = GetComponent<VanishingOwl>();
+        if (owl != null)
+            return owl.HeartDamage;
 
         SpikyTurtle turtle = GetComponent<SpikyTurtle>();
         if (turtle != null)
@@ -76,7 +76,7 @@ public class ChallengeContainerHunter : MonoBehaviour
         return 1f;
     }
 
-    private void DisablePlayerAttacks()
+    private void DisableSpecialAttacks()
     {
         EnemyAttack attack = GetComponent<EnemyAttack>();
         if (attack != null)
@@ -94,13 +94,33 @@ public class ChallengeContainerHunter : MonoBehaviour
         if (turtle != null)
             turtle.enabled = false;
 
+        VanishingOwl owl = GetComponent<VanishingOwl>();
+        if (owl != null)
+            owl.enabled = false;
+
+        PoisonousSnake snake = GetComponent<PoisonousSnake>();
+        if (snake != null)
+            snake.enabled = false;
+
         Mole mole = GetComponent<Mole>();
         if (mole != null)
             mole.enabled = false;
 
-        RatRegeneration regeneration = GetComponent<RatRegeneration>();
+        DisableRegeneration();
+    }
+
+    public static void DisableRegeneration(GameObject enemy)
+    {
+        if (enemy == null) return;
+
+        RatRegeneration regeneration = enemy.GetComponent<RatRegeneration>();
         if (regeneration != null)
             regeneration.enabled = false;
+    }
+
+    private void DisableRegeneration()
+    {
+        DisableRegeneration(gameObject);
     }
 
     private void IgnorePlayerCollision()

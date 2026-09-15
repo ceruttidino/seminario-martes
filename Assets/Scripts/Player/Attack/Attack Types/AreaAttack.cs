@@ -91,6 +91,13 @@ public class AreaAttack : MonoBehaviour, IAttack
                 continue;
             }
 
+            Supercontainer supercontainer = hit.GetComponentInParent<Supercontainer>();
+            if (supercontainer != null)
+            {
+                supercontainer.NotifyPlayerHit();
+                continue;
+            }
+
             IDamageable damageable = hit.GetComponentInParent<IDamageable>();
 
             if (damageable != null)

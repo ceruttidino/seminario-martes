@@ -3,11 +3,16 @@ using UnityEngine;
 public class Supercontainer : MonoBehaviour
 {
     [SerializeField] private float maxHealth = 24f;
+    [SerializeField] private Sprite closedSprite;
+    [SerializeField] private Sprite openSprite;
 
     private float currentHealth;
     private bool destroyed;
+    private bool defenseStarted;
     private SpriteRenderer spriteRenderer;
+    private Collider2D bodyCollider;
     private Transform barFill;
+    private GameObject healthBarRoot;
 
     public bool IsDestroyed => destroyed;
     public float CurrentHealth => currentHealth;
@@ -20,12 +25,47 @@ public class Supercontainer : MonoBehaviour
     {
         currentHealth = maxHealth;
         spriteRenderer = GetComponent<SpriteRenderer>();
+        bodyCollider = GetComponent<Collider2D>();
         BuildHealthBar();
+        ApplyClosedVisual();
+        HideHealthBar();
+    }
+
+    public void PrepareForChallenge()
+    {
+        destroyed = false;
+        defenseStarted = false;
+        currentHealth = maxHealth;
+        ApplyClosedVisual();
+        SetPresent(true);
+        HideHealthBar();
+        RefreshHealthBar();
+    }
+
+    public void BeginDefense()
+    {
+        if (destroyed) return;
+
+        defenseStarted = true;
+        ShowHealthBar();
+        RefreshHealthBar();
+    }
+
+    public void NotifyPlayerHit()
+    {
+        if (destroyed || defenseStarted)
+            return;
+
+        ChallengeRoomController controller = GetComponentInParent<ChallengeRoomController>();
+        if (controller == null)
+            return;
+
+        controller.StartChallenge();
     }
 
     public void TakeHitFromEnemy(float damage)
     {
-        if (destroyed) return;
+        if (destroyed || !defenseStarted) return;
 
         currentHealth = Mathf.Max(0f, currentHealth - damage);
         RefreshHealthBar();
@@ -37,39 +77,67 @@ public class Supercontainer : MonoBehaviour
     public void MarkOpened()
     {
         if (spriteRenderer != null)
-            spriteRenderer.color = new Color(0.35f, 0.85f, 0.4f, 1f);
+        {
+            spriteRenderer.enabled = true;
+            spriteRenderer.color = Color.white;
+            if (openSprite != null)
+                spriteRenderer.sprite = openSprite;
+        }
 
+        HideHealthBar();
+    }
+
+    public void MarkFailed()
+    {
+        SetPresent(false);
         HideHealthBar();
     }
 
     private void Break()
     {
         destroyed = true;
-
-        if (spriteRenderer != null)
-            spriteRenderer.color = new Color(0.25f, 0.25f, 0.25f, 1f);
-
-        HideHealthBar();
+        MarkFailed();
         Destroyed?.Invoke();
+    }
+
+    private void ApplyClosedVisual()
+    {
+        if (spriteRenderer == null) return;
+
+        spriteRenderer.color = Color.white;
+        if (closedSprite != null)
+            spriteRenderer.sprite = closedSprite;
+    }
+
+    private void SetPresent(bool present)
+    {
+        if (spriteRenderer != null)
+            spriteRenderer.enabled = present;
+
+        if (bodyCollider != null)
+            bodyCollider.enabled = present;
     }
 
     private void BuildHealthBar()
     {
-        Sprite square = spriteRenderer != null ? spriteRenderer.sprite : null;
-        if (square == null) return;
+        Sprite square = Sprite.Create(
+            Texture2D.whiteTexture,
+            new Rect(0f, 0f, 4f, 4f),
+            new Vector2(0.5f, 0.5f),
+            4f);
 
-        GameObject barRoot = new GameObject("HealthBar");
-        barRoot.transform.SetParent(transform, false);
-        barRoot.transform.localPosition = new Vector3(0f, 0.85f, 0f);
-        barRoot.transform.localScale = new Vector3(1.35f, 0.16f, 1f);
+        healthBarRoot = new GameObject("HealthBar");
+        healthBarRoot.transform.SetParent(transform, false);
+        healthBarRoot.transform.localPosition = new Vector3(0f, 1.25f, 0f);
+        healthBarRoot.transform.localScale = new Vector3(1.6f, 0.14f, 1f);
 
-        SpriteRenderer bg = barRoot.AddComponent<SpriteRenderer>();
+        SpriteRenderer bg = healthBarRoot.AddComponent<SpriteRenderer>();
         bg.sprite = square;
         bg.color = new Color(0.12f, 0.12f, 0.12f, 0.95f);
         bg.sortingOrder = 8;
 
         GameObject fillGo = new GameObject("Fill");
-        fillGo.transform.SetParent(barRoot.transform, false);
+        fillGo.transform.SetParent(healthBarRoot.transform, false);
         barFill = fillGo.transform;
 
         SpriteRenderer fill = fillGo.AddComponent<SpriteRenderer>();
@@ -77,6 +145,7 @@ public class Supercontainer : MonoBehaviour
         fill.color = Color.green;
         fill.sortingOrder = 9;
 
+        healthBarRoot.SetActive(false);
         RefreshHealthBar();
     }
 
@@ -93,9 +162,15 @@ public class Supercontainer : MonoBehaviour
             fill.color = Color.Lerp(new Color(0.85f, 0.15f, 0.1f), new Color(0.25f, 0.85f, 0.25f), percent);
     }
 
+    private void ShowHealthBar()
+    {
+        if (healthBarRoot != null)
+            healthBarRoot.SetActive(true);
+    }
+
     private void HideHealthBar()
     {
-        if (barFill != null && barFill.parent != null)
-            barFill.parent.gameObject.SetActive(false);
+        if (healthBarRoot != null)
+            healthBarRoot.SetActive(false);
     }
 }

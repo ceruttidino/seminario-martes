@@ -1972,10 +1972,8 @@ MonoBehaviour:
   enemySpeedMultiplier: 0.6
   waveEnemyPrefabs:
   - {fileID: 5136333534524507215, guid: 1010f75008e5eec49a330b3df2c0c32a, type: 3}
-  - {fileID: 8734249323408576011, guid: 23b9ec134f2fcab418d04cee4d163d96, type: 3}
+  - {fileID: 8734249323408576011, guid: 363038cda6e697f43a97b2858d1556e1, type: 3}
   - {fileID: 1000001, guid: 66f14781c1d04b228b9694b3d657150e, type: 3}
-  - {fileID: 8283417630010587146, guid: 93c36bf4b30107349ba48fa2a8110986, type: 3}
-  - {fileID: 2596313271398130789, guid: b4a14686c8056734b87e9ca8332d0663, type: 3}
   - {fileID: 3526715613216376611, guid: 71c68d685d14cf245bfa6cb088bed3b5, type: 3}
   possibleBuffs:
   - {fileID: 11400000, guid: 5675c88eff762c940bd6da0c5ca411a6, type: 2}
@@ -1995,6 +1993,7 @@ MonoBehaviour:
   heartPickupPrefab: {fileID: 4529712226497508647, guid: 37b2c80b6b0fdc346b4ecab47917b4be, type: 3}
   heartLoot: {fileID: 11400000, guid: 7cdb49b51cfab5a45baebed6876041c9, type: 2}
   heartDropChance: 30
+  lootSideDistance: 2.4
 --- !u!1 &5413412434907751617
 GameObject:
   m_ObjectHideFlags: 0
@@ -2327,7 +2326,7 @@ GameObject:
   - component: {fileID: 2654521618816301243}
   - component: {fileID: 2744187689220000998}
   - component: {fileID: 9208635906351167820}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Supercontainer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2344,7 +2343,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 631697794847498670}
@@ -2398,8 +2397,8 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 7c4e1a9b2d8f40c6a3e5b190d4f6a821, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -2442,17 +2441,17 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: -0.08}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
+    oldSize: {x: 2.234375, y: 2}
+    newSize: {x: 2.234375, y: 2}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 2.1, y: 1.65}
   m_EdgeRadius: 0
 --- !u!114 &9208635906351167820
 MonoBehaviour:
@@ -2467,6 +2466,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Supercontainer
   maxHealth: 24
+  closedSprite: {fileID: 21300000, guid: 7c4e1a9b2d8f40c6a3e5b190d4f6a821, type: 3}
+  openSprite: {fileID: 21300000, guid: 8d5f2b0c3e9a41d7b4f6c201e5a7b932, type: 3}
 --- !u!1 &7942455390066402997
 GameObject:
   m_ObjectHideFlags: 0

@@ -17,11 +17,12 @@ public class ChallengeRoomController : MonoBehaviour
     [SerializeField] private GameObject heartPickupPrefab;
     [SerializeField] private LootItem heartLoot;
     [SerializeField] [Range(0f, 100f)] private float heartDropChance = 30f;
+    [SerializeField] private float lootSideDistance = 2.4f;
 
     private RoomInstance roomInstance;
     private Supercontainer container;
     private readonly List<GameObject> livingEnemies = new List<GameObject>();
-    private readonly List<GameObject> remainingEnemyPrefabs = new List<GameObject>();
+    private readonly List<GameObject> allowedEnemyPrefabs = new List<GameObject>();
 
     private bool challengeStarted;
     private bool challengeFinished;
@@ -37,6 +38,20 @@ public class ChallengeRoomController : MonoBehaviour
         container = GetComponentInChildren<Supercontainer>(true);
     }
 
+    public void Prepare()
+    {
+        if (challengeFinished)
+            return;
+
+        if (ChallengeRunState.WasCompleted(ChallengeRunState.Supercontainer))
+        {
+            roomInstance?.UnlockDoorsInstant();
+            return;
+        }
+
+        container?.PrepareForChallenge();
+    }
+
     public void StartChallenge()
     {
         if (challengeStarted || challengeFinished)
@@ -49,11 +64,13 @@ public class ChallengeRoomController : MonoBehaviour
         }
 
         challengeStarted = true;
-        remainingEnemyPrefabs.Clear();
-        remainingEnemyPrefabs.AddRange(waveEnemyPrefabs.FindAll(prefab => prefab != null));
+        BuildAllowedPrefabs();
 
         if (container != null)
+        {
             container.Destroyed += FailChallenge;
+            container.BeginDefense();
+        }
 
         roomInstance?.LockDoors();
         StartCoroutine(RunWaves());
@@ -70,6 +87,18 @@ public class ChallengeRoomController : MonoBehaviour
     public bool IsCompleted()
     {
         return challengeFinished;
+    }
+
+    private void BuildAllowedPrefabs()
+    {
+        allowedEnemyPrefabs.Clear();
+
+        foreach (GameObject prefab in waveEnemyPrefabs)
+        {
+            if (prefab == null) continue;
+            if (prefab.GetComponent<ExplosiveHedgehog>() != null) continue;
+            allowedEnemyPrefabs.Add(prefab);
+        }
     }
 
     private IEnumerator RunWaves()
@@ -97,26 +126,32 @@ public class ChallengeRoomController : MonoBehaviour
 
     private void SpawnWave()
     {
-        if (remainingEnemyPrefabs.Count == 0 || container == null)
+        if (allowedEnemyPrefabs.Count == 0 || container == null)
             return;
-
-        int index = Random.Range(0, remainingEnemyPrefabs.Count);
-        GameObject prefab = remainingEnemyPrefabs[index];
-        remainingEnemyPrefabs.RemoveAt(index);
 
         Transform parent = roomInstance != null ? roomInstance.transform : transform;
         Vector3[] spawnPositions = GetInsideSpawnPositions(enemiesPerWave);
 
         for (int i = 0; i < enemiesPerWave; i++)
         {
+            GameObject prefab = allowedEnemyPrefabs[Random.Range(0, allowedEnemyPrefabs.Count)];
             Vector3 spawnPos = spawnPositions[i];
             GameObject enemy = Instantiate(prefab, spawnPos, Quaternion.identity, parent);
 
-            ChallengeContainerHunter hunter = enemy.GetComponent<ChallengeContainerHunter>();
-            if (hunter == null)
-                hunter = enemy.AddComponent<ChallengeContainerHunter>();
+            bool huntContainer = Random.value < 0.5f;
+            if (huntContainer)
+            {
+                ChallengeContainerHunter hunter = enemy.GetComponent<ChallengeContainerHunter>();
+                if (hunter == null)
+                    hunter = enemy.AddComponent<ChallengeContainerHunter>();
 
-            hunter.Setup(container, enemySpeedMultiplier);
+                hunter.Setup(container, enemySpeedMultiplier);
+            }
+            else
+            {
+                ChallengeContainerHunter.DisableRegeneration(enemy);
+            }
+
             livingEnemies.Add(enemy);
 
             EnemyHealth health = enemy.GetComponent<EnemyHealth>();
@@ -150,7 +185,7 @@ public class ChallengeRoomController : MonoBehaviour
         int start = Random.Range(0, anchors.Count);
 
         for (int i = 0; i < count; i++)
-            positions[i] = PullInsideIfBlocked(anchors[(start + i) % anchors.Count], center);
+            positions[i] = PullInsideIfBlocked(anchors[(start + i) % anchors.Count], center, ignoreContainer: true);
 
         return positions;
     }
@@ -166,12 +201,12 @@ public class ChallengeRoomController : MonoBehaviour
         anchors.Add(pos);
     }
 
-    private static Vector3 PullInsideIfBlocked(Vector3 desired, Vector3 center)
+    private static Vector3 PullInsideIfBlocked(Vector3 desired, Vector3 center, bool ignoreContainer)
     {
         Vector3 pos = desired;
         for (int step = 0; step < 6; step++)
         {
-            if (!IsBlocked(pos))
+            if (!IsBlocked(pos, ignoreContainer))
                 return pos;
 
             pos = Vector3.Lerp(pos, center, 0.25f);
@@ -180,13 +215,13 @@ public class ChallengeRoomController : MonoBehaviour
         return pos;
     }
 
-    private static bool IsBlocked(Vector3 worldPos)
+    private static bool IsBlocked(Vector3 worldPos, bool ignoreContainer)
     {
         Collider2D[] hits = Physics2D.OverlapCircleAll(worldPos, 0.35f);
         foreach (Collider2D hit in hits)
         {
             if (hit == null || hit.isTrigger) continue;
-            if (hit.GetComponent<Supercontainer>() != null) continue;
+            if (ignoreContainer && hit.GetComponent<Supercontainer>() != null) continue;
             if (hit.GetComponent<EnemyHealth>() != null) continue;
             return true;
         }
@@ -261,11 +296,13 @@ public class ChallengeRoomController : MonoBehaviour
     {
         Transform parent = roomInstance != null ? roomInstance.transform : transform;
         Vector3 origin = container != null ? container.transform.position : transform.position;
+        float buffSide = Random.value < 0.5f ? -1f : 1f;
 
         ObjectBuffSO buff = BuffPool.PickRandom(possibleBuffs);
         if (buff != null && buffPickupPrefab != null)
         {
-            GameObject pickup = Instantiate(buffPickupPrefab, origin, Quaternion.identity, parent);
+            Vector3 buffPos = SideLootPosition(origin, buffSide);
+            GameObject pickup = Instantiate(buffPickupPrefab, buffPos, Quaternion.identity, parent);
             UpgradePickup upgradePickup = pickup.GetComponent<UpgradePickup>();
             if (upgradePickup != null)
                 upgradePickup.SetUpgrade(buff);
@@ -283,12 +320,25 @@ public class ChallengeRoomController : MonoBehaviour
             int hearts = Random.Range(1, 3);
             for (int i = 0; i < hearts; i++)
             {
-                Vector3 offset = Quaternion.Euler(0f, 0f, 90f * i) * Vector3.right * 0.55f;
-                GameObject heart = Instantiate(heartPickupPrefab, origin + offset, Quaternion.identity, parent);
+                float heartSide = -buffSide;
+                Vector3 extra = Vector3.up * (i * 0.45f);
+                Vector3 heartPos = SideLootPosition(origin, heartSide) + extra;
+                GameObject heart = Instantiate(heartPickupPrefab, heartPos, Quaternion.identity, parent);
                 LootPickup loot = heart.GetComponent<LootPickup>();
                 if (loot != null && heartLoot != null)
                     loot.SetLootItem(heartLoot);
             }
         }
+    }
+
+    private Vector3 SideLootPosition(Vector3 origin, float sideSign)
+    {
+        float distance = lootSideDistance;
+        if (container != null && container.TryGetComponent(out Collider2D body) && body.enabled)
+            distance = Mathf.Max(lootSideDistance, body.bounds.extents.x + 0.9f);
+
+        Vector3 desired = origin + Vector3.right * sideSign * distance;
+        Vector3 fallback = origin + Vector3.right * sideSign * 0.6f;
+        return PullInsideIfBlocked(desired, fallback, ignoreContainer: false);
     }
 }
