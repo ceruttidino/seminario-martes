@@ -78,7 +78,6 @@ public class LootPickup : MonoBehaviour
                 PlayerUpgradeManager upgradeManager = player.GetComponent<PlayerUpgradeManager>();
                 if (upgradeManager == null || lootItem.upgradeSO == null) return false;
                 upgradeManager.CollectUpgrade(lootItem.upgradeSO);
-                player.GetComponent<AuraHandler>().ActivateAura(lootItem.upgradeSO.aColor);
                 return true;
         }
         return false;
