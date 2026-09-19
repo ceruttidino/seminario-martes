@@ -18,6 +18,13 @@ public class QuickAttack : MonoBehaviour, IAttack
     [SerializeField] private Vector2 attackBoxSize = new Vector2(1.2f, 0.8f);
     [SerializeField] private float attackActiveDuration = 0.25f;
 
+    [Header("Attack VFX")]
+    [SerializeField] private GameObject attackVfxPrefab;
+    [SerializeField] private float vfxDistance = 1f;      
+    [SerializeField] private float vfxLifetime = 0.5f;    
+    [SerializeField] private bool vfxFollowsPlayer = true;
+    [SerializeField] private float vfxAngleOffset = 0f;   
+
     [SerializeField] private AudioSource sfxSource;
 
     private float lastUseTime = -999f;
@@ -97,6 +104,7 @@ public class QuickAttack : MonoBehaviour, IAttack
             animator.SetFloat("AttackX", attackDirection.x);
             animator.SetFloat("AttackY", attackDirection.y);
             animator.SetTrigger("Attack");
+            SpawnAttackVfx(attackDirection);
         }
 
         Vector2 attackCenter = (Vector2)transform.position + attackDirection * attackDistance;
@@ -166,5 +174,22 @@ public class QuickAttack : MonoBehaviour, IAttack
     public void IncreaseRange(float percent)
     {
         attackBoxSize *= 1f + percent / 100f;
+    }
+
+    private void SpawnAttackVfx(Vector2 direction)
+    {
+        if (attackVfxPrefab == null) return;
+
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg + vfxAngleOffset;
+        Quaternion rotation = Quaternion.Euler(0f, 0f, angle);
+        Vector3 spawnPos = transform.position + (Vector3)(direction * vfxDistance);
+
+        GameObject vfx = Instantiate(attackVfxPrefab, spawnPos, rotation);
+
+        if (vfxFollowsPlayer)
+            vfx.transform.SetParent(transform, worldPositionStays: true);
+
+        if (vfxLifetime > 0f)
+            Destroy(vfx, vfxLifetime);
     }
 }

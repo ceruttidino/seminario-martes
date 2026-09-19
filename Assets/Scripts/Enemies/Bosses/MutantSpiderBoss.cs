@@ -43,7 +43,15 @@ public class MutantSpiderBoss : BossBase
 
     [Header("Victory")]
     [SerializeField] private GameObject victoryDoorPrefab;
-    [SerializeField] private Transform doorSpawnPoint;
+    [SerializeField] private Transform[] victoryDoorSpawnPoints; 
+    [SerializeField] private Transform entryDoorPoint;          
+    [SerializeField] private Transform roomCenterPoint;          
+
+    [Header("Victory - Rotación de puerta por pared (Z)")]
+    [SerializeField] private float doorRotUp = 0f;
+    [SerializeField] private float doorRotDown = 0f;
+    [SerializeField] private float doorRotLeft = 90f;
+    [SerializeField] private float doorRotRight = -90f;
 
     [Header("Melee")]
     [SerializeField] private EnemyAttack enemyAttack;
@@ -56,6 +64,9 @@ public class MutantSpiderBoss : BossBase
     private Vector3 groundedPosition;
     private bool isOnCeiling;
     private RigidbodyType2D storedBodyType;
+
+    private Vector3 capturedEntryPosition;
+    private bool hasCapturedEntry;
 
     private void Awake()
     {
@@ -89,6 +100,7 @@ public class MutantSpiderBoss : BossBase
 
     protected override IEnumerator BossRoutine()
     {
+        CaptureEntryPosition();
         yield return new WaitForSeconds(1f);
         IgnorePlayerCollision();
 
@@ -105,6 +117,22 @@ public class MutantSpiderBoss : BossBase
             StopMovement();
 
             yield return PauseBetweenAttacks();
+        }
+    }
+
+    private void CaptureEntryPosition()
+    {
+        if (player == null)
+        {
+            GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
+            if (playerObject != null)
+                player = playerObject.transform;
+        }
+
+        if (player != null)
+        {
+            capturedEntryPosition = player.position;
+            hasCapturedEntry = true;
         }
     }
 
@@ -464,15 +492,90 @@ public class MutantSpiderBoss : BossBase
         if (victoryDoorPrefab == null)
             return;
 
-        Vector3 spawnPos = doorSpawnPoint != null
-            ? doorSpawnPoint.position
+        Transform spawnPoint = PickVictoryDoorPoint();
+
+        Vector3 spawnPos = spawnPoint != null
+            ? spawnPoint.position
             : transform.position + new Vector3(0, 2f, 0);
 
-        GameObject door = Instantiate(victoryDoorPrefab, spawnPos, Quaternion.identity);
+        Quaternion rot = spawnPoint != null
+            ? GetDoorRotation(spawnPoint)
+            : Quaternion.identity;
+
+        GameObject door = Instantiate(victoryDoorPrefab, spawnPos, rot);
 
         Transform roomParent = FindRoomParent();
         if (roomParent != null)
             door.transform.SetParent(roomParent, true);
+    }
+
+    private Quaternion GetDoorRotation(Transform point)
+    {
+        Vector2 center = GetRoomCenter();
+        Vector2 offset = (Vector2)point.position - center;
+
+        float z;
+        if (Mathf.Abs(offset.x) > Mathf.Abs(offset.y))
+            z = offset.x > 0f ? doorRotRight : doorRotLeft;   // pared derecha / izquierda
+        else
+            z = offset.y > 0f ? doorRotUp : doorRotDown;       // pared arriba / abajo
+
+        return Quaternion.Euler(0f, 0f, z);
+    }
+
+    private Vector2 GetRoomCenter()
+    {
+        if (roomCenterPoint != null)
+            return roomCenterPoint.position;
+
+        Transform room = FindRoomParent();
+        return room != null ? (Vector2)room.position : (Vector2)transform.position;
+    }
+    private Transform PickVictoryDoorPoint()
+    {
+        List<Transform> all = new List<Transform>();
+        if (victoryDoorSpawnPoints != null)
+            foreach (Transform p in victoryDoorSpawnPoints)
+                if (p != null) all.Add(p);
+
+        if (all.Count == 0)
+            return null;
+
+        // posición de entrada: manual si está seteada, si no la capturada al empezar la pelea
+        Vector2 entryPos = Vector2.zero;
+        bool haveEntry = false;
+
+        if (entryDoorPoint != null)
+        {
+            entryPos = entryDoorPoint.position;
+            haveEntry = true;
+        }
+        else if (hasCapturedEntry)
+        {
+            entryPos = capturedEntryPosition;
+            haveEntry = true;
+        }
+
+        // ancla más cercana a la entrada => esa se excluye
+        Transform entrySide = null;
+        if (haveEntry)
+        {
+            float best = float.MaxValue;
+            foreach (Transform p in all)
+            {
+                float d = ((Vector2)p.position - entryPos).sqrMagnitude;
+                if (d < best) { best = d; entrySide = p; }
+            }
+        }
+
+        List<Transform> candidates = new List<Transform>();
+        foreach (Transform p in all)
+            if (p != entrySide) candidates.Add(p);
+
+        if (candidates.Count == 0)
+            candidates = all;
+
+        return candidates[Random.Range(0, candidates.Count)];
     }
 
     private Transform FindRoomParent()

@@ -1,9 +1,7 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class BaseTrap : MonoBehaviour
 {
-
     private enum TrapState
     {
         Hidden, Active, InBetween
@@ -23,6 +21,11 @@ public class BaseTrap : MonoBehaviour
     SpriteRenderer spriteRenderer;
     bool touching = false;
 
+    [Header("Damage Tick")]
+    [SerializeField] float damageTickInterval = 1f; // segundos entre golpes mientras estás adentro
+    float lastDamageTime = -999f;
+    PlayerHealth playerInside;
+
     private void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -41,7 +44,7 @@ public class BaseTrap : MonoBehaviour
 
             if (timer > trapStateCycleTime) { CycleState(); timer = 0; }
         }
-        if (trapType == TrapType.StepOnActive) 
+        if (trapType == TrapType.StepOnActive)
         {
             if (touching)
             {
@@ -55,38 +58,42 @@ public class BaseTrap : MonoBehaviour
             }
         }
 
-
+        // Daño continuo: tickea mientras el player esté adentro y la trampa esté activa.
+        if (playerInside != null && trapState == TrapState.Active
+            && Time.time >= lastDamageTime + damageTickInterval)
+        {
+            playerInside.PlayerGetHurt(damage);
+            lastDamageTime = Time.time;
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.GetComponent<PlayerHealth>() != null) 
+        PlayerHealth ph = other.GetComponent<PlayerHealth>();
+        if (ph != null)
         {
-            PlayerHealth PH = other.GetComponent<PlayerHealth>();
+            playerInside = ph;
             touching = true;
-            if (trapState == TrapState.Active && PH != null)
-            {
-                PH.PlayerGetHurt(damage);
-            }
-            if (trapType == TrapType.StepOnActive && PH != null && touching)
-            {
-                PH.PlayerGetHurt(damage);
-            }
+            lastDamageTime = -999f; // fuerza golpe inmediato al entrar si ya está activa
         }
     }
 
-    private void OnTriggerExit2D(Collider2D collision)
+    private void OnTriggerExit2D(Collider2D other)
     {
-        touching = false;
+        if (other.GetComponent<PlayerHealth>() == playerInside)
+        {
+            playerInside = null;
+            touching = false;
+        }
     }
 
     private void CycleState()
-        {
-            if (trapState == TrapState.Hidden) { trapState = TrapState.InBetween; return; }
-            if (trapState == TrapState.InBetween) { trapState = TrapState.Active; return; }
-            if (trapState == TrapState.Active) { trapState = TrapState.Hidden; return; }
+    {
+        if (trapState == TrapState.Hidden) { trapState = TrapState.InBetween; return; }
+        if (trapState == TrapState.InBetween) { trapState = TrapState.Active; return; }
+        if (trapState == TrapState.Active) { trapState = TrapState.Hidden; return; }
+    }
 
-        }
     private void CycleState(TrapState ts)
     {
         trapState = ts;
@@ -102,10 +109,6 @@ public class BaseTrap : MonoBehaviour
     private void DeactivateTrap()
     {
         touching = false;
+        playerInside = null;
     }
 }
-
-
-
-
-

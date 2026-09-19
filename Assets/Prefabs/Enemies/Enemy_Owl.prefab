@@ -322,7 +322,7 @@ MonoBehaviour:
   avoidanceRadius: 0.3
   avoidanceLookahead: 0.6
   stuckDistanceThreshold: 0.15
-  stuckTimeWindow: 0.4
+  stuckTimeWindow: 0.25
   escapeDuration: 0.5
 --- !u!114 &8918091845439713338
 MonoBehaviour:
@@ -352,7 +352,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAttack
   damage: 1
-  attackRange: 0.6
+  attackRange: 0.2
   attackCooldown: 1
   targetLayer:
     serializedVersion: 2
@@ -409,9 +409,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::VanishingOwl
   stalkSpeed: 3.5
   flyStraight: 0
-  revealDistance: 1.6
-  attackRadius: 1.9
-  windupTime: 0.7
+  revealDistance: 1
+  attackRadius: 1
+  windupTime: 0.25
   recoverTime: 0.6
   invisibleDuration: 3
   shadowChaseDuration: 2.5

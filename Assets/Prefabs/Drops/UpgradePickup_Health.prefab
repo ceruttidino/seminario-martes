@@ -145,6 +145,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UpgradePickup
   upgradeToGrant: {fileID: 11400000, guid: c6d58e2fd8eb23c44a5331b7bcd32906, type: 2}
+  sfxSource: {fileID: 0}
 --- !u!114 &4139506166805493479
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -158,7 +159,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LootPickup
   pickupDelay: 0.6
-  autoPickup: 0
   lootItem: {fileID: 0}
   pickupSfx: {fileID: -3324812894967279067}
 --- !u!114 &2502825405010110576

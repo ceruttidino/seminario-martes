@@ -1,0 +1,521 @@
+fileFormatVersion: 2
+guid: ff7604cf7dcf25649a14d11682564cf5
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -870360692614872430
+    second: SLASH___Tail_Attack-Sheet_0
+  - first:
+      213: 5275547039185816013
+    second: SLASH___Tail_Attack-Sheet_1
+  - first:
+      213: -934911233458318880
+    second: SLASH___Tail_Attack-Sheet_2
+  - first:
+      213: 3651672489913618844
+    second: SLASH___Tail_Attack-Sheet_3
+  - first:
+      213: -9136109437812226356
+    second: SLASH___Tail_Attack-Sheet_4
+  - first:
+      213: -5796115024475974572
+    second: SLASH___Tail_Attack-Sheet_5
+  - first:
+      213: 921326882163172007
+    second: SLASH___Tail_Attack-Sheet_6
+  - first:
+      213: -5419175796681467233
+    second: SLASH___Tail_Attack-Sheet_7
+  - first:
+      213: 8751305376669424911
+    second: SLASH___Tail_Attack-Sheet_8
+  - first:
+      213: -2997519605497669111
+    second: SLASH___Tail_Attack-Sheet_9
+  - first:
+      213: -1724779337043655469
+    second: SLASH___Tail_Attack-Sheet_10
+  - first:
+      213: 3860843707871760348
+    second: SLASH___Tail_Attack-Sheet_11
+  - first:
+      213: -2264684563536936858
+    second: SLASH___Tail_Attack-Sheet_12
+  - first:
+      213: -4180643652945769438
+    second: SLASH___Tail_Attack-Sheet_13
+  - first:
+      213: 7229027929726672417
+    second: SLASH___Tail_Attack-Sheet_14
+  - first:
+      213: -5277704171876538332
+    second: SLASH___Tail_Attack-Sheet_15
+  - first:
+      213: -1969953904213064416
+    second: SLASH___Tail_Attack-Sheet_16
+  - first:
+      213: -7147657583319105779
+    second: SLASH___Tail_Attack-Sheet_17
+  - first:
+      213: 5124173815208098319
+    second: SLASH___Tail_Attack-Sheet_18
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: SLASH___Tail_Attack-Sheet_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 122
+        height: 122
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2924a3abf8bdbe3f0800000000000000
+      internalID: -870360692614872430
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SLASH___Tail_Attack-Sheet_1
+      rect:
+        serializedVersion: 2
+        x: 122
+        y: 0
+        width: 122
+        height: 122
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dc9c882c412863940800000000000000
+      internalID: 5275547039185816013
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SLASH___Tail_Attack-Sheet_2
+      rect:
+        serializedVersion: 2
+        x: 244
+        y: 0
+        width: 122
+        height: 122
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0e1d131cf278603f0800000000000000
+      internalID: -934911233458318880
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SLASH___Tail_Attack-Sheet_3
+      rect:
+        serializedVersion: 2
+        x: 366
+        y: 0
+        width: 122
+        height: 122
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c911e5d38c85da230800000000000000
+      internalID: 3651672489913618844
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SLASH___Tail_Attack-Sheet_4
+      rect:
+        serializedVersion: 2
+        x: 488
+        y: 0
+        width: 122
+        height: 122
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cc6cb1a1fd4063180800000000000000
+      internalID: -9136109437812226356
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SLASH___Tail_Attack-Sheet_5
+      rect:
+        serializedVersion: 2
+        x: 610
+        y: 0
+        width: 122
+        height: 122
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4541ec82810109fa0800000000000000
+      internalID: -5796115024475974572
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SLASH___Tail_Attack-Sheet_6
+      rect:
+        serializedVersion: 2
+        x: 732
+        y: 0
+        width: 122
+        height: 122
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7a2aa5dfae539cc00800000000000000
+      internalID: 921326882163172007
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SLASH___Tail_Attack-Sheet_7
+      rect:
+        serializedVersion: 2
+        x: 854
+        y: 0
+        width: 122
+        height: 122
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f9a186f23583bc4b0800000000000000
+      internalID: -5419175796681467233
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SLASH___Tail_Attack-Sheet_8
+      rect:
+        serializedVersion: 2
+        x: 976
+        y: 0
+        width: 122
+        height: 122
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f0dd859afd1e27970800000000000000
+      internalID: 8751305376669424911
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SLASH___Tail_Attack-Sheet_9
+      rect:
+        serializedVersion: 2
+        x: 1098
+        y: 0
+        width: 122
+        height: 122
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 90ada03eccba666d0800000000000000
+      internalID: -2997519605497669111
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SLASH___Tail_Attack-Sheet_10
+      rect:
+        serializedVersion: 2
+        x: 1220
+        y: 0
+        width: 122
+        height: 122
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3d4449bc45a5018e0800000000000000
+      internalID: -1724779337043655469
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SLASH___Tail_Attack-Sheet_11
+      rect:
+        serializedVersion: 2
+        x: 1342
+        y: 0
+        width: 122
+        height: 122
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cdf8ffc85e8749530800000000000000
+      internalID: 3860843707871760348
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SLASH___Tail_Attack-Sheet_12
+      rect:
+        serializedVersion: 2
+        x: 1464
+        y: 0
+        width: 122
+        height: 122
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 660021663693290e0800000000000000
+      internalID: -2264684563536936858
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SLASH___Tail_Attack-Sheet_13
+      rect:
+        serializedVersion: 2
+        x: 1586
+        y: 0
+        width: 122
+        height: 122
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 22c0da56fbe5bf5c0800000000000000
+      internalID: -4180643652945769438
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SLASH___Tail_Attack-Sheet_14
+      rect:
+        serializedVersion: 2
+        x: 1708
+        y: 0
+        width: 122
+        height: 122
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 12e5cbed99aa25460800000000000000
+      internalID: 7229027929726672417
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 9495f7b2f5a04684697c747e998511d3
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":122.0,"y":122.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
+    nameFileIdTable:
+      SLASH___Tail_Attack-Sheet_0: -870360692614872430
+      SLASH___Tail_Attack-Sheet_1: 5275547039185816013
+      SLASH___Tail_Attack-Sheet_10: -1724779337043655469
+      SLASH___Tail_Attack-Sheet_11: 3860843707871760348
+      SLASH___Tail_Attack-Sheet_12: -2264684563536936858
+      SLASH___Tail_Attack-Sheet_13: -4180643652945769438
+      SLASH___Tail_Attack-Sheet_14: 7229027929726672417
+      SLASH___Tail_Attack-Sheet_2: -934911233458318880
+      SLASH___Tail_Attack-Sheet_3: 3651672489913618844
+      SLASH___Tail_Attack-Sheet_4: -9136109437812226356
+      SLASH___Tail_Attack-Sheet_5: -5796115024475974572
+      SLASH___Tail_Attack-Sheet_6: 921326882163172007
+      SLASH___Tail_Attack-Sheet_7: -5419175796681467233
+      SLASH___Tail_Attack-Sheet_8: 8751305376669424911
+      SLASH___Tail_Attack-Sheet_9: -2997519605497669111
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -15,6 +15,11 @@ public class AreaAttack : MonoBehaviour, IAttack
     [SerializeField] private float radius = 2f;
     [SerializeField] private float attackActiveDuration = 0.3f;
 
+    [Header("Attack VFX")]
+    [SerializeField] private GameObject attackVfxPrefab;
+    [SerializeField] private float vfxLifetime = 0.5f;
+    [SerializeField] private bool vfxFollowsPlayer = true;
+
     [SerializeField] private AudioSource sfxSource;
 
     private float lastUseTime = -999f;
@@ -74,6 +79,7 @@ public class AreaAttack : MonoBehaviour, IAttack
                 playerMovement.SetAttackAnimationActive(true);
 
             animator.SetTrigger("AreaAttack");
+            SpawnAttackVfx();
         }
 
         LayerMask combinedMask = enemyLayer | trashLayer;
@@ -136,4 +142,18 @@ public class AreaAttack : MonoBehaviour, IAttack
     {
         radius *= 1f + percent / 100f;
     }
+
+    private void SpawnAttackVfx()
+    {
+        if (attackVfxPrefab == null) return;
+
+        GameObject vfx = Instantiate(attackVfxPrefab, transform.position, Quaternion.identity);
+
+        if (vfxFollowsPlayer)
+            vfx.transform.SetParent(transform, worldPositionStays: true);
+
+        if (vfxLifetime > 0f)
+            Destroy(vfx, vfxLifetime);
+    }
+
 }

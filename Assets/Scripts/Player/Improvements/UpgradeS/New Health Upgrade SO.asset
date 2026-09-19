@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41f07b12793d6654faacff56f5aaff81, type: 3}
   m_Name: New Health Upgrade SO
   m_EditorClassIdentifier: Assembly-CSharp::HealthUpgradeSO
-  upgradeName: Extra Heart
-  description: "Descripci\xF3n de la mejora"
+  upgradeName: Rotten Apple
+  description: Increases health by 1.
   aColor: {r: 0, g: 1, b: 0, a: 1}
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 7c453a2b154e6484f93ccebbb01f9505, type: 3}
   heartsToAdd: 1
   fillNewHearts: 1

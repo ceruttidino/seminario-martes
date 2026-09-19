@@ -16,6 +16,9 @@ public class PlayerHealth : MonoBehaviour, IDamageable
 
     [Header("UI")]
     [SerializeField] GameObject[] hearts;
+    [SerializeField] private Sprite fullHeartSprite;
+    [SerializeField] private Sprite halfHeartSprite;
+    [SerializeField] private Sprite emptyHeartSprite;
 
     [SerializeField] private AudioSource sfxSource;
 
@@ -143,21 +146,22 @@ public class PlayerHealth : MonoBehaviour, IDamageable
 
             if (remaining > 1)
             {
+                heartImages[i].sprite = fullHeartSprite;
                 heartImages[i].color = Color.white;
                 remaining -= 2;
             }
             else if (remaining == 1)
             {
-                heartImages[i].color = Color.gray;
+                heartImages[i].sprite = halfHeartSprite;
+                heartImages[i].color = Color.white;
                 remaining -= 1;
             }
             else
             {
-                heartImages[i].color = Color.black;
+                heartImages[i].sprite = emptyHeartSprite;
             }
         }
     }
-
     public int CurrentHealth => playerHealth;
     public bool IsDead => playerHealth <= 0;
     public bool IsHealthFull => playerHealth >= playerMaxHealth;

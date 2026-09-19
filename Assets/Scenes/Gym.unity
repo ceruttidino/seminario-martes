@@ -606,7 +606,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: -22.20581, y: -17.603516}
-  m_SizeDelta: {x: 377.1092, y: 289.9858}
+  m_SizeDelta: {x: 310.9524, y: 239.1132}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &484437380
 MonoBehaviour:
@@ -1707,8 +1707,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -46.3125, y: -41.6875}
-  m_SizeDelta: {x: 330, y: 240}
+  m_AnchoredPosition: {x: -42.083435, y: -37.462433}
+  m_SizeDelta: {x: 272.1077, y: 197.8965}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &901950001
 MonoBehaviour:
@@ -4917,7 +4917,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -65}
+  m_AnchoredPosition: {x: 0, y: -155}
   m_SizeDelta: {x: 283.3646, y: 80.8708}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1518400260
@@ -7188,7 +7188,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -155}
+  m_AnchoredPosition: {x: 0, y: -65}
   m_SizeDelta: {x: 283.3646, y: 80.8708}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7778880003
@@ -7458,6 +7458,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1785173488312657902, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
+      propertyPath: radius
+      value: 1.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1785173488312657902, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
+      propertyPath: attackVfxPrefab
+      value: 
+      objectReference: {fileID: 6246440627469621124, guid: 8ad4a27aa2b78d34db2019eb0ee8d0ac, type: 3}
     - target: {fileID: 2442127025827706028, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
       propertyPath: m_ActionEvents.Array.size
       value: 9
@@ -7502,14 +7510,46 @@ PrefabInstance:
       propertyPath: m_ActionEvents.Array.data[8].m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 6354491309245815682, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
+      propertyPath: cooldown
+      value: 0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 6354491309245815682, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
+      propertyPath: vfxDistance
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6354491309245815682, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
+      propertyPath: attackDistance
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6354491309245815682, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
+      propertyPath: vfxAngleOffset
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 6354491309245815682, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
+      propertyPath: attackVfxPrefab
+      value: 
+      objectReference: {fileID: 7725699764038781745, guid: 6e2c69b01a7fec3469cf4c29060b581c, type: 3}
     - target: {fileID: 7409795251022180326, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 7840586562795469529, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
+      propertyPath: fullHeartSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: e793c6ec211e3354eb62e547b4714082, type: 3}
+    - target: {fileID: 7840586562795469529, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
+      propertyPath: halfHeartSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: a84d06551b6b13c46a794e63c9215825, type: 3}
+    - target: {fileID: 7840586562795469529, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
       propertyPath: playerHealthCap
       value: 12
       objectReference: {fileID: 0}
+    - target: {fileID: 7840586562795469529, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
+      propertyPath: emptyHeartSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 93cd08ad1dc96494a841775a2e04279c, type: 3}
     - target: {fileID: 7840586562795469529, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
       propertyPath: 'hearts.Array.data[0]'
       value: 
@@ -7622,6 +7662,10 @@ PrefabInstance:
     - target: {fileID: 9016933596901407692, guid: a1d610a6ea3d4b949ad2c90978379050, type: 3}
       propertyPath: m_Name
       value: Particle System
+      objectReference: {fileID: 0}
+    - target: {fileID: 9016933596901407692, guid: a1d610a6ea3d4b949ad2c90978379050, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

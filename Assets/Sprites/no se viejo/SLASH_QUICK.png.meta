@@ -1,34 +1,13 @@
 fileFormatVersion: 2
-guid: 6e8d22921190ed94fbadc4c31a5bd61a
+guid: 9fac1c49d426a5444b77a3e5ae7f9e96
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 3676925641299672207
-    second: Pinchos-Sheet_0
+      213: 5877579559826471957
+    second: SLASH_QUICK_0
   - first:
-      213: -1909479626155353230
-    second: Pinchos-Sheet_1
-  - first:
-      213: 5937586818718764224
-    second: Pinchos-Sheet_2
-  - first:
-      213: 8479444282135942006
-    second: Pinchos-Sheet_3
-  - first:
-      213: -1528416685977041391
-    second: Pinchos-Sheet_4
-  - first:
-      213: 2530357492343080070
-    second: Pinchos-Sheet_5
-  - first:
-      213: 4608614311396965399
-    second: Pinchos-Sheet_6
-  - first:
-      213: -1424340560650040874
-    second: Pinchos-Sheet_7
-  - first:
-      213: 3001260682430075486
-    second: Pinchos-Sheet_8
+      213: 1137791449447253028
+    second: SLASH_QUICK_1
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -124,13 +103,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Pinchos-Sheet_0
+      name: SLASH_QUICK_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 64
-        height: 64
+        x: 8
+        y: 32
+        width: 39
+        height: 7
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -139,20 +118,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: f8c313bb360170330800000000000000
-      internalID: 3676925641299672207
+      spriteID: 51cbd8a087b519150800000000000000
+      internalID: 5877579559826471957
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Pinchos-Sheet_1
+      name: SLASH_QUICK_1
       rect:
         serializedVersion: 2
-        x: 64
-        y: 0
-        width: 64
-        height: 64
+        x: 72
+        y: 32
+        width: 39
+        height: 7
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -161,30 +140,74 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 27b1a29956a2085e0800000000000000
-      internalID: -1909479626155353230
+      spriteID: 424c7c48b4f3acf00800000000000000
+      internalID: 1137791449447253028
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Pinchos-Sheet_2
+      name: SLASH_QUICK_2
       rect:
         serializedVersion: 2
-        x: 128
-        y: 0
-        width: 64
-        height: 64
+        x: 153
+        y: 31
+        width: 39
+        height: 7
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 0cc06c0c0cb866250800000000000000
-      internalID: 5937586818718764224
+      spriteID: d38efbf71bf6cc341889cde598ac326a
+      internalID: -573666820
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SLASH_QUICK_3
+      rect:
+        serializedVersion: 2
+        x: 232
+        y: 32
+        width: 39
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5da013bb4199d44438ce0b2dbc4634d2
+      internalID: -1268499119
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SLASH_QUICK_4
+      rect:
+        serializedVersion: 2
+        x: 306
+        y: 30
+        width: 39
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7e5d30abfc44595499768a9b1ed3cd43
+      internalID: 1762819000
       vertices: []
       indices: 
       edges: []
@@ -193,7 +216,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 16a73cd6f6585d04a99beb513f8de0d1
+    spriteID: 35a99e83340a26347868a64a68647f34
     internalID: 0
     vertices: []
     indices: 
@@ -201,13 +224,13 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries:
-      - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
+      entries: []
     nameFileIdTable:
-      Pinchos-Sheet_0: 3676925641299672207
-      Pinchos-Sheet_1: -1909479626155353230
-      Pinchos-Sheet_2: 5937586818718764224
+      SLASH_QUICK_0: 5877579559826471957
+      SLASH_QUICK_1: 1137791449447253028
+      SLASH_QUICK_2: -573666820
+      SLASH_QUICK_3: -1268499119
+      SLASH_QUICK_4: 1762819000
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

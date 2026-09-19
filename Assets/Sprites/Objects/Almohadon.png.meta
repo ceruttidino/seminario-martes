@@ -1,34 +1,10 @@
 fileFormatVersion: 2
-guid: 6e8d22921190ed94fbadc4c31a5bd61a
+guid: 20ea964b61ee0cb4da398e221d14df41
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 3676925641299672207
-    second: Pinchos-Sheet_0
-  - first:
-      213: -1909479626155353230
-    second: Pinchos-Sheet_1
-  - first:
-      213: 5937586818718764224
-    second: Pinchos-Sheet_2
-  - first:
-      213: 8479444282135942006
-    second: Pinchos-Sheet_3
-  - first:
-      213: -1528416685977041391
-    second: Pinchos-Sheet_4
-  - first:
-      213: 2530357492343080070
-    second: Pinchos-Sheet_5
-  - first:
-      213: 4608614311396965399
-    second: Pinchos-Sheet_6
-  - first:
-      213: -1424340560650040874
-    second: Pinchos-Sheet_7
-  - first:
-      213: 3001260682430075486
-    second: Pinchos-Sheet_8
+      213: 5280468558439549692
+    second: Almohadon_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -124,67 +100,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Pinchos-Sheet_0
+      name: Almohadon_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 64
-        height: 64
+        x: 6
+        y: 20
+        width: 87
+        height: 51
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: f8c313bb360170330800000000000000
-      internalID: 3676925641299672207
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Pinchos-Sheet_1
-      rect:
-        serializedVersion: 2
-        x: 64
-        y: 0
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 27b1a29956a2085e0800000000000000
-      internalID: -1909479626155353230
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Pinchos-Sheet_2
-      rect:
-        serializedVersion: 2
-        x: 128
-        y: 0
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 0cc06c0c0cb866250800000000000000
-      internalID: 5937586818718764224
+      spriteID: cfa88614d2ef74940800000000000000
+      internalID: 5280468558439549692
       vertices: []
       indices: 
       edges: []
@@ -193,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 16a73cd6f6585d04a99beb513f8de0d1
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -201,13 +133,9 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries:
-      - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
+      entries: []
     nameFileIdTable:
-      Pinchos-Sheet_0: 3676925641299672207
-      Pinchos-Sheet_1: -1909479626155353230
-      Pinchos-Sheet_2: 5937586818718764224
+      Almohadon_0: 5280468558439549692
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
