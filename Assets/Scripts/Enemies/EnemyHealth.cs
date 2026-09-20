@@ -57,8 +57,8 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         if (isDead) return;
 
         isDead = true;
-        OnDeath?.Invoke();
         BloodPool.Spawn(transform.position);
+        OnDeath?.Invoke();
         Destroy(gameObject);
     }
 
