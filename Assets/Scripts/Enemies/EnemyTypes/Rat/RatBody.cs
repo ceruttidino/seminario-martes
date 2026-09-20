@@ -78,6 +78,7 @@ public class RatBody : MonoBehaviour, IDamageable
         if (room != null)
             room.HandleEnemyDeath();
 
+        BloodPool.Spawn(transform.position);
         Destroy(gameObject);
     }
 }

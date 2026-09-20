@@ -57,9 +57,16 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         if (isDead) return;
 
         isDead = true;
-        BloodPool.Spawn(transform.position);
+        if (!WillLeaveCorpse())
+            BloodPool.Spawn(transform.position);
         OnDeath?.Invoke();
         Destroy(gameObject);
+    }
+
+    private bool WillLeaveCorpse()
+    {
+        RatRegeneration regeneration = GetComponent<RatRegeneration>();
+        return regeneration != null && regeneration.enabled && regeneration.isRegenerating;
     }
 
     public void SetCurrentHealth(float value)
