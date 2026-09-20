@@ -4,7 +4,6 @@ using UnityEngine;
 public class BloodPool : MonoBehaviour
 {
     private const float Lifetime = 3f;
-    private const float FadeDuration = 1f;
 
     private static Sprite[] cachedFrames;
     private static bool loadAttempted;
@@ -23,40 +22,53 @@ public class BloodPool : MonoBehaviour
 
         SpriteRenderer renderer = go.AddComponent<SpriteRenderer>();
         renderer.sortingOrder = 1;
-        renderer.color = new Color(0.95f, 0.07f, 0.07f, 1f);
+        renderer.color = new Color(0.95f, 0.07f, 0.07f, 0f);
 
         SpriteSequence sequence = go.AddComponent<SpriteSequence>();
         sequence.Play(frames, 8f, true);
 
         BloodPool pool = go.AddComponent<BloodPool>();
         pool.spriteRenderer = renderer;
-        pool.StartCoroutine(pool.FadeAndDestroy());
+        pool.StartCoroutine(pool.FadeInHoldFadeOut());
     }
 
-    private IEnumerator FadeAndDestroy()
+    private IEnumerator FadeInHoldFadeOut()
     {
-        float hold = Mathf.Max(0.1f, Lifetime - FadeDuration);
-        yield return new WaitForSeconds(hold);
-
         if (spriteRenderer == null)
             spriteRenderer = GetComponent<SpriteRenderer>();
 
+        Color visible = new Color(0.95f, 0.07f, 0.07f, 1f);
+        const float fadeIn = 0.6f;
+        const float fadeOut = 0.6f;
+        float hold = Mathf.Max(0f, Lifetime - fadeIn - fadeOut);
+
+        yield return FadeAlpha(0f, visible.a, fadeIn, visible);
+        yield return new WaitForSeconds(hold);
+        yield return FadeAlpha(visible.a, 0f, fadeOut, visible);
+
+        Destroy(gameObject);
+    }
+
+    private IEnumerator FadeAlpha(float from, float to, float duration, Color rgb)
+    {
         float elapsed = 0f;
-        Color start = spriteRenderer != null ? spriteRenderer.color : Color.white;
-        while (elapsed < FadeDuration)
+        while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
             if (spriteRenderer != null)
             {
-                Color color = start;
-                color.a = Mathf.Lerp(start.a, 0f, elapsed / FadeDuration);
-                spriteRenderer.color = color;
+                rgb.a = Mathf.Lerp(from, to, elapsed / duration);
+                spriteRenderer.color = rgb;
             }
 
             yield return null;
         }
 
-        Destroy(gameObject);
+        if (spriteRenderer != null)
+        {
+            rgb.a = to;
+            spriteRenderer.color = rgb;
+        }
     }
 
     private static Sprite[] GetFrames()
