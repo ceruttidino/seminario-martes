@@ -127,6 +127,7 @@ public class ExplosiveHedgehog : MonoBehaviour
         hasExploded = true;
 
         EndArmingFeedback();
+        CameraShake.Play(0.38f, 0.32f);
 
         Vector2 center = transform.position;
         LayerMask explosionMask = damageLayers | destructibleLayers;

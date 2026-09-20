@@ -13,6 +13,9 @@ public class DamageFlash : MonoBehaviour
     private Color originalColor;
     private Coroutine flashRoutine;
 
+    public bool IsFlashing => flashRoutine != null;
+    public float TotalFlashDuration => Mathf.Max(0.01f, flashCount) * Mathf.Max(0.01f, flashDuration) * 2f;
+
     private void Awake()
     {
         if(spriteRenderer  == null)
@@ -24,11 +27,17 @@ public class DamageFlash : MonoBehaviour
 
     public void Flash()
     {
-        if(flashRoutine != null)
-        {
+        Flash(TotalFlashDuration);
+    }
+
+    public void Flash(float totalDuration)
+    {
+        if (spriteRenderer == null) return;
+
+        if (flashRoutine != null)
             StopCoroutine(flashRoutine);
-        }
-        flashRoutine = StartCoroutine(FlashRoutine());
+
+        flashRoutine = StartCoroutine(FlashRoutine(totalDuration));
     }
 
     public void StartLoopFlash()
@@ -51,16 +60,23 @@ public class DamageFlash : MonoBehaviour
 
     private Coroutine loopRoutine;
 
-    private IEnumerator FlashRoutine()
+    private IEnumerator FlashRoutine(float totalDuration)
     {
-        for (int i = 0; i < flashCount; i++)
-        {
-            spriteRenderer.color = flashColor;
-            yield return new WaitForSeconds(flashDuration);
+        float duration = Mathf.Max(flashDuration * 2f, totalDuration);
+        float pulse = Mathf.Max(0.06f, flashDuration);
+        float elapsed = 0f;
+        bool red = true;
 
-            spriteRenderer.color = originalColor;
-            yield return new WaitForSeconds(flashDuration);
+        while (elapsed < duration)
+        {
+            spriteRenderer.color = red ? flashColor : originalColor;
+            red = !red;
+            yield return new WaitForSeconds(pulse);
+            elapsed += pulse;
         }
+
+        spriteRenderer.color = originalColor;
+        flashRoutine = null;
     }
 
     private IEnumerator LoopFlashRoutine()

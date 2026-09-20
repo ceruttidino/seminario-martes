@@ -77,7 +77,7 @@ public class BreakableTrash : MonoBehaviour
         currentHits++;
 
         if (hitShake != null)
-            hitShake.Play();
+            hitShake.Play(0.16f, 0.12f);
 
         if (currentHits >= maxHits)
             StartCoroutine(BreakAfterShake());
@@ -86,7 +86,7 @@ public class BreakableTrash : MonoBehaviour
     private IEnumerator BreakAfterShake()
     {
         isDestroyed = true;
-        yield return new WaitForSeconds(0.08f);
+        yield return new WaitForSeconds(0.14f);
         DestroyTrash();
     }
 
@@ -95,6 +95,7 @@ public class BreakableTrash : MonoBehaviour
         Transform roomParent = FindRoomParent();
 
         ShowOpenVisual();
+        BurstTrash();
         SpawnLoot(roomParent);
 
         RoomInstance room = GetComponentInParent<RoomInstance>();
@@ -113,6 +114,57 @@ public class BreakableTrash : MonoBehaviour
         }
     }
 
+    private void BurstTrash()
+    {
+        Sprite[] sprites = CollectDebrisSprites();
+        if (sprites.Length == 0) return;
+
+        if (trashType == TrashType.CommonBag)
+            TrashBurst.ExplodeAllAround(transform.position, sprites, Random.Range(14, 19));
+        else
+            TrashBurst.ExplodeToward(transform.position, -GetLidDirection(), sprites, Random.Range(12, 17), 72f);
+    }
+
+    private Sprite[] CollectDebrisSprites()
+    {
+        var sprites = new System.Collections.Generic.List<Sprite>();
+        AddSprite(sprites, closedSprite != null ? closedSprite.sprite : null);
+
+        if (openVisual != null)
+        {
+            SpriteRenderer openRenderer = openVisual.GetComponent<SpriteRenderer>();
+            if (openRenderer != null)
+                AddSprite(sprites, openRenderer.sprite);
+        }
+
+        AddPrefabSprite(sprites, heartDrop.prefab);
+        AddPrefabSprite(sprites, keyDrop.prefab);
+        AddPrefabSprite(sprites, scrapDrop.prefab);
+        return sprites.ToArray();
+    }
+
+    private static void AddPrefabSprite(System.Collections.Generic.List<Sprite> sprites, GameObject prefab)
+    {
+        if (prefab == null) return;
+        SpriteRenderer renderer = prefab.GetComponentInChildren<SpriteRenderer>();
+        if (renderer != null)
+            AddSprite(sprites, renderer.sprite);
+    }
+
+    private static void AddSprite(System.Collections.Generic.List<Sprite> sprites, Sprite sprite)
+    {
+        if (sprite != null && !sprites.Contains(sprite))
+            sprites.Add(sprite);
+    }
+
+    private Vector2 GetLidDirection()
+    {
+        Vector2 dir = transform.up;
+        if (dir.sqrMagnitude < 0.01f)
+            dir = Vector2.up;
+        return dir.normalized;
+    }
+
     private void SpawnLoot(Transform roomParent)
     {
         var options = new List<DropEntry>();
@@ -123,10 +175,9 @@ public class BreakableTrash : MonoBehaviour
         var lootToSpawn = new List<DropEntry>();
         if (options.Count > 0)
         {
-            DropEntry chosen = options[Random.Range(0, options.Count)];
             int amount = Random.Range(1, maxItems + 1);
             for (int i = 0; i < amount; i++)
-                lootToSpawn.Add(chosen);
+                lootToSpawn.Add(options[Random.Range(0, options.Count)]);
         }
 
         ObjectBuffSO chosenUpgrade = null;
@@ -199,25 +250,29 @@ public class BreakableTrash : MonoBehaviour
         mover.Launch(targetPos, hitCollider);
     }
 
-    private static readonly Vector2[] PreferredLootDirs =
-    {
-        Vector2.down,
-        new Vector2(-1f, -0.35f).normalized,
-        new Vector2(1f, -0.35f).normalized,
-        Vector2.left,
-        Vector2.right,
-        new Vector2(-0.75f, -0.75f).normalized,
-        new Vector2(0.75f, -0.75f).normalized
-    };
-
     private Vector3[] GetSpawnPositions(int count)
     {
         Vector3[] positions = new Vector3[count];
-        int startDir = Random.Range(0, PreferredLootDirs.Length);
+        bool allAround = trashType == TrashType.CommonBag;
+        Vector2 lidDir = GetLidDirection();
+        Vector2 ejectDir = -lidDir;
 
         for (int i = 0; i < count; i++)
         {
-            Vector2 dir = PreferredLootDirs[(startDir + i) % PreferredLootDirs.Length];
+            Vector2 dir;
+            if (allAround)
+            {
+                float angle = (360f / Mathf.Max(1, count)) * i + Random.Range(-20f, 20f);
+                dir = Quaternion.Euler(0f, 0f, angle) * Vector2.up;
+            }
+            else
+            {
+                float t = count == 1 ? 0f : (i / (float)(count - 1)) * 2f - 1f;
+                float cone = 38f;
+                float angle = Vector2.SignedAngle(Vector2.up, ejectDir) + t * cone + Random.Range(-8f, 8f);
+                dir = Quaternion.Euler(0f, 0f, angle) * Vector2.up;
+            }
+
             positions[i] = FindReachablePosition(dir);
         }
 
@@ -236,9 +291,9 @@ public class BreakableTrash : MonoBehaviour
                 return candidate;
         }
 
-        for (int i = 0; i < PreferredLootDirs.Length; i++)
+        for (int i = 0; i < 8; i++)
         {
-            Vector2 dir = PreferredLootDirs[i];
+            Vector2 dir = Quaternion.Euler(0f, 0f, i * 45f) * Vector2.up;
             for (float dist = minRadius; dist <= maxRadius + 2.2f; dist += 0.2f)
             {
                 Vector3 candidate = transform.position + (Vector3)(dir * dist);

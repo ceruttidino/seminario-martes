@@ -26,6 +26,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     private Image[] heartImages;
     private PlayerPoisonStatus poisonStatus;
     private bool heartsPoisoned;
+    private float invulnerableUntil;
 
     public event Action OnPlayerDeath;
 
@@ -57,34 +58,43 @@ public class PlayerHealth : MonoBehaviour, IDamageable
 
     public void TakeDamage(float damage)
     {
-        if (!canGetHurt || playerHealth <= 0) return;
+        if (!CanTakeHit || playerHealth <= 0) return;
 
         AudioManager.PlaySfx(GameSfx.PlayerHit, sfxSource != null ? sfxSource.clip : null);
 
+        float iFrames = invulTime;
+        if (damageFlash != null)
+            iFrames = Mathf.Max(iFrames, damageFlash.TotalFlashDuration);
+
         canGetHurt = false;
+        invulnerableUntil = Time.time + iFrames;
         playerHealth -= Mathf.RoundToInt(damage);
         playerHealth = Mathf.Clamp(playerHealth, 0, playerMaxHealth);
         UpdateHearts(playerHealth);
 
         if (damageFlash != null)
-            damageFlash.Flash();
+            damageFlash.Flash(iFrames);
 
         CameraShake.Play();
 
+        CancelInvoke(nameof(DesInvul));
         if (playerHealth <= 0)
         {
             Die();
         }
         else
         {
-            Invoke(nameof(DesInvul), invulTime);
+            Invoke(nameof(DesInvul), iFrames);
         }
     }
+
+    private bool CanTakeHit => canGetHurt && Time.time >= invulnerableUntil && (damageFlash == null || !damageFlash.IsFlashing);
 
     private void Die()
     {
         CancelInvoke(nameof(DesInvul));
         canGetHurt = false;
+        invulnerableUntil = float.PositiveInfinity;
         DisablePlayerControls();
         OnPlayerDeath?.Invoke();
     }
@@ -105,6 +115,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     private void DesInvul()
     {
         canGetHurt = true;
+        invulnerableUntil = 0f;
     }
     public void PlayerGetHurt()
     {

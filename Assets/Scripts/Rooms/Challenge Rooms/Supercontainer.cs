@@ -13,6 +13,7 @@ public class Supercontainer : MonoBehaviour
     private Collider2D bodyCollider;
     private Transform barFill;
     private GameObject healthBarRoot;
+    private HitShake hitShake;
 
     public bool IsDestroyed => destroyed;
     public float CurrentHealth => currentHealth;
@@ -26,6 +27,9 @@ public class Supercontainer : MonoBehaviour
         currentHealth = maxHealth;
         spriteRenderer = GetComponent<SpriteRenderer>();
         bodyCollider = GetComponent<Collider2D>();
+        hitShake = GetComponent<HitShake>();
+        if (hitShake == null)
+            hitShake = gameObject.AddComponent<HitShake>();
         BuildHealthBar();
         ApplyClosedVisual();
         HideHealthBar();
@@ -53,7 +57,13 @@ public class Supercontainer : MonoBehaviour
 
     public void NotifyPlayerHit()
     {
-        if (destroyed || defenseStarted)
+        if (destroyed)
+            return;
+
+        if (hitShake != null)
+            hitShake.Play(0.16f, 0.12f);
+
+        if (defenseStarted)
             return;
 
         ChallengeRoomController controller = GetComponentInParent<ChallengeRoomController>();
@@ -85,12 +95,33 @@ public class Supercontainer : MonoBehaviour
         }
 
         HideHealthBar();
+        BurstTrash();
     }
 
     public void MarkFailed()
     {
         SetPresent(false);
         HideHealthBar();
+    }
+
+    private void BurstTrash()
+    {
+        var sprites = new System.Collections.Generic.List<Sprite>();
+        if (spriteRenderer != null && spriteRenderer.sprite != null)
+            sprites.Add(spriteRenderer.sprite);
+        if (closedSprite != null && !sprites.Contains(closedSprite))
+            sprites.Add(closedSprite);
+        if (openSprite != null && !sprites.Contains(openSprite))
+            sprites.Add(openSprite);
+
+        if (sprites.Count == 0)
+            return;
+
+        Vector2 lidDir = transform.up;
+        if (lidDir.sqrMagnitude < 0.01f)
+            lidDir = Vector2.up;
+
+        TrashBurst.ExplodeToward(transform.position, -lidDir, sprites.ToArray(), Random.Range(18, 25), 78f);
     }
 
     private void Break()

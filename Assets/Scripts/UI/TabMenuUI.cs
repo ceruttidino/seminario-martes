@@ -61,6 +61,9 @@ public class TabMenuUI : MonoBehaviour
                 buttonImage.sprite = tabIcon;
         }
 
+        if (dimOverlay != null)
+            dimOverlay.SetActive(false);
+
         SetInventoryVisible(false);
         HideAllToasts();
     }
@@ -308,9 +311,6 @@ public class TabMenuUI : MonoBehaviour
 
     private void SetInventoryVisible(bool visible)
     {
-        if (dimOverlay != null)
-            dimOverlay.SetActive(visible);
-
         if (inventoryPanels == null) return;
 
         for (int i = 0; i < inventoryPanels.Length; i++)
