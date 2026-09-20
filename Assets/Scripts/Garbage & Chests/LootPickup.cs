@@ -10,6 +10,7 @@ public class LootPickup : MonoBehaviour
     [SerializeField] private AudioSource pickupSfx;
 
     private bool canBePickedUp = false;
+    private bool collected;
     private float spawnTime;
 
     private void Awake()
@@ -33,22 +34,33 @@ public class LootPickup : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (!canBePickedUp) return;
+        TryCollect(other);
+    }
+
+    private void OnTriggerStay2D(Collider2D other)
+    {
+        TryCollect(other);
+    }
+
+    private void TryCollect(Collider2D other)
+    {
+        if (collected || !canBePickedUp) return;
         if (!other.CompareTag("Player")) return;
 
-        bool collected = ApplyLoot(other.gameObject);
+        bool applied = ApplyLoot(other.gameObject);
 
-        if (collected)
-        {
-            NotifyInventoryPickup();
-            AudioManager.PlayLoot(lootItem.lootType, lootItem.upgradeSO, pickupSfx != null ? pickupSfx.clip : null);
+        if (!applied)
+            return;
 
-            PickupEffect effect = GetComponent<PickupEffect>();
-            if (effect != null)
-                effect.OnPickup();
-            else
-                Destroy(gameObject);
-        }
+        collected = true;
+        NotifyInventoryPickup();
+        AudioManager.PlayLoot(lootItem.lootType, lootItem.upgradeSO, pickupSfx != null ? pickupSfx.clip : null);
+
+        PickupEffect effect = GetComponent<PickupEffect>();
+        if (effect != null)
+            effect.OnPickup();
+        else
+            Destroy(gameObject);
     }
 
     private bool ApplyLoot(GameObject player)
