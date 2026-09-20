@@ -5,11 +5,10 @@ public class HedgehogArmingState : IEnemyState
     private readonly Transform player;
     private readonly EnemyMovement movement;
     private readonly Transform enemyTransform;
+    private readonly EnemyBehaviour behaviour;
     private readonly ExplosiveHedgehog hedgehog;
 
-    private EnemyHealth enemyHealth;
     private float countdown;
-    private float knockbackEndTime;
 
     public HedgehogArmingState(
         Transform player,
@@ -21,43 +20,45 @@ public class HedgehogArmingState : IEnemyState
         this.player = player;
         this.movement = movement;
         this.enemyTransform = enemy;
+        this.behaviour = behaviour;
         this.hedgehog = hedgehog;
-        enemyHealth = enemy.GetComponent<EnemyHealth>();
     }
 
     public void Enter()
     {
         countdown = hedgehog.CountdownDuration;
-        knockbackEndTime = 0f;
-        ApproachPlayerSlowly();
         hedgehog.BeginArmingFeedback();
-
-        if (enemyHealth != null)
-            enemyHealth.OnDamaged += HandleDamaged;
+        ApproachPlayerSlowly();
     }
 
     public void Tick()
     {
         if (hedgehog == null) return;
 
-        countdown -= Time.deltaTime;
+        if (player != null)
+        {
+            float distance = Vector2.Distance(enemyTransform.position, player.position);
+            if (distance >= hedgehog.CancelRange)
+            {
+                behaviour.SetState(new HedgehogChaseState(player, movement, enemyTransform, behaviour, hedgehog));
+                return;
+            }
+        }
 
-        if (Time.time >= knockbackEndTime)
+        countdown -= Time.deltaTime;
+        float elapsed = hedgehog.CountdownDuration - countdown;
+        hedgehog.UpdateArmingFeedback(hedgehog.CountdownDuration > 0f ? elapsed / hedgehog.CountdownDuration : 1f);
+
+        if (!hedgehog.IsBeingKnockedBack)
             ApproachPlayerSlowly();
 
         if (countdown <= 0f)
-        {
             hedgehog.Explode();
-            return;
-        }
     }
 
     public void Exit()
     {
         hedgehog?.EndArmingFeedback();
-
-        if (enemyHealth != null)
-            enemyHealth.OnDamaged -= HandleDamaged;
     }
 
     private void ApproachPlayerSlowly()
@@ -69,7 +70,6 @@ public class HedgehogArmingState : IEnemyState
         }
 
         Vector2 toPlayer = (Vector2)player.position - (Vector2)enemyTransform.position;
-
         if (toPlayer.sqrMagnitude < 0.01f)
         {
             movement.Move(Vector2.zero);
@@ -77,13 +77,5 @@ public class HedgehogArmingState : IEnemyState
         }
 
         movement.Move(toPlayer.normalized, hedgehog.ArmingMoveSpeed);
-    }
-
-    private void HandleDamaged()
-    {
-        if (player == null || hedgehog == null) return;
-
-        hedgehog.ApplyHitKnockback(player.position);
-        knockbackEndTime = Time.time + hedgehog.HitKnockbackDuration;
     }
 }

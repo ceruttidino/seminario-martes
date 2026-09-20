@@ -229,7 +229,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36f78df000705794abe22ca857d7f07e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyMovement
-  speed: 3
+  speed: 4.35
   animator: {fileID: 3319335485734253217}
   spriteRenderer: {fileID: 6455745231265445500}
 --- !u!114 &3149816341894566110
@@ -275,14 +275,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8d5f3a2b0145678b1c2d3e4f5a6b7c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ExplosiveHedgehog
-  armingRange: 1
+  armingRange: 1.5
+  cancelRange: 2
   explosionRadius: 2.5
   countdownDuration: 2
-  hitKnockbackDuration: 0.25
-  armingMoveSpeed: 1
-  explosionDamage: 3
-  hitKnockbackForce: 8
+  hitKnockbackDuration: 0.3
+  chaseSpeed: 4.35
+  armingMoveSpeed: 1.1
+  playerExplosionDamage: 2
+  enemyExplosionDamage: 15
+  hitKnockbackForce: 7.5
   explosionKnockbackForce: 10
+  maxDeformScale: 1.45
+  deformPulse: 0.07
   damageLayers:
     serializedVersion: 2
     m_Bits: 520

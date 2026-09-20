@@ -28,16 +28,17 @@ public class HedgehogChaseState : IEnemyState
     {
         if (player == null || hedgehog == null) return;
 
-        Vector2 toPlayer = player.position - enemy.position;
-        float distance = toPlayer.magnitude;
-
+        float distance = Vector2.Distance(player.position, enemy.position);
         if (distance <= hedgehog.ArmingRange)
         {
             behaviour.SetState(new HedgehogArmingState(player, movement, enemy, behaviour, hedgehog));
             return;
         }
 
-        movement.MoveTowards(player.position);
+        if (hedgehog.IsBeingKnockedBack)
+            return;
+
+        movement.MoveTowards(player.position, hedgehog.ChaseSpeed);
     }
 
     public void Exit() { }
