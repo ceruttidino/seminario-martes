@@ -64,6 +64,7 @@ public class AudioManager : MonoBehaviour
     private AudioClip currentMusicClip;
     private Coroutine musicFade;
     private int lastSpiderMelee = -1;
+    private float loopClipGain = 1f;
 
     public float MasterVolume
     {
@@ -94,6 +95,7 @@ public class AudioManager : MonoBehaviour
         {
             float clamped = Mathf.Clamp01(value);
             PlayerPrefs.SetFloat(SfxPref, clamped);
+            ApplySfxVolume();
         }
     }
 
@@ -127,6 +129,7 @@ public class AudioManager : MonoBehaviour
 
         AudioListener.volume = MasterVolume;
         ApplyMusicVolume();
+        ApplySfxVolume();
 
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
@@ -309,6 +312,12 @@ public class AudioManager : MonoBehaviour
         musicSource.volume = Mathf.Clamp01(MusicVolume * gain);
     }
 
+    private void ApplySfxVolume()
+    {
+        if (loopSource == null || loopSource.clip == null) return;
+        loopSource.volume = Mathf.Clamp01(SfxVolume * loopClipGain);
+    }
+
     private void PlayLoopInternal(GameSfx id)
     {
         if (loopSource == null) return;
@@ -322,11 +331,12 @@ public class AudioManager : MonoBehaviour
         float pitch = library != null ? library.GetSfxPitch(id) : 1f;
         float volume = library != null ? library.GetSfxVolume(id) : 1f;
         float mix = library != null ? library.sfxMixGain : 1f;
+        loopClipGain = Mathf.Clamp01(volume * mix);
 
         loopSource.Stop();
         loopSource.clip = clip;
         loopSource.pitch = pitch > 0f ? pitch : 1f;
-        loopSource.volume = Mathf.Clamp01(SfxVolume * volume * mix);
+        loopSource.volume = Mathf.Clamp01(SfxVolume * loopClipGain);
         loopSource.Play();
     }
 

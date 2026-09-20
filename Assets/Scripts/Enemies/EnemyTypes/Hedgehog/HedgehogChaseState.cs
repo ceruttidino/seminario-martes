@@ -37,7 +37,7 @@ public class HedgehogChaseState : IEnemyState
             return;
         }
 
-        movement.Move(toPlayer.normalized);
+        movement.MoveTowards(player.position);
     }
 
     public void Exit() { }

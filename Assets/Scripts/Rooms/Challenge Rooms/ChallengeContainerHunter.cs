@@ -37,7 +37,7 @@ public class ChallengeContainerHunter : MonoBehaviour
         if (distance > attackRange)
         {
             float speed = movement != null ? movement.Speed * speedMultiplier : 1.5f;
-            movement?.Move(toContainer.normalized, speed, false);
+            movement?.MoveTowards(container.transform.position, speed);
             return;
         }
 

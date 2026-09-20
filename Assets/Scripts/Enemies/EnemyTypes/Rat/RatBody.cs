@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class RatBody : MonoBehaviour, IDamageable
@@ -6,6 +7,15 @@ public class RatBody : MonoBehaviour, IDamageable
 
     private float timer;
     private float reducedHealth;
+    private bool regenerating;
+    private HitShake hitShake;
+
+    private void Awake()
+    {
+        hitShake = GetComponent<HitShake>();
+        if (hitShake == null)
+            hitShake = gameObject.AddComponent<HitShake>();
+    }
 
     public void Init(float time, float reducedHp)
     {
@@ -15,13 +25,25 @@ public class RatBody : MonoBehaviour, IDamageable
 
     private void Update()
     {
+        if (regenerating) return;
+
         timer -= Time.deltaTime;
 
         if (timer <= 0f)
-        {
-            Regenerate();
-            Destroy(gameObject);
-        }
+            StartCoroutine(RegenerateRoutine());
+    }
+
+    private IEnumerator RegenerateRoutine()
+    {
+        regenerating = true;
+
+        if (hitShake != null)
+            hitShake.Play(0.22f, 0.08f);
+
+        yield return new WaitForSeconds(0.22f);
+
+        Regenerate();
+        Destroy(gameObject);
     }
 
     private void Regenerate()

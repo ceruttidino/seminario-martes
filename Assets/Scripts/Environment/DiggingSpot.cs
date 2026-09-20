@@ -65,12 +65,16 @@ public class DiggingSpot : MonoBehaviour, IInteractable
 
         if (spriteRenderer != null) spriteRenderer.color = originalColor;
 
-        if (molePrefab != null && Random.Range(0f, 100f) <= moleSpawnChance)
+        if (ShouldSpawnMole())
         {
-            Transform roomParent = GetComponentInParent<RoomInstance>()?.transform;
+            RoomInstance room = GetComponentInParent<RoomInstance>();
             GameObject mole = Instantiate(molePrefab, spawnPoint.position, Quaternion.identity);
-            if (roomParent != null)
-                mole.transform.SetParent(roomParent, true);
+            if (room != null)
+            {
+                mole.transform.SetParent(room.transform, true);
+                room.RegisterSpawnedCombatEnemy(mole);
+            }
+
             Destroy(gameObject);
             return;
         }
@@ -79,6 +83,18 @@ public class DiggingSpot : MonoBehaviour, IInteractable
             SpawnLoot();
 
         Destroy(gameObject);
+    }
+
+    private bool ShouldSpawnMole()
+    {
+        if (molePrefab == null) return false;
+        if (Random.Range(0f, 100f) > moleSpawnChance) return false;
+
+        PlayerHealth playerHealth = FindFirstObjectByType<PlayerHealth>();
+        if (playerHealth != null && playerHealth.CurrentHealth <= 1)
+            return false;
+
+        return true;
     }
 
     private void SpawnLoot()

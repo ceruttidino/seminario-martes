@@ -48,6 +48,9 @@ public class RoomInstance : MonoBehaviour
     private void Awake()
     {
         BuildLookups();
+
+        if (GetComponent<RoomPathGrid>() == null)
+            gameObject.AddComponent<RoomPathGrid>();
     }
 
     private void BuildLookups()
@@ -186,7 +189,7 @@ public class RoomInstance : MonoBehaviour
         }
     }
 
-    private void RegisterEnemy(GameObject enemyGO)
+    public void RegisterEnemy(GameObject enemyGO)
     {
         if (enemyGO == null) return;
 
@@ -194,12 +197,29 @@ public class RoomInstance : MonoBehaviour
             RegisterEnemy(health);
     }
 
-    private void RegisterEnemy(EnemyHealth enemyHealth)
+    public void RegisterEnemy(EnemyHealth enemyHealth)
     {
         if (enemyHealth == null) return;
 
         enemyHealth.OnDeath -= HandleEnemyDeath;
         enemyHealth.OnDeath += HandleEnemyDeath;
+    }
+
+    public void RegisterSpawnedCombatEnemy(GameObject enemyGO)
+    {
+        RegisterEnemy(enemyGO);
+
+        if (!HasLivingEnemies())
+            return;
+
+        combatActive = true;
+        LockDoors();
+    }
+
+    public void InvalidatePathGrid()
+    {
+        RoomPathGrid grid = GetComponent<RoomPathGrid>();
+        grid?.Invalidate();
     }
 
     public void LockDoors()

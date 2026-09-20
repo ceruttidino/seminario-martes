@@ -40,6 +40,14 @@ public class EnemyMovement : MonoBehaviour, IMovement
     private float escapeTimer;
     private float escapeAngleJitter;
 
+    private Vector2 cachedPathStep;
+    private Vector2 lastPathGoal;
+    private float nextRepathTime;
+    private Vector2 smoothedDirection;
+    private bool hasSmoothedDirection;
+    private bool hasExplicitGoal;
+    private Vector2 explicitGoal;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -74,16 +82,42 @@ public class EnemyMovement : MonoBehaviour, IMovement
 
     public void Move(Vector2 direction, float speedOverride, bool avoidObstacles)
     {
-        Vector2 finalDirection = avoidObstacles ? ApplyObstacleAvoidance(direction) : direction;
+        Vector2 steered = direction;
+        if (avoidObstacles)
+            steered = ApplyPathfinding(direction);
 
-        rb.linearVelocity = finalDirection * speedOverride;
+        steered = SmoothDirection(steered);
 
-        UpdateAnimator(finalDirection);
+        if (avoidObstacles && IsImmediatelyBlocked(steered))
+            steered = ApplyObstacleAvoidance(steered);
+
+        rb.linearVelocity = steered * speedOverride;
+
+        UpdateAnimator(steered);
 
         if (avoidObstacles)
-        {
             UpdateStuckTracking(direction);
+    }
+
+    public void MoveTowards(Vector2 worldTarget)
+    {
+        MoveTowards(worldTarget, speed);
+    }
+
+    public void MoveTowards(Vector2 worldTarget, float speedOverride)
+    {
+        Vector2 from = rb != null ? rb.position : (Vector2)transform.position;
+        Vector2 toTarget = worldTarget - from;
+        if (toTarget.sqrMagnitude < 0.0001f)
+        {
+            Move(Vector2.zero, speedOverride, true);
+            return;
         }
+
+        hasExplicitGoal = true;
+        explicitGoal = worldTarget;
+        Move(toTarget.normalized, speedOverride, true);
+        hasExplicitGoal = false;
     }
 
     public void Face(Vector2 direction)
@@ -127,6 +161,88 @@ public class EnemyMovement : MonoBehaviour, IMovement
         stuckWindowTimer = 0f;
     }
 
+    private Vector2 ApplyPathfinding(Vector2 desiredDirection)
+    {
+        float magnitude = desiredDirection.magnitude;
+        if (magnitude < 0.0001f)
+            return desiredDirection;
+
+        Vector2 from = rb != null ? rb.position : (Vector2)transform.position;
+        Vector2 goal = hasExplicitGoal
+            ? explicitGoal
+            : from + (desiredDirection / magnitude) * 2.4f;
+
+        RoomPathGrid grid = RoomPathGrid.For(transform);
+        if (grid == null)
+            return desiredDirection;
+
+        if (grid.HasClearLine(from, goal, avoidanceRadius * 0.85f))
+        {
+            cachedPathStep = goal;
+            lastPathGoal = goal;
+            return desiredDirection;
+        }
+
+        if (Time.time >= nextRepathTime || (goal - lastPathGoal).sqrMagnitude > 0.85f)
+        {
+            if (grid.TryGetLookAhead(from, goal, 1.15f, out Vector2 step))
+                cachedPathStep = step;
+            else
+                cachedPathStep = goal;
+
+            lastPathGoal = goal;
+            nextRepathTime = Time.time + 0.18f;
+        }
+
+        Vector2 toStep = cachedPathStep - from;
+        if (toStep.sqrMagnitude < 0.04f)
+            return desiredDirection;
+
+        return toStep.normalized * magnitude;
+    }
+
+    private Vector2 SmoothDirection(Vector2 desiredDirection)
+    {
+        if (desiredDirection.sqrMagnitude < 0.0001f)
+        {
+            hasSmoothedDirection = false;
+            return desiredDirection;
+        }
+
+        Vector2 target = desiredDirection.normalized;
+        if (!hasSmoothedDirection || smoothedDirection.sqrMagnitude < 0.0001f)
+        {
+            smoothedDirection = target;
+            hasSmoothedDirection = true;
+            return desiredDirection;
+        }
+
+        smoothedDirection = Vector3.Slerp(smoothedDirection, target, 1f - Mathf.Exp(-9f * Time.deltaTime));
+        if (smoothedDirection.sqrMagnitude < 0.0001f)
+            smoothedDirection = target;
+        else
+            smoothedDirection.Normalize();
+
+        return smoothedDirection * desiredDirection.magnitude;
+    }
+
+    private bool IsImmediatelyBlocked(Vector2 desiredDirection)
+    {
+        if (desiredDirection.sqrMagnitude < 0.0001f || obstacleLayers.value == 0)
+            return false;
+
+        Vector2 origin = rb != null ? rb.position : (Vector2)transform.position;
+        int hitCount = Physics2D.CircleCast(
+            origin,
+            avoidanceRadius,
+            desiredDirection.normalized,
+            obstacleFilter,
+            AvoidanceHitBuffer,
+            0.38f);
+
+        return hitCount > 0;
+    }
+
     private Vector2 ApplyObstacleAvoidance(Vector2 desiredDirection)
     {
         float magnitude = desiredDirection.magnitude;
@@ -162,12 +278,10 @@ public class EnemyMovement : MonoBehaviour, IMovement
             }
         }
 
-        if (bestClearance > avoidanceRadius * 0.5f)
-        {
-            return bestDirection * magnitude * 0.5f;
-        }
+        if (bestDirection.sqrMagnitude > 0.0001f)
+            return bestDirection * magnitude * 0.75f;
 
-        return Vector2.zero;
+        return desiredDirection * 0.35f;
     }
 
     private static Vector2 RotateVector(Vector2 vector, float degrees)

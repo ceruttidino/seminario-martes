@@ -22,6 +22,8 @@ public class PlayerDash : MonoBehaviour
     private InputAction dashAction;
     private float lastDashTime = -999f;
     private bool isDashing = false;
+    private Collider2D[] playerColliders;
+    private readonly System.Collections.Generic.List<Collider2D> ignoredEnemyColliders = new System.Collections.Generic.List<Collider2D>();
 
     public bool IsDashing => isDashing;
 
@@ -69,6 +71,8 @@ public class PlayerDash : MonoBehaviour
 
         if (areaAttack == null)
             areaAttack = GetComponent<AreaAttack>();
+
+        playerColliders = GetComponentsInChildren<Collider2D>();
     }
 
     private void OnEnable()
@@ -128,6 +132,7 @@ public class PlayerDash : MonoBehaviour
 
         lastDashTime = Time.time;
         isDashing = true;
+        IgnoreEnemyCollisions(true);
 
         if (animator != null)
         {
@@ -170,6 +175,7 @@ public class PlayerDash : MonoBehaviour
     private void EndDash(bool keepMomentum)
     {
         isDashing = false;
+        IgnoreEnemyCollisions(false);
 
         if (animator != null)
             animator.SetBool("IsDashing", false);
@@ -180,5 +186,55 @@ public class PlayerDash : MonoBehaviour
             rb.linearVelocity *= 0.6f;
         else
             rb.linearVelocity = Vector2.zero;
+    }
+
+    private void IgnoreEnemyCollisions(bool ignore)
+    {
+        if (playerColliders == null) return;
+
+        if (!ignore)
+        {
+            for (int i = 0; i < ignoredEnemyColliders.Count; i++)
+            {
+                Collider2D enemyCol = ignoredEnemyColliders[i];
+                if (enemyCol == null) continue;
+
+                for (int p = 0; p < playerColliders.Length; p++)
+                {
+                    Collider2D playerCol = playerColliders[p];
+                    if (playerCol == null) continue;
+                    Physics2D.IgnoreCollision(playerCol, enemyCol, false);
+                }
+            }
+
+            ignoredEnemyColliders.Clear();
+            return;
+        }
+
+        ignoredEnemyColliders.Clear();
+        int enemyLayer = LayerMask.NameToLayer("Enemy");
+        if (enemyLayer < 0) return;
+
+        EnemyHealth[] enemies = FindObjectsByType<EnemyHealth>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+        for (int i = 0; i < enemies.Length; i++)
+        {
+            if (enemies[i] == null) continue;
+
+            Collider2D[] enemyCols = enemies[i].GetComponentsInChildren<Collider2D>();
+            for (int e = 0; e < enemyCols.Length; e++)
+            {
+                Collider2D enemyCol = enemyCols[e];
+                if (enemyCol == null || enemyCol.isTrigger) continue;
+
+                for (int p = 0; p < playerColliders.Length; p++)
+                {
+                    Collider2D playerCol = playerColliders[p];
+                    if (playerCol == null) continue;
+                    Physics2D.IgnoreCollision(playerCol, enemyCol, true);
+                }
+
+                ignoredEnemyColliders.Add(enemyCol);
+            }
+        }
     }
 }

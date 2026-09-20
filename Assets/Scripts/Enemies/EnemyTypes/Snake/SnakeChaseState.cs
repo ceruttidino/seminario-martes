@@ -32,7 +32,7 @@ public class SnakeChaseState : IEnemyState
             return;
         }
 
-        movement.Move(toPlayer.normalized, snake.ChaseSpeed);
+        movement.MoveTowards(player.position, snake.ChaseSpeed);
     }
 
     public void Exit() { }

@@ -38,7 +38,7 @@ public class RatChaseState : IEnemyState
             return;
         }
 
-        movement.Move(toPlayer.normalized);
+        movement.MoveTowards(player.position);
     }
 
     public void Exit() { }

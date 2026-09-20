@@ -11,7 +11,7 @@ public class SpikyTurtle : MonoBehaviour
     [Tooltip("Duracion de la embestida en si (GDD: 1.5s).")]
     [SerializeField] private float chargeDuration = 1.5f;
     [SerializeField] private float chargeSpeed = 8f;
-    [SerializeField] private float chargeDamage = 15f;
+    [SerializeField] private float chargeDamage = 1f;
     public float ChargeDamage => chargeDamage;
     [SerializeField] private float detectionRange = 4f;
 
@@ -27,6 +27,7 @@ public class SpikyTurtle : MonoBehaviour
 
     private EnemyHealth health;
     private EnemyBehaviour behaviour;
+    private Rigidbody2D rb;
 
     public bool IsUpsideDown { get; private set; }
 
@@ -40,6 +41,13 @@ public class SpikyTurtle : MonoBehaviour
     {
         health = GetComponent<EnemyHealth>();
         behaviour = GetComponent<EnemyBehaviour>();
+        rb = GetComponent<Rigidbody2D>();
+
+        if (rb != null)
+        {
+            rb.mass = 40f;
+            rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+        }
 
         if (spriteRenderer == null)
             spriteRenderer = GetComponent<SpriteRenderer>();
@@ -89,6 +97,15 @@ public class SpikyTurtle : MonoBehaviour
 
         IDamageable damageable = collision.gameObject.GetComponent<IDamageable>();
         damageable?.TakeDamage(chargeDamage);
+    }
+
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        if (rb == null || behaviour == null) return;
+        if (behaviour.CurrentStateIs<TurtleChargeState>()) return;
+        if (!collision.gameObject.CompareTag("Player")) return;
+
+        rb.linearVelocity = Vector2.zero;
     }
 
     private void DropShell()

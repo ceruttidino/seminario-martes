@@ -26,6 +26,12 @@ public class EnemyHealth : MonoBehaviour, IDamageable
             damageFlash = GetComponent<DamageFlash>();
     }
 
+    private void Start()
+    {
+        RoomInstance room = GetComponentInParent<RoomInstance>();
+        room?.RegisterEnemy(this);
+    }
+
     public void TakeDamage(float damage)
     {
         if (isDead) return;

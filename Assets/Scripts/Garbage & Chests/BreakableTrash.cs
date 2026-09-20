@@ -96,6 +96,9 @@ public class BreakableTrash : MonoBehaviour
 
         ShowOpenVisual();
         SpawnLoot(roomParent);
+
+        RoomInstance room = GetComponentInParent<RoomInstance>();
+        room?.InvalidatePathGrid();
     }
 
     private void ShowOpenVisual()
@@ -108,9 +111,6 @@ public class BreakableTrash : MonoBehaviour
             openVisual.transform.localPosition = openVisualInitialLocalPosition;
             openVisual.SetActive(true);
         }
-
-        if (hitCollider != null)
-            hitCollider.enabled = false;
     }
 
     private void SpawnLoot(Transform roomParent)
@@ -199,59 +199,55 @@ public class BreakableTrash : MonoBehaviour
         mover.Launch(targetPos, hitCollider);
     }
 
+    private static readonly Vector2[] PreferredLootDirs =
+    {
+        Vector2.down,
+        new Vector2(-1f, -0.35f).normalized,
+        new Vector2(1f, -0.35f).normalized,
+        Vector2.left,
+        Vector2.right,
+        new Vector2(-0.75f, -0.75f).normalized,
+        new Vector2(0.75f, -0.75f).normalized
+    };
+
     private Vector3[] GetSpawnPositions(int count)
     {
         Vector3[] positions = new Vector3[count];
-
-        float safeRadius = GetSafeMinRadius();
-        float extraRange = Mathf.Max(0.1f, maxSpawnRadius - minSpawnRadius);
-        float baseAngle = Random.Range(0f, 360f);
-        float angleStep = 360f / count;
+        int startDir = Random.Range(0, PreferredLootDirs.Length);
 
         for (int i = 0; i < count; i++)
         {
-            float jitter = Random.Range(-angleStep * 0.25f, angleStep * 0.25f);
-            float angleRad = (baseAngle + angleStep * i + jitter) * Mathf.Deg2Rad;
-
-            Vector2 dir = new Vector2(Mathf.Cos(angleRad), Mathf.Sin(angleRad));
-            float dist = safeRadius + Random.Range(0f, extraRange);
-            Vector3 desired = transform.position + new Vector3(dir.x, dir.y, 0f) * dist;
-
-            positions[i] = FindReachablePosition(desired);
+            Vector2 dir = PreferredLootDirs[(startDir + i) % PreferredLootDirs.Length];
+            positions[i] = FindReachablePosition(dir);
         }
 
         return positions;
     }
 
-    private Vector3 FindReachablePosition(Vector3 desired)
+    private Vector3 FindReachablePosition(Vector2 preferredDir)
     {
-        Vector3 origin = transform.position;
-        if (!IsPositionBlocked(desired))
-            return desired;
+        float minRadius = GetSafeMinRadius();
+        float maxRadius = Mathf.Max(minRadius + 0.15f, maxSpawnRadius);
 
-        for (int step = 8; step >= 1; step--)
+        for (float dist = minRadius; dist <= maxRadius + 1.6f; dist += 0.2f)
         {
-            Vector3 candidate = Vector3.Lerp(origin, desired, step / 8f);
+            Vector3 candidate = transform.position + (Vector3)(preferredDir * dist);
             if (!IsPositionBlocked(candidate))
                 return candidate;
         }
 
-        Vector2[] fallbackDirs =
+        for (int i = 0; i < PreferredLootDirs.Length; i++)
         {
-            Vector2.up, Vector2.down, Vector2.left, Vector2.right,
-            new Vector2(1, 1).normalized, new Vector2(-1, 1).normalized,
-            new Vector2(1, -1).normalized, new Vector2(-1, -1).normalized
-        };
-
-        float radius = GetSafeMinRadius();
-        foreach (Vector2 dir in fallbackDirs)
-        {
-            Vector3 candidate = origin + (Vector3)(dir * radius);
-            if (!IsPositionBlocked(candidate))
-                return candidate;
+            Vector2 dir = PreferredLootDirs[i];
+            for (float dist = minRadius; dist <= maxRadius + 2.2f; dist += 0.2f)
+            {
+                Vector3 candidate = transform.position + (Vector3)(dir * dist);
+                if (!IsPositionBlocked(candidate))
+                    return candidate;
+            }
         }
 
-        return origin;
+        return transform.position + (Vector3)(Vector2.down * (minRadius + 0.4f));
     }
 
     private bool IsPositionBlocked(Vector3 worldPos)
@@ -260,7 +256,6 @@ public class BreakableTrash : MonoBehaviour
         foreach (Collider2D hit in hits)
         {
             if (hit == null || hit.isTrigger) continue;
-            if (hit == hitCollider) continue;
             if (hit.GetComponent<LootPickup>() != null) continue;
             if (hit.GetComponent<UpgradePickup>() != null) continue;
             return true;
