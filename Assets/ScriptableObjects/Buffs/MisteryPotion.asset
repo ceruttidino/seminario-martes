@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e694b862f86f3484f9895016e8246107, type: 3}
   m_Name: MisteryPotion
   m_EditorClassIdentifier: Assembly-CSharp::ObjectBuffSO
-  upgradeName: MisteryPotion
+  upgradeName: Mystery Potion
   description: Increases speed by 40%.
   aColor: {r: 1, g: 1, b: 0, a: 1}
   icon: {fileID: -9064446687474135519, guid: 1e87b4b867b54a640af12bd11c39a434, type: 3}

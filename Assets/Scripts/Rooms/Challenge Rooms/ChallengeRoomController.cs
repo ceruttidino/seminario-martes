@@ -73,6 +73,7 @@ public class ChallengeRoomController : MonoBehaviour
         }
 
         roomInstance?.LockDoors();
+        TabMenuUI.CloseCurrent();
         StartCoroutine(RunWaves());
     }
 
@@ -146,10 +147,6 @@ public class ChallengeRoomController : MonoBehaviour
                     hunter = enemy.AddComponent<ChallengeContainerHunter>();
 
                 hunter.Setup(container, enemySpeedMultiplier);
-            }
-            else
-            {
-                ChallengeContainerHunter.DisableRegeneration(enemy);
             }
 
             livingEnemies.Add(enemy);
@@ -244,7 +241,15 @@ public class ChallengeRoomController : MonoBehaviour
                 return true;
         }
 
-        return false;
+        Transform searchRoot = roomInstance != null ? roomInstance.transform : transform;
+        EnemyHealth[] roomHealths = searchRoot.GetComponentsInChildren<EnemyHealth>(true);
+        for (int i = 0; i < roomHealths.Length; i++)
+        {
+            if (roomHealths[i] != null && !roomHealths[i].IsDead)
+                return true;
+        }
+
+        return searchRoot.GetComponentInChildren<RatBody>(true) != null;
     }
 
     private void FailChallenge()

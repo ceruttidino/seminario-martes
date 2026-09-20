@@ -34,7 +34,9 @@ public class PlayerUpgradeManager : MonoBehaviour
         collectedUpgrades.Add(upgrade);
         upgrade.Apply(this);
 
-        if (UpgradePopupUI.Instance != null)
+        if (TabMenuUI.Instance != null)
+            TabMenuUI.Instance.ShowPickup(upgrade.icon, upgrade.upgradeName, 1);
+        else if (UpgradePopupUI.Instance != null)
             UpgradePopupUI.Instance.Show(upgrade);
     }
 

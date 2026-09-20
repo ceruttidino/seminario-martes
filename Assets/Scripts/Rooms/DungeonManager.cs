@@ -40,6 +40,7 @@ public class DungeonManager : MonoBehaviour
     public int CurrentFloor => currentFloor;
     public int MaxFloor => maxFloor;
     public bool IsFinalFloor => currentFloor >= maxFloor;
+    public RoomInstance CurrentRoom => currentRoomInstance;
 
     private void Awake()
     {
@@ -326,6 +327,9 @@ public class DungeonManager : MonoBehaviour
         }
 
         AudioManager.PlayMusicForRoom(node.information.type, currentRoomInstance);
+
+        if (currentRoomInstance != null && currentRoomInstance.HasLivingEnemies())
+            TabMenuUI.CloseCurrent();
     }
 
     private void MovePlayerToCorrectSpawn(DoorDirection? entryDirection)

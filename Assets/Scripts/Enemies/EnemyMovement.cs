@@ -114,6 +114,17 @@ public class EnemyMovement : MonoBehaviour, IMovement
             return;
         }
 
+        if (toTarget.magnitude <= 2.15f)
+        {
+            RoomPathGrid grid = RoomPathGrid.For(transform);
+            bool clear = grid == null || grid.HasClearLine(from, worldTarget, avoidanceRadius * 0.7f);
+            if (clear)
+            {
+                Move(toTarget.normalized, speedOverride, false);
+                return;
+            }
+        }
+
         hasExplicitGoal = true;
         explicitGoal = worldTarget;
         Move(toTarget.normalized, speedOverride, true);

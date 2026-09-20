@@ -19,11 +19,13 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     [SerializeField] private Sprite fullHeartSprite;
     [SerializeField] private Sprite halfHeartSprite;
     [SerializeField] private Sprite emptyHeartSprite;
+    [SerializeField] private Color poisonedHeartColor = new Color(0.25f, 0.85f, 0.28f, 1f);
 
     [SerializeField] private AudioSource sfxSource;
 
-
     private Image[] heartImages;
+    private PlayerPoisonStatus poisonStatus;
+    private bool heartsPoisoned;
 
     public event Action OnPlayerDeath;
 
@@ -32,12 +34,25 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         heartImages = new Image[hearts.Length];
         for (int i = 0; i < hearts.Length; i++)
             heartImages[i] = hearts[i].GetComponent<Image>();
+
+        poisonStatus = GetComponent<PlayerPoisonStatus>();
+        if (poisonStatus == null)
+            poisonStatus = gameObject.AddComponent<PlayerPoisonStatus>();
     }
 
     void Start()
     {
         UpdateMaxHearts();
         UpdateHearts(playerHealth);
+
+        if (poisonStatus != null)
+            poisonStatus.PoisonChanged += HandlePoisonChanged;
+    }
+
+    private void OnDestroy()
+    {
+        if (poisonStatus != null)
+            poisonStatus.PoisonChanged -= HandlePoisonChanged;
     }
 
     public void TakeDamage(float damage)
@@ -147,20 +162,26 @@ public class PlayerHealth : MonoBehaviour, IDamageable
             if (remaining > 1)
             {
                 heartImages[i].sprite = fullHeartSprite;
-                heartImages[i].color = Color.white;
                 remaining -= 2;
             }
             else if (remaining == 1)
             {
                 heartImages[i].sprite = halfHeartSprite;
-                heartImages[i].color = Color.white;
                 remaining -= 1;
             }
             else
             {
                 heartImages[i].sprite = emptyHeartSprite;
             }
+
+            heartImages[i].color = heartsPoisoned ? poisonedHeartColor : Color.white;
         }
+    }
+
+    private void HandlePoisonChanged(bool poisoned)
+    {
+        heartsPoisoned = poisoned;
+        UpdateHearts(playerHealth);
     }
     public int CurrentHealth => playerHealth;
     public bool IsDead => playerHealth <= 0;

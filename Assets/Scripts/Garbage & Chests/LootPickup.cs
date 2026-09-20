@@ -40,6 +40,7 @@ public class LootPickup : MonoBehaviour
 
         if (collected)
         {
+            NotifyInventoryPickup();
             AudioManager.PlayLoot(lootItem.lootType, lootItem.upgradeSO, pickupSfx != null ? pickupSfx.clip : null);
 
             PickupEffect effect = GetComponent<PickupEffect>();
@@ -86,5 +87,30 @@ public class LootPickup : MonoBehaviour
     public void SetLootItem(LootItem item)
     {
         lootItem = item;
+    }
+
+    private void NotifyInventoryPickup()
+    {
+        if (TabMenuUI.Instance == null || lootItem == null) return;
+        if (lootItem.lootType != LootType.Scrap && lootItem.lootType != LootType.Key)
+            return;
+
+        Sprite icon = lootItem.icon;
+        if (icon == null && lootItem.upgradeSO != null)
+            icon = lootItem.upgradeSO.icon;
+
+        string label = lootItem.lootType == LootType.Key ? "Lockpick"
+            : lootItem.lootType == LootType.Scrap ? "Scrap"
+            : lootItem.lootType == LootType.Health ? "Heart"
+            : lootItem.upgradeSO != null && !string.IsNullOrEmpty(lootItem.upgradeSO.upgradeName)
+                ? lootItem.upgradeSO.upgradeName
+            : !string.IsNullOrEmpty(lootItem.itemName) ? lootItem.itemName
+            : "Item";
+
+        int amount = lootItem.lootType == LootType.Key
+            ? Mathf.Max(1, lootItem.keyAmount)
+            : Mathf.Max(1, lootItem.scrapAmount);
+
+        TabMenuUI.Instance.ShowPickup(icon, label, amount);
     }
 }

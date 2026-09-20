@@ -51,8 +51,15 @@ public class VanishingOwl : MonoBehaviour
     public void MoveTowards(Vector2 target)
     {
         if (movement == null) return;
-        Vector2 dir = (target - (Vector2)transform.position).normalized;
-        movement.Move(dir, stalkSpeed, !flyStraight);
+
+        if (flyStraight)
+        {
+            Vector2 dir = (target - (Vector2)transform.position).normalized;
+            movement.Move(dir, stalkSpeed, false);
+            return;
+        }
+
+        movement.MoveTowards(target, stalkSpeed);
     }
 
     public void Stop()

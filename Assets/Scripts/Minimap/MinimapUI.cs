@@ -19,9 +19,19 @@ public class MinimapUI : MonoBehaviour
     private DungeonManager dungeonManager;
     private readonly Dictionary<RoomNode, MinimapRoomIcon> roomIcons = new Dictionary<RoomNode, MinimapRoomIcon>();
 
+    public MinimapRoomIcon RoomIconPrefab => roomIconPrefab;
+
+    public void Configure(RectTransform container, MinimapRoomIcon iconPrefab)
+    {
+        mapContainer = container;
+        if (iconPrefab != null)
+            roomIconPrefab = iconPrefab;
+    }
+
     public void Initialize(DungeonManager manager)
     {
         dungeonManager = manager;
+        if (roomIconPrefab == null || mapContainer == null) return;
 
         originalIconSize = roomIconPrefab.GetComponent<RectTransform>().sizeDelta;
         iconSize = originalIconSize * iconScale;

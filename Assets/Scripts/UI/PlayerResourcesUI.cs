@@ -30,9 +30,16 @@ public class PlayerResourcesUI : MonoBehaviour
 
         if (playerKeys != null)
             playerKeys.OnKeysChanged += UpdateKeysUI;
+
+        Refresh();
     }
 
     private void Start()
+    {
+        Refresh();
+    }
+
+    private void Refresh()
     {
         if (playerScrap != null)
             UpdateScrapUI(playerScrap.CurrentScrap);
@@ -52,12 +59,14 @@ public class PlayerResourcesUI : MonoBehaviour
 
     private void UpdateScrapUI(int amount)
     {
-        scrapText.text = amount.ToString();
+        if (scrapText != null)
+            scrapText.text = amount.ToString();
     }
 
     private void UpdateKeysUI(int amount)
     {
-        keysText.text = amount.ToString();
+        if (keysText != null)
+            keysText.text = amount.ToString();
     }
 
 }

@@ -105,8 +105,6 @@ public class ChallengeContainerHunter : MonoBehaviour
         Mole mole = GetComponent<Mole>();
         if (mole != null)
             mole.enabled = false;
-
-        DisableRegeneration();
     }
 
     public static void DisableRegeneration(GameObject enemy)

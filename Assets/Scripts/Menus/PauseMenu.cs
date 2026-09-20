@@ -14,6 +14,13 @@ public class PauseMenu : MonoBehaviour
     {
         if (!context.performed) return;
         if (GameOverManager.IsOpen || VictoryManager.IsOpen) return;
+
+        if (TabMenuUI.IsOpen)
+        {
+            TabMenuUI.CloseCurrent();
+            return;
+        }
+
         if (!isPaused && GamePause.IsGameplayFrozen) return;
 
         if (isPaused)

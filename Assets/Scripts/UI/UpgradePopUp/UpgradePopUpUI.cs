@@ -72,7 +72,7 @@ public class UpgradePopupUI : MonoBehaviour
             iconImage.sprite = upgrade.icon;
             iconImage.enabled = upgrade.icon != null;
         }
-        if (nameText != null) nameText.text = upgrade.upgradeName;
+        if (nameText != null) nameText.text = TabMenuUI.EnglishItemName(upgrade.upgradeName);
         if (descriptionText != null) descriptionText.text = upgrade.description;
 
         yield return Animate(hiddenPos, shownPos, 0f, 1f, fadeInTime);

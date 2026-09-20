@@ -71,7 +71,15 @@ public class AntMoveState : IEnemyState
 
             while (Vector2.Distance(startPos, enemyTransform.position) < distance)
             {
-                movement.Move(moveDirection);
+                float toPlayer = player != null
+                    ? Vector2.Distance(player.position, enemyTransform.position)
+                    : float.MaxValue;
+                bool closingToHit = attack != null && toPlayer <= attack.AttackRange * 1.75f;
+                if (closingToHit)
+                    movement.Move(moveDirection, movement.Speed, false);
+                else
+                    movement.Move(moveDirection);
+
                 yield return null;
             }
 

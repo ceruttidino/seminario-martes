@@ -49,7 +49,10 @@ public class SnailMoveState : IEnemyState
             PickNewDirection();
         }
 
-        movement.Move(direction);
+        if (movement is EnemyMovement enemyMovement)
+            enemyMovement.Move(direction, enemyMovement.Speed, false);
+        else
+            movement.Move(direction);
 
         UpdateTrailCycle();
     }
@@ -88,7 +91,10 @@ public class SnailMoveState : IEnemyState
     {
         direction = normal;
 
-        movement.Move(normal * 2f);
+        if (movement is EnemyMovement enemyMovement)
+            enemyMovement.Move(normal * 2f, enemyMovement.Speed, false);
+        else
+            movement.Move(normal * 2f);
 
         direction += Random.insideUnitCircle * 0.05f;
         direction.Normalize();

@@ -71,7 +71,8 @@ public class RoomDoor : MonoBehaviour
         {
             if (IsShopDoor && Keyboard.current != null && Keyboard.current.fKey.wasPressedThisFrame)
             {
-                TryUnlock();
+                if (!RoomBlocksLockpick())
+                    TryUnlock();
             }
         }
     }
@@ -374,26 +375,41 @@ public class RoomDoor : MonoBehaviour
     private void TryUnlock()
     {
         if (currentPlayer == null) return;
+        if (RoomBlocksLockpick()) return;
 
         PlayerKeys keys = currentPlayer.GetComponent<PlayerKeys>();
-            if (keys != null && keys.UseKey())
+        if (keys == null || !keys.UseKey())
+            return;
+
+        if (myNode != null)
+            myNode.isShopUnlocked = true;
+
+        AudioManager.PlaySfx(GameSfx.ShopLockpick);
+
+        PlayUnlockAnimation(() =>
         {
-            if (myNode != null)
+            if (playerInRange && canTrigger)
             {
-                myNode.isShopUnlocked = true;
+                canTrigger = false;
+                DungeonManager.Instance.TryMoveToNextRoom(direction);
             }
+        });
+    }
 
-            AudioManager.PlaySfx(GameSfx.ShopLockpick);
+    private bool RoomBlocksLockpick()
+    {
+        RoomInstance room = GetComponentInParent<RoomInstance>();
+        if (room == null && DungeonManager.Instance != null)
+            room = DungeonManager.Instance.CurrentRoom;
 
-            PlayUnlockAnimation(() =>
-            {
-                if (playerInRange && canTrigger)
-                {
-                    canTrigger = false;
-                    DungeonManager.Instance.TryMoveToNextRoom(direction);
-                }
-            });
-        }
+        if (room == null)
+            return false;
+
+        if (room.HasLivingEnemies())
+            return true;
+
+        ChallengeRoomController challenge = room.GetComponent<ChallengeRoomController>();
+        return challenge != null && challenge.HoldsDoorsLocked;
     }
 
     private void OnTriggerEnter2D(Collider2D other)

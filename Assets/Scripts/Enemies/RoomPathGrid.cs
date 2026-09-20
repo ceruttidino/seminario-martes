@@ -115,6 +115,8 @@ public class RoomPathGrid : MonoBehaviour
         if (hit.GetComponent<UpgradePickup>() != null) return true;
         if (hit.GetComponent<SlimeTile>() != null) return true;
         if (hit.CompareTag("Player")) return true;
+        if (hit.GetComponent<Supercontainer>() != null) return true;
+        if (hit.GetComponent<TurtleShell>() != null) return true;
         return false;
     }
 

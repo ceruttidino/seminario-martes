@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c16b865643efc0d4abcd5493b9c05780, type: 3}
   m_Name: KeyLoot
   m_EditorClassIdentifier: Assembly-CSharp::LootItem
-  itemName: Key
+  itemName: Lockpick
   icon: {fileID: 21300000, guid: bbc83220d888da64aa62145a2eecad71, type: 3}
   prefab: {fileID: 6470171162183498645, guid: 73b1827f1902e2e42bebce0fadcaa3fd, type: 3}
   lootType: 2
