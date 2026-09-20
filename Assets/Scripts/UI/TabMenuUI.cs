@@ -136,7 +136,7 @@ public class TabMenuUI : MonoBehaviour
         if (room == null)
             return false;
 
-        if (room.HasLivingEnemies())
+        if (room.IsInCombat)
             return true;
 
         ChallengeRoomController challenge = room.GetComponent<ChallengeRoomController>();

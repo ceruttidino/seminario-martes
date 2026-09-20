@@ -61,14 +61,23 @@ public class DiggingSpot : MonoBehaviour, IInteractable
     public void Interact()
     {
         if (isDug || !isPlayerNear) return;
-        isDug = true;
 
+        PlayerMovement movement = FindFirstObjectByType<PlayerMovement>();
+        if (movement == null || !movement.TryPlayDig(CompleteDig))
+            return;
+
+        isDug = true;
         if (spriteRenderer != null) spriteRenderer.color = originalColor;
+    }
+
+    private void CompleteDig()
+    {
+        Vector3 resultPosition = spawnPoint != null ? spawnPoint.position : transform.position;
+        RoomInstance room = GetComponentInParent<RoomInstance>();
 
         if (ShouldSpawnMole())
         {
-            RoomInstance room = GetComponentInParent<RoomInstance>();
-            GameObject mole = Instantiate(molePrefab, spawnPoint.position, Quaternion.identity);
+            GameObject mole = Instantiate(molePrefab, resultPosition, Quaternion.identity);
             if (room != null)
             {
                 mole.transform.SetParent(room.transform, true);

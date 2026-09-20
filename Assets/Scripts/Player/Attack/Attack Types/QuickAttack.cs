@@ -61,6 +61,7 @@ public class QuickAttack : MonoBehaviour, IAttack
     {
         if (GamePause.IsGameplayFrozen) return false;
         if (playerDash != null && playerDash.IsDashing) return false;
+        if (playerMovement != null && playerMovement.IsDigging) return false;
         return Time.time >= lastUseTime + cooldown;
     }
 

@@ -16,6 +16,9 @@ public class PlayerInteraction : MonoBehaviour
     {
         if (GamePause.IsGameplayFrozen) return;
 
+        PlayerMovement movement = GetComponent<PlayerMovement>();
+        if (movement != null && movement.IsDigging) return;
+
         CheckNearbyInteractables();
 
         if (Keyboard.current != null && Keyboard.current.fKey.wasPressedThisFrame && currentInteractable != null)

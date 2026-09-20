@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -18,6 +19,8 @@ public class PlayerMovement : MonoBehaviour
 
     private static readonly int AttackBlendTreeHash = Animator.StringToHash("Raccoon_Attack_BlendTree");
     private static readonly int AreaAttackHash = Animator.StringToHash("Raccoon_Area_Attack");
+    private static readonly int DigHash = Animator.StringToHash("Raccoon_Dig");
+    private bool isDigging;
 
     [Header("Movement Stats")]
     [SerializeField] private float moveSpeed = 5f;
@@ -35,6 +38,7 @@ public class PlayerMovement : MonoBehaviour
     public Vector2 MoveInput => moveInput;
     public Vector2 MoveDirection => moveDirection;
     public Vector2 CurrentVelocity => rb != null ? rb.linearVelocity : Vector2.zero;
+    public bool IsDigging => isDigging;
 
     void Awake()
     {
@@ -100,9 +104,13 @@ public class PlayerMovement : MonoBehaviour
 
     private void HandleMovement()
     {
-        if (GamePause.IsGameplayFrozen)
+        if (GamePause.IsGameplayFrozen || isDigging)
         {
-            FreezeMovement();
+            if (rb != null)
+                rb.linearVelocity = Vector2.zero;
+
+            if (animator != null)
+                animator.SetFloat("Speed", 0f);
             return;
         }
 
@@ -187,14 +195,79 @@ public class PlayerMovement : MonoBehaviour
     private bool IsPlayingActionAnimation()
     {
         AnimatorStateInfo current = animator.GetCurrentAnimatorStateInfo(0);
-        if (current.shortNameHash == AttackBlendTreeHash || current.shortNameHash == AreaAttackHash)
+        if (IsActionState(current.shortNameHash))
             return true;
 
         if (!animator.IsInTransition(0))
             return false;
 
         AnimatorStateInfo next = animator.GetNextAnimatorStateInfo(0);
-        return next.shortNameHash == AttackBlendTreeHash || next.shortNameHash == AreaAttackHash;
+        return IsActionState(next.shortNameHash);
+    }
+
+    private static bool IsActionState(int hash)
+    {
+        return hash == AttackBlendTreeHash || hash == AreaAttackHash || hash == DigHash;
+    }
+
+    public bool TryPlayDig(System.Action onComplete)
+    {
+        if (isDigging || GamePause.IsGameplayFrozen)
+            return false;
+
+        if (playerDash != null && playerDash.IsDashing)
+            return false;
+
+        isDigging = true;
+
+        if (rb != null)
+            rb.linearVelocity = Vector2.zero;
+
+        if (animator != null)
+        {
+            animator.SetFloat("Speed", 0f);
+            animator.ResetTrigger("Attack");
+            animator.ResetTrigger("AreaAttack");
+            animator.SetTrigger("Dig");
+        }
+
+        StartCoroutine(WaitForDig(onComplete));
+        return true;
+    }
+
+    private IEnumerator WaitForDig(System.Action onComplete)
+    {
+        float timeout = 2.2f;
+        float elapsed = 0f;
+        bool enteredDig = animator == null;
+
+        while (elapsed < timeout)
+        {
+            if (animator != null)
+            {
+                AnimatorStateInfo current = animator.GetCurrentAnimatorStateInfo(0);
+                if (current.shortNameHash == DigHash)
+                {
+                    enteredDig = true;
+                    if (current.normalizedTime >= 1f && !animator.IsInTransition(0))
+                        break;
+                }
+                else if (enteredDig && !animator.IsInTransition(0))
+                {
+                    break;
+                }
+            }
+
+            elapsed += Time.deltaTime;
+            if (rb != null)
+                rb.linearVelocity = Vector2.zero;
+            if (animator != null)
+                animator.SetFloat("Speed", 0f);
+            yield return null;
+        }
+
+        isDigging = false;
+        onComplete?.Invoke();
     }
 
     private static Vector2 GetCardinalFacing(Vector2 direction)

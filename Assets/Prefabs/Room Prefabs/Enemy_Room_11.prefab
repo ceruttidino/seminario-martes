@@ -3921,7 +3921,7 @@ TilemapRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: -1
+  m_SortingOrder: 1
   m_MaskInteraction: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
@@ -4090,11 +4090,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1779494511321461091, guid: 9d33b772eca364945bc7ada72fc442b5, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 7.15
+      value: 0.45
       objectReference: {fileID: 0}
     - target: {fileID: 1779494511321461091, guid: 9d33b772eca364945bc7ada72fc442b5, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.05
+      value: 0.35
       objectReference: {fileID: 0}
     - target: {fileID: 1779494511321461091, guid: 9d33b772eca364945bc7ada72fc442b5, type: 3}
       propertyPath: m_LocalPosition.z
@@ -4164,11 +4164,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1779494511321461091, guid: 9d33b772eca364945bc7ada72fc442b5, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -7.07
+      value: -0.45
       objectReference: {fileID: 0}
     - target: {fileID: 1779494511321461091, guid: 9d33b772eca364945bc7ada72fc442b5, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3.06
+      value: -0.35
       objectReference: {fileID: 0}
     - target: {fileID: 1779494511321461091, guid: 9d33b772eca364945bc7ada72fc442b5, type: 3}
       propertyPath: m_LocalPosition.z

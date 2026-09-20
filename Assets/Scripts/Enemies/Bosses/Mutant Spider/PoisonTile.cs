@@ -14,6 +14,8 @@ public class PoisonTile : MonoBehaviour
 
     [Header("Visual")]
     [SerializeField] private SpriteRenderer spriteRenderer;
+    [SerializeField] private Sprite[] animationFrames;
+    [SerializeField] private float animationFps = 8f;
     [SerializeField] private float fadeOutDuration = 0.4f;
 
     private float lastDamageTime = -999f;
@@ -24,6 +26,19 @@ public class PoisonTile : MonoBehaviour
 
         if (spriteRenderer == null)
             spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+
+        Sprite[] frames = animationFrames;
+        if (frames == null || frames.Length == 0)
+            frames = Resources.LoadAll<Sprite>("Effects/Acido-Sheet");
+
+        if (frames != null && frames.Length > 0)
+        {
+            SpriteSequence sequence = GetComponent<SpriteSequence>();
+            if (sequence == null)
+                sequence = gameObject.AddComponent<SpriteSequence>();
+
+            sequence.Play(frames, animationFps, true);
+        }
     }
 
     private void Start()

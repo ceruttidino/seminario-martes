@@ -26,6 +26,7 @@ public class ChallengeRoomController : MonoBehaviour
 
     private bool challengeStarted;
     private bool challengeFinished;
+    private int pendingWaveSpawns;
 
     public bool HoldsDoorsLocked => challengeStarted && !challengeFinished;
 
@@ -109,7 +110,7 @@ public class ChallengeRoomController : MonoBehaviour
             if (challengeFinished)
                 yield break;
 
-            SpawnWave();
+            yield return SpawnWave();
 
             while (!challengeFinished && HasLivingEnemies())
                 yield return null;
@@ -125,16 +126,28 @@ public class ChallengeRoomController : MonoBehaviour
             Finish(won: true);
     }
 
-    private void SpawnWave()
+    private IEnumerator SpawnWave()
     {
         if (allowedEnemyPrefabs.Count == 0 || container == null)
-            return;
+            yield break;
 
         Transform parent = roomInstance != null ? roomInstance.transform : transform;
         Vector3[] spawnPositions = GetInsideSpawnPositions(enemiesPerWave);
 
+        pendingWaveSpawns = enemiesPerWave;
+        for (int i = 0; i < enemiesPerWave; i++)
+            EnemySummon.PlaySmoke(spawnPositions[i]);
+
+        yield return new WaitForSeconds(EnemySummon.Delay);
+
         for (int i = 0; i < enemiesPerWave; i++)
         {
+            if (challengeFinished)
+            {
+                pendingWaveSpawns = 0;
+                yield break;
+            }
+
             GameObject prefab = allowedEnemyPrefabs[Random.Range(0, allowedEnemyPrefabs.Count)];
             Vector3 spawnPos = spawnPositions[i];
             GameObject enemy = Instantiate(prefab, spawnPos, Quaternion.identity, parent);
@@ -154,7 +167,11 @@ public class ChallengeRoomController : MonoBehaviour
             EnemyHealth health = enemy.GetComponent<EnemyHealth>();
             if (health != null)
                 health.OnDeath += OnEnemyDied;
+
+            pendingWaveSpawns--;
         }
+
+        pendingWaveSpawns = 0;
     }
 
     private Vector3[] GetInsideSpawnPositions(int count)
@@ -233,6 +250,9 @@ public class ChallengeRoomController : MonoBehaviour
 
     private bool HasLivingEnemies()
     {
+        if (pendingWaveSpawns > 0)
+            return true;
+
         livingEnemies.RemoveAll(enemy => enemy == null);
         foreach (GameObject enemy in livingEnemies)
         {
@@ -263,6 +283,7 @@ public class ChallengeRoomController : MonoBehaviour
         if (challengeFinished) return;
 
         challengeFinished = true;
+        pendingWaveSpawns = 0;
         ChallengeRunState.MarkCompleted(ChallengeRunState.Supercontainer);
 
         if (container != null)

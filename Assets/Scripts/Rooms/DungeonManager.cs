@@ -328,7 +328,7 @@ public class DungeonManager : MonoBehaviour
 
         AudioManager.PlayMusicForRoom(node.information.type, currentRoomInstance);
 
-        if (currentRoomInstance != null && currentRoomInstance.HasLivingEnemies())
+        if (currentRoomInstance != null && currentRoomInstance.IsInCombat)
             TabMenuUI.CloseCurrent();
     }
 

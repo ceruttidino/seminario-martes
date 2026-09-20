@@ -42,6 +42,7 @@ public class RoomInstance : MonoBehaviour
     private Dictionary<DoorDirection, RoomDoor> doorLookup = new Dictionary<DoorDirection, RoomDoor>();
 
     public Transform DefaultSpawnPoint => defaultSpawnPoint;
+    public bool IsInCombat => combatActive || HasLivingEnemies();
 
     private RoomNode currentNode;
 
@@ -164,29 +165,64 @@ public class RoomInstance : MonoBehaviour
     public void SpawnEnemies()
     {
         if (enemiesSpawned) return;
-
-        if (enemyPrefab == null || enemySpawnPoints == null || enemySpawnPoints.Length == 0)
-            return;
-
-        foreach (Transform point in enemySpawnPoints)
-        {
-            if (point == null)
-                continue;
-
-            GameObject enemyGO = Instantiate(enemyPrefab, point.position, Quaternion.identity, transform);
-            RegisterEnemy(enemyGO);
-        }
+        enemiesSpawned = true;
 
         foreach (EnemyHealth existing in GetComponentsInChildren<EnemyHealth>(true))
             RegisterEnemy(existing);
 
-        enemiesSpawned = true;
-
-        if (HasLivingEnemies())
+        if (enemyPrefab == null || enemySpawnPoints == null || enemySpawnPoints.Length == 0)
         {
-            combatActive = true;
-            LockDoors();
+            if (HasLivingEnemies())
+            {
+                combatActive = true;
+                LockDoors();
+            }
+            return;
         }
+
+        combatActive = true;
+        LockDoors();
+        StartCoroutine(SpawnEnemiesDelayed());
+    }
+
+    private IEnumerator SpawnEnemiesDelayed()
+    {
+        List<Transform> points = new List<Transform>();
+        foreach (Transform point in enemySpawnPoints)
+        {
+            if (point != null)
+                points.Add(point);
+        }
+
+        foreach (Transform point in points)
+            EnemySummon.PlaySmoke(point.position);
+
+        yield return new WaitForSeconds(EnemySummon.Delay);
+
+        foreach (Transform point in points)
+        {
+            GameObject enemyGO = Instantiate(enemyPrefab, point.position, Quaternion.identity, transform);
+            RegisterEnemy(enemyGO);
+        }
+    }
+
+    public void SpawnEnemyWithSummon(GameObject prefab, Vector3 position)
+    {
+        if (prefab == null)
+            return;
+
+        combatActive = true;
+        LockDoors();
+        StartCoroutine(SpawnEnemyWithSummonRoutine(prefab, position));
+    }
+
+    private IEnumerator SpawnEnemyWithSummonRoutine(GameObject prefab, Vector3 position)
+    {
+        EnemySummon.PlaySmoke(position);
+        yield return new WaitForSeconds(EnemySummon.Delay);
+
+        GameObject enemy = Instantiate(prefab, position, Quaternion.identity, transform);
+        RegisterSpawnedCombatEnemy(enemy);
     }
 
     public void RegisterEnemy(GameObject enemyGO)

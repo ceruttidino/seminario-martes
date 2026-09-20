@@ -43,6 +43,8 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         OnDamaged?.Invoke();
         PlayHurtSfx();
 
+        EnemySummon.PlayBloodHit(transform.position);
+
         if (damageFlash != null)
             damageFlash.Flash();
 
@@ -56,6 +58,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
 
         isDead = true;
         OnDeath?.Invoke();
+        BloodPool.Spawn(transform.position);
         Destroy(gameObject);
     }
 

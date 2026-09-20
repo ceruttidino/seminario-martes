@@ -156,4 +156,13 @@ MonoBehaviour:
   minLifetime: 2
   maxLifetime: 4
   spriteRenderer: {fileID: 6396831343729448540}
+  animationFrames:
+  - {fileID: -7927074937866108687, guid: 9dae259176d5408468d99b4c561f4a3f, type: 3}
+  - {fileID: -5749005088783636144, guid: 9dae259176d5408468d99b4c561f4a3f, type: 3}
+  - {fileID: 1163885324619969862, guid: 9dae259176d5408468d99b4c561f4a3f, type: 3}
+  - {fileID: -2899280592991883870, guid: 9dae259176d5408468d99b4c561f4a3f, type: 3}
+  - {fileID: 2281515840046040840, guid: 9dae259176d5408468d99b4c561f4a3f, type: 3}
+  - {fileID: -3713361985425574245, guid: 9dae259176d5408468d99b4c561f4a3f, type: 3}
+  - {fileID: 4844550792844522396, guid: 9dae259176d5408468d99b4c561f4a3f, type: 3}
+  animationFps: 8
   fadeOutDuration: 0.4

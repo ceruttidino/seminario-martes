@@ -154,7 +154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LootPickup
   pickupDelay: 0.6
   autoPickup: 0
-  lootItem: {fileID: 0}
+  lootItem: {fileID: 11400000, guid: 77ce5807911df084e8ce0ec914dd83c8, type: 2}
   pickupSfx: {fileID: -6809959975088304372}
 --- !u!82 &-6809959975088304372
 AudioSource:

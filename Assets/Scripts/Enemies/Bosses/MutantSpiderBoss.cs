@@ -68,7 +68,7 @@ public class MutantSpiderBoss : BossBase
     private Vector3 capturedEntryPosition;
     private bool hasCapturedEntry;
 
-    private void Awake()
+    protected override void Awake()
     {
         if (rb == null)
             rb = GetComponent<Rigidbody2D>();
@@ -96,6 +96,7 @@ public class MutantSpiderBoss : BossBase
             enemyHealth.OnDeath += HandleDeath;
 
         IgnorePlayerCollision();
+        base.Awake();
     }
 
     protected override IEnumerator BossRoutine()
