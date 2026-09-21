@@ -400,4 +400,58 @@ public class RoomPathGrid : MonoBehaviour
     {
         return new Vector2Int(Mathf.Clamp(cell.x, 0, width - 1), Mathf.Clamp(cell.y, 0, height - 1));
     }
+
+    public bool TryGetWanderPoint(Vector2 from, Vector2 avoid, float minDistanceFromAvoid, out Vector2 point)
+    {
+        EnsureReady();
+        point = from;
+
+        if (walkable == null)
+            return false;
+
+        Vector2 best = from;
+        float bestScore = float.MinValue;
+        bool found = false;
+
+        int samples = Mathf.Min(48, width * height);
+        for (int i = 0; i < samples; i++)
+        {
+            int x = Random.Range(0, width);
+            int y = Random.Range(0, height);
+            if (!walkable[x, y])
+                continue;
+
+            Vector2 candidate = CellToWorld(x, y);
+            float fromHere = Vector2.Distance(from, candidate);
+            if (fromHere < 1.1f)
+                continue;
+
+            float fromAvoid = Vector2.Distance(avoid, candidate);
+            if (fromAvoid < minDistanceFromAvoid)
+                continue;
+
+            float score = fromAvoid * 1.25f + fromHere;
+            if (score > bestScore)
+            {
+                bestScore = score;
+                best = candidate;
+                found = true;
+            }
+        }
+
+        if (found)
+        {
+            point = best;
+            return true;
+        }
+
+        Vector2Int start = FindNearestWalkable(WorldToCell(from));
+        if (InBounds(start) && walkable[start.x, start.y])
+        {
+            point = CellToWorld(start.x, start.y);
+            return true;
+        }
+
+        return false;
+    }
 }
