@@ -27,7 +27,7 @@ public class PoisonousSnake : MonoBehaviour
 
     public float ChaseSpeed => chaseSpeed;
     public float AttackRange => attackRange;
-    public float WindupDuration => 0.5f;
+    public float WindupDuration => windupDuration;
     public float FleeSpeed => fleeSpeed;
     public bool IsStunned => stunned;
     public GameObject CompanionPrefab => companionPrefab;

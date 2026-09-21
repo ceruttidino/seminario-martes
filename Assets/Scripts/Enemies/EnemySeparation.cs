@@ -18,7 +18,7 @@ public class EnemySeparation : MonoBehaviour
         if (rb == null || GetComponent<BossBase>() != null)
             return;
 
-        int count = Physics2D.OverlapCircle(rb.position, radius, new ContactFilter2D().NoFilter(), hits);
+        int count = Physics2D.OverlapCircle(rb.position, radius, ContactFilter2D.noFilter, hits);
         Vector2 separation = Vector2.zero;
         int others = 0;
 
