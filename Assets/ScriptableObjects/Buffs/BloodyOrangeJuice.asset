@@ -13,7 +13,9 @@ MonoBehaviour:
   m_Name: BloodyOrangeJuice
   m_EditorClassIdentifier: Assembly-CSharp::ObjectBuffSO
   upgradeName: Bloody Orange Juice
-  description: Increases health by 1 heart and increases damage by 7%.
+  description: 'Health +
+
+    Damage +'
   aColor: {r: 0, g: 1, b: 0, a: 1}
   icon: {fileID: 6427420444943808392, guid: 4477f4f664c9d014eacb943784fa60ed, type: 3}
   heartsToAdd: 1

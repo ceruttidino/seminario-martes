@@ -159,3 +159,39 @@ public class OwlAttackState : IEnemyState
 
     public void Exit() { }
 }
+
+public class OwlRevealedState : IEnemyState
+{
+    private readonly Transform player;
+    private readonly Transform self;
+    private readonly EnemyBehaviour behaviour;
+    private readonly VanishingOwl owl;
+    private float timer;
+
+    public OwlRevealedState(Transform player, Transform self, EnemyBehaviour behaviour, VanishingOwl owl)
+    {
+        this.player = player;
+        this.self = self;
+        this.behaviour = behaviour;
+        this.owl = owl;
+    }
+
+    public void Enter()
+    {
+        owl.Reveal();   
+        owl.Stop();     
+        timer = owl.RevealedSpawnDuration;
+    }
+
+    public void Tick()
+    {
+        timer -= Time.deltaTime;
+
+        if (player != null) owl.FaceTarget(player.position);
+
+        if (timer <= 0f)
+            behaviour.SetState(new OwlShadowState(player, self, behaviour, owl));
+    }
+
+    public void Exit() { }
+}

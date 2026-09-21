@@ -16,7 +16,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &5829830915938300050
 Transform:
   m_ObjectHideFlags: 0
@@ -409,6 +409,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::VanishingOwl
   stalkSpeed: 3.5
   flyStraight: 0
+  startForm: 2
+  revealedSpawnDuration: 1
   revealDistance: 1
   attackRadius: 1
   windupTime: 0.25
@@ -421,6 +423,8 @@ MonoBehaviour:
   projectedShadow: {fileID: 8871834171099964277}
   animator: {fileID: 161573808956338407}
   movement: {fileID: 2366819222791710392}
+  fadeInTime: 0.15
+  fadeOutTime: 0.4
 --- !u!1 &8871834171099964277
 GameObject:
   m_ObjectHideFlags: 0

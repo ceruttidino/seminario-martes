@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: New Speed Upgrade SO
   m_EditorClassIdentifier: Assembly-CSharp::SpeedUpgradeSO
   upgradeName: Diamond Ring
-  description: Increases Speed by 25%
+  description: Speed +
   aColor: {r: 1, g: 1, b: 0, a: 1}
   icon: {fileID: 21300000, guid: 8e992d8e2a0a12e48b7400e5c5b33b62, type: 3}
   speedIncrease: 2

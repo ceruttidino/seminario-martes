@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca7c404de0aba2740b7d42caa06aaf8a, type: 3}
   m_Name: New Damage Upgrade SO
   m_EditorClassIdentifier: Assembly-CSharp::DamageUpgradeSO
-  upgradeName: Damage Up
-  description: "Descripci\xF3n de la mejora"
+  upgradeName: Boxing Gloves
+  description: Damage +
   aColor: {r: 1, g: 0, b: 0, a: 1}
   icon: {fileID: 0}
   damageIncrease: 10

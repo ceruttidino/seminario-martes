@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: New Health Upgrade SO
   m_EditorClassIdentifier: Assembly-CSharp::HealthUpgradeSO
   upgradeName: Rotten Apple
-  description: Increases health by 1.
+  description: Health +
   aColor: {r: 0, g: 1, b: 0, a: 1}
   icon: {fileID: 21300000, guid: 7c453a2b154e6484f93ccebbb01f9505, type: 3}
   heartsToAdd: 1

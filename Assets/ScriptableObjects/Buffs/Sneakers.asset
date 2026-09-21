@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Sneakers
   m_EditorClassIdentifier: Assembly-CSharp::ObjectBuffSO
   upgradeName: Sneakers
-  description: Increases speed by 25%.
+  description: Speed +
   aColor: {r: 1, g: 1, b: 0, a: 1}
   icon: {fileID: 264140068925472808, guid: 4d873a36e56e86f458d9f2d1d79774cb, type: 3}
   heartsToAdd: 0

@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class VanishingOwl : MonoBehaviour
 {
@@ -6,6 +7,16 @@ public class VanishingOwl : MonoBehaviour
     [SerializeField] private float stalkSpeed = 3.5f;
     [Tooltip("Si esta activo, vuela recto ignorando el esquive de obstaculos de EnemyMovement.")]
     [SerializeField] private bool flyStraight = false;
+
+    public enum OwlStartForm { Invisible, Shadow, Revealed }
+
+    [Header("Spawn")]
+    [Tooltip("En que forma aparece el owl al spawnear.")]
+    [SerializeField] private OwlStartForm startForm = OwlStartForm.Invisible;
+    public OwlStartForm StartForm => startForm;
+    [Tooltip("Cuanto se queda visible y quieto al spawnear en forma Revealed, antes de entrar al ciclo.")]
+    [SerializeField] private float revealedSpawnDuration = 2f;
+    public float RevealedSpawnDuration => revealedSpawnDuration;
 
     [Header("Distances")]
     [SerializeField] private float revealDistance = 1.6f;
@@ -28,11 +39,24 @@ public class VanishingOwl : MonoBehaviour
     [SerializeField] private SpriteRenderer bodyRenderer;
     [Tooltip("La shadow form (buho oscuro + ojos). Objeto 'Eyes' en la jerarquia.")]
     [SerializeField] private GameObject shadowFormObject;
-    [Tooltip("La sombra proyectada ('Shadow'). Se apaga en fase invisible.")]
+    [Tooltip("La sombra proyectada ('Shadow').")]
     [SerializeField] private GameObject projectedShadow;
     [SerializeField] private Animator animator;
+
     [Header("Refs")]
     [SerializeField] private EnemyMovement movement;
+
+    [Header("Fade")]
+    [Tooltip("Cuanto tarda en aparecer (rapido, al atacar/revelarse).")]
+    [SerializeField] private float fadeInTime = 0.15f;
+    [Tooltip("Cuanto tarda en desvanecerse (gradual, al ocultarse).")]
+    [SerializeField] private float fadeOutTime = 0.4f;
+
+    private SpriteRenderer[] bodyGroup;
+    private SpriteRenderer[] shadowGroup;
+    private SpriteRenderer[] projGroup;
+
+    private Coroutine bodyFade, shadowFade, projFade;
 
     public float RevealDistance => revealDistance;
     public float AttackRadius => attackRadius;
@@ -47,7 +71,16 @@ public class VanishingOwl : MonoBehaviour
         if (movement == null) movement = GetComponent<EnemyMovement>();
         if (animator == null) animator = GetComponent<Animator>();
         if (bodyRenderer == null) bodyRenderer = GetComponent<SpriteRenderer>();
+
+        bodyGroup = bodyRenderer != null ? new[] { bodyRenderer } : new SpriteRenderer[0];
+        shadowGroup = shadowFormObject != null
+            ? shadowFormObject.GetComponentsInChildren<SpriteRenderer>(true)
+            : new SpriteRenderer[0];
+        projGroup = projectedShadow != null
+            ? projectedShadow.GetComponentsInChildren<SpriteRenderer>(true)
+            : new SpriteRenderer[0];
     }
+
     public void MoveTowards(Vector2 target)
     {
         if (movement == null) return;
@@ -88,25 +121,70 @@ public class VanishingOwl : MonoBehaviour
     {
         if (animator != null) animator.SetBool("IsStealthed", true);
         ResetAttackTrigger();
-        if (bodyRenderer != null) bodyRenderer.enabled = false;
-        if (shadowFormObject != null) shadowFormObject.SetActive(false);
-        if (projectedShadow != null) projectedShadow.SetActive(false);
+        FadeTo(bodyGroup, ref bodyFade, 0f, fadeOutTime);
+        FadeTo(shadowGroup, ref shadowFade, 0f, fadeOutTime);
+        FadeTo(projGroup, ref projFade, 0f, fadeOutTime);
     }
+
     public void EnterShadow()
     {
         if (animator != null) animator.SetBool("IsStealthed", true);
-        if (bodyRenderer != null) bodyRenderer.enabled = false;
-        if (shadowFormObject != null) shadowFormObject.SetActive(true);
-        if (projectedShadow != null) projectedShadow.SetActive(true);
+        FadeTo(bodyGroup, ref bodyFade, 0f, fadeOutTime);
+        FadeTo(shadowGroup, ref shadowFade, 1f, fadeInTime);
+        FadeTo(projGroup, ref projFade, 1f, fadeInTime);
     }
 
     public void Reveal()
     {
         if (animator != null) animator.SetBool("IsStealthed", false);
-        if (bodyRenderer != null) bodyRenderer.enabled = true;
-        if (shadowFormObject != null) shadowFormObject.SetActive(false);
-        if (projectedShadow != null) projectedShadow.SetActive(true);
+        FadeTo(bodyGroup, ref bodyFade, 1f, fadeInTime);
+        FadeTo(shadowGroup, ref shadowFade, 0f, fadeOutTime);
+        FadeTo(projGroup, ref projFade, 1f, fadeInTime);
     }
+
+    private void FadeTo(SpriteRenderer[] group, ref Coroutine handle, float target, float duration)
+    {
+        if (group == null || group.Length == 0) return;
+        if (handle != null) StopCoroutine(handle);
+        handle = StartCoroutine(FadeRoutine(group, target, duration));
+    }
+
+    private IEnumerator FadeRoutine(SpriteRenderer[] group, float target, float duration)
+    {
+        // Reactiva los renderers para poder fadear.
+        foreach (var r in group)
+            if (r != null) r.enabled = true;
+
+        float start = group[0] != null ? group[0].color.a : 0f;
+        float dur = Mathf.Max(0.01f, duration);
+        float t = 0f;
+
+        while (t < dur)
+        {
+            t += Time.deltaTime;
+            SetGroupAlpha(group, Mathf.Lerp(start, target, t / dur));
+            yield return null;
+        }
+        SetGroupAlpha(group, target);
+
+        // Si quedo invisible, apaga el dibujado.
+        if (target <= 0f)
+            foreach (var r in group)
+                if (r != null) r.enabled = false;
+    }
+
+    private void SetGroupAlpha(SpriteRenderer[] group, float a)
+    {
+        foreach (var r in group)
+        {
+            if (r == null) continue;
+            Color c = r.color;
+            c.a = a;
+            r.color = c;
+        }
+    }
+
+
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;

@@ -13,7 +13,9 @@ MonoBehaviour:
   m_Name: SugarBanana
   m_EditorClassIdentifier: Assembly-CSharp::ObjectBuffSO
   upgradeName: Sugar Banana
-  description: Increases health by 1 heart and increases speed by 10%.
+  description: 'Health +
+
+    Speed +'
   aColor: {r: 0, g: 1, b: 0, a: 1}
   icon: {fileID: 5171108488828137069, guid: 6c89b25572c05bd40b8e909213c02cb3, type: 3}
   heartsToAdd: 1

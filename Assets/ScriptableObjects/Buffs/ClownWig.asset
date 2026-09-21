@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: ClownWig
   m_EditorClassIdentifier: Assembly-CSharp::ObjectBuffSO
   upgradeName: Clown Wig
-  description: 'Increases range by 10% but reduces damage by 5%.
+  description: 'Range +
 
-'
+    Damage -'
   aColor: {r: 0, g: 0, b: 1, a: 1}
   icon: {fileID: -136636158363380763, guid: 3cd170987fd39884e8cdece45dfb4250, type: 3}
   heartsToAdd: 0

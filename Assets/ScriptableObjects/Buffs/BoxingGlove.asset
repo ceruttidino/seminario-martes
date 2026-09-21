@@ -13,7 +13,9 @@ MonoBehaviour:
   m_Name: BoxingGlove
   m_EditorClassIdentifier: Assembly-CSharp::ObjectBuffSO
   upgradeName: Boxing Glove
-  description: Increases damage by 15% but reduces range by 7%.
+  description: 'Damage +
+
+    Range -'
   aColor: {r: 1, g: 0, b: 0, a: 1}
   icon: {fileID: -7007396623880608610, guid: bf3a6bc7f6950b243a7c11b501da8c69, type: 3}
   heartsToAdd: 0

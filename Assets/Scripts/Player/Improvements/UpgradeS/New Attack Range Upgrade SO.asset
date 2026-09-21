@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: New Attack Range Upgrade SO
   m_EditorClassIdentifier: Assembly-CSharp::AttackRangeUpgradeSO
   upgradeName: Range Up
-  description: "Descripci\xF3n de la mejora"
+  description: Range +
   aColor: {r: 0, g: 0, b: 1, a: 1}
   icon: {fileID: 0}
   rangeIncreases:

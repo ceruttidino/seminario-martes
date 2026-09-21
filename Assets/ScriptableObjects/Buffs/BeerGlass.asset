@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BeerGlass
   m_EditorClassIdentifier: Assembly-CSharp::ObjectBuffSO
   upgradeName: Beer Glass
-  description: Increases damage by 15%.
+  description: Damage +
   aColor: {r: 1, g: 0, b: 0, a: 1}
   icon: {fileID: 4939244873698389530, guid: d557d29df7c656043b32d53d89544955, type: 3}
   heartsToAdd: 0

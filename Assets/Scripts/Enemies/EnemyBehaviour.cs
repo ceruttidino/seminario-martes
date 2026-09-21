@@ -108,7 +108,18 @@ public class EnemyBehaviour : MonoBehaviour
                     break;
                 }
 
-                SetState(new OwlInvisibleState(player, transform, this, vanishingOwl));
+                switch (vanishingOwl.StartForm)
+                {
+                    case VanishingOwl.OwlStartForm.Shadow:
+                        SetState(new OwlShadowState(player, transform, this, vanishingOwl));
+                        break;
+                    case VanishingOwl.OwlStartForm.Revealed:
+                        SetState(new OwlRevealedState(player, transform, this, vanishingOwl));
+                        break;
+                    default:
+                        SetState(new OwlInvisibleState(player, transform, this, vanishingOwl));
+                        break;
+                }
                 break;
 
             default:

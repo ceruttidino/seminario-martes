@@ -1,0 +1,27 @@
+Upgrade Modifiers:
+
+Beer Glass: 15% damage
+
+Bloody Orange Juice: Health +1, 7% Damage
+
+Boxing Glove: Increases damage by 15% but reduces range by 7%.
+
+Clown Wig: Increases range by 10% but reduces damage by 5%.
+
+Comics: Increases range by 15%.
+
+Gold Ring: Increases speed by 25% and damage by 20%.
+
+Mystery Potion: Increases speed by 40%.
+
+Moose Antlers: Increases damage by 25% but reduces speed by 5%.
+
+Rotten Apple: Increases health by 1 heart.
+
+Sneakers: Increases speed by 25%.
+
+Strawberry Ice Cream: Increases health by 1 heart.
+
+Sugar Banana: Increases health by 1 heart and increases speed by 10%.
+
+Tree Root: Increases damage by 20%.
