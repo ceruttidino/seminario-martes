@@ -75,8 +75,13 @@ public class DiggingSpot : MonoBehaviour, IInteractable
         Vector3 resultPosition = spawnPoint != null ? spawnPoint.position : transform.position;
         RoomInstance room = GetComponentInParent<RoomInstance>();
 
+        DisableInteraction();
+
         if (ShouldSpawnMole())
         {
+            if (spriteRenderer != null)
+                spriteRenderer.enabled = false;
+
             GameObject mole = Instantiate(molePrefab, resultPosition, Quaternion.identity);
             if (room != null)
             {
@@ -84,14 +89,74 @@ public class DiggingSpot : MonoBehaviour, IInteractable
                 room.RegisterSpawnedCombatEnemy(mole);
             }
 
-            Destroy(gameObject);
+            EnemyHealth moleHealth = mole.GetComponent<EnemyHealth>();
+            if (moleHealth != null)
+                moleHealth.OnDeath += ShowHoleAfterMole;
+            else
+                ShowHole();
+
             return;
         }
 
         if (Random.Range(0f, 100f) <= chanceToFindLoot)
             SpawnLoot();
 
-        Destroy(gameObject);
+        ShowHole();
+    }
+
+    private void DisableInteraction()
+    {
+        Collider2D col = GetComponent<Collider2D>();
+        if (col != null)
+            col.enabled = false;
+    }
+
+    private void ShowHoleAfterMole()
+    {
+        ShowHole();
+    }
+
+    private void ShowHole()
+    {
+        Sprite hole = LoadHoleSprite();
+        if (spriteRenderer == null)
+            spriteRenderer = GetComponent<SpriteRenderer>();
+
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.enabled = true;
+            spriteRenderer.color = Color.white;
+            if (hole != null)
+                spriteRenderer.sprite = hole;
+            spriteRenderer.sortingOrder = 0;
+        }
+    }
+
+    private static Sprite cachedHole;
+    private static bool holeLoadAttempted;
+
+    private static Sprite LoadHoleSprite()
+    {
+        if (holeLoadAttempted)
+            return cachedHole;
+
+        holeLoadAttempted = true;
+        cachedHole = Resources.Load<Sprite>("Effects/DigHole");
+        if (cachedHole != null)
+            return cachedHole;
+
+        Texture2D texture = Resources.Load<Texture2D>("Effects/DigHole");
+        if (texture == null)
+            return null;
+
+        cachedHole = Sprite.Create(
+            texture,
+            new Rect(0f, 0f, texture.width, texture.height),
+            new Vector2(0.5f, 0.5f),
+            64f,
+            0,
+            SpriteMeshType.FullRect);
+        return cachedHole;
     }
 
     private bool ShouldSpawnMole()

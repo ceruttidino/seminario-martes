@@ -172,6 +172,7 @@ public class ChallengeRoomController : MonoBehaviour
         }
 
         pendingWaveSpawns = 0;
+        PoisonousSnake.EnsureNonSnakeCompany(roomInstance);
     }
 
     private Vector3[] GetInsideSpawnPositions(int count)

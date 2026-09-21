@@ -5,6 +5,7 @@ public class BreakableStone : MonoBehaviour
 {
     public void BreakFromExplosion()
     {
+        GetComponentInParent<RoomInstance>()?.InvalidatePathGrid();
         Destroy(gameObject);
     }
 }

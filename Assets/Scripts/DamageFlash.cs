@@ -11,6 +11,7 @@ public class DamageFlash : MonoBehaviour
     [SerializeField] private int flashCount = 2;
 
     private Color originalColor;
+    private Color persistentTint = Color.white;
     private Coroutine flashRoutine;
 
     public bool IsFlashing => flashRoutine != null;
@@ -23,6 +24,14 @@ public class DamageFlash : MonoBehaviour
             spriteRenderer = GetComponent<SpriteRenderer>();
         }
         originalColor = spriteRenderer.color;
+        persistentTint = originalColor;
+    }
+
+    public void SetPersistentTint(Color tint)
+    {
+        persistentTint = tint;
+        if (spriteRenderer != null && flashRoutine == null && loopRoutine == null)
+            spriteRenderer.color = persistentTint;
     }
 
     public void Flash()
@@ -55,7 +64,7 @@ public class DamageFlash : MonoBehaviour
         }
 
         if (spriteRenderer != null)
-            spriteRenderer.color = originalColor;
+            spriteRenderer.color = persistentTint;
     }
 
     private Coroutine loopRoutine;
@@ -69,13 +78,13 @@ public class DamageFlash : MonoBehaviour
 
         while (elapsed < duration)
         {
-            spriteRenderer.color = red ? flashColor : originalColor;
+            spriteRenderer.color = red ? flashColor : persistentTint;
             red = !red;
             yield return new WaitForSeconds(pulse);
             elapsed += pulse;
         }
 
-        spriteRenderer.color = originalColor;
+        spriteRenderer.color = persistentTint;
         flashRoutine = null;
     }
 
@@ -86,7 +95,7 @@ public class DamageFlash : MonoBehaviour
             spriteRenderer.color = flashColor;
             yield return new WaitForSeconds(flashDuration);
 
-            spriteRenderer.color = originalColor;
+            spriteRenderer.color = persistentTint;
             yield return new WaitForSeconds(flashDuration);
         }
     }

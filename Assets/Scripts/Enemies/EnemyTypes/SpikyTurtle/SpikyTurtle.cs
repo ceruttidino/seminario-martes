@@ -37,6 +37,8 @@ public class SpikyTurtle : MonoBehaviour
     public float UpsideDownDuration => upsideDownDuration;
     public float DetectionRange => detectionRange;
 
+    private bool hitPlayerThisCharge;
+
     private void Awake()
     {
         health = GetComponent<EnemyHealth>();
@@ -45,7 +47,7 @@ public class SpikyTurtle : MonoBehaviour
 
         if (rb != null)
         {
-            rb.mass = 40f;
+            rb.mass = 8f;
             rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
         }
 
@@ -87,6 +89,28 @@ public class SpikyTurtle : MonoBehaviour
     public void EndWindupFeedback()
     {
         damageFlash?.StopLoopFlash();
+    }
+
+    public void BeginCharge()
+    {
+        hitPlayerThisCharge = false;
+    }
+
+    public void TryHitPlayerDuringCharge()
+    {
+        if (hitPlayerThisCharge)
+            return;
+
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player == null)
+            return;
+
+        float reach = 0.7f;
+        if (Vector2.Distance(transform.position, player.transform.position) > reach)
+            return;
+
+        hitPlayerThisCharge = true;
+        player.GetComponent<IDamageable>()?.TakeDamage(chargeDamage);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

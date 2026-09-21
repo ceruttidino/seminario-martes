@@ -244,6 +244,7 @@ MonoBehaviour:
   poisonMinDuration: 3
   poisonMaxDuration: 5
   poisonTickDamage: 1
+  companionPrefab: {fileID: 5136333534524507215, guid: 1010f75008e5eec49a330b3df2c0c32a, type: 3}
 --- !u!114 &1000013
 MonoBehaviour:
   m_ObjectHideFlags: 0

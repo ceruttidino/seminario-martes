@@ -146,8 +146,11 @@ public class Cheats : MonoBehaviour
             case "SkipLevel":
                 Debug.Log("Skipping level");
 
+                StopCheating();
+
                 VictoryManager victoryManager = FindFirstObjectByType<VictoryManager>();
-                victoryManager.ContinueRun();
+                if (victoryManager != null)
+                    victoryManager.ContinueRun();
 
                 consoleText.GetComponent<TextMeshProUGUI>().text = "Skiping to next level";
                 break;

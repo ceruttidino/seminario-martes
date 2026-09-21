@@ -248,14 +248,14 @@ public class RoomDoor : MonoBehaviour
 
     public void PlayUnlockAnimation(Action onComplete = null)
     {
+        CancelDoorAnimation();
+
         if (!isLocked)
         {
             UpdateDoorVisual();
             onComplete?.Invoke();
             return;
         }
-
-        if (isAnimating) return;
 
         isLocked = false;
 

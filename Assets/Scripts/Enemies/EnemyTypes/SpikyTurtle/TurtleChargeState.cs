@@ -24,12 +24,14 @@ public class TurtleChargeState : IEnemyState
     public void Enter()
     {
         chargeTimer = turtle.ChargeDuration;
+        turtle.BeginCharge();
     }
 
     public void Tick()
     {
         // Sin evasión: la embestida tiene que chocar y rebotar.
         movement.Move(direction, turtle.ChargeSpeed, avoidObstacles: false);
+        turtle.TryHitPlayerDuringCharge();
 
         chargeTimer -= Time.deltaTime;
         if (chargeTimer <= 0f)

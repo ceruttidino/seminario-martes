@@ -8,9 +8,6 @@ public class SnakeFleeState : IEnemyState
     private readonly EnemyBehaviour behaviour;
     private readonly PoisonousSnake snake;
 
-    private Vector2 fleeDirection;
-    private float fleeTimer;
-
     public SnakeFleeState(Transform player, EnemyMovement movement, Transform self, EnemyBehaviour behaviour, PoisonousSnake snake)
     {
         this.player = player;
@@ -20,31 +17,32 @@ public class SnakeFleeState : IEnemyState
         this.snake = snake;
     }
 
-    public void Enter()
-    {
-        fleeTimer = snake.FleeDuration;
-
-        Vector2 awayFromPlayer = player != null
-            ? (Vector2)self.position - (Vector2)player.position
-            : Vector2.down;
-
-        if (awayFromPlayer.sqrMagnitude < 0.0001f)
-            awayFromPlayer = Vector2.down;
-
-        fleeDirection = awayFromPlayer.normalized;
-    }
+    public void Enter() { }
 
     public void Tick()
     {
-        fleeTimer -= Time.deltaTime;
+        if (snake.IsStunned)
+        {
+            movement.Move(Vector2.zero);
+            return;
+        }
 
-        if (fleeTimer <= 0f)
+        PlayerPoisonStatus poison = player != null ? player.GetComponent<PlayerPoisonStatus>() : null;
+        if (poison == null || !poison.IsPoisoned)
         {
             behaviour.SetState(new SnakeChaseState(player, movement, self, behaviour, snake));
             return;
         }
 
-        movement.Move(fleeDirection, snake.FleeSpeed);
+        Vector2 away = player != null
+            ? (Vector2)self.position - (Vector2)player.position
+            : Vector2.down;
+
+        if (away.sqrMagnitude < 0.0001f)
+            away = Vector2.down;
+
+        Vector2 fleePoint = (Vector2)self.position + away.normalized * 2.4f;
+        movement.MoveTowards(fleePoint, snake.FleeSpeed);
     }
 
     public void Exit()
@@ -54,6 +52,7 @@ public class SnakeFleeState : IEnemyState
 
     public void OnWallHit(Vector2 normal)
     {
-        fleeDirection = Vector2.Reflect(fleeDirection, normal).normalized;
+        Vector2 bounce = Vector2.Reflect(((Vector2)self.position - (Vector2)player.position).normalized, normal);
+        movement.MoveTowards((Vector2)self.position + bounce * 2f, snake.FleeSpeed);
     }
 }

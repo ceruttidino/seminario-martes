@@ -10,7 +10,7 @@ public class BloodPool : MonoBehaviour
 
     [SerializeField] private SpriteRenderer spriteRenderer;
 
-    public static void Spawn(Vector3 worldPosition)
+    public static void Spawn(Vector3 worldPosition, Transform roomParent = null)
     {
         Sprite[] frames = GetFrames();
         if (frames == null || frames.Length == 0)
@@ -19,6 +19,11 @@ public class BloodPool : MonoBehaviour
         GameObject go = new GameObject("BloodPool");
         go.transform.position = worldPosition + Vector3.back * 0.01f;
         go.transform.localScale = Vector3.one * 1.35f;
+
+        if (roomParent == null && DungeonManager.Instance != null && DungeonManager.Instance.CurrentRoom != null)
+            roomParent = DungeonManager.Instance.CurrentRoom.transform;
+        if (roomParent != null)
+            go.transform.SetParent(roomParent, true);
 
         SpriteRenderer renderer = go.AddComponent<SpriteRenderer>();
         renderer.sortingOrder = 1;

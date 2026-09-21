@@ -9,5 +9,10 @@ public class Enemy : MonoBehaviour
     {
         behaviour = GetComponent<EnemyBehaviour>();
         health = GetComponent<EnemyHealth>();
+
+        if (GetComponent<EnemyBodyCollision>() == null)
+            gameObject.AddComponent<EnemyBodyCollision>();
+        if (GetComponent<EnemySeparation>() == null)
+            gameObject.AddComponent<EnemySeparation>();
     }
 }

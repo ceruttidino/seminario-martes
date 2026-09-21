@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b0c124024a8a0a4083117b91f68acb6, type: 3}
   m_Name: DamageUpgrade_Item
   m_EditorClassIdentifier: Assembly-CSharp::ShopItemData
-  itemName: Damage Upgrade
+  itemName: Boxing Glove
   price: 10
   prefab: {fileID: 1304267503638994069, guid: 9ff6da0e73e262c41bed21d1478e09f4, type: 3}
   effect: {fileID: 11400000, guid: 85e649ec1cee5724abb2b6e6e31ba1fe, type: 2}

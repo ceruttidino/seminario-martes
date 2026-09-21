@@ -10,29 +10,47 @@ public class PoisonousSnake : MonoBehaviour
 
     [Header("Attack")]
     [SerializeField] private float windupDuration = 0.5f;
+    [SerializeField] private float biteStunDuration = 0.45f;
     [SerializeField] private float attackDamage = 1f;
     public float AttackDamage => attackDamage;
     [SerializeField] private DamageFlash damageFlash;
 
     [Header("Flee")]
     [SerializeField] private float fleeSpeed = 4f;
-    [SerializeField] private float fleeDuration = 4f;
 
-    [Header("Poison")]
-    [SerializeField] private float poisonMinDuration = 3f;
-    [SerializeField] private float poisonMaxDuration = 5f;
-    [SerializeField] private float poisonTickDamage = 1f;
+    [Header("Company")]
+    [SerializeField] private GameObject companionPrefab;
+
+    private bool stunned;
+    private float stunTimer;
+    private EnemyMovement movement;
 
     public float ChaseSpeed => chaseSpeed;
     public float AttackRange => attackRange;
-    public float WindupDuration => windupDuration;
+    public float WindupDuration => 0.5f;
     public float FleeSpeed => fleeSpeed;
-    public float FleeDuration => fleeDuration;
+    public bool IsStunned => stunned;
+    public GameObject CompanionPrefab => companionPrefab;
 
     private void Awake()
     {
         if (damageFlash == null)
             damageFlash = GetComponent<DamageFlash>();
+        movement = GetComponent<EnemyMovement>();
+        windupDuration = 0.5f;
+    }
+
+    private void Update()
+    {
+        if (!stunned)
+            return;
+
+        stunTimer -= Time.deltaTime;
+        if (movement != null)
+            movement.Move(Vector2.zero);
+
+        if (stunTimer <= 0f)
+            stunned = false;
     }
 
     public void BeginWindupFeedback()
@@ -45,21 +63,79 @@ public class PoisonousSnake : MonoBehaviour
         damageFlash?.StopLoopFlash();
     }
 
-    public void PerformAttack(Transform player)
+    public void Stun(float duration)
     {
-        if (player == null) return;
+        stunned = true;
+        stunTimer = duration;
+        if (movement != null)
+            movement.Move(Vector2.zero);
+    }
+
+    public bool PerformAttack(Transform player)
+    {
+        if (player == null)
+            return false;
 
         float distance = Vector2.Distance(transform.position, player.position);
-        if (distance > attackRange + 0.15f) return;
-
-        IDamageable damageable = player.GetComponent<IDamageable>();
-        damageable?.TakeDamage(attackDamage);
+        if (distance > attackRange + 0.2f)
+            return false;
 
         PlayerPoisonStatus poisonStatus = player.GetComponent<PlayerPoisonStatus>();
         if (poisonStatus == null)
             poisonStatus = player.gameObject.AddComponent<PlayerPoisonStatus>();
 
-        float duration = Random.Range(poisonMinDuration, poisonMaxDuration);
-        poisonStatus.ApplyPoison(duration, poisonTickDamage);
+        PlayerMovement playerMove = player.GetComponent<PlayerMovement>();
+        playerMove?.Stun(biteStunDuration);
+        Stun(biteStunDuration);
+
+        if (poisonStatus.IsPoisoned)
+        {
+            player.GetComponent<IDamageable>()?.TakeDamage(attackDamage);
+        }
+        else
+        {
+            poisonStatus.ApplyPoison();
+        }
+
+        return true;
+    }
+
+    public static void EnsureNonSnakeCompany(RoomInstance room)
+    {
+        if (room == null)
+            return;
+
+        EnemyBehaviour[] behaviours = room.GetComponentsInChildren<EnemyBehaviour>(true);
+        bool hasSnake = false;
+        bool hasNonSnake = false;
+        PoisonousSnake snake = null;
+
+        for (int i = 0; i < behaviours.Length; i++)
+        {
+            if (behaviours[i] == null)
+                continue;
+
+            if (behaviours[i].Type == EnemyType.Snake)
+            {
+                hasSnake = true;
+                if (snake == null)
+                    snake = behaviours[i].GetComponent<PoisonousSnake>();
+            }
+            else
+            {
+                hasNonSnake = true;
+            }
+        }
+
+        if (!hasSnake || hasNonSnake || snake == null || snake.companionPrefab == null)
+            return;
+
+        Vector3 spawnPos = snake.transform.position + Vector3.right * 1.1f;
+        RoomPathGrid grid = RoomPathGrid.For(room.transform);
+        if (grid != null && !grid.IsWalkableWorld(spawnPos))
+            spawnPos = snake.transform.position + Vector3.left * 1.1f;
+
+        GameObject companion = Instantiate(snake.companionPrefab, spawnPos, Quaternion.identity, room.transform);
+        room.RegisterSpawnedCombatEnemy(companion);
     }
 }

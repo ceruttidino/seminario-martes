@@ -17,7 +17,7 @@ public class PlayerInteraction : MonoBehaviour
         if (GamePause.IsGameplayFrozen) return;
 
         PlayerMovement movement = GetComponent<PlayerMovement>();
-        if (movement != null && movement.IsDigging) return;
+        if (movement != null && movement.IsActionLocked) return;
 
         CheckNearbyInteractables();
 

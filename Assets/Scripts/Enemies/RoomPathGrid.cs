@@ -1,11 +1,12 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class RoomPathGrid : MonoBehaviour
 {
-    [SerializeField] private float cellSize = 0.45f;
-    [SerializeField] private float probeRadius = 0.16f;
-    [SerializeField] private LayerMask blockedLayers = 1088;
+    [SerializeField] private float cellSize = 0.4f;
+    [SerializeField] private float probeRadius = 0.2f;
+    [SerializeField] private LayerMask blockedLayers = 1089; // Default + Trash + Wall
 
     private bool[,] walkable;
     private Vector2 origin;
@@ -14,8 +15,11 @@ public class RoomPathGrid : MonoBehaviour
     private bool dirty = true;
     private float nextRebuildTime;
     private ContactFilter2D blockedFilter;
-    private readonly Collider2D[] overlapBuffer = new Collider2D[12];
-    private readonly RaycastHit2D[] lineBuffer = new RaycastHit2D[4];
+    private readonly Collider2D[] overlapBuffer = new Collider2D[16];
+    private readonly RaycastHit2D[] lineBuffer = new RaycastHit2D[8];
+    private Tilemap floorMap;
+    private Tilemap voidMap;
+    private bool tilemapsCached;
     private readonly List<Vector2Int> open = new List<Vector2Int>(64);
     private readonly Dictionary<Vector2Int, Vector2Int> cameFrom = new Dictionary<Vector2Int, Vector2Int>(64);
     private readonly Dictionary<Vector2Int, int> cost = new Dictionary<Vector2Int, int>(64);
@@ -49,9 +53,44 @@ public class RoomPathGrid : MonoBehaviour
 
     private void Awake()
     {
+        blockedLayers = LayerMask.GetMask("Default", "Trash", "Wall");
+        if (blockedLayers.value == 0)
+            blockedLayers = 1089;
+
         blockedFilter = new ContactFilter2D();
         blockedFilter.useTriggers = false;
         blockedFilter.SetLayerMask(blockedLayers);
+        CacheTilemaps();
+    }
+
+    private void CacheTilemaps()
+    {
+        if (tilemapsCached)
+            return;
+
+        tilemapsCached = true;
+        Tilemap[] maps = GetComponentsInChildren<Tilemap>(true);
+        for (int i = 0; i < maps.Length; i++)
+        {
+            string name = maps[i].gameObject.name;
+            if (NameContains(name, "void") || NameContains(name, "vacio") || NameContains(name, "vacío"))
+                voidMap = maps[i];
+            else if (floorMap == null && NameContains(name, "floor"))
+                floorMap = maps[i];
+        }
+    }
+
+    public bool IsWalkableWorld(Vector2 world)
+    {
+        EnsureReady();
+        if (IsTerrainHole(world) || IsBlocked(world))
+            return false;
+
+        Vector2Int cell = WorldToCell(world);
+        if (!InBounds(cell) || walkable == null)
+            return false;
+
+        return walkable[cell.x, cell.y];
     }
 
     private void EnsureReady()
@@ -66,16 +105,20 @@ public class RoomPathGrid : MonoBehaviour
 
     private void Rebuild()
     {
+        CacheTilemaps();
         Bounds bounds = ComputeBounds();
         origin = new Vector2(bounds.min.x, bounds.min.y);
-        width = Mathf.Clamp(Mathf.CeilToInt(bounds.size.x / cellSize), 4, 56);
-        height = Mathf.Clamp(Mathf.CeilToInt(bounds.size.y / cellSize), 4, 40);
+        width = Mathf.Clamp(Mathf.CeilToInt(bounds.size.x / cellSize), 4, 64);
+        height = Mathf.Clamp(Mathf.CeilToInt(bounds.size.y / cellSize), 4, 48);
         walkable = new bool[width, height];
 
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
-                walkable[x, y] = !IsBlocked(CellToWorld(x, y));
+            {
+                Vector2 world = CellToWorld(x, y);
+                walkable[x, y] = !IsTerrainHole(world) && !IsBlocked(world);
+            }
         }
     }
 
@@ -109,14 +152,30 @@ public class RoomPathGrid : MonoBehaviour
     private bool IsIgnoredBlocker(Collider2D hit)
     {
         if (hit == null) return true;
+        if (hit.isTrigger) return true;
         if (hit.GetComponent<EnemyHealth>() != null) return true;
         if (hit.GetComponent<RatBody>() != null) return true;
         if (hit.GetComponent<LootPickup>() != null) return true;
         if (hit.GetComponent<UpgradePickup>() != null) return true;
         if (hit.GetComponent<SlimeTile>() != null) return true;
+        if (hit.GetComponent<BloodPool>() != null) return true;
+        if (hit.GetComponent<DiggingSpot>() != null) return true;
+        if (hit.GetComponent<BaseTrap>() != null) return true;
         if (hit.CompareTag("Player")) return true;
         if (hit.GetComponent<Supercontainer>() != null) return true;
         if (hit.GetComponent<TurtleShell>() != null) return true;
+        if (NameContains(hit.gameObject.name, "floor")) return true;
+        return false;
+    }
+
+    private bool IsTerrainHole(Vector2 world)
+    {
+        if (voidMap != null && voidMap.HasTile(voidMap.WorldToCell(world)))
+            return true;
+
+        if (floorMap != null && !floorMap.HasTile(floorMap.WorldToCell(world)))
+            return true;
+
         return false;
     }
 
@@ -132,11 +191,24 @@ public class RoomPathGrid : MonoBehaviour
         return false;
     }
 
+    private static bool NameContains(string name, string token)
+    {
+        return !string.IsNullOrEmpty(name) && name.IndexOf(token, System.StringComparison.OrdinalIgnoreCase) >= 0;
+    }
+
     public bool HasClearLine(Vector2 from, Vector2 to, float radius)
     {
         Vector2 delta = to - from;
         float distance = delta.magnitude;
         if (distance <= 0.05f) return true;
+
+        int samples = Mathf.Max(2, Mathf.CeilToInt(distance / Mathf.Max(0.2f, cellSize)));
+        for (int i = 0; i <= samples; i++)
+        {
+            Vector2 point = Vector2.Lerp(from, to, i / (float)samples);
+            if (IsTerrainHole(point) || IsBlocked(point))
+                return false;
+        }
 
         int hits = Physics2D.CircleCast(from, radius, delta / distance, blockedFilter, lineBuffer, distance);
         for (int i = 0; i < hits; i++)

@@ -39,6 +39,10 @@ public class PlayerMovement : MonoBehaviour
     public Vector2 MoveDirection => moveDirection;
     public Vector2 CurrentVelocity => rb != null ? rb.linearVelocity : Vector2.zero;
     public bool IsDigging => isDigging;
+    public bool IsStunned => stunTimer > 0f;
+    public bool IsActionLocked => isDigging || IsStunned;
+
+    private float stunTimer;
 
     void Awake()
     {
@@ -51,6 +55,9 @@ public class PlayerMovement : MonoBehaviour
 
         if (playerAim == null)
             playerAim = GetComponent<PlayerAim>();
+
+        if (GetComponent<PlayerWalkableClamp>() == null)
+            gameObject.AddComponent<PlayerWalkableClamp>();
     }
 
     private void OnEnable()
@@ -80,6 +87,23 @@ public class PlayerMovement : MonoBehaviour
             animator.SetFloat("Speed", 0f);
     }
 
+    void Update()
+    {
+        if (stunTimer > 0f)
+        {
+            stunTimer -= Time.deltaTime;
+            if (rb != null)
+                rb.linearVelocity = Vector2.zero;
+        }
+    }
+
+    public void Stun(float duration)
+    {
+        stunTimer = Mathf.Max(stunTimer, duration);
+        if (rb != null)
+            rb.linearVelocity = Vector2.zero;
+    }
+
     void LateUpdate()
     {
         ApplySpriteFlip();
@@ -104,7 +128,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void HandleMovement()
     {
-        if (GamePause.IsGameplayFrozen || isDigging)
+        if (GamePause.IsGameplayFrozen || isDigging || IsStunned)
         {
             if (rb != null)
                 rb.linearVelocity = Vector2.zero;

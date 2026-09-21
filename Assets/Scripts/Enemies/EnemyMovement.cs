@@ -12,7 +12,7 @@ public class EnemyMovement : MonoBehaviour, IMovement
 
     [Header("Obstacle Avoidance")]
     [Tooltip("Capas solidas (paredes, piedras, bolsas de basura, etc.) que el enemigo esquiva en vez de empujar contra ellas. Los triggers (puertas, zonas de interaccion) se ignoran siempre, sin importar la capa.")]
-    [SerializeField] private LayerMask obstacleLayers = 1088; // Wall (1024) + Trash (64)
+    [SerializeField] private LayerMask obstacleLayers = 1089; // Default + Trash + Wall
     [Tooltip("Radio del sondeo circular usado para detectar obstaculos por delante.")]
     [SerializeField] private float avoidanceRadius = 0.3f;
     [Tooltip("Distancia hacia adelante que se sondea antes de moverse.")]
@@ -63,6 +63,10 @@ public class EnemyMovement : MonoBehaviour, IMovement
         }
 
         // Las puertas son triggers en capa Wall: si las contamos, los enemigos las "esquivan" y no cruzan.
+        obstacleLayers = LayerMask.GetMask("Default", "Trash", "Wall");
+        if (obstacleLayers.value == 0)
+            obstacleLayers = 1089;
+
         obstacleFilter = new ContactFilter2D();
         obstacleFilter.useTriggers = false;
         obstacleFilter.SetLayerMask(obstacleLayers);
@@ -114,7 +118,7 @@ public class EnemyMovement : MonoBehaviour, IMovement
             return;
         }
 
-        if (toTarget.magnitude <= 2.15f)
+        if (toTarget.magnitude <= 1.35f)
         {
             RoomPathGrid grid = RoomPathGrid.For(transform);
             bool clear = grid == null || grid.HasClearLine(from, worldTarget, avoidanceRadius * 0.7f);

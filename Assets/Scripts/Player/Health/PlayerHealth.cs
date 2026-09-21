@@ -39,6 +39,10 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         poisonStatus = GetComponent<PlayerPoisonStatus>();
         if (poisonStatus == null)
             poisonStatus = gameObject.AddComponent<PlayerPoisonStatus>();
+
+        PlayerFeetMarker.EnsureOn(gameObject);
+        if (GetComponent<PlayerWalkableClamp>() == null)
+            gameObject.AddComponent<PlayerWalkableClamp>();
     }
 
     void Start()
@@ -142,6 +146,8 @@ public class PlayerHealth : MonoBehaviour, IDamageable
 
         UpdateMaxHearts();
         UpdateHearts(playerHealth);
+        if (heartsToAdd > 0)
+            poisonStatus?.Cure();
     }
 
     public void PlayerHeal()
@@ -151,6 +157,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
 
     public void PlayerHeal(int heal)
     {
+        poisonStatus?.Cure();
         if (playerHealth >= playerMaxHealth) return;
 
         playerHealth = Mathf.Clamp(playerHealth + heal, 0, playerMaxHealth);
@@ -195,6 +202,22 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         UpdateHearts(playerHealth);
     }
     public int CurrentHealth => playerHealth;
+    public int MaxHealth => playerMaxHealth;
     public bool IsDead => playerHealth <= 0;
     public bool IsHealthFull => playerHealth >= playerMaxHealth;
+
+    public void TakePoisonTick()
+    {
+        if (playerHealth <= 1)
+        {
+            poisonStatus?.Cure();
+            return;
+        }
+
+        playerHealth = Mathf.Max(1, playerHealth - 1);
+        UpdateHearts(playerHealth);
+
+        if (playerHealth <= 1)
+            poisonStatus?.Cure();
+    }
 }

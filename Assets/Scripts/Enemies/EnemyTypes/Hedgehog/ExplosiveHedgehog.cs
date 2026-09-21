@@ -63,6 +63,8 @@ public class ExplosiveHedgehog : MonoBehaviour
 
         if (damageFlash == null)
             damageFlash = GetComponent<DamageFlash>();
+
+        countdownDuration = 2f;
     }
 
     private void Start()
@@ -180,7 +182,7 @@ public class ExplosiveHedgehog : MonoBehaviour
                 knockDirection = Vector2.up;
 
             Rigidbody2D targetRb = damageableBehaviour.GetComponent<Rigidbody2D>();
-            if (targetRb != null && knockedBack.Add(targetRb))
+            if (targetRb != null && knockedBack.Add(targetRb) && damageable is not PlayerHealth)
                 ApplyKnockbackToRigidbody(targetRb, knockDirection, explosionKnockbackForce);
 
             damageable.TakeDamage(ResolveExplosionDamage(damageable));

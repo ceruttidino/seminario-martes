@@ -24,6 +24,18 @@ public class EnemyHealth : MonoBehaviour, IDamageable
 
         if (damageFlash == null)
             damageFlash = GetComponent<DamageFlash>();
+
+        if (GetComponent<BossBase>() == null)
+        {
+            if (GetComponent<EnemyBodyCollision>() == null)
+                gameObject.AddComponent<EnemyBodyCollision>();
+            if (GetComponent<EnemySeparation>() == null)
+                gameObject.AddComponent<EnemySeparation>();
+        }
+        else if (GetComponent<EnemyBodyCollision>() == null)
+        {
+            gameObject.AddComponent<EnemyBodyCollision>();
+        }
     }
 
     private void Start()
@@ -58,7 +70,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
 
         isDead = true;
         if (!WillLeaveCorpse())
-            BloodPool.Spawn(transform.position);
+            BloodPool.Spawn(transform.position, GetComponentInParent<RoomInstance>()?.transform);
         OnDeath?.Invoke();
         Destroy(gameObject);
     }

@@ -95,7 +95,7 @@ public class MutantSpiderBoss : BossBase
         if (enemyHealth != null)
             enemyHealth.OnDeath += HandleDeath;
 
-        IgnorePlayerCollision();
+        ConfigurePlayerBlocking();
         base.Awake();
     }
 
@@ -103,7 +103,7 @@ public class MutantSpiderBoss : BossBase
     {
         CaptureEntryPosition();
         yield return new WaitForSeconds(1f);
-        IgnorePlayerCollision();
+        ConfigurePlayerBlocking();
 
         while (!isDead)
         {
@@ -137,9 +137,18 @@ public class MutantSpiderBoss : BossBase
         }
     }
 
-    private void IgnorePlayerCollision()
+    private void ConfigurePlayerBlocking()
     {
-        if (bodyCollider == null) return;
+        if (bodyCollider == null)
+            return;
+
+        int playerLayer = LayerMask.NameToLayer("Player");
+        if (playerLayer >= 0)
+            bodyCollider.excludeLayers &= ~(1 << playerLayer);
+
+        CircleCollider2D circle = bodyCollider as CircleCollider2D;
+        if (circle != null && circle.radius < 0.38f)
+            circle.radius = 0.38f;
 
         if (player == null)
         {
@@ -148,14 +157,20 @@ public class MutantSpiderBoss : BossBase
                 player = playerObject.transform;
         }
 
-        if (player == null) return;
+        if (player == null)
+            return;
 
         Collider2D[] playerCols = player.GetComponentsInChildren<Collider2D>();
         foreach (Collider2D col in playerCols)
         {
             if (col == null || col.isTrigger) continue;
-            Physics2D.IgnoreCollision(bodyCollider, col, true);
+            Physics2D.IgnoreCollision(bodyCollider, col, false);
         }
+    }
+
+    private void IgnorePlayerCollision()
+    {
+        ConfigurePlayerBlocking();
     }
 
     private IEnumerator ChasePlayer()
@@ -176,9 +191,17 @@ public class MutantSpiderBoss : BossBase
             }
 
             Vector2 toPlayer = (Vector2)player.position - rb.position;
-            Vector2 direction = toPlayer.sqrMagnitude > 0.001f ? toPlayer.normalized : lastMoveDirection;
+            float distance = toPlayer.magnitude;
+            Vector2 direction = distance > 0.001f ? toPlayer / distance : lastMoveDirection;
 
-            rb.linearVelocity = direction * moveSpeed;
+            float stopDistance = 1.25f;
+            if (bodyCollider != null)
+                stopDistance = Mathf.Max(stopDistance, bodyCollider.bounds.extents.magnitude * 0.65f + 0.55f);
+
+            if (distance <= stopDistance)
+                rb.linearVelocity = Vector2.zero;
+            else
+                rb.linearVelocity = direction * moveSpeed;
             UpdateMovementAnimation(direction);
 
             if (enemyAttack != null && !isOnCeiling && enemyAttack.TryAttack())

@@ -286,6 +286,11 @@ public class DungeonManager : MonoBehaviour
 
         MovePlayerToCorrectSpawn(entryDirection);
 
+        PlayerHealth playerHealth = player != null ? player.GetComponent<PlayerHealth>() : null;
+        if (playerHealth == null)
+            playerHealth = FindFirstObjectByType<PlayerHealth>();
+        playerHealth?.GetComponent<PlayerPoisonStatus>()?.NotifyRoomEntered();
+
         bool firstVisit = !node.hasBeenVisited;
 
         if (firstVisit)

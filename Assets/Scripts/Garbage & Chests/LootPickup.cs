@@ -77,7 +77,9 @@ public class LootPickup : MonoBehaviour
 
             case LootType.Health:
                 PlayerHealth health = player.GetComponent<PlayerHealth>();
-                if (health == null || health.IsHealthFull) return false;
+                PlayerPoisonStatus poison = player.GetComponent<PlayerPoisonStatus>();
+                if (health == null) return false;
+                if (health.IsHealthFull && (poison == null || !poison.IsPoisoned)) return false;
                 health.PlayerHeal(lootItem.healthAmount);
                 return true;
 

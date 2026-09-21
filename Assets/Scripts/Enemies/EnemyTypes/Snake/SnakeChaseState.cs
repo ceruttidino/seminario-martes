@@ -23,6 +23,19 @@ public class SnakeChaseState : IEnemyState
     {
         if (player == null) return;
 
+        if (snake.IsStunned)
+        {
+            movement.Move(Vector2.zero);
+            return;
+        }
+
+        PlayerPoisonStatus poison = player.GetComponent<PlayerPoisonStatus>();
+        if (poison != null && poison.IsPoisoned)
+        {
+            behaviour.SetState(new SnakeFleeState(player, movement, self, behaviour, snake));
+            return;
+        }
+
         Vector2 toPlayer = player.position - self.position;
         float distance = toPlayer.magnitude;
 

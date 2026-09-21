@@ -204,6 +204,8 @@ public class RoomInstance : MonoBehaviour
             GameObject enemyGO = Instantiate(enemyPrefab, point.position, Quaternion.identity, transform);
             RegisterEnemy(enemyGO);
         }
+
+        PoisonousSnake.EnsureNonSnakeCompany(this);
     }
 
     public void SpawnEnemyWithSummon(GameObject prefab, Vector3 position)
@@ -358,6 +360,7 @@ public class RoomInstance : MonoBehaviour
     private IEnumerator CheckCombatClearedNextFrame()
     {
         checkingCombatClear = true;
+        yield return null;
         yield return null;
         checkingCombatClear = false;
 

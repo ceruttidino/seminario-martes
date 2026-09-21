@@ -69,18 +69,25 @@ public class BaseTrap : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        PlayerHealth ph = other.GetComponent<PlayerHealth>();
+        if (other.GetComponent<PlayerFeetMarker>() == null)
+            return;
+
+        PlayerHealth ph = other.GetComponentInParent<PlayerHealth>();
         if (ph != null)
         {
             playerInside = ph;
             touching = true;
-            lastDamageTime = -999f; // fuerza golpe inmediato al entrar si ya está activa
+            lastDamageTime = -999f;
         }
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.GetComponent<PlayerHealth>() == playerInside)
+        if (other.GetComponent<PlayerFeetMarker>() == null)
+            return;
+
+        PlayerHealth ph = other.GetComponentInParent<PlayerHealth>();
+        if (ph == playerInside)
         {
             playerInside = null;
             touching = false;

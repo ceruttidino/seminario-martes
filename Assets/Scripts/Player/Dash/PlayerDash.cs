@@ -46,7 +46,7 @@ public class PlayerDash : MonoBehaviour
     }
 
     public bool CanDash => CooldownRemaining <= 0f && !isDashing && !IsAnyAttackActive() && !GamePause.IsGameplayFrozen
-        && (playerMovement == null || !playerMovement.IsDigging);
+        && (playerMovement == null || !playerMovement.IsActionLocked);
 
     private bool IsAnyAttackActive()
     {
