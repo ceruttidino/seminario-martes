@@ -106,9 +106,18 @@ public class DiggingSpot : MonoBehaviour, IInteractable
 
     private void DisableInteraction()
     {
+        isPlayerNear = false;
+
         Collider2D col = GetComponent<Collider2D>();
         if (col != null)
             col.enabled = false;
+
+        DiggingPileBlink[] blinks = GetComponentsInChildren<DiggingPileBlink>(true);
+        for (int i = 0; i < blinks.Length; i++)
+        {
+            if (blinks[i] != null)
+                blinks[i].gameObject.SetActive(false);
+        }
     }
 
     private void ShowHoleAfterMole()
