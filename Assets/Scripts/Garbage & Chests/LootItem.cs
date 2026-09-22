@@ -19,11 +19,19 @@ public class LootItem : ScriptableObject
     public LootType lootType;
 
     [Header("Valores")]
-    public int scrapAmount = 0;
+    public int scrapAmount = 1;
+    public int scrapMaxAmount = 2;
     public int healthAmount = 0;
     public int keyAmount = 0;
 
     [Header("Si es mejora")]
     public bool isUpgrade = false;
     public UpgradeSO upgradeSO;
+
+    public int RollScrapAmount()
+    {
+        int min = Mathf.Max(0, scrapAmount);
+        int max = Mathf.Max(min, scrapMaxAmount);
+        return Random.Range(min, max + 1);
+    }
 }

@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 7812814972841177970}
   - component: {fileID: 5194391407452285506}
   - component: {fileID: 531731411836854771}
+  - component: {fileID: -3759699315439017157}
   m_Layer: 0
   m_Name: KeyItem
   m_TagString: Untagged
@@ -153,7 +154,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LootPickup
   pickupDelay: 0.6
-  autoPickup: 0
   lootItem: {fileID: 0}
   pickupSfx: {fileID: 531731411836854771}
 --- !u!82 &531731411836854771
@@ -253,3 +253,21 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &-3759699315439017157
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6470171162183498645}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 522da9c4f9bffbc438e2eec40a5e0ad4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PickupEffect
+  floatAmplitude: 0.18
+  floatSpeed: 1.8
+  popDuration: 0.35
+  spawnParticlesOnPickup: 1
+  particlePresetId: lockpick
+  particleOffset: {x: 0, y: 0, z: 0}

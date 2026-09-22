@@ -16,6 +16,12 @@ public class RoomInformation : ScriptableObject
     [Header("Doors")]
     public List<DoorDirection> availableDoors = new List<DoorDirection>();
 
+    [Header("Challenge")]
+    [Tooltip("Id del challenge. Usar las constantes de ChallengeRunState (Supercontainer, StealTheItem).")]
+    public string challengeId;
+    [Tooltip("Logo que lleva la puerta que da a esta challenge room (ej: la pieza de scrap).")]
+    public Sprite challengeDoorSprite;
+
     public bool HasDoor(DoorDirection direction)
     {
         return availableDoors.Contains(direction);

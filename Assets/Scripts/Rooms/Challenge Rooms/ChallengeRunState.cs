@@ -3,6 +3,7 @@ using System.Collections.Generic;
 public static class ChallengeRunState
 {
     public const string Supercontainer = "Supercontainer";
+    public const string StealTheItem = "StealTheItem";
 
     private static readonly HashSet<string> completed = new HashSet<string>();
 

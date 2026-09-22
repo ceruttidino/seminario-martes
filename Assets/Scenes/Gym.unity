@@ -12604,6 +12604,97 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.RectMask2D
   m_Padding: {x: -8, y: -5, z: -8, w: -5}
   m_Softness: {x: 0, y: 0}
+--- !u!1 &1865377241
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1865377243}
+  - component: {fileID: 1865377242}
+  m_Layer: 0
+  m_Name: ParticleEffectsManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1865377242
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1865377241}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ced4b07e0b8b6644386e9a7ffef30fdc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ParticleEffectsManager
+  presets:
+  - id: scrap
+    sprite: {fileID: 0}
+    colorA: {r: 0.78, g: 0.78, b: 0.82, a: 1}
+    colorB: {r: 1, g: 0.72, b: 0.32, a: 1}
+    minCount: 7
+    maxCount: 11
+    spawnRadius: 0.12
+    minSpeed: 2
+    maxSpeed: 4.5
+    upwardBias: 0.45
+    gravity: 10
+    drag: 2.5
+    maxRotationSpeed: 220
+    minLifetime: 0.35
+    maxLifetime: 0.65
+    minSize: 0.12
+    maxSize: 0.22
+    endScaleMultiplier: 0.15
+    fadeStart: 0.45
+    attractToCollector: 0
+    attractForce: 35
+  - id: lockpick
+    sprite: {fileID: 0}
+    colorA: {r: 1, g: 0.85, b: 0.35, a: 1}
+    colorB: {r: 1, g: 0.97, b: 0.75, a: 1}
+    minCount: 9
+    maxCount: 14
+    spawnRadius: 0.12
+    minSpeed: 1.6
+    maxSpeed: 3.6
+    upwardBias: 0.45
+    gravity: 3
+    drag: 2.5
+    maxRotationSpeed: 220
+    minLifetime: 0.45
+    maxLifetime: 0.8
+    minSize: 0.12
+    maxSize: 0.22
+    endScaleMultiplier: 0.15
+    fadeStart: 0.45
+    attractToCollector: 1
+    attractForce: 35
+  initialPoolSize: 60
+  expandPoolIfNeeded: 1
+  sortingLayerName: Default
+  sortingOrder: 50
+--- !u!4 &1865377243
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1865377241}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1909060254
 GameObject:
   m_ObjectHideFlags: 0
@@ -13644,7 +13735,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6354491309245815682, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
       propertyPath: attackDistance
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6354491309245815682, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
       propertyPath: vfxAngleOffset
@@ -13807,3 +13898,4 @@ SceneRoots:
   - {fileID: 1073348446815861783}
   - {fileID: 1240830711}
   - {fileID: 3790582539949757998}
+  - {fileID: 1865377243}

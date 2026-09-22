@@ -37,6 +37,8 @@ public class DungeonManager : MonoBehaviour
     private bool isTransitioning;
     private int currentFloor = 1;
 
+    private DoorDirection? lastEntryDirection;
+
     public int CurrentFloor => currentFloor;
     public int MaxFloor => maxFloor;
     public bool IsFinalFloor => currentFloor >= maxFloor;
@@ -271,6 +273,8 @@ public class DungeonManager : MonoBehaviour
             return;
         }
 
+        lastEntryDirection = entryDirection;
+
         if (node.spawnedInstance == null)
         {
 
@@ -310,8 +314,8 @@ public class DungeonManager : MonoBehaviour
 
             if (node.information.type == RoomType.Challenge)
             {
-                ChallengeRoomController challenge =
-                    currentRoomInstance.GetComponentInChildren<ChallengeRoomController>();
+                ChallengeRoomBase challenge =
+                    currentRoomInstance.GetComponentInChildren<ChallengeRoomBase>();
 
                 if (challenge != null)
                 {
@@ -527,10 +531,10 @@ public class DungeonManager : MonoBehaviour
 
     private bool TryForceChallengeSmart()
     {
-        if (challengeSpawned)
+        if (!HasPendingChallenges())
             return false;
 
-        if (ChallengeRunState.WasCompleted(ChallengeRunState.Supercontainer))
+        if (challengeSpawned)
             return false;
 
         List<RoomNode> candidates = new List<RoomNode>();
@@ -605,6 +609,96 @@ public class DungeonManager : MonoBehaviour
         }
 
         return false;
+    }
+
+    private bool HasPendingChallenges()
+    {
+        foreach (RoomInformation info in challengeRoomInformations)
+        {
+            if (info == null)
+                continue;
+
+            if (!ChallengeRunState.WasCompleted(info.challengeId))
+                return true;
+        }
+
+        return false;
+    }
+
+    public void ExpelFromCurrentRoom(bool sealRoom = true)
+    {
+        if (isTransitioning || currentNode == null)
+            return;
+
+        DoorDirection? exit = null;
+
+        if (lastEntryDirection.HasValue && currentNode.HasNeighbor(lastEntryDirection.Value))
+            exit = lastEntryDirection;
+
+        if (!exit.HasValue)
+        {
+            foreach (DoorDirection dir in System.Enum.GetValues(typeof(DoorDirection)))
+            {
+                if (currentNode.HasNeighbor(dir))
+                {
+                    exit = dir;
+                    break;
+                }
+            }
+        }
+
+        if (!exit.HasValue)
+            return;
+
+        StartCoroutine(ExpelRoutine(exit.Value, sealRoom));
+    }
+
+    private IEnumerator ExpelRoutine(DoorDirection exitDirection, bool sealRoom)
+    {
+        isTransitioning = true;
+
+        RoomNode targetNode = currentNode.GetNeighbor(exitDirection);
+
+        if (targetNode == null)
+        {
+            isTransitioning = false;
+            yield break;
+        }
+
+        if (screenFader != null)
+            yield return StartCoroutine(screenFader.FadeOut());
+
+        DoorDirection entryDirection = DungeonLayout.GetOppositeDirection(exitDirection);
+
+        if (currentRoomInstance != null)
+            currentRoomInstance.gameObject.SetActive(false);
+
+        yield return new WaitForSeconds(transitionDelay);
+
+        RoomNode previousNode = currentNode;
+        previousNode.isCurrentRoom = false;
+
+        if (sealRoom)
+            previousNode.isSealed = true;
+
+        currentNode = targetNode;
+        currentNode.isCurrentRoom = true;
+
+        EnterRoom(currentNode, entryDirection);
+
+        if (currentNode.spawnedInstance != null)
+            currentNode.spawnedInstance.ConfigureDoors(currentNode);
+
+        if (minimapUI != null)
+        {
+            minimapUI.BuildMap();
+            minimapUI.RefreshMap();
+        }
+
+        if (screenFader != null)
+            yield return StartCoroutine(screenFader.FadeIn());
+
+        isTransitioning = false;
     }
 
     public List<RoomNode> GetAllRooms()

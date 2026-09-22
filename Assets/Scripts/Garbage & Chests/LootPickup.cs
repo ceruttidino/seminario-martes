@@ -13,6 +13,8 @@ public class LootPickup : MonoBehaviour
     private bool collected;
     private float spawnTime;
 
+    private int rolledScrapAmount = 1;
+
     private void Awake()
     {
         GetComponent<Collider2D>().isTrigger = true;
@@ -72,7 +74,8 @@ public class LootPickup : MonoBehaviour
             case LootType.Scrap:
                 PlayerScrap scrap = player.GetComponent<PlayerScrap>();
                 if (scrap == null) return false;
-                scrap.AddScrap(lootItem.scrapAmount);
+                rolledScrapAmount = lootItem.RollScrapAmount();
+                scrap.AddScrap(rolledScrapAmount);
                 return true;
 
             case LootType.Health:
@@ -123,7 +126,7 @@ public class LootPickup : MonoBehaviour
 
         int amount = lootItem.lootType == LootType.Key
             ? Mathf.Max(1, lootItem.keyAmount)
-            : Mathf.Max(1, lootItem.scrapAmount);
+            : Mathf.Max(1, rolledScrapAmount);
 
         TabMenuUI.Instance.ShowPickup(icon, label, amount);
     }

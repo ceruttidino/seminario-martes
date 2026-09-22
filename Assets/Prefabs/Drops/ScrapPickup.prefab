@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6628349623662775144}
   - component: {fileID: 3522473393200830544}
   - component: {fileID: -6809959975088304372}
+  - component: {fileID: -8850866613815195257}
   m_Layer: 0
   m_Name: ScrapPickup
   m_TagString: Untagged
@@ -153,7 +154,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LootPickup
   pickupDelay: 0.6
-  autoPickup: 0
   lootItem: {fileID: 11400000, guid: 77ce5807911df084e8ce0ec914dd83c8, type: 2}
   pickupSfx: {fileID: -6809959975088304372}
 --- !u!82 &-6809959975088304372
@@ -253,3 +253,21 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &-8850866613815195257
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6731944521481601438}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 522da9c4f9bffbc438e2eec40a5e0ad4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PickupEffect
+  floatAmplitude: 0.18
+  floatSpeed: 1.8
+  popDuration: 0.35
+  spawnParticlesOnPickup: 1
+  particlePresetId: scrap
+  particleOffset: {x: 0, y: 0, z: 0}

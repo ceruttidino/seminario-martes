@@ -14,6 +14,7 @@ public class RoomNode
     public bool hasBeenVisited;
     public bool isCurrentRoom;
     public bool isShopUnlocked = false;
+    public bool isSealed = false;
 
     public RoomNode(string id, RoomInformation roomInformation)
     {
