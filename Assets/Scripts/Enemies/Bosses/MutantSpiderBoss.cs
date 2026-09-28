@@ -67,6 +67,7 @@ public class MutantSpiderBoss : BossBase
 
     private Vector3 capturedEntryPosition;
     private bool hasCapturedEntry;
+    private BossExitDoor exitDoor;
 
     protected override void Awake()
     {
@@ -508,29 +509,48 @@ public class MutantSpiderBoss : BossBase
         if (room != null)
             room.UnlockDoorsAnimated();
 
-        SpawnVictoryDoor();
+        if (exitDoor == null && room != null)
+            EnsureExitDoor(room.GetBossExitDirection());
+
+        if (exitDoor != null)
+            exitDoor.OpenAfterBoss();
     }
 
-    private void SpawnVictoryDoor()
+    public void EnsureExitDoor(DoorDirection wall)
     {
-        if (victoryDoorPrefab == null)
-            return;
-
-        Transform spawnPoint = PickVictoryDoorPoint();
-
-        Vector3 spawnPos = spawnPoint != null
-            ? spawnPoint.position
-            : transform.position + new Vector3(0, 2f, 0);
-
-        Quaternion rot = spawnPoint != null
-            ? GetDoorRotation(spawnPoint)
-            : Quaternion.identity;
-
-        GameObject door = Instantiate(victoryDoorPrefab, spawnPos, rot);
+        if (exitDoor == null)
+            exitDoor = GetComponentInParent<RoomInstance>()?.GetComponentInChildren<BossExitDoor>(true);
 
         Transform roomParent = FindRoomParent();
-        if (roomParent != null)
-            door.transform.SetParent(roomParent, true);
+        RoomInstance room = roomParent != null
+            ? roomParent.GetComponent<RoomInstance>()
+            : GetComponentInParent<RoomInstance>();
+
+        if (exitDoor == null)
+        {
+            GameObject go = new GameObject("BossExitDoor");
+            if (roomParent != null)
+                go.transform.SetParent(roomParent, false);
+            exitDoor = go.AddComponent<BossExitDoor>();
+        }
+
+        Vector3 roomCenter = GetRoomCenter();
+        Vector3 spawnPos = room != null
+            ? room.GetDoorWorldPosition(wall)
+            : roomCenter + DirectionOffset(wall);
+
+        exitDoor.Place(spawnPos, wall, roomCenter);
+    }
+
+    private static Vector3 DirectionOffset(DoorDirection wall)
+    {
+        switch (wall)
+        {
+            case DoorDirection.Up: return Vector3.up * 4.6f;
+            case DoorDirection.Down: return Vector3.down * 4.6f;
+            case DoorDirection.Left: return Vector3.left * 8.4f;
+            default: return Vector3.right * 8.4f;
+        }
     }
 
     private Quaternion GetDoorRotation(Transform point)

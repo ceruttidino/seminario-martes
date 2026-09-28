@@ -49,9 +49,12 @@ public class RoomDoor : MonoBehaviour
 
     private bool playerInRange = false;
     private GameObject currentPlayer;
+    private bool pendingUnlock;
+    private Action pendingUnlockComplete;
 
     public DoorDirection Direction => direction;
     public bool IsLocked => isLocked;
+    public bool IsAnimating => isAnimating;
     public bool UsesBranchUnlockSfx => currentDoorType != RoomType.Shop && currentDoorType != RoomType.Boss;
 
     private bool IsShopDoor => currentDoorType == RoomType.Shop;
@@ -81,6 +84,8 @@ public class RoomDoor : MonoBehaviour
     {
         isAnimating = false;
         doorAnimRoutine = null;
+        pendingUnlock = false;
+        pendingUnlockComplete = null;
     }
 
     public void Initialize(RoomNode node, DoorDirection newDirection)
@@ -114,6 +119,8 @@ public class RoomDoor : MonoBehaviour
     public void SetLocked(bool locked)
     {
         CancelDoorAnimation();
+        pendingUnlock = false;
+        pendingUnlockComplete = null;
         isLocked = locked;
         UpdateDoorVisual();
     }
@@ -248,7 +255,16 @@ public class RoomDoor : MonoBehaviour
 
     public void PlayUnlockAnimation(Action onComplete = null)
     {
+        if (isLocked && isAnimating)
+        {
+            pendingUnlock = true;
+            pendingUnlockComplete = onComplete;
+            return;
+        }
+
         CancelDoorAnimation();
+        pendingUnlock = false;
+        pendingUnlockComplete = null;
 
         if (!isLocked)
         {
@@ -291,8 +307,24 @@ public class RoomDoor : MonoBehaviour
         onComplete?.Invoke();
     }
 
+    public float GetLockAnimationDuration()
+    {
+        if (IsShopDoor)
+            return 0f;
+
+        Sprite[] frames = IsBossDoor ? GetBossFrames() : combatAnimationFrames;
+        float rate = IsBossDoor ? bossFrameRate : combatFrameRate;
+        if (frames == null || frames.Length == 0)
+            return 0.35f;
+
+        return frames.Length / Mathf.Max(1f, rate);
+    }
+
     public void PlayLockAnimation()
     {
+        if (pendingUnlock)
+            return;
+
         if (IsShopDoor)
         {
             SetLocked(true);
@@ -304,6 +336,9 @@ public class RoomDoor : MonoBehaviour
             UpdateDoorVisual();
             return;
         }
+
+        if (isLocked && isAnimating)
+            return;
 
         CancelDoorAnimation();
         isLocked = true;
@@ -328,6 +363,14 @@ public class RoomDoor : MonoBehaviour
         isAnimating = false;
         doorAnimRoutine = null;
         UpdateDoorVisual();
+
+        if (pendingUnlock)
+        {
+            pendingUnlock = false;
+            Action complete = pendingUnlockComplete;
+            pendingUnlockComplete = null;
+            PlayUnlockAnimation(complete);
+        }
     }
 
     private IEnumerator PlaySpriteFrames(Sprite[] frames, float frameRate, bool reverse)

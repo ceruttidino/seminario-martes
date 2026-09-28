@@ -25,6 +25,13 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         if (damageFlash == null)
             damageFlash = GetComponent<DamageFlash>();
 
+        const int minEnemySort = 2;
+        foreach (SpriteRenderer renderer in GetComponentsInChildren<SpriteRenderer>(true))
+        {
+            if (renderer != null && renderer.sortingOrder < minEnemySort)
+                renderer.sortingOrder += minEnemySort;
+        }
+
         if (GetComponent<BossBase>() == null)
         {
             if (GetComponent<EnemyBodyCollision>() == null)

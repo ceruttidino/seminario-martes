@@ -45,6 +45,7 @@ public class RoomInstance : MonoBehaviour
     public bool IsInCombat => combatActive || HasLivingEnemies();
 
     private RoomNode currentNode;
+    private DoorDirection? entryDirection;
 
     private void Awake()
     {
@@ -84,6 +85,8 @@ public class RoomInstance : MonoBehaviour
     public void ConfigureDoors(RoomNode node, DoorDirection? forcedDoor = null)
     {
         currentNode = node;
+        if (forcedDoor.HasValue)
+            entryDirection = forcedDoor;
 
         foreach (var pair in doorLookup)
         {
@@ -132,7 +135,73 @@ public class RoomInstance : MonoBehaviour
             LockDoors(instant: true);
         }
 
+        if (node.information != null && node.information.type == RoomType.Boss)
+            EnsureBossExitDoor();
+
         GenerateDiggingSpots();
+    }
+
+    public bool AnyDoorAnimating()
+    {
+        foreach (RoomDoor door in roomDoors)
+        {
+            if (door != null && door.IsAnimating)
+                return true;
+        }
+
+        return false;
+    }
+
+    public Vector3 GetDoorWorldPosition(DoorDirection direction)
+    {
+        if (doorLookup.TryGetValue(direction, out RoomDoor door) && door != null)
+            return door.transform.position;
+
+        switch (direction)
+        {
+            case DoorDirection.Up: return transform.position + Vector3.up * 4.6f;
+            case DoorDirection.Down: return transform.position + Vector3.down * 4.6f;
+            case DoorDirection.Left: return transform.position + Vector3.left * 8.4f;
+            default: return transform.position + Vector3.right * 8.4f;
+        }
+    }
+
+    public DoorDirection GetBossExitDirection()
+    {
+        if (entryDirection.HasValue)
+            return entryDirection.Value.Opposite();
+
+        if (currentNode != null)
+        {
+            foreach (var pair in doorLookup)
+            {
+                if (currentNode.HasNeighbor(pair.Key))
+                    return pair.Key.Opposite();
+            }
+        }
+
+        return DoorDirection.Up;
+    }
+
+    private void EnsureBossExitDoor()
+    {
+        MutantSpiderBoss boss = GetComponentInChildren<MutantSpiderBoss>(true);
+        if (boss != null)
+        {
+            boss.EnsureExitDoor(GetBossExitDirection());
+            return;
+        }
+
+        BossExitDoor existing = GetComponentInChildren<BossExitDoor>(true);
+        if (existing == null)
+        {
+            GameObject go = new GameObject("BossExitDoor");
+            go.transform.SetParent(transform, false);
+            existing = go.AddComponent<BossExitDoor>();
+        }
+
+        existing.Place(GetDoorWorldPosition(GetBossExitDirection()), GetBossExitDirection(), transform.position);
+        existing.SetOpenedImmediate();
     }
 
     private void GenerateDiggingSpots()
@@ -176,17 +245,29 @@ public class RoomInstance : MonoBehaviour
             {
                 combatActive = true;
                 LockDoors();
+                StartCoroutine(UnlockIfClearedAfterDoorsClose());
             }
             return;
         }
 
         combatActive = true;
         LockDoors();
+        StartCoroutine(UnlockIfClearedAfterDoorsClose());
         StartCoroutine(SpawnEnemiesDelayed());
     }
 
     private IEnumerator SpawnEnemiesDelayed()
     {
+        List<GameObject> heldExisting = new List<GameObject>();
+        foreach (EnemyHealth existing in GetComponentsInChildren<EnemyHealth>(true))
+        {
+            if (existing == null || existing.GetComponent<BossBase>() != null)
+                continue;
+
+            EnemySummon.Hold(existing.gameObject);
+            heldExisting.Add(existing.gameObject);
+        }
+
         List<Transform> points = new List<Transform>();
         foreach (Transform point in enemySpawnPoints)
         {
@@ -197,7 +278,15 @@ public class RoomInstance : MonoBehaviour
         foreach (Transform point in points)
             EnemySummon.PlaySmoke(point.position);
 
-        yield return new WaitForSeconds(EnemySummon.Delay);
+        float start = Time.time;
+        while (Time.time - start < EnemySummon.Delay || AnyDoorAnimating())
+            yield return null;
+
+        foreach (GameObject held in heldExisting)
+        {
+            if (held != null)
+                EnemySummon.Release(held);
+        }
 
         foreach (Transform point in points)
         {
@@ -206,6 +295,18 @@ public class RoomInstance : MonoBehaviour
         }
 
         PoisonousSnake.EnsureNonSnakeCompany(this);
+
+        if (!HasLivingEnemies())
+            EndCombat();
+    }
+
+    private IEnumerator UnlockIfClearedAfterDoorsClose()
+    {
+        while (AnyDoorAnimating())
+            yield return null;
+
+        if (!HasLivingEnemies())
+            EndCombat();
     }
 
     public void SpawnEnemyWithSummon(GameObject prefab, Vector3 position)

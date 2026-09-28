@@ -26,9 +26,10 @@ public class ChallengeRoomController : MonoBehaviour
 
     private bool challengeStarted;
     private bool challengeFinished;
+    private bool challengeStarting;
     private int pendingWaveSpawns;
 
-    public bool HoldsDoorsLocked => challengeStarted && !challengeFinished;
+    public bool HoldsDoorsLocked => (challengeStarted || challengeStarting) && !challengeFinished;
 
     private void Awake()
     {
@@ -55,7 +56,7 @@ public class ChallengeRoomController : MonoBehaviour
 
     public void StartChallenge()
     {
-        if (challengeStarted || challengeFinished)
+        if (challengeStarted || challengeFinished || challengeStarting)
             return;
 
         if (ChallengeRunState.WasCompleted(ChallengeRunState.Supercontainer))
@@ -64,7 +65,24 @@ public class ChallengeRoomController : MonoBehaviour
             return;
         }
 
+        challengeStarting = true;
+        roomInstance?.LockDoors();
+        TabMenuUI.CloseCurrent();
+        StartCoroutine(StartChallengeAfterIntro());
+    }
+
+    private IEnumerator StartChallengeAfterIntro()
+    {
+        yield return ChallengeIntroOverlay.Play(this);
+
+        if (challengeFinished)
+        {
+            challengeStarting = false;
+            yield break;
+        }
+
         challengeStarted = true;
+        challengeStarting = false;
         BuildAllowedPrefabs();
 
         if (container != null)
@@ -73,8 +91,6 @@ public class ChallengeRoomController : MonoBehaviour
             container.BeginDefense();
         }
 
-        roomInstance?.LockDoors();
-        TabMenuUI.CloseCurrent();
         StartCoroutine(RunWaves());
     }
 

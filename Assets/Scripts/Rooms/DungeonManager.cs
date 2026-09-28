@@ -314,6 +314,11 @@ public class DungeonManager : MonoBehaviour
 
             if (node.information.type == RoomType.Challenge)
             {
+                ChallengeRoomController challengeController =
+                    currentRoomInstance.GetComponent<ChallengeRoomController>();
+                if (challengeController != null)
+                    challengeController.Prepare();
+
                 ChallengeRoomBase challenge =
                     currentRoomInstance.GetComponentInChildren<ChallengeRoomBase>();
 

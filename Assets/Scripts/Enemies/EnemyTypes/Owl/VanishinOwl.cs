@@ -119,7 +119,7 @@ public class VanishingOwl : MonoBehaviour
 
     public void EnterInvisible()
     {
-        if (animator != null) animator.SetBool("IsStealthed", true);
+        if (animator != null) animator.SetBool("ShadowMode", true);
         ResetAttackTrigger();
         FadeTo(bodyGroup, ref bodyFade, 0f, fadeOutTime);
         FadeTo(shadowGroup, ref shadowFade, 0f, fadeOutTime);
@@ -128,7 +128,7 @@ public class VanishingOwl : MonoBehaviour
 
     public void EnterShadow()
     {
-        if (animator != null) animator.SetBool("IsStealthed", true);
+        if (animator != null) animator.SetBool("ShadowMode", true);
         FadeTo(bodyGroup, ref bodyFade, 0f, fadeOutTime);
         FadeTo(shadowGroup, ref shadowFade, 1f, fadeInTime);
         FadeTo(projGroup, ref projFade, 1f, fadeInTime);
@@ -136,7 +136,7 @@ public class VanishingOwl : MonoBehaviour
 
     public void Reveal()
     {
-        if (animator != null) animator.SetBool("IsStealthed", false);
+        if (animator != null) animator.SetBool("ShadowMode", false);
         FadeTo(bodyGroup, ref bodyFade, 1f, fadeInTime);
         FadeTo(shadowGroup, ref shadowFade, 0f, fadeOutTime);
         FadeTo(projGroup, ref projFade, 1f, fadeInTime);

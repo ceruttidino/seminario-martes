@@ -26,7 +26,7 @@ public class BloodPool : MonoBehaviour
             go.transform.SetParent(roomParent, true);
 
         SpriteRenderer renderer = go.AddComponent<SpriteRenderer>();
-        renderer.sortingOrder = 1;
+        renderer.sortingOrder = 0;
         renderer.color = new Color(0.95f, 0.07f, 0.07f, 0f);
 
         SpriteSequence sequence = go.AddComponent<SpriteSequence>();

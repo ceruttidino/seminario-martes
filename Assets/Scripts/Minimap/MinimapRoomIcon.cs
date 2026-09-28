@@ -25,6 +25,15 @@ public class MinimapRoomIcon : MonoBehaviour
         gameObject.SetActive(true);
         playerIndicator.SetActive(node.isCurrentRoom);
 
+        if (node.information != null &&
+            (node.information.type == RoomType.Shop || node.information.type == RoomType.Boss))
+        {
+            roomImage.color = node.information.type == RoomType.Shop
+                ? shopRoomColor
+                : bossRoomColor;
+            return;
+        }
+
         if (!node.hasBeenVisited && showAsAdjacent)
         {
             roomImage.color = adjacentRoomColor;
@@ -41,14 +50,6 @@ public class MinimapRoomIcon : MonoBehaviour
         {
             case RoomType.Start:
                 roomImage.color = startRoomColor;
-                break;
-
-            case RoomType.Shop:
-                roomImage.color = shopRoomColor;
-                break;
-
-            case RoomType.Boss:
-                roomImage.color = bossRoomColor;
                 break;
 
             default:
