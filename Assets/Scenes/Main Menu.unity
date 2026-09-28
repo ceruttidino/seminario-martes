@@ -1110,6 +1110,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AudioSlider
   vSlider: {fileID: 688155280}
+  channel: 0
+  spawnMissingChannelSliders: 1
 --- !u!1 &711173638
 GameObject:
   m_ObjectHideFlags: 0
