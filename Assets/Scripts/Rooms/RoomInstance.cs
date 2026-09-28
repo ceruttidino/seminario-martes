@@ -36,13 +36,14 @@ public class RoomInstance : MonoBehaviour
     private bool enemiesSpawned = false;
     private bool combatActive = false;
     private bool checkingCombatClear = false;
+    private bool awaitingEnemySpawn = false;
 
 
     private Dictionary<DoorDirection, Transform> spawnPointLookup = new Dictionary<DoorDirection, Transform>();
     private Dictionary<DoorDirection, RoomDoor> doorLookup = new Dictionary<DoorDirection, RoomDoor>();
 
     public Transform DefaultSpawnPoint => defaultSpawnPoint;
-    public bool IsInCombat => combatActive || HasLivingEnemies();
+    public bool IsInCombat => combatActive || awaitingEnemySpawn || HasLivingEnemies();
 
     private RoomNode currentNode;
     private DoorDirection? entryDirection;
@@ -245,14 +246,13 @@ public class RoomInstance : MonoBehaviour
             {
                 combatActive = true;
                 LockDoors();
-                StartCoroutine(UnlockIfClearedAfterDoorsClose());
             }
             return;
         }
 
         combatActive = true;
+        awaitingEnemySpawn = true;
         LockDoors();
-        StartCoroutine(UnlockIfClearedAfterDoorsClose());
         StartCoroutine(SpawnEnemiesDelayed());
     }
 
@@ -296,14 +296,7 @@ public class RoomInstance : MonoBehaviour
 
         PoisonousSnake.EnsureNonSnakeCompany(this);
 
-        if (!HasLivingEnemies())
-            EndCombat();
-    }
-
-    private IEnumerator UnlockIfClearedAfterDoorsClose()
-    {
-        while (AnyDoorAnimating())
-            yield return null;
+        awaitingEnemySpawn = false;
 
         if (!HasLivingEnemies())
             EndCombat();
@@ -398,7 +391,7 @@ public class RoomInstance : MonoBehaviour
 
     public void UnlockDoorsAnimated()
     {
-        if (HasLivingEnemies())
+        if (awaitingEnemySpawn || HasLivingEnemies())
             return;
 
         bool playBranchUnlock = false;
@@ -438,6 +431,9 @@ public class RoomInstance : MonoBehaviour
 
     private void EndCombat()
     {
+        if (awaitingEnemySpawn)
+            return;
+
         ChallengeRoomController challenge = GetComponent<ChallengeRoomController>();
         if (challenge != null && challenge.HoldsDoorsLocked)
             return;
@@ -465,7 +461,7 @@ public class RoomInstance : MonoBehaviour
         yield return null;
         checkingCombatClear = false;
 
-        if (!HasLivingEnemies())
+        if (!awaitingEnemySpawn && !HasLivingEnemies())
             EndCombat();
     }
 

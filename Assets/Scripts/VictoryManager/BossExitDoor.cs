@@ -7,6 +7,7 @@ public class BossExitDoor : MonoBehaviour
     private const int FrameCount = 5;
     private const float PixelsPerUnit = 40f;
     private const float OpenFrameRate = 8f;
+    private const float OpenHoldBeforeInteract = 0.2f;
 
     private static Sprite[] cachedFrames;
 
@@ -25,6 +26,7 @@ public class BossExitDoor : MonoBehaviour
             spriteRenderer = gameObject.AddComponent<SpriteRenderer>();
 
         spriteRenderer.sortingOrder = 3;
+        spriteRenderer.drawMode = SpriteDrawMode.Simple;
 
         doorCollider = GetComponent<Collider2D>();
         if (doorCollider == null)
@@ -33,12 +35,7 @@ public class BossExitDoor : MonoBehaviour
         doorCollider.isTrigger = true;
         doorCollider.enabled = false;
 
-        Sprite closed = GetFrame(0);
-        if (closed != null)
-        {
-            spriteRenderer.sprite = closed;
-            FitCollider(closed);
-        }
+        ShowClosed();
     }
 
     public void Place(Vector3 worldPosition, DoorDirection wall, Vector3 roomCenter)
@@ -52,18 +49,13 @@ public class BossExitDoor : MonoBehaviour
         float scale = wall == DoorDirection.Left || wall == DoorDirection.Right ? 0.72f : 1.1f;
         transform.localScale = Vector3.one * scale;
 
-        Sprite closed = GetFrame(0);
-        if (spriteRenderer != null && closed != null)
-        {
-            spriteRenderer.sprite = closed;
-            spriteRenderer.color = Color.white;
-        }
-
         isOpen = false;
         hasTriggered = false;
         opening = false;
         if (doorCollider != null)
             doorCollider.enabled = false;
+
+        ShowClosed();
     }
 
     public void OpenAfterBoss()
@@ -73,21 +65,50 @@ public class BossExitDoor : MonoBehaviour
 
         if (!gameObject.activeInHierarchy)
         {
-            SetOpenedImmediate();
+            ShowOpenAndEnable();
             return;
         }
 
         opening = true;
+        if (doorCollider != null)
+            doorCollider.enabled = false;
+
         StartCoroutine(OpenRoutine());
     }
 
     public void SetOpenedImmediate()
     {
+        ShowOpenAndEnable();
+    }
+
+    private void ShowClosed()
+    {
+        Sprite closed = GetFrame(0);
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.color = Color.white;
+            if (closed != null)
+            {
+                spriteRenderer.sprite = closed;
+                FitCollider(closed);
+            }
+        }
+
+        if (doorCollider != null)
+            doorCollider.enabled = false;
+    }
+
+    private void ShowOpenAndEnable()
+    {
         opening = false;
         isOpen = true;
+
         Sprite open = GetFrame(FrameCount - 1);
         if (spriteRenderer != null && open != null)
+        {
             spriteRenderer.sprite = open;
+            FitCollider(open);
+        }
 
         if (doorCollider != null)
             doorCollider.enabled = true;
@@ -98,16 +119,24 @@ public class BossExitDoor : MonoBehaviour
         Sprite[] frames = GetFrames();
         if (frames != null && frames.Length > 0 && spriteRenderer != null)
         {
+            spriteRenderer.sprite = frames[0];
+
             float frameDuration = 1f / Mathf.Max(1f, OpenFrameRate);
-            for (int i = 0; i < frames.Length; i++)
+            for (int i = 1; i < frames.Length; i++)
             {
+                yield return new WaitForSeconds(frameDuration);
                 if (frames[i] != null)
                     spriteRenderer.sprite = frames[i];
-                yield return new WaitForSeconds(frameDuration);
             }
+
+            Sprite last = frames[frames.Length - 1];
+            if (last != null)
+                spriteRenderer.sprite = last;
+
+            yield return new WaitForSeconds(OpenHoldBeforeInteract);
         }
 
-        SetOpenedImmediate();
+        ShowOpenAndEnable();
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -167,29 +196,35 @@ public class BossExitDoor : MonoBehaviour
 
     private static Sprite[] GetFrames()
     {
-        if (cachedFrames != null && cachedFrames.Length > 0)
+        if (cachedFrames != null && cachedFrames.Length > 1)
             return cachedFrames;
 
-        Texture2D texture = Resources.Load<Texture2D>(SheetResource);
-        if (texture == null)
+        Sprite[] sliced = Resources.LoadAll<Sprite>(SheetResource);
+        if (sliced != null && sliced.Length > 1)
         {
-            Sprite single = Resources.Load<Sprite>(SheetResource);
-            if (single != null)
-                texture = single.texture;
+            System.Array.Sort(sliced, (a, b) => string.CompareOrdinal(a.name, b.name));
+            cachedFrames = sliced;
+            return cachedFrames;
         }
 
-        if (texture == null)
-            return null;
+        Texture2D texture = Resources.Load<Texture2D>(SheetResource);
+        if (texture == null && sliced != null && sliced.Length == 1 && sliced[0] != null)
+            texture = sliced[0].texture;
 
-        int count = Mathf.Max(1, FrameCount);
-        float stride = texture.width / (float)count;
+        if (texture == null)
+            return cachedFrames;
+
+        int count = FrameCount;
+        int frameWidth = Mathf.Max(1, texture.width / count);
         cachedFrames = new Sprite[count];
 
         for (int i = 0; i < count; i++)
         {
+            int x = i * frameWidth;
+            int width = i == count - 1 ? texture.width - x : frameWidth;
             cachedFrames[i] = Sprite.Create(
                 texture,
-                new Rect(i * stride, 0f, stride, texture.height),
+                new Rect(x, 0f, width, texture.height),
                 new Vector2(0.5f, 0.5f),
                 PixelsPerUnit,
                 0,
