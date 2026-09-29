@@ -3,13 +3,21 @@ using UnityEngine;
 
 public class BossExitDoor : MonoBehaviour
 {
-    private const string SheetResource = "Effects/BossCaveDoor";
-    private const int FrameCount = 5;
+    private const string ClosedResource = "Effects/BossCaveDoorClosed";
+    private const string OpenResource = "Effects/BossCaveDoorOpen";
+    private const string SheetResource = "Effects/BossCaveDoorAnim";
+    private const int FrameCount = 6;
+    private const int FrameWidth = 181;
+    private const int FrameHeight = 90;
     private const float PixelsPerUnit = 40f;
-    private const float OpenFrameRate = 8f;
-    private const float OpenHoldBeforeInteract = 0.2f;
+    private const float OpenFrameRate = 14f;
+    private const float OpenHoldBeforeInteract = 0.15f;
 
+    private static Sprite cachedClosed;
+    private static Sprite cachedOpen;
     private static Sprite[] cachedFrames;
+    private static bool closedLoadAttempted;
+    private static bool openLoadAttempted;
 
     private SpriteRenderer spriteRenderer;
     private Collider2D doorCollider;
@@ -83,17 +91,7 @@ public class BossExitDoor : MonoBehaviour
 
     private void ShowClosed()
     {
-        Sprite closed = GetFrame(0);
-        if (spriteRenderer != null)
-        {
-            spriteRenderer.color = Color.white;
-            if (closed != null)
-            {
-                spriteRenderer.sprite = closed;
-                FitCollider(closed);
-            }
-        }
-
+        ApplySprite(GetClosedSprite());
         if (doorCollider != null)
             doorCollider.enabled = false;
     }
@@ -102,16 +100,19 @@ public class BossExitDoor : MonoBehaviour
     {
         opening = false;
         isOpen = true;
-
-        Sprite open = GetFrame(FrameCount - 1);
-        if (spriteRenderer != null && open != null)
-        {
-            spriteRenderer.sprite = open;
-            FitCollider(open);
-        }
-
+        ApplySprite(GetOpenSprite());
         if (doorCollider != null)
             doorCollider.enabled = true;
+    }
+
+    private void ApplySprite(Sprite sprite)
+    {
+        if (spriteRenderer == null || sprite == null)
+            return;
+
+        spriteRenderer.color = Color.white;
+        spriteRenderer.sprite = sprite;
+        FitCollider(sprite);
     }
 
     private IEnumerator OpenRoutine()
@@ -119,23 +120,20 @@ public class BossExitDoor : MonoBehaviour
         Sprite[] frames = GetFrames();
         if (frames != null && frames.Length > 0 && spriteRenderer != null)
         {
-            spriteRenderer.sprite = frames[0];
-
             float frameDuration = 1f / Mathf.Max(1f, OpenFrameRate);
-            for (int i = 1; i < frames.Length; i++)
+            for (int i = 0; i < frames.Length; i++)
             {
-                yield return new WaitForSeconds(frameDuration);
                 if (frames[i] != null)
+                {
+                    spriteRenderer.color = Color.white;
                     spriteRenderer.sprite = frames[i];
+                }
+                yield return new WaitForSeconds(frameDuration);
             }
-
-            Sprite last = frames[frames.Length - 1];
-            if (last != null)
-                spriteRenderer.sprite = last;
-
-            yield return new WaitForSeconds(OpenHoldBeforeInteract);
         }
 
+        ApplySprite(GetOpenSprite());
+        yield return new WaitForSeconds(OpenHoldBeforeInteract);
         ShowOpenAndEnable();
     }
 
@@ -184,6 +182,57 @@ public class BossExitDoor : MonoBehaviour
         }
     }
 
+    private static Sprite GetClosedSprite()
+    {
+        if (!closedLoadAttempted)
+        {
+            closedLoadAttempted = true;
+            cachedClosed = LoadSingleSprite(ClosedResource);
+        }
+
+        if (cachedClosed != null)
+            return cachedClosed;
+
+        return GetFrame(0);
+    }
+
+    private static Sprite GetOpenSprite()
+    {
+        if (!openLoadAttempted)
+        {
+            openLoadAttempted = true;
+            cachedOpen = LoadSingleSprite(OpenResource);
+        }
+
+        if (cachedOpen != null)
+            return cachedOpen;
+
+        Sprite[] frames = GetFrames();
+        if (frames != null && frames.Length > 0)
+            return frames[frames.Length - 1];
+
+        return null;
+    }
+
+    private static Sprite LoadSingleSprite(string resourcePath)
+    {
+        Sprite sprite = Resources.Load<Sprite>(resourcePath);
+        if (sprite != null)
+            return sprite;
+
+        Texture2D texture = Resources.Load<Texture2D>(resourcePath);
+        if (texture == null)
+            return null;
+
+        return Sprite.Create(
+            texture,
+            new Rect(0f, 0f, texture.width, texture.height),
+            new Vector2(0.5f, 0.5f),
+            PixelsPerUnit,
+            0,
+            SpriteMeshType.FullRect);
+    }
+
     private static Sprite GetFrame(int index)
     {
         Sprite[] frames = GetFrames();
@@ -214,21 +263,24 @@ public class BossExitDoor : MonoBehaviour
         if (texture == null)
             return cachedFrames;
 
-        int count = FrameCount;
-        int frameWidth = Mathf.Max(1, texture.width / count);
+        int count = Mathf.Max(1, texture.width / FrameWidth);
+        if (count < 2)
+            count = FrameCount;
+
         cachedFrames = new Sprite[count];
 
         for (int i = 0; i < count; i++)
         {
-            int x = i * frameWidth;
-            int width = i == count - 1 ? texture.width - x : frameWidth;
+            int x = i * FrameWidth;
+            int width = Mathf.Min(FrameWidth, texture.width - x);
+            int height = texture.height > 0 ? texture.height : FrameHeight;
             cachedFrames[i] = Sprite.Create(
                 texture,
-                new Rect(x, 0f, width, texture.height),
+                new Rect(x, 0f, width, height),
                 new Vector2(0.5f, 0.5f),
                 PixelsPerUnit,
                 0,
-                SpriteMeshType.FullRect);
+                SpriteMeshType.Tight);
         }
 
         return cachedFrames;

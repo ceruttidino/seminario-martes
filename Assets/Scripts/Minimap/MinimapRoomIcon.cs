@@ -13,6 +13,7 @@ public class MinimapRoomIcon : MonoBehaviour
     [SerializeField] private Color startRoomColor = Color.green;
     [SerializeField] private Color shopRoomColor = Color.yellow;
     [SerializeField] private Color bossRoomColor = Color.red;
+    [SerializeField] private Color buffRoomColor = Color.blue;
 
     public void Setup(RoomNode node, bool showAsAdjacent)
     {
@@ -25,12 +26,21 @@ public class MinimapRoomIcon : MonoBehaviour
         gameObject.SetActive(true);
         playerIndicator.SetActive(node.isCurrentRoom);
 
-        if (node.information != null &&
-            (node.information.type == RoomType.Shop || node.information.type == RoomType.Boss))
+        if (IsShopRoom(node))
         {
-            roomImage.color = node.information.type == RoomType.Shop
-                ? shopRoomColor
-                : bossRoomColor;
+            roomImage.color = shopRoomColor;
+            return;
+        }
+
+        if (IsBossRoom(node))
+        {
+            roomImage.color = bossRoomColor;
+            return;
+        }
+
+        if (IsBuffConnectionRoom(node))
+        {
+            roomImage.color = buffRoomColor;
             return;
         }
 
@@ -56,5 +66,27 @@ public class MinimapRoomIcon : MonoBehaviour
                 roomImage.color = normalVisitedColor;
                 break;
         }
+    }
+
+    private static bool IsShopRoom(RoomNode node)
+    {
+        return node.information != null && node.information.type == RoomType.Shop;
+    }
+
+    private static bool IsBossRoom(RoomNode node)
+    {
+        return node.information != null && node.information.type == RoomType.Boss;
+    }
+
+    private static bool IsBuffConnectionRoom(RoomNode node)
+    {
+        if (node.information == null)
+            return false;
+
+        string id = node.information.roomID;
+        if (string.IsNullOrEmpty(id))
+            id = node.information.name;
+
+        return id == "Connection_Room_4" || id == "ConnectionRoom4";
     }
 }

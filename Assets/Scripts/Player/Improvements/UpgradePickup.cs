@@ -32,7 +32,9 @@ public class UpgradePickup : MonoBehaviour
 
             manager.CollectUpgrade(upgradeToGrant);
 
-            collision.GetComponent<AuraHandler>().ActivateAura(upgradeToGrant.aColor);
+            AuraHandler aura = collision.GetComponent<AuraHandler>();
+            if (aura != null)
+                aura.ActivateAura(upgradeToGrant.aColor);
 
             PickupEffect effect = GetComponent<PickupEffect>();
             if (effect != null)
