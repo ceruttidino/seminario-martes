@@ -13,7 +13,28 @@ public class BossHealthBarUI : MonoBehaviour
             healthSlider = GetComponentInChildren<Slider>();
 
         if (bossHealth == null)
-            bossHealth = FindFirstObjectByType<MutantSpiderBoss>()?.GetComponent<EnemyHealth>();
+            bossHealth = FindBossHealth();
+    }
+
+    // NUEVO: sirve para cualquier boss que herede de BossBase
+    private EnemyHealth FindBossHealth()
+    {
+        // 1) La barra es hija del boss
+        BossBase boss = GetComponentInParent<BossBase>();
+
+        // 2) La barra está en la misma room que el boss
+        if (boss == null)
+        {
+            RoomInstance room = GetComponentInParent<RoomInstance>();
+            if (room != null)
+                boss = room.GetComponentInChildren<BossBase>(true);
+        }
+
+        // 3) Último recurso: cualquier boss de la escena
+        if (boss == null)
+            boss = FindFirstObjectByType<BossBase>();
+
+        return boss != null ? boss.GetComponent<EnemyHealth>() : null;
     }
 
     private void OnEnable()
@@ -36,7 +57,7 @@ public class BossHealthBarUI : MonoBehaviour
             return;
         }
 
-        healthSlider.value = bossHealth.CurrentHealth / bossHealth.MaxHealth;
+        healthSlider.value = (float)bossHealth.CurrentHealth / bossHealth.MaxHealth;
     }
 
     private void Hide()

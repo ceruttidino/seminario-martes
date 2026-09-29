@@ -516,7 +516,7 @@ public class MutantSpiderBoss : BossBase
             exitDoor.OpenAfterBoss();
     }
 
-    public void EnsureExitDoor(DoorDirection wall)
+    public override void EnsureExitDoor(DoorDirection wall)
     {
         if (exitDoor == null)
             exitDoor = GetComponentInParent<RoomInstance>()?.GetComponentInChildren<BossExitDoor>(true);

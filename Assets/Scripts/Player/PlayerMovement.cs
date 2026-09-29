@@ -10,6 +10,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private PlayerDash playerDash;
     [SerializeField] private PlayerAim playerAim;
+    private PlayerSlowStatus slowStatus;
 
     [Header("Input")]
     private Vector2 moveInput;
@@ -58,6 +59,10 @@ public class PlayerMovement : MonoBehaviour
 
         if (GetComponent<PlayerWalkableClamp>() == null)
             gameObject.AddComponent<PlayerWalkableClamp>();
+
+        slowStatus = GetComponent<PlayerSlowStatus>();           
+        if (slowStatus == null)                                     
+            slowStatus = gameObject.AddComponent<PlayerSlowStatus>();
     }
 
     private void OnEnable()
@@ -141,7 +146,8 @@ public class PlayerMovement : MonoBehaviour
         if (playerDash != null && playerDash.IsDashing)
             return;
 
-        Vector2 targetVelocity = moveInput * moveSpeed;
+        float speedMultiplier = slowStatus != null ? slowStatus.SpeedMultiplier : 1f;
+        Vector2 targetVelocity = moveInput * moveSpeed * speedMultiplier;
         Vector2 currentVelocity = rb.linearVelocity;
 
         float accelRate;

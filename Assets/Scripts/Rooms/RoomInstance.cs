@@ -186,7 +186,7 @@ public class RoomInstance : MonoBehaviour
 
     private void EnsureBossExitDoor()
     {
-        MutantSpiderBoss boss = GetComponentInChildren<MutantSpiderBoss>(true);
+        BossBase boss = GetComponentInChildren<BossBase>(true); // CAMBIADO: antes MutantSpiderBoss
         if (boss != null)
         {
             boss.EnsureExitDoor(GetBossExitDirection());
