@@ -657,9 +657,9 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 10
-      m_TileSpriteIndex: 11
+      m_TileSpriteIndex: 12
       m_TileMatrixIndex: 2
-      m_TileColorIndex: 16
+      m_TileColorIndex: 15
       m_TileObjectToInstantiateIndex: 65535
       dummyAlignment: 0
       m_AllTileFlags: 1073741827
@@ -667,9 +667,9 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 10
-      m_TileSpriteIndex: 11
+      m_TileSpriteIndex: 12
       m_TileMatrixIndex: 2
-      m_TileColorIndex: 16
+      m_TileColorIndex: 15
       m_TileObjectToInstantiateIndex: 65535
       dummyAlignment: 0
       m_AllTileFlags: 1073741827
@@ -816,9 +816,9 @@ Tilemap:
     m_Data: {fileID: -4428599492126535051, guid: ef4909214b055d44fa5b5cbf6c394433, type: 3}
   - m_RefCount: 4
     m_Data: {fileID: 1530954242053478090, guid: ef4909214b055d44fa5b5cbf6c394433, type: 3}
-  - m_RefCount: 2
-    m_Data: {fileID: 0}
   - m_RefCount: 0
+    m_Data: {fileID: 0}
+  - m_RefCount: 2
     m_Data: {fileID: 0}
   - m_RefCount: 6
     m_Data: {fileID: 3075466786343887021, guid: ef4909214b055d44fa5b5cbf6c394433, type: 3}
@@ -926,10 +926,10 @@ Tilemap:
     m_Data: {r: 1, g: 1, b: 1, a: 1}
   - m_RefCount: 0
     m_Data: {r: 1.67e-43, g: 1.67e-43, b: 1.67e-43, a: 1.67e-43}
+  - m_RefCount: 2
+    m_Data: {r: 0.8089998, g: 0.36564058, b: 0.44388157, a: 1}
   - m_RefCount: 0
     m_Data: {r: 1.67e-43, g: 1.67e-43, b: 1.67e-43, a: 1.67e-43}
-  - m_RefCount: 2
-    m_Data: {r: 0.9390692, g: 0.5552075, b: 0.67893565, a: 1}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -3980,8 +3980,8 @@ Transform:
   m_GameObject: {fileID: 7730261635670006336}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.11, y: -0.05, z: 0}
-  m_LocalScale: {x: 1.954341, y: 1.954341, z: 1.954341}
+  m_LocalPosition: {x: 0.15, y: 0.19, z: 0}
+  m_LocalScale: {x: 1.5623002, y: 1.5623002, z: 1.5623002}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8855914108497674385}
@@ -4035,12 +4035,12 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 1036970653, guid: f298a99a18c3c1141bd7296b0c284f5d, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 4f58d252fc0b02c45b93816fe39dfee0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 5.12, y: 1.79}
+  m_Size: {x: 10.24, y: 5.12}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
