@@ -7,6 +7,7 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] private GameObject pausePanel;
     [SerializeField] private GameObject pauseMenuPanel;
     [SerializeField] private GameObject settingsPanel;
+    [SerializeField] private GameObject controlsPanel;
 
     private bool isPaused = false;
 
@@ -22,6 +23,13 @@ public class PauseMenu : MonoBehaviour
         }
 
         if (!isPaused && GamePause.IsGameplayFrozen) return;
+
+        // Si estás en Controles o Settings, ESC vuelve al menú de pausa en vez de reanudar
+        if (isPaused && (controlsPanel.activeSelf || settingsPanel.activeSelf))
+        {
+            PauseMainMenu();
+            return;
+        }
 
         if (isPaused)
             Resume();
@@ -64,12 +72,21 @@ public class PauseMenu : MonoBehaviour
     public void PauseSettings()
     {
         pauseMenuPanel.SetActive(false);
+        controlsPanel.SetActive(false);
         settingsPanel.SetActive(true);
+    }
+
+    public void PauseControls()
+    {
+        pauseMenuPanel.SetActive(false);
+        settingsPanel.SetActive(false);
+        controlsPanel.SetActive(true);
     }
 
     public void PauseMainMenu()
     {
         pauseMenuPanel.SetActive(true);
         settingsPanel.SetActive(false);
+        controlsPanel.SetActive(false);
     }
 }
