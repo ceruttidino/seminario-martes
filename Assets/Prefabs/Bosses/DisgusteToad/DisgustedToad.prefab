@@ -441,7 +441,6 @@ GameObject:
   - component: {fileID: 1671940467018888927}
   - component: {fileID: 4600605529067181269}
   - component: {fileID: 1108735194842988532}
-  - component: {fileID: 8369453983613496739}
   - component: {fileID: -5744563512138347244}
   m_Layer: 3
   m_Name: DisgustedToad
@@ -563,7 +562,9 @@ MonoBehaviour:
   rb: {fileID: 0}
   bodyCollider: {fileID: 0}
   enemyHealth: {fileID: 0}
-  enemyAttack: {fileID: 0}
+  contactDamage: 1
+  contactRangeTiles: 0.4
+  landingPushMargin: 0.35
   visual: {fileID: 0}
   visualRenderer: {fileID: 0}
   animator: {fileID: 0}
@@ -608,24 +609,6 @@ MonoBehaviour:
   possibleBuffs: []
   buffPickupPrefab: {fileID: 0}
   spawnPoint: {fileID: 0}
---- !u!114 &8369453983613496739
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5649567841627389013}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 40521986e017e6a4183e4b4288386610, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyAttack
-  damage: 10
-  attackRange: 1
-  attackCooldown: 1
-  targetLayer:
-    serializedVersion: 2
-    m_Bits: 512
 --- !u!114 &-5744563512138347244
 MonoBehaviour:
   m_ObjectHideFlags: 0

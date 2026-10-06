@@ -2023,6 +2023,7 @@ MonoBehaviour:
   enemySpawnPoints:
   - {fileID: 3471704183191795967}
   - {fileID: 6337749241437438592}
+  rewardTable: {fileID: 11400000, guid: f19d51b0d5757954b8e83cb559953a24, type: 2}
   rewardSpawnPoint: {fileID: 6993241451865638871}
   possibleRewards: []
   chanceToSpawnReward: 40

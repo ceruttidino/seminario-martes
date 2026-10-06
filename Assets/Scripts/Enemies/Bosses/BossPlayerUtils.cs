@@ -2,12 +2,25 @@ using UnityEngine;
 
 public static class BossPlayerUtils
 {
-    public static void DamagePlayer(GameObject playerObject, int amount)
+    private const float BossDamageCooldown = 0.75f;
+    private static float nextBossDamageTime;
+
+    public static bool DamagePlayer(GameObject playerObject, int amount) // devuelve si pegó
     {
-        if (playerObject == null || amount <= 0) return;
+        if (playerObject == null || amount <= 0) return false;
+
+        // si quedó un valor viejo (por ej. con Domain Reload desactivado), se resetea
+        if (nextBossDamageTime - Time.time > BossDamageCooldown)
+            nextBossDamageTime = 0f;
+
+        if (Time.time < nextBossDamageTime) return false; // evita que se apilen golpes
+
         PlayerHealth health = playerObject.GetComponentInParent<PlayerHealth>();
-        if (health != null)
-            health.TakeDamage(amount);
+        if (health == null) return false;
+
+        health.TakeDamage(amount);
+        nextBossDamageTime = Time.time + BossDamageCooldown;
+        return true;
     }
 
     public static void ApplySlow(GameObject playerObject, float percent, float duration)

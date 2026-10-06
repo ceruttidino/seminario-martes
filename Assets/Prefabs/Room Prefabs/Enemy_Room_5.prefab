@@ -1986,6 +1986,7 @@ MonoBehaviour:
   enemyPrefab: {fileID: 1000001, guid: 66f14781c1d04b228b9694b3d657150e, type: 3}
   enemySpawnPoints:
   - {fileID: 3471704183191795967}
+  rewardTable: {fileID: 11400000, guid: f19d51b0d5757954b8e83cb559953a24, type: 2}
   rewardSpawnPoint: {fileID: 8040820141452212638}
   possibleRewards: []
   chanceToSpawnReward: 40

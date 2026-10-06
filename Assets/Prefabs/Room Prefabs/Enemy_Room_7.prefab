@@ -2022,6 +2022,11 @@ MonoBehaviour:
   enemyPrefab: {fileID: 8283417630010587146, guid: 93c36bf4b30107349ba48fa2a8110986, type: 3}
   enemySpawnPoints:
   - {fileID: 3471704183191795967}
+  rewardTable: {fileID: 0}
+  rewardSpawnPoint: {fileID: 0}
+  possibleRewards: []
+  chanceToSpawnReward: 40
+  possibleRewardBuffs: []
 --- !u!1 &5413412434907751617
 GameObject:
   m_ObjectHideFlags: 0

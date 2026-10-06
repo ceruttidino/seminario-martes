@@ -15,7 +15,7 @@ public class RoomInstance : MonoBehaviour
     [Header("Digging Spots (TESTEANDO)")]
     [SerializeField] private Transform[] diggingSpotLocations;
     [SerializeField] private GameObject diggingSpotPrefab;
-    [SerializeField] [Range(0f, 100f)] private float chanceToHaveDiggingSpots = 30f;
+    [SerializeField][Range(0f, 100f)] private float chanceToHaveDiggingSpots = 30f;
     private bool diggingSpotsGenerated = false;
 
     [Header("Enemies")]
@@ -23,6 +23,8 @@ public class RoomInstance : MonoBehaviour
     [SerializeField] private Transform[] enemySpawnPoints;
 
     [Header("Room Clear Reward")]
+    [Tooltip("Si está asignada, reemplaza los valores locales de abajo.")] // NUEVO
+    [SerializeField] private RoomRewardTable rewardTable;                 // NUEVO
     [SerializeField] private Transform rewardSpawnPoint;
     [SerializeField] private List<RoomReward> possibleRewards = new List<RoomReward>();
     [SerializeField][Range(0f, 100f)] private float chanceToSpawnReward = 40f;
@@ -30,6 +32,11 @@ public class RoomInstance : MonoBehaviour
     [SerializeField] private List<ObjectBuffSO> possibleRewardBuffs = new List<ObjectBuffSO>();
 
     private bool rewardSpawned = false;
+
+    // NUEVO: valores efectivos (tabla compartida si está asignada, si no los locales de la room)
+    private float RewardChance => rewardTable != null ? rewardTable.chanceToSpawnReward : chanceToSpawnReward;
+    private List<RoomReward> Rewards => rewardTable != null ? rewardTable.rewards : possibleRewards;
+    private List<ObjectBuffSO> RewardBuffs => rewardTable != null ? rewardTable.possibleBuffs : possibleRewardBuffs;
 
     private EnemyBehaviour[] currentEnemies;
 
@@ -60,14 +67,14 @@ public class RoomInstance : MonoBehaviour
     {
         foreach (DoorSpawnPoint point in doorSpawnPoints)
         {
-            if(point != null && point.spawnPoint != null)
+            if (point != null && point.spawnPoint != null)
             {
                 spawnPointLookup.Add(point.direction, point.spawnPoint);
             }
         }
-        foreach (RoomDoor door in roomDoors) 
+        foreach (RoomDoor door in roomDoors)
         {
-            if(door != null && !doorLookup.ContainsKey(door.Direction))
+            if (door != null && !doorLookup.ContainsKey(door.Direction))
             {
                 doorLookup.Add(door.Direction, door);
             }
@@ -76,7 +83,7 @@ public class RoomInstance : MonoBehaviour
 
     public Transform GetSpawnPointFromEntry(DoorDirection entryDirection)
     {
-        if(spawnPointLookup.TryGetValue(entryDirection, out Transform spawn))
+        if (spawnPointLookup.TryGetValue(entryDirection, out Transform spawn))
         {
             return spawn;
         }
@@ -210,7 +217,7 @@ public class RoomInstance : MonoBehaviour
         if (diggingSpotsGenerated) return;
         diggingSpotsGenerated = true;
 
-        if (diggingSpotLocations == null || diggingSpotLocations.Length == 0 || diggingSpotPrefab == null) 
+        if (diggingSpotLocations == null || diggingSpotLocations.Length == 0 || diggingSpotPrefab == null)
             return;
 
         if (Random.value * 100f <= chanceToHaveDiggingSpots)
@@ -492,10 +499,10 @@ public class RoomInstance : MonoBehaviour
                 return;
         }
 
-        if (possibleRewards == null || possibleRewards.Count == 0)
+        if (Rewards == null || Rewards.Count == 0) // CAMBIADO: antes possibleRewards
             return;
 
-        if (Random.value * 100f > chanceToSpawnReward)
+        if (Random.value * 100f > RewardChance) // CAMBIADO: antes chanceToSpawnReward
             return;
 
         GameObject prefab = PickWeightedReward();
@@ -514,7 +521,7 @@ public class RoomInstance : MonoBehaviour
     {
         float totalWeight = 0f;
 
-        foreach (RoomReward reward in possibleRewards)
+        foreach (RoomReward reward in Rewards) // CAMBIADO: antes possibleRewards
         {
             if (reward == null || reward.prefab == null) continue;
             totalWeight += Mathf.Max(0f, reward.weight);
@@ -524,7 +531,7 @@ public class RoomInstance : MonoBehaviour
 
         float roll = Random.Range(0f, totalWeight);
 
-        foreach (RoomReward reward in possibleRewards)
+        foreach (RoomReward reward in Rewards) // CAMBIADO: antes possibleRewards
         {
             if (reward == null || reward.prefab == null) continue;
 
@@ -547,10 +554,10 @@ public class RoomInstance : MonoBehaviour
         UpgradePickup pickup = spawned.GetComponent<UpgradePickup>();
         if (pickup == null) return;
 
-        if (possibleRewardBuffs == null || possibleRewardBuffs.Count == 0)
+        if (RewardBuffs == null || RewardBuffs.Count == 0) // CAMBIADO: antes possibleRewardBuffs
             return;
 
-        ObjectBuffSO chosen = BuffPool.PickRandom(possibleRewardBuffs);
+        ObjectBuffSO chosen = BuffPool.PickRandom(RewardBuffs); // CAMBIADO: antes possibleRewardBuffs
 
         if (chosen == null)
         {
@@ -591,7 +598,7 @@ public class RoomInstance : MonoBehaviour
 
         if (diggingSpotLocations != null)
         {
-            Gizmos.color = new Color(0.5f, 0.3f, 0.1f); 
+            Gizmos.color = new Color(0.5f, 0.3f, 0.1f);
 
             foreach (Transform spot in diggingSpotLocations)
             {
@@ -609,3 +616,4 @@ public class RoomInstance : MonoBehaviour
         }
     }
 }
+

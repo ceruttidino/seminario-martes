@@ -14,8 +14,11 @@ public class DisgustedToadBoss : BossBase
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private Collider2D bodyCollider;
     [SerializeField] private EnemyHealth enemyHealth;
-    [Tooltip("Opcional: daño por contacto mientras está en el piso entre salto y salto.")]
-    [SerializeField] private EnemyAttack enemyAttack;
+
+    [Header("Ataque 1 - Saltos")]
+    [SerializeField] private int contactDamage = 1;                 
+    [SerializeField] private float contactRangeTiles = 0.4f;        
+    [SerializeField] private float landingPushMargin = 0.35f;       
 
     [Header("Visual")]
     [SerializeField] private Transform visual;
@@ -71,7 +74,6 @@ public class DisgustedToadBoss : BossBase
         if (rb == null) rb = GetComponent<Rigidbody2D>();
         if (bodyCollider == null) bodyCollider = GetComponent<Collider2D>();
         if (enemyHealth == null) enemyHealth = GetComponent<EnemyHealth>();
-        if (enemyAttack == null) enemyAttack = GetComponent<EnemyAttack>();
         if (visual == null) visual = transform.Find("Visual");
         if (visual != null && visualRenderer == null) visualRenderer = visual.GetComponent<SpriteRenderer>();
         if (visual != null && animator == null) animator = visual.GetComponent<Animator>();
@@ -170,7 +172,7 @@ public class DisgustedToadBoss : BossBase
             float t = 0f;
             while (t < landingRecovery && !isDead)
             {
-                if (enemyAttack != null && !isAirborne) enemyAttack.TryAttack();
+                TryContactDamage();
                 t += Time.deltaTime;
                 yield return null;
             }
@@ -269,9 +271,55 @@ public class DisgustedToadBoss : BossBase
 
     private void TryLandingDamage(Vector2 landPosition)
     {
-        if (player == null || landingDamage <= 0) return;
-        if (Vector2.Distance(landPosition, player.position) <= landingDamageRadiusTiles * tileSize)
+        if (player == null) return;
+
+        float distance = Vector2.Distance(landPosition, player.position);
+        if (distance > landingDamageRadiusTiles * tileSize) return;
+
+        if (landingDamage > 0)
             BossPlayerUtils.DamagePlayer(player.gameObject, landingDamage);
+
+        PushPlayerOut(landPosition); // que no quede atrapado debajo del sapo
+    }
+
+    private void TryContactDamage()
+    {
+        if (player == null || contactDamage <= 0 || isAirborne) return;
+
+        float range = GetBodyRadius() + contactRangeTiles * tileSize;
+        if (Vector2.Distance(rb.position, player.position) <= range)
+            BossPlayerUtils.DamagePlayer(player.gameObject, contactDamage);
+    }
+
+    private void PushPlayerOut(Vector2 center)
+    {
+        Rigidbody2D playerRb = player.GetComponent<Rigidbody2D>();
+        Vector2 playerPos = playerRb != null ? playerRb.position : (Vector2)player.position;
+
+        Vector2 away = playerPos - center;
+        if (away.sqrMagnitude < 0.0001f)
+            away = Vector2.down;
+
+        float minDistance = GetBodyRadius() + landingPushMargin;
+        if (away.magnitude >= minDistance) return;
+
+        Vector2 newPos = center + away.normalized * minDistance;
+        player.position = newPos;
+
+        if (playerRb != null)
+        {
+            playerRb.position = newPos;
+            playerRb.linearVelocity = Vector2.zero;
+        }
+    }
+
+    private float GetBodyRadius()
+    {
+        CircleCollider2D circle = bodyCollider as CircleCollider2D;
+        if (circle != null)
+            return circle.radius * Mathf.Abs(transform.lossyScale.x);
+
+        return 0.5f;
     }
 
     // ───── Ataque 2: lengua ─────

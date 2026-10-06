@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28cffaf9549ebce4480341370cfad1a3, type: 3}
+  m_Name: RoomRewardTable
+  m_EditorClassIdentifier: Assembly-CSharp::RoomRewardTable
+  chanceToSpawnReward: 40
+  rewards:
+  - prefab: {fileID: 6731944521481601438, guid: 9d33b772eca364945bc7ada72fc442b5, type: 3}
+    weight: 35
+  - prefab: {fileID: 4529712226497508647, guid: 37b2c80b6b0fdc346b4ecab47917b4be, type: 3}
+    weight: 30
+  - prefab: {fileID: 6470171162183498645, guid: 73b1827f1902e2e42bebce0fadcaa3fd, type: 3}
+    weight: 20
+  - prefab: {fileID: 8288388510651883771, guid: 5443f03a3acee2543a3d3b3183e03bb2, type: 3}
+    weight: 15
+  - prefab: {fileID: 1304267503638994069, guid: 9ff6da0e73e262c41bed21d1478e09f4, type: 3}
+    weight: 15
+  - prefab: {fileID: 5588464782313880407, guid: e5f5b2ab036f6fd458dff2c0c9c366a3, type: 3}
+    weight: 15
+  possibleBuffs: []
+  effectiveChances: 'Nada: 60,0%
+
+    ScrapPickup: 10,8%
+
+    HeartPickup: 9,2%
+
+    KeyItem:
+    6,2%
+
+    UpgradePickup_Health: 4,6%
+
+    UpgradePickup_Damage: 4,6%
+
+    UpgradePickup_Speed:
+    4,6%
+
+'

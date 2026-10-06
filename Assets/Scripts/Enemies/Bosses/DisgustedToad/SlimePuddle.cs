@@ -1,13 +1,16 @@
 using System.Collections;
 using UnityEngine;
 
-// NUEVO ARCHIVO
-// Prefab: root con CircleCollider2D + SlimePuddle, hijo con el SpriteRenderer (sorting order bajo).
-[RequireComponent(typeof(CircleCollider2D))]
 public class SlimePuddle : MonoBehaviour
 {
     [SerializeField] private SpriteRenderer visual;
     [SerializeField] private float defaultRadius = 5f;
+
+    [Header("Ajuste del área")] // NUEVO
+    [Tooltip("Qué parte del ancho del sprite es baba visible (sin bordes transparentes). 1 = el sprite completo.")]
+    [SerializeField][Range(0.3f, 1f)] private float spriteContentFill = 1f; // NUEVO
+    [Tooltip("Margen a favor del jugador: 0.9 = el daño empieza un 10% adentro del borde.")]
+    [SerializeField][Range(0.5f, 1f)] private float hitRadiusMultiplier = 0.9f; // NUEVO
 
     [Header("Efecto")]
     [SerializeField] private int damage = 1;
@@ -20,11 +23,14 @@ public class SlimePuddle : MonoBehaviour
     [SerializeField] private float growDuration = 0.2f;
     [SerializeField] private float fadeDuration = 1f;
 
-    private CircleCollider2D area;
+    private float radius;                 
+    private float growProgress;           
+    private bool isActive;                
     private Vector3 targetVisualScale = Vector3.one;
     private bool initialized;
-    private GameObject playerInside;
-    private int playerCollidersInside;
+
+    private Transform player;            
+    private GameObject playerHealthObject; 
     private float nextDamageTime;
 
     public static SlimePuddle Spawn(SlimePuddle prefab, Vector3 position, float radius, Transform parent)
@@ -37,14 +43,18 @@ public class SlimePuddle : MonoBehaviour
 
     private void Awake()
     {
-        area = GetComponent<CircleCollider2D>();
-        area.isTrigger = true;
-        if (visual == null) visual = GetComponentInChildren<SpriteRenderer>();
+        if (visual == null)
+            visual = GetComponentInChildren<SpriteRenderer>();
+
+        Collider2D oldCollider = GetComponent<Collider2D>();
+        if (oldCollider != null)
+            oldCollider.enabled = false;
     }
 
     private void Start()
     {
-        if (!initialized) Initialize(defaultRadius);
+        if (!initialized)
+            Initialize(defaultRadius);
     }
 
     public void Initialize(float worldRadius)
@@ -52,16 +62,30 @@ public class SlimePuddle : MonoBehaviour
         if (initialized) return;
         initialized = true;
 
-        area.radius = worldRadius / Mathf.Max(0.0001f, Mathf.Abs(transform.lossyScale.x));
+        radius = worldRadius;
 
         if (visual != null && visual.sprite != null)
         {
             float currentWidth = visual.sprite.bounds.size.x * Mathf.Abs(visual.transform.lossyScale.x);
-            if (currentWidth > 0.0001f)
-                targetVisualScale = visual.transform.localScale * (worldRadius * 2f / currentWidth);
+            float visibleWidth = currentWidth * spriteContentFill;
+            if (visibleWidth > 0.0001f)
+                targetVisualScale = visual.transform.localScale * (worldRadius * 2f / visibleWidth);
         }
 
+        isActive = true; 
+        FindPlayer();    
         StartCoroutine(Lifecycle());
+    }
+
+    private void FindPlayer()
+    {
+        GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
+        if (playerObject == null) return;
+
+        player = playerObject.transform;
+
+        PlayerHealth health = playerObject.GetComponentInParent<PlayerHealth>();
+        playerHealthObject = health != null ? health.gameObject : playerObject;
     }
 
     private IEnumerator Lifecycle()
@@ -69,14 +93,22 @@ public class SlimePuddle : MonoBehaviour
         float t = 0f;
         while (t < growDuration)
         {
+            growProgress = Mathf.SmoothStep(0f, 1f, t / growDuration);
+
             if (visual != null)
-                visual.transform.localScale = targetVisualScale * Mathf.SmoothStep(0f, 1f, t / growDuration);
+                visual.transform.localScale = targetVisualScale * growProgress;
+
             t += Time.deltaTime;
             yield return null;
         }
-        if (visual != null) visual.transform.localScale = targetVisualScale;
+
+        growProgress = 1f; 
+        if (visual != null)
+            visual.transform.localScale = targetVisualScale;
 
         yield return new WaitForSeconds(Mathf.Max(0f, lifetime - growDuration - fadeDuration));
+
+        isActive = false; 
 
         Color baseColor = visual != null ? visual.color : Color.white;
         t = 0f;
@@ -87,35 +119,38 @@ public class SlimePuddle : MonoBehaviour
             t += Time.deltaTime;
             yield return null;
         }
+
         Destroy(gameObject);
     }
 
-    // Enter/Exit + Update en vez de OnTriggerStay2D: Stay deja de llamarse si el rigidbody del jugador se duerme
-    private void OnTriggerEnter2D(Collider2D other)
+    private void Update() 
     {
-        PlayerHealth health = other.GetComponentInParent<PlayerHealth>();
-        if (health == null) return;
-        playerInside = health.gameObject;
-        playerCollidersInside++;
-    }
+        if (!isActive) return;
 
-    private void OnTriggerExit2D(Collider2D other)
-    {
-        if (other.GetComponentInParent<PlayerHealth>() == null) return;
-        playerCollidersInside = Mathf.Max(0, playerCollidersInside - 1);
-        if (playerCollidersInside == 0) playerInside = null;
-    }
+        if (player == null)
+        {
+            FindPlayer();
+            if (player == null) return;
+        }
 
-    private void Update()
-    {
-        if (playerInside == null) return;
+        float effectiveRadius = radius * growProgress * hitRadiusMultiplier;
+        Vector2 offset = (Vector2)player.position - (Vector2)transform.position;
+        if (offset.sqrMagnitude > effectiveRadius * effectiveRadius)
+            return;
 
-        BossPlayerUtils.ApplySlow(playerInside, slowPercent, slowDuration);
+        BossPlayerUtils.ApplySlow(playerHealthObject, slowPercent, slowDuration);
 
         if (Time.time >= nextDamageTime)
         {
-            BossPlayerUtils.DamagePlayer(playerInside, damage);
-            nextDamageTime = Time.time + damageInterval;
+            if (BossPlayerUtils.DamagePlayer(playerHealthObject, damage))
+                nextDamageTime = Time.time + damageInterval;
         }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        float r = initialized ? radius : defaultRadius;
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, r * hitRadiusMultiplier);
     }
 }
