@@ -16,5 +16,6 @@ MonoBehaviour:
   description: Health +
   aColor: {r: 0, g: 1, b: 0, a: 1}
   icon: {fileID: 21300000, guid: 7c453a2b154e6484f93ccebbb01f9505, type: 3}
+  replacedBy: {fileID: 11400000, guid: 0ddc80887a5f55048ab76c1e91f39dca, type: 2}
   heartsToAdd: 1
   fillNewHearts: 1

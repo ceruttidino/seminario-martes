@@ -18,7 +18,14 @@ public class DungeonManager : MonoBehaviour
     [SerializeField] private RoomInformation startRoomInformation;
     [SerializeField] private List<RoomInformation> normalRoomInformations = new List<RoomInformation>();
     [SerializeField] private RoomInformation shopRoomInformation;
+    [Tooltip("Boss por defecto (se usa solo si el pool de abajo esta vacio).")]
     [SerializeField] private RoomInformation bossRoomInformation;
+    [Tooltip("Bosses de los pisos NO finales (1 y 2): en cada piso sale UNO al azar (Araña o Sapo).")]
+    [SerializeField] private List<RoomInformation> bossRoomInformations = new List<RoomInformation>();
+    [Tooltip("Boss del ULTIMO piso (nivel 3): siempre el mismo, el Cuervo.")]
+    [SerializeField] private RoomInformation finalBossRoomInformation;
+    [Tooltip("Si esta activo, el boss de un piso no se repite en el piso siguiente (cuando hay mas de uno en el pool).")]
+    [SerializeField] private bool avoidRepeatingBoss = false;
     [SerializeField] private List<RoomInformation> challengeRoomInformations = new List<RoomInformation>();
 
     [Header("Transition")]
@@ -38,6 +45,7 @@ public class DungeonManager : MonoBehaviour
     private int currentFloor = 1;
 
     private DoorDirection? lastEntryDirection;
+    private RoomInformation lastRandomBoss;
 
     public int CurrentFloor => currentFloor;
     public int MaxFloor => maxFloor;
@@ -87,14 +95,44 @@ public class DungeonManager : MonoBehaviour
         return filtered;
     }
 
+    /// <summary>
+    /// Orden de bosses: el ultimo piso (nivel 3) SIEMPRE tiene al Cuervo; en los pisos anteriores sale UNO al
+    /// azar entre los bosses del pool (Araña o Sapo).
+    /// </summary>
+    private RoomInformation PickBossRoomInformationForFloor()
+    {
+        if (IsFinalFloor && finalBossRoomInformation != null && finalBossRoomInformation.prefab != null)
+            return finalBossRoomInformation;
+
+        List<RoomInformation> pool = new List<RoomInformation>();
+        foreach (RoomInformation info in bossRoomInformations)
+        {
+            if (info != null && info.prefab != null)
+                pool.Add(info);
+        }
+
+        if (pool.Count == 0)
+            return bossRoomInformation;
+
+        if (avoidRepeatingBoss && pool.Count > 1 && lastRandomBoss != null)
+            pool.Remove(lastRandomBoss);
+
+        RoomInformation chosen = pool[Random.Range(0, pool.Count)];
+        lastRandomBoss = chosen;
+        return chosen;
+    }
+
     private void BuildNewDungeon()
     {
         challengeSpawned = false;
 
+        // Los challenges se juegan UNA vez por nivel (no por run): al empezar cada piso vuelven a estar disponibles.
+        ChallengeRunState.Reset();
+
         List<RoomInformation> floorRooms = GetNormalRoomsForFloor(currentFloor);
 
         dungeonLayout = new DungeonLayout();
-        dungeonLayout.Build(startRoomInformation, floorRooms, shopRoomInformation, bossRoomInformation, challengeRoomInformations);
+        dungeonLayout.Build(startRoomInformation, floorRooms, shopRoomInformation, PickBossRoomInformationForFloor(), challengeRoomInformations);
 
         currentNode = dungeonLayout.StartNode;
         currentNode.isCurrentRoom = true;
@@ -127,6 +165,9 @@ public class DungeonManager : MonoBehaviour
             yield return StartCoroutine(screenFader.FadeOut());
 
         DestroyCurrentDungeon();
+
+        // Los pickups de mejoras sin recoger se destruyen con el piso: sus items vuelven a estar disponibles.
+        UpgradeRegistry.ClearReservations();
 
         currentFloor++;
         dungeonProgression.ResetProgression();
@@ -366,6 +407,7 @@ public class DungeonManager : MonoBehaviour
         if (spawnPoint != null) 
         {
             player.position = spawnPoint.position;
+            player.GetComponent<PlayerWalkableClamp>()?.ResetTo(spawnPoint.position);
 
             // autoSyncTransforms está off: sin esto la física sigue en la posición vieja y los enemigos no detectan al jugador.
             Physics2D.SyncTransforms();

@@ -16,6 +16,7 @@ MonoBehaviour:
   description: Damage +
   aColor: {r: 1, g: 0, b: 0, a: 1}
   icon: {fileID: 0}
+  replacedBy: {fileID: 11400000, guid: 6e1dfd62d1a564f46adf26cd11f31943, type: 2}
   damageIncrease: 10
   affectQuickAttack: 1
   affectAreaAttack: 1

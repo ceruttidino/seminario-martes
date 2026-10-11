@@ -2212,6 +2212,21 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 88ca1c77c57e9b647b5c47e6539a893a, type: 2}
   keys:
   - {fileID: 11400000, guid: 6106ea7924c64024a9e274bc11767ab9, type: 2}
+  fallbackUpgrades:
+  - {fileID: 11400000, guid: 5675c88eff762c940bd6da0c5ca411a6, type: 2}
+  - {fileID: 11400000, guid: 364e1376a750d01409e2adf496dcd8f7, type: 2}
+  - {fileID: 11400000, guid: 6e1dfd62d1a564f46adf26cd11f31943, type: 2}
+  - {fileID: 11400000, guid: 062d624a5553b7847ad44cb0286213d5, type: 2}
+  - {fileID: 11400000, guid: d6f5bd3b522487243b65ca68085c1663, type: 2}
+  - {fileID: 11400000, guid: 260f8898d5a37504fbcd710b73337385, type: 2}
+  - {fileID: 11400000, guid: f6d46cfde9f62fa4992bcb66e1b6e57b, type: 2}
+  - {fileID: 11400000, guid: 0e5231ad66a40d449beb25b681937388, type: 2}
+  - {fileID: 11400000, guid: 0ddc80887a5f55048ab76c1e91f39dca, type: 2}
+  - {fileID: 11400000, guid: aebf8a7492942e44b95ff2fa5c20d2c6, type: 2}
+  - {fileID: 11400000, guid: b476671b8318dc14bb1c6a5d30d758d3, type: 2}
+  - {fileID: 11400000, guid: ca6d2b5ab2a055e46bfa9a690bed6cea, type: 2}
+  - {fileID: 11400000, guid: 0cd3857cb66cb204d9801ca2c531bbd9, type: 2}
+  fallbackUpgradePrice: 10
 --- !u!1 &2581643176001099377
 GameObject:
   m_ObjectHideFlags: 0

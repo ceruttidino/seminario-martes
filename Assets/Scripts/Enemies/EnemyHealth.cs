@@ -13,6 +13,12 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     public event System.Action OnDeath;
     public event System.Action OnDamaged;
 
+    /// <summary>Bosses con fases: si devuelve true la muerte se cancela (el boss repone la vida cuando quiera).</summary>
+    public System.Func<bool> DeathInterceptor;
+
+    /// <summary>true: el daño no dispara sangre / flash / sonido (ej: el cuervo cuando esta escondido).</summary>
+    public bool SuppressHitFeedback;
+
     public bool IsDead => isDead;
     public float MaxHealth => maxHealth;
     public float CurrentHealth => currentHealth;
@@ -60,20 +66,34 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
 
         OnDamaged?.Invoke();
-        PlayHurtSfx();
 
-        EnemySummon.PlayBloodHit(transform.position);
+        if (!SuppressHitFeedback)
+        {
+            PlayHurtSfx();
 
-        if (damageFlash != null)
-            damageFlash.Flash();
+            EnemySummon.PlayBloodHit(transform.position);
+
+            if (damageFlash != null)
+                damageFlash.Flash();
+        }
 
         if (currentHealth <= 0)
             Die();
     }
 
+    /// <summary>Repone la vida con un nuevo maximo (fases de los bosses).</summary>
+    public void Refill(float newMaxHealth)
+    {
+        maxHealth = Mathf.Max(1f, newMaxHealth);
+        currentHealth = maxHealth;
+    }
+
     private void Die()
     {
         if (isDead) return;
+
+        if (DeathInterceptor != null && DeathInterceptor())
+            return;
 
         isDead = true;
         if (!WillLeaveCorpse())

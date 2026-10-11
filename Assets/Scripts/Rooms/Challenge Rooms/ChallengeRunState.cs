@@ -1,5 +1,9 @@
 using System.Collections.Generic;
 
+/// <summary>
+/// Challenges completados en el NIVEL ACTUAL. DungeonManager lo resetea al construir cada piso, asi un
+/// challenge se juega como mucho una vez por nivel (y vuelve a poder aparecer en el siguiente).
+/// </summary>
 public static class ChallengeRunState
 {
     public const string Supercontainer = "Supercontainer";

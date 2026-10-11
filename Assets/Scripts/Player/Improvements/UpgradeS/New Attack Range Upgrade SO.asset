@@ -16,6 +16,7 @@ MonoBehaviour:
   description: Range +
   aColor: {r: 0, g: 0, b: 1, a: 1}
   icon: {fileID: 0}
+  replacedBy: {fileID: 11400000, guid: d6f5bd3b522487243b65ca68085c1663, type: 2}
   rangeIncreases:
   - 10
   - 7

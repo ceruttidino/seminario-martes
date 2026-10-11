@@ -1,5 +1,11 @@
 using UnityEngine;
 
+/// <summary>
+/// Evita que el player quede sobre el vacio / fuera del piso (por ejemplo si un enemigo lo empuja).
+/// Solo corrige el VACIO. Los obstaculos (bolsas, props, paredes) los resuelve la fisica normal:
+/// si tambien se tomaban como "no caminables", el mapache podia quedar trabado pegado a una bolsa recien
+/// abierta (la grilla de pathfinding se reconstruye al romperla y su celda pasaba a estar bloqueada).
+/// </summary>
 public class PlayerWalkableClamp : MonoBehaviour
 {
     private Rigidbody2D rb;
@@ -15,6 +21,13 @@ public class PlayerWalkableClamp : MonoBehaviour
         hasValid = true;
     }
 
+    /// <summary>Lo llama DungeonManager al mover al player a la entrada de una room.</summary>
+    public void ResetTo(Vector2 position)
+    {
+        lastValid = position;
+        hasValid = true;
+    }
+
     private void FixedUpdate()
     {
         if (rb == null)
@@ -22,22 +35,21 @@ public class PlayerWalkableClamp : MonoBehaviour
 
         Vector2 pos = rb.position;
         RoomPathGrid grid = CurrentGrid();
-        if (grid == null)
+
+        if (grid == null || !grid.IsOverVoid(pos))
         {
             lastValid = pos;
             hasValid = true;
             return;
         }
 
-        if (grid.IsWalkableWorld(pos))
+        // Fail-safe: si la ultima posicion "buena" tambien es vacio (ej. cambio de room), no hay a donde volver:
+        // se acepta la posicion actual en vez de dejar al player clavado.
+        if (!hasValid || grid.IsOverVoid(lastValid))
         {
-            lastValid = pos;
-            hasValid = true;
+            ResetTo(pos);
             return;
         }
-
-        if (!hasValid)
-            return;
 
         rb.position = lastValid;
         rb.linearVelocity = Vector2.zero;
@@ -48,8 +60,8 @@ public class PlayerWalkableClamp : MonoBehaviour
     private RoomPathGrid CurrentGrid()
     {
         if (DungeonManager.Instance != null && DungeonManager.Instance.CurrentRoom != null)
-            return RoomPathGrid.For(DungeonManager.Instance.CurrentRoom.transform);
+            return RoomPathGrid.ForQuick(DungeonManager.Instance.CurrentRoom.transform);
 
-        return RoomPathGrid.For(transform);
+        return RoomPathGrid.ForQuick(transform);
     }
 }

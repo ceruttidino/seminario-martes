@@ -25,6 +25,9 @@ public class AreaAttack : MonoBehaviour, IAttack
     private float lastUseTime = -999f;
     private bool isAttacking = false;
 
+    /// <summary>Se dispara cada vez que el player usa el ataque pesado (posicion, radio). Lo usan, por ejemplo, las orbes desviables del jefe final.</summary>
+    public static event System.Action<Vector2, float> Performed;
+
     public bool IsAttacking => isAttacking;
 
     private void Awake()
@@ -82,6 +85,8 @@ public class AreaAttack : MonoBehaviour, IAttack
             animator.SetTrigger("AreaAttack");
             SpawnAttackVfx();
         }
+
+        Performed?.Invoke(transform.position, radius);
 
         LayerMask combinedMask = enemyLayer | trashLayer;
 

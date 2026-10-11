@@ -341,9 +341,12 @@ public class ChallengeRoomController : MonoBehaviour
         Vector3 origin = container != null ? container.transform.position : transform.position;
         float buffSide = Random.value < 0.5f ? -1f : 1f;
 
+        // El item es unico: nunca repite uno que el player ya tiene (o que ya esta puesto en el nivel).
         ObjectBuffSO buff = BuffPool.PickRandom(possibleBuffs);
+        bool buffDropped = false;
         if (buff != null && buffPickupPrefab != null)
         {
+            buffDropped = true;
             Vector3 buffPos = SideLootPosition(origin, buffSide);
             GameObject pickup = Instantiate(buffPickupPrefab, buffPos, Quaternion.identity, parent);
             UpgradePickup upgradePickup = pickup.GetComponent<UpgradePickup>();
@@ -358,7 +361,9 @@ public class ChallengeRoomController : MonoBehaviour
             }
         }
 
-        if (heartPickupPrefab != null && Random.Range(0f, 100f) <= heartDropChance)
+        // Si no quedo ninguna mejora para dar, se compensa asegurando los corazones.
+        bool dropHearts = !buffDropped || Random.Range(0f, 100f) <= heartDropChance;
+        if (heartPickupPrefab != null && dropHearts)
         {
             int hearts = Random.Range(1, 3);
             for (int i = 0; i < hearts; i++)

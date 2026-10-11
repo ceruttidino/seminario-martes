@@ -14,7 +14,11 @@ public class PlayerFeetMarker : MonoBehaviour
         var feet = new GameObject("PlayerFeet");
         feet.transform.SetParent(player.transform, false);
         feet.layer = player.layer;
-        feet.tag = "Player";
+
+        // OJO: NO taggear como "Player". Con un segundo collider con ese tag, todo script que haga
+        // CompareTag("Player") + GetComponent (puertas con ganzua, tienda, pickups...) recibia a veces el
+        // collider de los pies en lugar del cuerpo y fallaba segun la posicion exacta del jugador.
+        // Las trampas lo detectan por el componente PlayerFeetMarker, no por el tag.
 
         float y = body != null ? body.offset.y - body.size.y * 0.38f : -0.38f;
         feet.transform.localPosition = new Vector3(0f, y, 0f);

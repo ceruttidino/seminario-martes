@@ -47,8 +47,13 @@ public class RoomDoor : MonoBehaviour
     private bool isAnimating = false;
     private Coroutine doorAnimRoutine;
 
+    private const float LockpickRange = 1.35f;
+
     private bool playerInRange = false;
     private GameObject currentPlayer;
+    private GameObject cachedPlayer;
+    private Collider2D cachedPlayerCollider;
+    private Collider2D doorCollider;
     private bool pendingUnlock;
     private Action pendingUnlockComplete;
 
@@ -70,14 +75,52 @@ public class RoomDoor : MonoBehaviour
     {
         if (GamePause.IsGameplayFrozen) return;
 
-        if (playerInRange && isLocked && !isAnimating)
+        if (!isLocked || isAnimating || !IsShopDoor) return;
+        if (Keyboard.current == null || !Keyboard.current.fKey.wasPressedThisFrame) return;
+
+        // La ganzua se usa estando CERCA de la puerta. Antes dependia de los eventos del trigger
+        // (enter/exit), asi que solo andaba parado en una posicion muy especifica.
+        if (!TryGetNearbyPlayer(out GameObject player)) return;
+        if (RoomBlocksLockpick()) return;
+
+        TryUnlock(player);
+    }
+
+    private bool TryGetNearbyPlayer(out GameObject player)
+    {
+        player = null;
+
+        if (cachedPlayer == null)
         {
-            if (IsShopDoor && Keyboard.current != null && Keyboard.current.fKey.wasPressedThisFrame)
-            {
-                if (!RoomBlocksLockpick())
-                    TryUnlock();
-            }
+            cachedPlayer = GameObject.FindGameObjectWithTag("Player");
+            cachedPlayerCollider = cachedPlayer != null ? cachedPlayer.GetComponent<Collider2D>() : null;
         }
+
+        if (cachedPlayer == null) return false;
+
+        if (doorCollider == null)
+            doorCollider = GetComponent<Collider2D>();
+        if (doorCollider == null) return false;
+
+        Vector2 playerPosition = cachedPlayer.transform.position;
+        float distance;
+
+        if (cachedPlayerCollider != null && cachedPlayerCollider.enabled && doorCollider.enabled)
+        {
+            ColliderDistance2D result = doorCollider.Distance(cachedPlayerCollider);
+            distance = result.isValid
+                ? result.distance
+                : Vector2.Distance(doorCollider.ClosestPoint(playerPosition), playerPosition);
+        }
+        else
+        {
+            distance = Vector2.Distance(doorCollider.ClosestPoint(playerPosition), playerPosition);
+        }
+
+        if (distance > LockpickRange) return false;
+
+        player = cachedPlayer;
+        return true;
     }
 
     private void OnDisable()
@@ -415,12 +458,15 @@ public class RoomDoor : MonoBehaviour
         SetDoorType(neighbor.information.type, neighbor);
     }
 
-    private void TryUnlock()
+    private void TryUnlock(GameObject player)
     {
-        if (currentPlayer == null) return;
+        if (player == null) return;
         if (RoomBlocksLockpick()) return;
 
-        PlayerKeys keys = currentPlayer.GetComponent<PlayerKeys>();
+        PlayerKeys keys = player.GetComponent<PlayerKeys>();
+        if (keys == null)
+            keys = player.GetComponentInParent<PlayerKeys>();
+
         if (keys == null || !keys.UseKey())
             return;
 
@@ -460,7 +506,7 @@ public class RoomDoor : MonoBehaviour
         if (!other.CompareTag("Player")) return;
 
         playerInRange = true;
-        currentPlayer = other.gameObject;
+        currentPlayer = other.attachedRigidbody != null ? other.attachedRigidbody.gameObject : other.gameObject;
 
         if (GamePause.IsGameplayFrozen) return;
 

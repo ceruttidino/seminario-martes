@@ -24,20 +24,36 @@ public class PlayerUpgradeManager : MonoBehaviour
 
     public int GetTimesApplied(UpgradeSO upgrade)
     {
-        return collectedUpgrades.FindAll(u => u == upgrade).Count;
+        UpgradeSO real = UpgradeRegistry.Resolve(upgrade);
+        return collectedUpgrades.FindAll(u => u == real).Count;
     }
 
-    public void CollectUpgrade(UpgradeSO upgrade)
+    /// <summary>True si el player ya tiene esta mejora (o su version duplicada).</summary>
+    public bool HasUpgrade(UpgradeSO upgrade)
     {
-        if (upgrade == null) return;
+        UpgradeSO real = UpgradeRegistry.Resolve(upgrade);
+        return real != null && collectedUpgrades.Contains(real);
+    }
 
-        collectedUpgrades.Add(upgrade);
-        upgrade.Apply(this);
+    /// <summary>
+    /// Aplica la mejora. Cada mejora se puede tener UNA sola vez: si ya la tiene devuelve false y no hace nada.
+    /// </summary>
+    public bool CollectUpgrade(UpgradeSO upgrade)
+    {
+        UpgradeSO real = UpgradeRegistry.Resolve(upgrade);
+        if (real == null) return false;
+        if (HasUpgrade(real)) return false;
+
+        collectedUpgrades.Add(real);
+        UpgradeRegistry.MarkOwned(real);
+        real.Apply(this);
 
         if (UpgradePopupUI.Instance != null)
-            UpgradePopupUI.Instance.Show(upgrade);
+            UpgradePopupUI.Instance.Show(real);
         else if (TabMenuUI.Instance != null)
-            TabMenuUI.Instance.ShowPickup(upgrade.icon, upgrade.upgradeName, 1);
+            TabMenuUI.Instance.ShowPickup(real.icon, real.upgradeName, 1);
+
+        return true;
     }
 
     public List<UpgradeSO> GetCollectedUpgrades() => collectedUpgrades;

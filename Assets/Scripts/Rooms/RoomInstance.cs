@@ -524,6 +524,7 @@ public class RoomInstance : MonoBehaviour
         foreach (RoomReward reward in Rewards) // CAMBIADO: antes possibleRewards
         {
             if (reward == null || reward.prefab == null) continue;
+            if (!IsRewardAvailable(reward.prefab)) continue;
             totalWeight += Mathf.Max(0f, reward.weight);
         }
 
@@ -534,6 +535,7 @@ public class RoomInstance : MonoBehaviour
         foreach (RoomReward reward in Rewards) // CAMBIADO: antes possibleRewards
         {
             if (reward == null || reward.prefab == null) continue;
+            if (!IsRewardAvailable(reward.prefab)) continue;
 
             float weight = Mathf.Max(0f, reward.weight);
             if (weight <= 0f) continue;
@@ -545,6 +547,16 @@ public class RoomInstance : MonoBehaviour
         }
 
         return null;
+    }
+
+    // Los items (mejoras) son unicos: si el reward es un pickup de mejora que el player ya tiene (o que ya esta
+    // puesto en otra parte del nivel) no puede salir de nuevo.
+    private static bool IsRewardAvailable(GameObject prefab)
+    {
+        if (prefab == null) return false;
+
+        UpgradePickup pickup = prefab.GetComponent<UpgradePickup>();
+        return pickup == null || pickup.IsAvailableToSpawn();
     }
 
     private void ConfigureRewardBuff(GameObject spawned)

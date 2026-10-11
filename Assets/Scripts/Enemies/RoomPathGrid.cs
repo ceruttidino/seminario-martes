@@ -46,6 +46,28 @@ public class RoomPathGrid : MonoBehaviour
         return grid;
     }
 
+    /// <summary>Como For() pero sin reconstruir la grilla: sirve para consultas de terreno (vacio) baratas.</summary>
+    public static RoomPathGrid ForQuick(Transform t)
+    {
+        if (t == null) return null;
+
+        RoomInstance room = t.GetComponentInParent<RoomInstance>();
+        if (room == null) return null;
+
+        RoomPathGrid grid = room.GetComponent<RoomPathGrid>();
+        if (grid == null)
+            grid = room.gameObject.AddComponent<RoomPathGrid>();
+
+        return grid;
+    }
+
+    /// <summary>True si el punto cae sobre el tilemap de vacio o fuera del tilemap de piso.</summary>
+    public bool IsOverVoid(Vector2 world)
+    {
+        CacheTilemaps();
+        return IsTerrainHole(world);
+    }
+
     public void Invalidate()
     {
         dirty = true;

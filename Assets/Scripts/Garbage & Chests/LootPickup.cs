@@ -95,8 +95,8 @@ public class LootPickup : MonoBehaviour
             case LootType.Upgrade:
                 PlayerUpgradeManager upgradeManager = player.GetComponent<PlayerUpgradeManager>();
                 if (upgradeManager == null || lootItem.upgradeSO == null) return false;
-                upgradeManager.CollectUpgrade(lootItem.upgradeSO);
-                return true;
+                // Cada item se puede tener una sola vez: si ya lo tiene no se recoge.
+                return upgradeManager.CollectUpgrade(lootItem.upgradeSO);
         }
         return false;
     }
