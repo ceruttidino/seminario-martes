@@ -164,10 +164,10 @@ MonoBehaviour:
     prefab: {fileID: 6731944521481601438, guid: 9d33b772eca364945bc7ada72fc442b5, type: 3}
     lootItem: {fileID: 11400000, guid: 77ce5807911df084e8ce0ec914dd83c8, type: 2}
   spawnPoint: {fileID: 0}
-  chanceToFindLoot: 50
-  maxItems: 2
+  chanceToFindLoot: 45
+  maxItems: 1
   molePrefab: {fileID: 4216251994002000201, guid: cf81d60945cada34fb6046978be4ad51, type: 3}
-  moleSpawnChance: 25
+  moleSpawnChance: 15
 --- !u!1 &7948396606063819814
 GameObject:
   m_ObjectHideFlags: 0
@@ -272,3 +272,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 684c7bdf1a1c9394d8ab08a2a9f55daa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DiggingPileBlink
+  flashDuratiron: 1

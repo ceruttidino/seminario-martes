@@ -2008,9 +2008,14 @@ MonoBehaviour:
   - {fileID: 5562171015158021200}
   - {fileID: 7368240045080889273}
   diggingSpotPrefab: {fileID: 3611433241170528407, guid: 7367a0a007b04e74d875d4e74d4a5fa3, type: 3}
-  chanceToHaveDiggingSpots: 35
+  chanceToHaveDiggingSpots: 25
   enemyPrefab: {fileID: 0}
   enemySpawnPoints: []
+  rewardTable: {fileID: 0}
+  rewardSpawnPoint: {fileID: 0}
+  possibleRewards: []
+  chanceToSpawnReward: 40
+  possibleRewardBuffs: []
 --- !u!1 &5413412434907751617
 GameObject:
   m_ObjectHideFlags: 0

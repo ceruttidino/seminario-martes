@@ -23,13 +23,13 @@ public class DiggingSpot : MonoBehaviour, IInteractable
 
     [Header("Loot Config")]
     [Range(0f, 100f)]
-    [SerializeField] private float chanceToFindLoot = 75f;
-    [SerializeField] private int maxItems = 2;
+    [SerializeField] private float chanceToFindLoot = 45f;
+    [SerializeField] private int maxItems = 1;
 
     [Header("Enemigo Topo")]
     [SerializeField] private GameObject molePrefab;
     [Range(0f, 100f)]
-    [SerializeField] private float moleSpawnChance = 10f;
+    [SerializeField] private float moleSpawnChance = 15f;
 
     private bool isDug = false;
     private bool isPlayerNear = false;
