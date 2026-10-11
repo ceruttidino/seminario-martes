@@ -105,6 +105,7 @@ public class MutantSpiderBoss : BossBase
         CaptureEntryPosition();
         yield return new WaitForSeconds(1f);
         ConfigurePlayerBlocking();
+        meleeActive = true;
 
         while (!isDead)
         {
@@ -174,6 +175,54 @@ public class MutantSpiderBoss : BossBase
         ConfigurePlayerBlocking();
     }
 
+    // Separacion (entre superficies de colliders) a la que la Araña se detiene frente al jugador.
+    private const float MeleeStopGap = 0.1f;
+    private Collider2D playerBodyCollider;
+    private bool meleeActive;
+
+    private void Update()
+    {
+        // El cuerpo de la Araña es solido: si el jugador lo toca tiene que recibir el golpe SIEMPRE (tambien mientras
+        // dispara telarañas o descansa), no solo mientras la Araña lo persigue.
+        if (meleeActive)
+            TryMelee();
+    }
+
+    private void TryMelee()
+    {
+        if (isDead || isOnCeiling || enemyAttack == null || !enemyAttack.enabled)
+            return;
+
+        if (enemyAttack.TryAttack())
+            AudioManager.PlaySpiderMelee();
+    }
+
+    /// <summary>Distancia entre la superficie del cuerpo de la Araña y la del cuerpo del jugador (negativa si se solapan).</summary>
+    private float GapToPlayer(float centerDistance)
+    {
+        if (bodyCollider == null || !bodyCollider.enabled || player == null)
+            return centerDistance;
+
+        if (playerBodyCollider == null)
+        {
+            Collider2D[] playerColliders = player.GetComponents<Collider2D>();
+            for (int i = 0; i < playerColliders.Length; i++)
+            {
+                Collider2D col = playerColliders[i];
+                if (col != null && col.enabled && !col.isTrigger)
+                {
+                    playerBodyCollider = col;
+                    break;
+                }
+            }
+        }
+
+        if (playerBodyCollider == null || !playerBodyCollider.enabled)
+            return centerDistance;
+
+        return bodyCollider.Distance(playerBodyCollider).distance;
+    }
+
     private IEnumerator ChasePlayer()
     {
         float timer = 0f;
@@ -195,18 +244,23 @@ public class MutantSpiderBoss : BossBase
             float distance = toPlayer.magnitude;
             Vector2 direction = distance > 0.001f ? toPlayer / distance : lastMoveDirection;
 
-            float stopDistance = 1.25f;
-            if (bodyCollider != null)
-                stopDistance = Mathf.Max(stopDistance, bodyCollider.bounds.extents.magnitude * 0.65f + 0.55f);
+            // La distancia se mide entre las SUPERFICIES de los colliders (no entre pivots): asi la Araña frena
+            // pegada al jugador sin empujarlo, y desde ahi el golpe melee (EnemyAttack.Reach) siempre conecta.
+            float gap = GapToPlayer(distance);
 
-            if (distance <= stopDistance)
+            if (gap <= MeleeStopGap)
+            {
                 rb.linearVelocity = Vector2.zero;
+            }
             else
-                rb.linearVelocity = direction * moveSpeed;
+            {
+                // En el ultimo tramo se limita la velocidad para frenar justo en el borde (sin pasarse y empujar).
+                float step = Mathf.Max(0f, gap - MeleeStopGap) / Mathf.Max(Time.fixedDeltaTime, 0.001f);
+                rb.linearVelocity = direction * Mathf.Min(moveSpeed, step);
+            }
             UpdateMovementAnimation(direction);
 
-            if (enemyAttack != null && !isOnCeiling && enemyAttack.TryAttack())
-                AudioManager.PlaySpiderMelee();
+            TryMelee();
 
             timer += Time.deltaTime;
             yield return null;
@@ -498,6 +552,7 @@ public class MutantSpiderBoss : BossBase
 
     private void HandleDeath()
     {
+        meleeActive = false;
         AudioManager.StopLoop();
         StopBoss();
         StopMovement();

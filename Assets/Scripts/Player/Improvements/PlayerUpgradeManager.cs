@@ -48,6 +48,12 @@ public class PlayerUpgradeManager : MonoBehaviour
         UpgradeRegistry.MarkOwned(real);
         real.Apply(this);
 
+        // Animacion de agarre: el mapache se queda quieto mostrando el objeto que acaba de conseguir.
+        PlayerBuffPose pose = GetComponent<PlayerBuffPose>();
+        if (pose == null)
+            pose = gameObject.AddComponent<PlayerBuffPose>();
+        pose.Play(real.icon, real.aColor);
+
         if (UpgradePopupUI.Instance != null)
             UpgradePopupUI.Instance.Show(real);
         else if (TabMenuUI.Instance != null)

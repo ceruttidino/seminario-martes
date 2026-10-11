@@ -69,6 +69,10 @@ public class ChallengeContainerHunter : MonoBehaviour
         if (turtle != null)
             return turtle.ChargeDamage;
 
+        HungryAnt ant = GetComponent<HungryAnt>();
+        if (ant != null)
+            return ant.AoeDamage;
+
         EnemyAttack attack = GetComponent<EnemyAttack>();
         if (attack != null)
             return attack.Damage;
@@ -105,6 +109,11 @@ public class ChallengeContainerHunter : MonoBehaviour
         Mole mole = GetComponent<Mole>();
         if (mole != null)
             mole.enabled = false;
+
+        // La hormiga deja de ser autonoma (no deambula ni ataca): solo conserva su animacion al caminar.
+        HungryAnt ant = GetComponent<HungryAnt>();
+        if (ant != null)
+            ant.EnterPassiveMode();
     }
 
     public static void DisableRegeneration(GameObject enemy)

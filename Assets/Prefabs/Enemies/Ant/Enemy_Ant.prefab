@@ -16,11 +16,9 @@ GameObject:
   - component: {fileID: 1463402056870659288}
   - component: {fileID: -2046340648554966154}
   - component: {fileID: 2366819222791710392}
-  - component: {fileID: 6964399883535842292}
   - component: {fileID: 8918091845439713338}
-  - component: {fileID: -1778954237217324266}
   - component: {fileID: 8546525372491809007}
-  - component: {fileID: 161573808956338407}
+  - component: {fileID: 7600000000000000001}
   m_Layer: 3
   m_Name: Enemy_Ant
   m_TagString: Untagged
@@ -93,7 +91,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -6943813488821943829, guid: 0ea8d4e57506c95449009691bbccd245, type: 3}
+  m_Sprite: {fileID: 6140265055159734981, guid: c5e4842020f0c3b46a2751b1809f8e24, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -222,24 +220,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyMovement
   speed: 3
-  animator: {fileID: 161573808956338407}
+  animator: {fileID: 0}
   spriteRenderer: {fileID: 8208979293606837074}
---- !u!114 &6964399883535842292
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8734249323408576011}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 30fc10574e4e99c4084f043921bce407, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AntDetection
-  detectionRange: 5
-  playerPlayer:
-    serializedVersion: 2
-    m_Bits: 512
 --- !u!114 &8918091845439713338
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -255,24 +237,6 @@ MonoBehaviour:
   wallLayer:
     serializedVersion: 2
     m_Bits: 1024
---- !u!114 &-1778954237217324266
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8734249323408576011}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 40521986e017e6a4183e4b4288386610, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyAttack
-  damage: 1
-  attackRange: 0.6
-  attackCooldown: 1
-  targetLayer:
-    serializedVersion: 2
-    m_Bits: 512
 --- !u!114 &8546525372491809007
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -289,28 +253,74 @@ MonoBehaviour:
   flashColor: {r: 1, g: 0, b: 0, a: 1}
   flashDuration: 0.05
   flashCount: 2
---- !u!95 &161573808956338407
-Animator:
-  serializedVersion: 7
+--- !u!114 &7600000000000000001
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8734249323408576011}
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 8be4c376f2fff0b4089b71fd07fae74d, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f1c9d3a8b2e4f57a0c6d4e2b9f81a35, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HungryAnt
+  frontFrames:
+  - {fileID: 6140265055159734981, guid: c5e4842020f0c3b46a2751b1809f8e24, type: 3}
+  - {fileID: 108763179088579731, guid: c5e4842020f0c3b46a2751b1809f8e24, type: 3}
+  - {fileID: -7155912614503402644, guid: c5e4842020f0c3b46a2751b1809f8e24, type: 3}
+  - {fileID: 8095189091028527064, guid: c5e4842020f0c3b46a2751b1809f8e24, type: 3}
+  backFrames:
+  - {fileID: -169039966664430048, guid: 2ea322229f7bc6240b161ea4caa6d4f9, type: 3}
+  - {fileID: 1305773746161554210, guid: 2ea322229f7bc6240b161ea4caa6d4f9, type: 3}
+  - {fileID: -3386862262481395915, guid: 2ea322229f7bc6240b161ea4caa6d4f9, type: 3}
+  - {fileID: -4878662744950277179, guid: 2ea322229f7bc6240b161ea4caa6d4f9, type: 3}
+  leftFrames:
+  - {fileID: 7102571612538692024, guid: c80c52502b151b04ab9657aab648eac9, type: 3}
+  - {fileID: 1477659604143671906, guid: c80c52502b151b04ab9657aab648eac9, type: 3}
+  - {fileID: -8696043788787259253, guid: c80c52502b151b04ab9657aab648eac9, type: 3}
+  - {fileID: -5476454570850989988, guid: c80c52502b151b04ab9657aab648eac9, type: 3}
+  - {fileID: -3470796626203394363, guid: c80c52502b151b04ab9657aab648eac9, type: 3}
+  rightFrames:
+  - {fileID: 8250518726722669439, guid: 4619680419d2ad22dd940c549afdb573, type: 3}
+  - {fileID: 7932434356335193695, guid: 4619680419d2ad22dd940c549afdb573, type: 3}
+  - {fileID: 8889914041989326293, guid: 4619680419d2ad22dd940c549afdb573, type: 3}
+  - {fileID: 4497976884319599180, guid: 4619680419d2ad22dd940c549afdb573, type: 3}
+  - {fileID: 3921165891055543431, guid: 4619680419d2ad22dd940c549afdb573, type: 3}
+  attackFrames:
+  - {fileID: 4111646588051123306, guid: 9da0e72ae016acb9ab6540358104e56c, type: 3}
+  - {fileID: 641228471761516306, guid: 9da0e72ae016acb9ab6540358104e56c, type: 3}
+  - {fileID: 440574919399764719, guid: 9da0e72ae016acb9ab6540358104e56c, type: 3}
+  - {fileID: 472825064595085377, guid: 9da0e72ae016acb9ab6540358104e56c, type: 3}
+  - {fileID: 8713976999762193498, guid: 9da0e72ae016acb9ab6540358104e56c, type: 3}
+  - {fileID: 2631374553506112507, guid: 9da0e72ae016acb9ab6540358104e56c, type: 3}
+  - {fileID: 8787343442567417288, guid: 9da0e72ae016acb9ab6540358104e56c, type: 3}
+  - {fileID: 4088970225405743452, guid: 9da0e72ae016acb9ab6540358104e56c, type: 3}
+  - {fileID: 2216539652046181157, guid: 9da0e72ae016acb9ab6540358104e56c, type: 3}
+  - {fileID: 5031870850547783635, guid: 9da0e72ae016acb9ab6540358104e56c, type: 3}
+  - {fileID: 5532019980781783443, guid: 9da0e72ae016acb9ab6540358104e56c, type: 3}
+  - {fileID: 8743437247795637320, guid: 9da0e72ae016acb9ab6540358104e56c, type: 3}
+  - {fileID: 5200710040969109208, guid: 9da0e72ae016acb9ab6540358104e56c, type: 3}
+  - {fileID: 2126957220415730353, guid: 9da0e72ae016acb9ab6540358104e56c, type: 3}
+  - {fileID: 8117704394929795217, guid: 9da0e72ae016acb9ab6540358104e56c, type: 3}
+  dizzyFrames:
+  - {fileID: 6690064972121587167, guid: c963273dc438ab8492cdd9a6f5877c68, type: 3}
+  - {fileID: 1535253399838489452, guid: c963273dc438ab8492cdd9a6f5877c68, type: 3}
+  - {fileID: 899368049652726268, guid: c963273dc438ab8492cdd9a6f5877c68, type: 3}
+  - {fileID: 2963425472299280316, guid: c963273dc438ab8492cdd9a6f5877c68, type: 3}
+  deathFrames:
+  - {fileID: 1533227104452189428, guid: 72dca817fdf4acedc4fca6c50d804d6f, type: 3}
+  - {fileID: 8898799452921721784, guid: 72dca817fdf4acedc4fca6c50d804d6f, type: 3}
+  - {fileID: 53559012031327458, guid: 72dca817fdf4acedc4fca6c50d804d6f, type: 3}
+  - {fileID: 7132973955059583430, guid: 72dca817fdf4acedc4fca6c50d804d6f, type: 3}
+  - {fileID: 6317570895653087345, guid: 72dca817fdf4acedc4fca6c50d804d6f, type: 3}
+  - {fileID: 4105755137675762409, guid: 72dca817fdf4acedc4fca6c50d804d6f, type: 3}
+  - {fileID: 6431639794674259657, guid: 72dca817fdf4acedc4fca6c50d804d6f, type: 3}
+  - {fileID: 3231285912242554205, guid: 72dca817fdf4acedc4fca6c50d804d6f, type: 3}
+  - {fileID: 3078509545768019288, guid: 72dca817fdf4acedc4fca6c50d804d6f, type: 3}
+  - {fileID: 7217563630111352663, guid: 72dca817fdf4acedc4fca6c50d804d6f, type: 3}
+  - {fileID: 4781895680182842214, guid: 72dca817fdf4acedc4fca6c50d804d6f, type: 3}
+  - {fileID: 4190592560934176980, guid: 72dca817fdf4acedc4fca6c50d804d6f, type: 3}
 --- !u!1 &8871834171099964277
 GameObject:
   m_ObjectHideFlags: 0

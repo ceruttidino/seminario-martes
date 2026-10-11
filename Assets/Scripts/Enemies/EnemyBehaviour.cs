@@ -65,7 +65,9 @@ public class EnemyBehaviour : MonoBehaviour
                 break;
 
             case EnemyType.Ant:
-                SetState(new AntMoveState(player, movement, transform, this, attack));
+                // La Hormiga Hambrienta lleva toda su logica (movimiento intermitente, ataque en area, mareo) en HungryAnt.
+                if (GetComponent<HungryAnt>() == null)
+                    Debug.LogError($"EnemyBehaviour: {gameObject.name} necesita HungryAnt.");
                 break;
 
             case EnemyType.Mole:
@@ -151,11 +153,6 @@ public class EnemyBehaviour : MonoBehaviour
         {
             snail.OnWallHit(normal);
         }
-        if (currentState is AntMoveState ant)
-        {
-            ant.OnWallHit(normal);
-        }
-
         if (currentState is TurtleWanderState turtleWander)
         {
             turtleWander.OnWallHit(normal);

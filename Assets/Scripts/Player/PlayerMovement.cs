@@ -21,7 +21,14 @@ public class PlayerMovement : MonoBehaviour
     private static readonly int AttackBlendTreeHash = Animator.StringToHash("Raccoon_Attack_BlendTree");
     private static readonly int AreaAttackHash = Animator.StringToHash("Raccoon_Area_Attack");
     private static readonly int DigHash = Animator.StringToHash("Raccoon_Dig");
+    private static readonly int TakeBuffHash = Animator.StringToHash("Raccoon_TakeBuff");
     private bool isDigging;
+    private bool isPosing;
+
+    // Knockback (ej: golpear a la Hormiga mientras ataca): el jugador sale despedido y no controla el movimiento un instante.
+    private float knockbackTimer;
+    private float knockbackTotal;
+    private Vector2 knockbackStartVelocity;
 
     [Header("Movement Stats")]
     [SerializeField] private float moveSpeed = 5f;
@@ -40,8 +47,10 @@ public class PlayerMovement : MonoBehaviour
     public Vector2 MoveDirection => moveDirection;
     public Vector2 CurrentVelocity => rb != null ? rb.linearVelocity : Vector2.zero;
     public bool IsDigging => isDigging;
+    public bool IsPosing => isPosing;
+    public bool IsKnockedBack => knockbackTimer > 0f;
     public bool IsStunned => stunTimer > 0f;
-    public bool IsActionLocked => isDigging || IsStunned;
+    public bool IsActionLocked => isDigging || isPosing || IsStunned || IsKnockedBack;
 
     private float stunTimer;
 
@@ -97,9 +106,42 @@ public class PlayerMovement : MonoBehaviour
         if (stunTimer > 0f)
         {
             stunTimer -= Time.deltaTime;
-            if (rb != null)
+            if (rb != null && knockbackTimer <= 0f)
                 rb.linearVelocity = Vector2.zero;
         }
+    }
+
+    /// <summary>
+    /// Empuja al jugador 'distance' unidades en 'direction' durante 'duration' segundos (velocidad inicial alta que baja
+    /// de forma lineal). Mientras dura no puede moverse, atacar ni hacer dash.
+    /// </summary>
+    public void ApplyKnockback(Vector2 direction, float distance, float duration)
+    {
+        if (direction.sqrMagnitude < 0.0001f)
+            direction = -lastFacingDirection;
+
+        duration = Mathf.Max(0.05f, duration);
+        knockbackTotal = duration;
+        knockbackTimer = duration;
+        knockbackStartVelocity = direction.normalized * (2f * Mathf.Max(0f, distance) / duration);
+
+        if (rb != null)
+            rb.linearVelocity = knockbackStartVelocity;
+
+        if (animator != null)
+            animator.SetFloat("Speed", 0f);
+    }
+
+    private void StepKnockback()
+    {
+        knockbackTimer -= Time.fixedDeltaTime;
+
+        float k = Mathf.Clamp01(knockbackTimer / Mathf.Max(0.01f, knockbackTotal));
+        if (rb != null)
+            rb.linearVelocity = knockbackTimer > 0f ? knockbackStartVelocity * k : Vector2.zero;
+
+        if (animator != null)
+            animator.SetFloat("Speed", 0f);
     }
 
     public void Stun(float duration)
@@ -133,7 +175,13 @@ public class PlayerMovement : MonoBehaviour
 
     private void HandleMovement()
     {
-        if (GamePause.IsGameplayFrozen || isDigging || IsStunned)
+        if (knockbackTimer > 0f && !GamePause.IsGameplayFrozen)
+        {
+            StepKnockback();
+            return;
+        }
+
+        if (GamePause.IsGameplayFrozen || isDigging || isPosing || IsStunned)
         {
             if (rb != null)
                 rb.linearVelocity = Vector2.zero;
@@ -237,7 +285,77 @@ public class PlayerMovement : MonoBehaviour
 
     private static bool IsActionState(int hash)
     {
-        return hash == AttackBlendTreeHash || hash == AreaAttackHash || hash == DigHash;
+        return hash == AttackBlendTreeHash || hash == AreaAttackHash || hash == DigHash || hash == TakeBuffHash;
+    }
+
+    /// <summary>
+    /// Pose de "agarre de buff": el mapache se queda QUIETO (sin moverse, atacar ni hacer dash) mientras dura la animacion
+    /// Raccoon_TakeBuff, mostrando el objeto que acaba de conseguir. Devuelve false si no se puede arrancar ahora (ya esta
+    /// posando, dash en curso, juego pausado...).
+    /// </summary>
+    public bool TryPlayTakeBuff(System.Action onComplete = null)
+    {
+        if (isPosing || animator == null || GamePause.IsGameplayFrozen)
+            return false;
+
+        if (playerDash != null && playerDash.IsDashing)
+            return false;
+
+        isPosing = true;
+
+        if (rb != null)
+            rb.linearVelocity = Vector2.zero;
+
+        animator.SetFloat("Speed", 0f);
+        animator.ResetTrigger("Attack");
+        animator.ResetTrigger("AreaAttack");
+        animator.ResetTrigger("Dig");
+        animator.SetTrigger("TakeBuff");
+
+        StartCoroutine(WaitForTakeBuff(onComplete));
+        return true;
+    }
+
+    private IEnumerator WaitForTakeBuff(System.Action onComplete)
+    {
+        const float timeout = 3f;
+        const float enterGrace = 0.5f;
+
+        float elapsed = 0f;
+        bool entered = false;
+
+        while (elapsed < timeout)
+        {
+            AnimatorStateInfo current = animator.GetCurrentAnimatorStateInfo(0);
+
+            if (current.shortNameHash == TakeBuffHash)
+            {
+                entered = true;
+                if (current.normalizedTime >= 1f && !animator.IsInTransition(0))
+                    break;
+            }
+            else if (entered && !animator.IsInTransition(0))
+            {
+                break;
+            }
+            else if (!entered && elapsed > enterGrace)
+            {
+                // El animator nunca entro al estado (controller sin el estado, etc.): no se deja al jugador trabado.
+                break;
+            }
+
+            elapsed += Time.deltaTime;
+            if (rb != null)
+                rb.linearVelocity = Vector2.zero;
+            animator.SetFloat("Speed", 0f);
+            yield return null;
+        }
+
+        // Por si el trigger quedo sin consumir (que no vuelva a disparar la pose al salir del estado).
+        animator.ResetTrigger("TakeBuff");
+
+        isPosing = false;
+        onComplete?.Invoke();
     }
 
     public bool TryPlayDig(System.Action onComplete)

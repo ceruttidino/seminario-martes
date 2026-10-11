@@ -9,14 +9,19 @@ using UnityEngine;
 /// - Dos estados: Normal y Poseido. Al vencerlo en estado Normal "parece" terminar la pelea y se revela
 ///   Poseido, con los mismos ataques pero mas fuertes. Al vencer al Poseido aparece la puerta final.
 /// Ataques:
-///   1) Orbes espectrales: 5 orbes (0.7 s entre cada una). Solo la ULTIMA se puede desviar con el ATAQUE
-///      PESADO (E); si vuelve y le pega, el cuervo recibe daño y queda aturdido 2.5 s (ahi se lo golpea).
+///   1) Orbes espectrales GRANDES: 5 orbes (0.7 s entre cada una). Solo la ULTIMA se puede desviar: hay que apretar el
+///      ATAQUE PESADO (E) en el momento en que la orbe choca con el player (ver CrowOrb). Si vuelve y le pega, el cuervo
+///      recibe daño y queda aturdido 2.5 s (ahi se lo golpea).
 ///   2) Portal y brazo: se escapa por un portal, abre un portal en el piso donde esta el player (aviso con
-///      temblor) y saca un brazo. Hay 0.7 s para golpear el brazo antes de que se retraiga.
-///   3) Chillido: desaparece y suelta cuervitos desde los costados que vuelan por el eje X. Los negros no
-///      se pueden golpear; los blancos (versiones chicas del jefe) si, y dañan al cuervo.
-/// Estado Poseido: 8 orbes al doble de velocidad (0.5 s entre cada una), 5 portales/brazos (0.7 s entre cada
-/// uno, todos quedan hasta que aparece el ultimo) y muchos mas cuervitos a la vez.
+///      temblor) y saca un brazo. Hay 0.7 s para golpear el brazo antes de que se retraiga. NUNCA hay dos portales
+///      abiertos a la vez (el de escape se cierra antes de abrir el del brazo, y ese se cierra antes del de regreso);
+///      al terminar vuelve a la arena por un portal.
+///   3) Chillido: desaparece y suelta cuervitos desde los costados que vuelan por el eje X, con 0.6 s entre cada uno.
+///      Los negros no se pueden golpear; los blancos (versiones chicas del jefe) si, solo pueden aparecer 3 veces por
+///      ataque y al recibir el golpe desaparecen y dañan al cuervo.
+/// Estado Poseido: 8 orbes al doble de velocidad (0.5 s entre cada una), 5 portales/brazos (0.7 s entre cada uno,
+/// todos quedan hasta que aparece el ultimo) y muchos mas cuervitos, varios a la vez, que ahora tambien vuelan por
+/// el eje Y y salen cada 0.5 s.
 /// </summary>
 public class SorcererCrowBoss : BossBase
 {
@@ -36,45 +41,60 @@ public class SorcererCrowBoss : BossBase
 
     [Header("Ataque 1 - Orbes espectrales")]
     [SerializeField] private int orbCount = 5;
+    [Tooltip("GDD: 0.7 s entre cada orbe.")]
     [SerializeField] private float orbDelay = 0.7f;
     [SerializeField] private float orbSpeed = 5.5f;
-    [SerializeField] private float orbScale = 1.3f;
+    [Tooltip("Las orbes son GRANDES (GDD).")]
+    [SerializeField] private float orbScale = 1.5f;
     [SerializeField] private int orbDamage = 1;
     [SerializeField] private float orbTellTime = 0.6f;
-    [Tooltip("Que tan cerca del player tiene que estar la orbe para poder desviarla con el ataque pesado.")]
-    [SerializeField] private float deflectRadius = 1.5f;
     [SerializeField] private float reflectedOrbSpeed = 13f;
     [Tooltip("Daño que recibe el cuervo cuando le devuelven la orbe.")]
     [SerializeField] private float deflectDamage = 30f;
+    [Tooltip("GDD: el cuervo queda aturdido 2.5 s cuando le devuelven la orbe.")]
     [SerializeField] private float stunDuration = 2.5f;
 
     [Header("Ataque 2 - Portal y brazo")]
     [SerializeField] private float armTellTime = 0.9f;
+    [Tooltip("GDD: el player tiene 0.7 s para golpear el brazo antes de que se retraiga.")]
     [SerializeField] private float armWindow = 0.7f;
+    [Tooltip("GDD (estado poseido): 0.7 s entre la aparicion de cada portal/brazo.")]
     [SerializeField] private float armSpawnDelay = 0.7f;
     [SerializeField] private int armContactDamage = 2;
     [SerializeField] private float armShake = 0.07f;
+    [Tooltip("Pausa entre que se cierra un portal y se abre el siguiente (nunca hay dos portales abiertos a la vez en estado Normal).")]
+    [SerializeField] private float portalGap = 0.3f;
 
     [Header("Ataque 3 - Chillido y cuervitos")]
-    [SerializeField] private float ravenDuration = 6f;
-    [SerializeField] private float ravenInterval = 0.45f;
+    [Tooltip("Cuanto dura la lluvia de cuervitos (estado Normal).")]
+    [SerializeField] private float ravenDuration = 7.2f;
+    [Tooltip("GDD: 0.6 s de delay entre cuervitos.")]
+    [SerializeField] private float ravenInterval = 0.6f;
     [SerializeField] private float ravenSpeed = 6.5f;
     [SerializeField] private int ravenDamage = 1;
     [SerializeField] private float ravenTellTime = 0.45f;
-    [Range(0f, 1f)]
-    [SerializeField] private float whiteRavenChance = 0.2f;
-    [Tooltip("Como minimo sale un cuervito blanco cada tantos cuervitos.")]
-    [SerializeField] private int whiteRavenAtLeastEvery = 5;
+    [Tooltip("GDD: los cuervitos blancos solo pueden aparecer 3 veces por ataque.")]
+    [SerializeField] private int maxWhiteRavensPerAttack = 3;
 
     [Header("Estado Poseido (versiones mas fuertes)")]
+    [Tooltip("GDD: 8 proyectiles...")]
     [SerializeField] private int possessedOrbCount = 8;
+    [Tooltip("...con 0.5 s de delay entre ellos...")]
     [SerializeField] private float possessedOrbDelay = 0.5f;
+    [Tooltip("...al doble de velocidad.")]
     [SerializeField] private float possessedOrbSpeedMultiplier = 2f;
+    [Tooltip("GDD: 5 portales/brazos en total.")]
     [SerializeField] private int possessedArmCount = 5;
-    [SerializeField] private float possessedRavenDuration = 7f;
-    [SerializeField] private float possessedRavenInterval = 0.3f;
-    [SerializeField] private int possessedRavenBurst = 3;
-    [SerializeField] private float possessedRavenSpeedMultiplier = 1.35f;
+    [SerializeField] private float possessedRavenDuration = 7.2f;
+    [Tooltip("GDD: el delay de 0.6 s baja a 0.5 s.")]
+    [SerializeField] private float possessedRavenInterval = 0.5f;
+    [Tooltip("GDD: aparecen muchos a la vez: cada tanda suelta entre Min y Max cuervitos.")]
+    [SerializeField] private int possessedRavenBurstMin = 2;
+    [SerializeField] private int possessedRavenBurstMax = 3;
+    [Tooltip("GDD: en estado poseido los cuervitos tambien vuelan por el eje Y. Probabilidad de que un cuervito (que no sea el primero de la tanda) sea vertical.")]
+    [Range(0f, 1f)]
+    [SerializeField] private float possessedVerticalChance = 0.5f;
+    [SerializeField] private float possessedRavenSpeedMultiplier = 1.25f;
     [SerializeField] private Color possessedTint = new Color(1f, 0.82f, 1f, 1f);
 
     [Header("Arena (relativa al centro de la room)")]
@@ -102,6 +122,29 @@ public class SorcererCrowBoss : BossBase
 
     /// <summary>Punto al que apuntan las orbes devueltas.</summary>
     public Vector2 HitPoint => bodyCollider != null ? (Vector2)bodyCollider.bounds.center : (Vector2)transform.position;
+
+    /// <summary>true si un circulo (centro, radio) toca el cuerpo del cuervo. Lo usa la orbe devuelta para saber si le pego.</summary>
+    public bool OverlapsBody(Vector2 center, float radius)
+    {
+        if (bodyCollider != null && bodyCollider.enabled)
+        {
+            Vector2 closest = bodyCollider.ClosestPoint(center);
+            return (closest - center).sqrMagnitude <= radius * radius;
+        }
+
+        // Sin collider activo (no deberia pasar mientras tira orbes): se usa una zona fija alrededor del cuervo.
+        float reach = radius + 0.8f;
+        return (HitPoint - center).sqrMagnitude <= reach * reach;
+    }
+
+    /// <summary>true si el punto esta fuera de la arena (con un margen). Las orbes que se escapan se descartan.</summary>
+    public bool IsOutsideArena(Vector2 point, float margin)
+    {
+        Vector2 center = RoomCenter();
+        return Mathf.Abs(point.x - center.x) > arenaHalfWidth + margin
+            || point.y > center.y + arenaMaxY + margin + 2f
+            || point.y < center.y + arenaMinY - margin;
+    }
 
     // ================================================================= ciclo de vida
 
@@ -285,7 +328,7 @@ public class SorcererCrowBoss : BossBase
         if (direction.sqrMagnitude < 0.01f)
             direction = Vector2.down;
 
-        CrowOrb orb = CrowOrb.Spawn(this, mouth, direction, speed, orbDamage, deflectable, deflectRadius,
+        CrowOrb orb = CrowOrb.Spawn(this, mouth, direction, speed, orbDamage, deflectable,
             reflectedOrbSpeed, orbScale, RoomTransform());
         Track(orb.gameObject);
 
@@ -348,16 +391,24 @@ public class SorcererCrowBoss : BossBase
     {
         int armCount = possessed ? possessedArmCount : 1;
 
+        // 1) El cuervo se hunde en un portal y espera a que ese portal se CIERRE del todo...
         yield return EscapeThroughPortal();
         if (ShouldAbort) yield break;
 
+        // 2) ...recien despues se abre el portal del brazo (GDD: nunca hay varios portales abiertos a la vez;
+        //    el estado Poseido es la excepcion: ahi abre 5 portales/brazos y quedan todos en la arena).
+        yield return Wait(portalGap);
+        if (ShouldAbort) yield break;
+
         List<CrowArm> arms = new List<CrowArm>();
+        List<Vector2> armPositions = new List<Vector2>();
 
         for (int i = 0; i < armCount; i++)
         {
             if (ShouldAbort) yield break;
 
-            Vector2 target = ClampToArena((Vector2)player.position + Vector2.down * 0.35f);
+            Vector2 target = PickArmPosition(armPositions);
+            armPositions.Add(target);
 
             // Temblor leve: avisa que va a salir un brazo.
             CameraShake.Play(armTellTime, armShake);
@@ -387,6 +438,41 @@ public class SorcererCrowBoss : BossBase
         yield return ReturnThroughPortal();
     }
 
+    private const float ArmSpacing = 1.6f;
+
+    /// <summary>
+    /// Donde sale el brazo: justo donde esta el jugador AHORA (GDD). En estado Poseido, si ya hay un brazo en ese lugar (el
+    /// jugador se quedo quieto) el nuevo portal se abre al lado, para que siempre sean 5 portales distintos.
+    /// </summary>
+    private Vector2 PickArmPosition(List<Vector2> existing)
+    {
+        Vector2 baseTarget = ClampToArena((Vector2)player.position + Vector2.down * 0.35f);
+        if (IsFarFromAll(existing, baseTarget))
+            return baseTarget;
+
+        for (int attempt = 0; attempt < 10; attempt++)
+        {
+            float angle = Random.Range(0f, Mathf.PI * 2f);
+            float distance = Random.Range(ArmSpacing, ArmSpacing * 1.9f);
+            Vector2 candidate = ClampToArena(baseTarget + new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * distance);
+            if (IsFarFromAll(existing, candidate))
+                return candidate;
+        }
+
+        return baseTarget;
+    }
+
+    private static bool IsFarFromAll(List<Vector2> points, Vector2 candidate)
+    {
+        for (int i = 0; i < points.Count; i++)
+        {
+            if (Vector2.Distance(points[i], candidate) < ArmSpacing)
+                return false;
+        }
+
+        return true;
+    }
+
     private static bool AnyArmAlive(List<CrowArm> arms)
     {
         for (int i = 0; i < arms.Count; i++)
@@ -409,8 +495,9 @@ public class SorcererCrowBoss : BossBase
 
     private IEnumerator EscapeThroughPortal()
     {
+        // Abre (0.35 s), se mantiene hasta que el cuervo termina de hundirse (~0.75 s) y se cierra (0.3 s).
         Vector2 portalPosition = (Vector2)transform.position + Vector2.down * 1.25f;
-        CrowFx.Portal(portalPosition, RoomTransform(), 0.35f, 1.0f, 0.3f, 2.8f);
+        GameObject portal = CrowFx.Portal(portalPosition, RoomTransform(), 0.35f, 0.5f, 0.3f, 2.8f);
         yield return Wait(0.3f);
 
         // El cuervo se hunde en el portal.
@@ -427,12 +514,19 @@ public class SorcererCrowBoss : BossBase
         if (ShouldAbort) yield break;
 
         SetOnArena(false);
+
+        // El portal de escape tiene que estar CERRADO antes de que se abra cualquier otro.
+        yield return WaitUntilGone(portal);
     }
 
     private IEnumerator ReturnThroughPortal()
     {
+        // Los brazos (y sus portales) ya terminaron: recien ahora se abre el portal de regreso.
+        yield return Wait(portalGap);
+        if (ShouldAbort) yield break;
+
         Vector2 portalPosition = (Vector2)transform.position + Vector2.down * 1.25f;
-        CrowFx.Portal(portalPosition, RoomTransform(), 0.35f, 0.6f, 0.3f, 2.8f);
+        GameObject portal = CrowFx.Portal(portalPosition, RoomTransform(), 0.35f, 0.5f, 0.3f, 2.8f);
         yield return Wait(0.35f);
         if (ShouldAbort) yield break;
 
@@ -450,6 +544,17 @@ public class SorcererCrowBoss : BossBase
         }
 
         ResetVisual();
+
+        // El portal de regreso se cierra por completo antes de seguir con la rutina.
+        yield return WaitUntilGone(portal);
+    }
+
+    /// <summary>Espera a que un efecto (portal) termine de cerrarse y se destruya.</summary>
+    private IEnumerator WaitUntilGone(GameObject effect)
+    {
+        float safety = Time.time + 3f;
+        while (effect != null && !ShouldAbort && Time.time < safety)
+            yield return null;
     }
 
     // ================================================================= ataque 3: chillido y cuervitos
@@ -458,7 +563,6 @@ public class SorcererCrowBoss : BossBase
     {
         float duration = possessed ? possessedRavenDuration : ravenDuration;
         float interval = possessed ? possessedRavenInterval : ravenInterval;
-        int burst = possessed ? possessedRavenBurst : 1;
         float speed = possessed ? ravenSpeed * possessedRavenSpeedMultiplier : ravenSpeed;
 
         // Chillido: se agranda, tiembla y desaparece.
@@ -483,18 +587,32 @@ public class SorcererCrowBoss : BossBase
         SetOnArena(false);
         ResetVisual();
 
-        // Enjambre
-        float end = Time.time + duration;
-        int sinceWhite = 0;
+        // Enjambre: una tanda cada 'interval' segundos (GDD: 0.6 s en estado Normal, 0.5 s en Poseido).
+        // Los cuervitos BLANCOS solo pueden aparecer maximo 3 veces por ataque: se reparten al azar a lo largo del ataque.
+        int waves = Mathf.Max(1, Mathf.RoundToInt(duration / interval));
+        HashSet<int> whiteWaves = PickWhiteRavenWaves(waves, maxWhiteRavensPerAttack);
 
-        while (Time.time < end && !ShouldAbort)
+        for (int wave = 0; wave < waves && !ShouldAbort; wave++)
         {
+            // Normal: de a uno. Poseido: "muchos a la vez".
+            int burst = possessed ? Random.Range(possessedRavenBurstMin, possessedRavenBurstMax + 1) : 1;
+            burst = Mathf.Max(1, burst);
+            int whiteIndex = whiteWaves.Contains(wave) ? Random.Range(0, burst) : -1;
+
+            List<float> usedRows = new List<float>();
+            List<float> usedColumns = new List<float>();
+
             for (int i = 0; i < burst; i++)
             {
-                bool white = sinceWhite >= whiteRavenAtLeastEvery || Random.value < whiteRavenChance;
-                sinceWhite = white ? 0 : sinceWhite + 1;
+                // Normal: solo vuelan por el eje X. Poseido: tambien por el eje Y (el primero de la tanda siempre es
+                // horizontal para que siempre haya un carril a la altura del player).
+                bool vertical = possessed && i > 0 && Random.value < possessedVerticalChance;
+                bool white = i == whiteIndex;
+                float side = Random.value < 0.5f ? -1f : 1f;
+                float lane = vertical ? PickColumn(usedColumns) : PickRow(usedRows);
+
                 pendingRavenLaunches++;
-                StartCoroutine(LaunchRaven(white, speed));
+                StartCoroutine(LaunchRaven(white, vertical, side, lane, speed));
             }
 
             yield return Wait(interval);
@@ -510,27 +628,130 @@ public class SorcererCrowBoss : BossBase
         yield return ReturnFromScreech();
     }
 
-    private IEnumerator LaunchRaven(bool white, float speed)
+    /// <summary>Elige en que tandas sale un cuervito blanco: 'count' (max 3), repartidas en tercios y nunca en la primera tanda.</summary>
+    private static HashSet<int> PickWhiteRavenWaves(int waves, int count)
+    {
+        HashSet<int> result = new HashSet<int>();
+        count = Mathf.Clamp(count, 0, waves);
+        if (count == 0)
+            return result;
+
+        float segment = waves / (float)count;
+        for (int i = 0; i < count; i++)
+        {
+            int from = Mathf.Max(i == 0 ? 1 : 0, Mathf.CeilToInt(segment * i));
+            int to = Mathf.Min(waves - 1, Mathf.CeilToInt(segment * (i + 1)) - 1);
+            if (to < from)
+                to = from;
+
+            int pick = Mathf.Min(Random.Range(from, to + 1), waves - 1);
+            int guard = 0;
+            while (result.Contains(pick) && guard++ < waves)
+                pick = (pick + 1) % waves;
+
+            result.Add(pick);
+        }
+
+        return result;
+    }
+
+    private const float RavenLaneSpacing = 1.5f;
+
+    /// <summary>Altura (Y) del carril de un cuervito horizontal. Muchos van hacia donde esta el player para obligarlo a moverse.</summary>
+    private float PickRow(List<float> used)
     {
         Vector2 center = RoomCenter();
-        float side = Random.value < 0.5f ? -1f : 1f;
+        float min = center.y + arenaMinY;
+        float max = center.y + arenaMaxY;
 
-        // Muchos van hacia donde esta el player para obligarlo a moverse.
-        float y;
-        if (player != null && Random.value < 0.6f)
-            y = player.position.y + Random.Range(-0.7f, 0.7f);
+        float pick = Mathf.Clamp(center.y, min, max);
+        for (int attempt = 0; attempt < 8; attempt++)
+        {
+            float y = player != null && Random.value < 0.6f
+                ? player.position.y + Random.Range(-0.7f, 0.7f)
+                : Random.Range(min, max);
+
+            pick = Mathf.Clamp(y, min, max);
+            if (LaneIsFree(used, pick))
+                break;
+        }
+
+        used.Add(pick);
+        return pick;
+    }
+
+    /// <summary>Posicion (X) del carril de un cuervito vertical (solo estado Poseido).</summary>
+    private float PickColumn(List<float> used)
+    {
+        Vector2 center = RoomCenter();
+        float min = center.x - arenaHalfWidth + 0.8f;
+        float max = center.x + arenaHalfWidth - 0.8f;
+
+        float pick = Mathf.Clamp(center.x, min, max);
+        for (int attempt = 0; attempt < 8; attempt++)
+        {
+            float x = player != null && Random.value < 0.7f
+                ? player.position.x + Random.Range(-0.7f, 0.7f)
+                : Random.Range(min, max);
+
+            pick = Mathf.Clamp(x, min, max);
+            if (LaneIsFree(used, pick))
+                break;
+        }
+
+        used.Add(pick);
+        return pick;
+    }
+
+    private static bool LaneIsFree(List<float> used, float value)
+    {
+        for (int i = 0; i < used.Count; i++)
+        {
+            if (Mathf.Abs(used[i] - value) < RavenLaneSpacing)
+                return false;
+        }
+
+        return true;
+    }
+
+    private IEnumerator LaunchRaven(bool white, bool vertical, float side, float lane, float speed)
+    {
+        Vector2 center = RoomCenter();
+
+        Vector2 spawn;
+        Vector2 direction;
+        float travel;
+        Vector2 barCenter;
+        float barWidth;
+        float barHeight;
+
+        if (!vertical)
+        {
+            // Entra por un costado y cruza toda la sala por el eje X.
+            spawn = new Vector2(center.x + side * (arenaHalfWidth + 0.4f), lane);
+            direction = new Vector2(-side, 0f);
+            travel = arenaHalfWidth * 2f + 2.2f;
+            barCenter = new Vector2(center.x, lane);
+            barWidth = arenaHalfWidth * 2f + 1f;
+            barHeight = 0.45f;
+        }
         else
-            y = center.y + Random.Range(arenaMinY, arenaMaxY);
-
-        y = Mathf.Clamp(y, center.y + arenaMinY, center.y + arenaMaxY);
-
-        float startX = center.x + side * (arenaHalfWidth + 0.4f);
-        float travelHalfWidth = arenaHalfWidth + 1.6f;
+        {
+            // Estado Poseido: entra por arriba o por abajo y cruza toda la sala por el eje Y.
+            float top = center.y + arenaMaxY + 1f;
+            float bottom = center.y + arenaMinY - 0.6f;
+            spawn = new Vector2(lane, side > 0f ? top : bottom);
+            direction = new Vector2(0f, -side);
+            travel = (top - bottom) + 2.2f;
+            barCenter = new Vector2(lane, (top + bottom) * 0.5f);
+            barWidth = 0.45f;
+            barHeight = (top - bottom) + 0.6f;
+        }
 
         // Aviso: barra translucida por donde va a pasar.
         float tell = ravenTellTime;
         Color warn = white ? new Color(1f, 1f, 1f, 0.28f) : new Color(1f, 0.15f, 0.15f, 0.3f);
-        GameObject bar = CrowFx.Bar(new Vector2(center.x, y), arenaHalfWidth * 2f + 1f, 0.45f, warn, tell * 0.4f, tell * 0.6f, 0.15f, RoomTransform());
+        GameObject bar = CrowFx.Bar(barCenter, barWidth, barHeight, warn, tell * 0.4f, tell * 0.6f, 0.15f, RoomTransform());
         Track(bar);
 
         yield return new WaitForSeconds(tell);
@@ -541,8 +762,7 @@ public class SorcererCrowBoss : BossBase
             yield break;
         }
 
-        CrowRaven raven = CrowRaven.Spawn(this, white, new Vector2(startX, y), -side, speed, ravenDamage,
-            center.x, travelHalfWidth, RoomTransform());
+        CrowRaven raven = CrowRaven.Spawn(this, white, spawn, direction, speed, ravenDamage, travel, RoomTransform());
         Track(raven.gameObject);
 
         pendingRavenLaunches = Mathf.Max(0, pendingRavenLaunches - 1);

@@ -20,12 +20,10 @@ public class DungeonManager : MonoBehaviour
     [SerializeField] private RoomInformation shopRoomInformation;
     [Tooltip("Boss por defecto (se usa solo si el pool de abajo esta vacio).")]
     [SerializeField] private RoomInformation bossRoomInformation;
-    [Tooltip("Bosses de los pisos NO finales (1 y 2): en cada piso sale UNO al azar (Araña o Sapo).")]
+    [Tooltip("Bosses de los pisos NO finales (1 y 2): en el piso 1 sale UNO al azar (Araña o Sapo) y en el piso 2 sale el que NO salio en el piso 1 (nunca se repiten).")]
     [SerializeField] private List<RoomInformation> bossRoomInformations = new List<RoomInformation>();
     [Tooltip("Boss del ULTIMO piso (nivel 3): siempre el mismo, el Cuervo.")]
     [SerializeField] private RoomInformation finalBossRoomInformation;
-    [Tooltip("Si esta activo, el boss de un piso no se repite en el piso siguiente (cuando hay mas de uno en el pool).")]
-    [SerializeField] private bool avoidRepeatingBoss = false;
     [SerializeField] private List<RoomInformation> challengeRoomInformations = new List<RoomInformation>();
 
     [Header("Transition")]
@@ -45,7 +43,9 @@ public class DungeonManager : MonoBehaviour
     private int currentFloor = 1;
 
     private DoorDirection? lastEntryDirection;
-    private RoomInformation lastRandomBoss;
+
+    // Bosses "random" (Araña / Sapo) que ya salieron en esta partida: no se repiten en el piso siguiente.
+    private readonly List<RoomInformation> usedRandomBosses = new List<RoomInformation>();
 
     public int CurrentFloor => currentFloor;
     public int MaxFloor => maxFloor;
@@ -96,29 +96,47 @@ public class DungeonManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Orden de bosses: el ultimo piso (nivel 3) SIEMPRE tiene al Cuervo; en los pisos anteriores sale UNO al
-    /// azar entre los bosses del pool (Araña o Sapo).
+    /// Orden de bosses:
+    ///  - Piso 1: UNO al azar entre los bosses del pool (Araña o Sapo).
+    ///  - Piso 2: el que NO salio en el piso 1 (los bosses nunca se repiten: Araña -> Sapo o Sapo -> Araña).
+    ///  - Ultimo piso (nivel 3): SIEMPRE el Cuervo.
     /// </summary>
     private RoomInformation PickBossRoomInformationForFloor()
     {
         if (IsFinalFloor && finalBossRoomInformation != null && finalBossRoomInformation.prefab != null)
+        {
+            Debug.Log($"[DungeonManager] Piso {currentFloor} (final): boss = {finalBossRoomInformation.roomID}");
             return finalBossRoomInformation;
+        }
 
         List<RoomInformation> pool = new List<RoomInformation>();
         foreach (RoomInformation info in bossRoomInformations)
         {
-            if (info != null && info.prefab != null)
+            if (info != null && info.prefab != null && !pool.Contains(info))
                 pool.Add(info);
         }
 
         if (pool.Count == 0)
             return bossRoomInformation;
 
-        if (avoidRepeatingBoss && pool.Count > 1 && lastRandomBoss != null)
-            pool.Remove(lastRandomBoss);
+        // Sin repeticion: solo pueden salir los bosses que todavia no aparecieron en esta partida.
+        List<RoomInformation> available = pool.FindAll(info => !usedRandomBosses.Contains(info));
 
-        RoomInformation chosen = pool[Random.Range(0, pool.Count)];
-        lastRandomBoss = chosen;
+        if (available.Count == 0)
+        {
+            // Ya salieron todos (solo pasa si hay mas pisos "random" que bosses en el pool): se reinicia el ciclo
+            // evitando que el primero del ciclo nuevo sea el ultimo que salio.
+            RoomInformation previous = usedRandomBosses.Count > 0 ? usedRandomBosses[usedRandomBosses.Count - 1] : null;
+            usedRandomBosses.Clear();
+
+            available = new List<RoomInformation>(pool);
+            if (previous != null && available.Count > 1)
+                available.Remove(previous);
+        }
+
+        RoomInformation chosen = available[Random.Range(0, available.Count)];
+        usedRandomBosses.Add(chosen);
+        Debug.Log($"[DungeonManager] Piso {currentFloor}: boss = {chosen.roomID} (ya salieron: {usedRandomBosses.Count} de {pool.Count})");
         return chosen;
     }
 

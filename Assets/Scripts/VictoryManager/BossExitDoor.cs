@@ -25,6 +25,14 @@ public class BossExitDoor : MonoBehaviour
     private bool hasTriggered;
     private bool opening;
 
+    // Emblema del final: la puerta que aparece al vencer al ultimo jefe lleva un logo "extraño" (GDD) que avisa que
+    // esa es la salida definitiva (pasar por ahi dispara la pantalla de victoria).
+    private const float EmblemWorldSize = 1.8f;
+    private static Sprite cachedEmblem;
+    private Transform emblem;
+    private SpriteRenderer emblemRenderer;
+    private Coroutine emblemRoutine;
+
     public bool IsOpen => isOpen;
 
     private void Awake()
@@ -94,6 +102,8 @@ public class BossExitDoor : MonoBehaviour
         ApplySprite(GetClosedSprite());
         if (doorCollider != null)
             doorCollider.enabled = false;
+
+        HideEmblem();
     }
 
     private void ShowOpenAndEnable()
@@ -103,6 +113,158 @@ public class BossExitDoor : MonoBehaviour
         ApplySprite(GetOpenSprite());
         if (doorCollider != null)
             doorCollider.enabled = true;
+
+        ShowEmblem();
+    }
+
+    // ------------------------------------------------------------------ emblema de la puerta final
+
+    private static bool IsFinalDoor()
+    {
+        return DungeonManager.Instance != null && DungeonManager.Instance.IsFinalFloor;
+    }
+
+    private void ShowEmblem()
+    {
+        if (!IsFinalDoor())
+            return;
+
+        if (emblem == null)
+        {
+            GameObject go = new GameObject("FinalDoorEmblem");
+            go.transform.SetParent(transform, false);
+            emblem = go.transform;
+            emblemRenderer = go.AddComponent<SpriteRenderer>();
+            emblemRenderer.sprite = GetEmblemSprite();
+        }
+
+        if (spriteRenderer != null && emblemRenderer != null)
+            emblemRenderer.sortingOrder = spriteRenderer.sortingOrder + 1;
+
+        emblem.gameObject.SetActive(true);
+
+        if (emblemRoutine != null)
+            StopCoroutine(emblemRoutine);
+        emblemRoutine = StartCoroutine(EmblemRoutine());
+    }
+
+    private void HideEmblem()
+    {
+        if (emblemRoutine != null)
+        {
+            StopCoroutine(emblemRoutine);
+            emblemRoutine = null;
+        }
+
+        if (emblem != null)
+            emblem.gameObject.SetActive(false);
+    }
+
+    /// <summary>Aparece con un fade y despues "late" con un brillo suave. Siempre queda derecho (la puerta puede estar rotada por la pared).</summary>
+    private IEnumerator EmblemRoutine()
+    {
+        float appear = 0f;
+        while (emblem != null)
+        {
+            appear = Mathf.Min(1f, appear + Time.unscaledDeltaTime / 0.8f);
+
+            float pulse = 1f + Mathf.Sin(Time.unscaledTime * 2.4f) * 0.07f;
+            float parentScale = Mathf.Max(0.01f, transform.lossyScale.x);
+            float natural = emblemRenderer != null && emblemRenderer.sprite != null
+                ? Mathf.Max(0.01f, emblemRenderer.sprite.bounds.size.x)
+                : 1f;
+            float size = (EmblemWorldSize / natural) * pulse * Mathf.SmoothStep(0.6f, 1f, appear) / parentScale;
+
+            emblem.position = transform.position;
+            emblem.rotation = Quaternion.identity;
+            emblem.localScale = new Vector3(size, size, 1f);
+
+            if (emblemRenderer != null)
+            {
+                float glow = 0.82f + Mathf.Sin(Time.unscaledTime * 2.4f) * 0.18f;
+                emblemRenderer.color = new Color(1f, 1f, 1f, glow * appear);
+            }
+
+            yield return null;
+        }
+    }
+
+    private static Sprite GetEmblemSprite()
+    {
+        if (cachedEmblem != null)
+            return cachedEmblem;
+
+        const int size = 48;
+        Color32[] pixels = new Color32[size * size];
+        Vector2 center = new Vector2((size - 1) * 0.5f, (size - 1) * 0.5f);
+
+        Color32 gold = new Color32(255, 214, 92, 255);
+        Color32 goldDark = new Color32(190, 120, 40, 255);
+        Color32 disc = new Color32(34, 10, 58, 235);
+        Color32 eyeWhite = new Color32(248, 240, 222, 255);
+        Color32 iris = new Color32(236, 70, 232, 255);
+        Color32 outline = new Color32(10, 4, 18, 255);
+
+        for (int y = 0; y < size; y++)
+        {
+            for (int x = 0; x < size; x++)
+            {
+                Vector2 p = new Vector2(x, y) - center;
+                float d = p.magnitude;
+                float angle = Mathf.Atan2(p.y, p.x);
+                Color32 color = new Color32(0, 0, 0, 0);
+
+                // Anillo exterior dorado con "dientes" (8 rayos).
+                float ray = Mathf.Abs(Mathf.Cos(angle * 4f));
+                if (d <= 23.2f && d >= 19.2f)
+                    color = ((x + y) & 3) < 2 ? gold : goldDark;
+                else if (d > 23.2f && d <= 23.8f)
+                    color = outline;
+                else if (d > 19.2f - 0.1f && d < 19.2f)
+                    color = outline;
+                else if (d < 19.2f)
+                    color = disc;
+
+                // Rayos hacia afuera: pequeñas puntas doradas sobre el anillo.
+                if (d > 21f && d <= 23.8f && ray > 0.93f)
+                    color = gold;
+
+                // Ojo (almendra) en el centro.
+                float eyeHalfWidth = 14f;
+                if (d < 19.2f && Mathf.Abs(p.x) <= eyeHalfWidth)
+                {
+                    float k = p.x / eyeHalfWidth;
+                    float halfHeight = 8.5f * (1f - k * k);
+                    if (Mathf.Abs(p.y) <= halfHeight)
+                        color = eyeWhite;
+                    else if (Mathf.Abs(p.y) <= halfHeight + 1.2f)
+                        color = outline;
+                }
+
+                // Iris y pupila vertical.
+                if (d < 19.2f)
+                {
+                    if (p.magnitude <= 6.2f && Mathf.Abs(p.y) <= 8f * (1f - (p.x / 14f) * (p.x / 14f)))
+                        color = iris;
+                    if (Mathf.Abs(p.x) <= 1.6f && Mathf.Abs(p.y) <= 6f)
+                        color = outline;
+                    if (Mathf.Abs(p.x + 2.4f) <= 0.9f && Mathf.Abs(p.y - 2.4f) <= 0.9f)
+                        color = eyeWhite;
+                }
+
+                pixels[y * size + x] = color;
+            }
+        }
+
+        Texture2D texture = new Texture2D(size, size, TextureFormat.RGBA32, false);
+        texture.filterMode = FilterMode.Point;
+        texture.wrapMode = TextureWrapMode.Clamp;
+        texture.SetPixels32(pixels);
+        texture.Apply();
+
+        // 48 px a 32 ppu = 1.5 unidades de lado "natural" (el tamaño final en mundo se ajusta por codigo).
+        cachedEmblem = Sprite.Create(texture, new Rect(0f, 0f, size, size), new Vector2(0.5f, 0.5f), 32f);
+        return cachedEmblem;
     }
 
     private void ApplySprite(Sprite sprite)

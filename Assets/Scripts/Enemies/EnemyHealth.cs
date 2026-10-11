@@ -13,6 +13,16 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     public event System.Action OnDeath;
     public event System.Action OnDamaged;
 
+    /// <summary>Alguien intento dañar al enemigo mientras era intocable (SetDamageable(false) o DamageBlocker). La Hormiga lo usa para rebotar al jugador.</summary>
+    public event System.Action OnDamageBlocked;
+
+    /// <summary>
+    /// Filtro opcional: si devuelve true el daño que llega en ese momento se descarta (sin sangre, sin flash, sin restar vida)
+    /// y se dispara OnDamageBlocked. La Hormiga lo usa para ignorar solo los golpes del jugador mientras ataca (el resto de
+    /// fuentes de daño, como la explosion del Erizo, sigue funcionando).
+    /// </summary>
+    public System.Func<bool> DamageBlocker;
+
     /// <summary>Bosses con fases: si devuelve true la muerte se cancela (el boss repone la vida cuando quiera).</summary>
     public System.Func<bool> DeathInterceptor;
 
@@ -60,7 +70,11 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     public void TakeDamage(float damage)
     {
         if (isDead) return;
-        if (!canTakeDamage) return;
+        if (!canTakeDamage || (DamageBlocker != null && DamageBlocker()))
+        {
+            OnDamageBlocked?.Invoke();
+            return;
+        }
 
         currentHealth -= damage;
         currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
