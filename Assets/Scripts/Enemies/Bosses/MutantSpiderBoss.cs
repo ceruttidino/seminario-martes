@@ -56,6 +56,8 @@ public class MutantSpiderBoss : BossBase
     [Header("Melee")]
     [SerializeField] private EnemyAttack enemyAttack;
 
+    public override string BarTitle => "Mutant Spider";
+
     private BossAttackType lastAttack;
     private int sameAttackCounter = 0;
     private bool hasLastAttack = false;

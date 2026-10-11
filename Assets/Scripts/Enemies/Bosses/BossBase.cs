@@ -10,6 +10,23 @@ public abstract class BossBase : MonoBehaviour
 
     protected BossExitDoor bossExitDoor;
 
+    // ---------------------------------------------------------------- barra de vida (BossHealthBarUI)
+
+    /// <summary>
+    /// Nombre que muestra la barra de vida de este jefe. Cada jefe define el suyo (si devuelve null/vacio la barra
+    /// deja el texto que trae el prefab).
+    /// </summary>
+    public virtual string BarTitle => null;
+
+    /// <summary>Color de relleno de la barra. null = el que trae el prefab (rojo).</summary>
+    public virtual Color? BarFillColor => null;
+
+    /// <summary>Opacidad de la barra (0 = invisible, 1 = normal). El Cuervo la apaga y la prende con un fade entre fases.</summary>
+    public virtual float BarOpacity => 1f;
+
+    /// <summary>Si es mayor o igual a 0, valor de relleno (0..1) que muestra la barra en lugar de la vida real.</summary>
+    public virtual float BarFillOverride => -1f;
+
     protected virtual void Awake()
     {
         SetSummonVisible(false);

@@ -6,8 +6,10 @@ using UnityEngine;
 /// Cuervo Hechicero: jefe final (nivel 3). Segun el GDD:
 /// - Se queda quieto arriba de la room y NO recibe daño mientras esta ahi: solo se lo puede herir durante
 ///   sus ataques (segun el ataque).
-/// - Dos estados: Normal y Poseido. Al vencerlo en estado Normal "parece" terminar la pelea y se revela
-///   Poseido, con los mismos ataques pero mas fuertes. Al vencer al Poseido aparece la puerta final.
+/// - Dos estados: Normal ("The Sorcerer Crow", barra roja, mas vida) y Poseido ("The Possessed Crow", barra violeta,
+///   un poco menos de vida). Al vencerlo en estado Normal muere (se sacude, grita y cae mientras su barra roja se apaga
+///   con un fade), queda tirado unos segundos y RESURGE renovado en su segunda forma con una barra nueva violeta,
+///   con los mismos ataques pero mas fuertes. Al vencer al Poseido aparece la puerta final.
 /// Ataques:
 ///   1) Orbes espectrales GRANDES: 5 orbes (0.7 s entre cada una). Solo la ULTIMA se puede desviar: hay que apretar el
 ///      ATAQUE PESADO (E) en el momento en que la orbe choca con el player (ver CrowOrb). Si vuelve y le pega, el cuervo
@@ -36,8 +38,26 @@ public class SorcererCrowBoss : BossBase
     [SerializeField] private SpriteRenderer visualRenderer;
 
     [Header("Vida por fase")]
-    [SerializeField] private float phaseOneHealth = 100f;
-    [SerializeField] private float phaseTwoHealth = 120f;
+    [Tooltip("Vida de la PRIMERA fase (The Sorcerer Crow). Tiene que ser mayor que la de la segunda.")]
+    [SerializeField] private float phaseOneHealth = 300f;
+    [Tooltip("Vida de la SEGUNDA fase (The Possessed Crow): un poco menos que la primera.")]
+    [SerializeField] private float phaseTwoHealth = 240f;
+
+    [Header("Muerte de la 1ra fase y resurreccion (2da fase)")]
+    [Tooltip("El cuervo se sacude y grita antes de caer.")]
+    [SerializeField] private float deathConvulseTime = 0.45f;
+    [SerializeField] private float deathCollapseTime = 1.2f;
+    [Tooltip("Tiempo que queda tirado antes de empezar a resurgir.")]
+    [SerializeField] private float deathLieTime = 1.5f;
+    [Tooltip("La energia violeta se junta sobre el cuerpo justo antes de resurgir.")]
+    [SerializeField] private float rebirthChargeTime = 1.2f;
+    [SerializeField] private float rebirthRiseTime = 0.9f;
+    [Tooltip("La barra de vida ROJA se apaga con un fade apenas muere la 1ra fase.")]
+    [SerializeField] private float barFadeOutTime = 1.0f;
+    [Tooltip("La barra de vida VIOLETA aparece con un fade cuando resurge...")]
+    [SerializeField] private float barFadeInTime = 0.7f;
+    [Tooltip("...y se va llenando hasta el maximo en este tiempo.")]
+    [SerializeField] private float barFillTime = 1.6f;
 
     [Header("Ataque 1 - Orbes espectrales")]
     [SerializeField] private int orbCount = 5;
@@ -117,6 +137,21 @@ public class SorcererCrowBoss : BossBase
     private Coroutine stunRoutine;
 
     private readonly List<GameObject> hazards = new List<GameObject>();
+
+    // Barra de vida del jefe (BossHealthBarUI lee estos valores): nombre y color segun la fase + fades entre fases.
+    private static readonly Color PossessedBarColor = new Color(0.62f, 0.24f, 0.95f, 1f);
+    private float barOpacity = 1f;
+    private float barFill = -1f;
+
+    /// <summary>Primera fase: "The Sorcerer Crow". Segunda fase: "The Possessed Crow".</summary>
+    public override string BarTitle => possessed ? "The Possessed Crow" : "The Sorcerer Crow";
+
+    /// <summary>Primera fase: barra roja (la del prefab). Segunda fase: barra violeta.</summary>
+    public override Color? BarFillColor => possessed ? PossessedBarColor : (Color?)null;
+
+    public override float BarOpacity => barOpacity;
+
+    public override float BarFillOverride => barFill;
 
     private bool ShouldAbort => isDead || phaseTransitionPending;
 
@@ -827,6 +862,23 @@ public class SorcererCrowBoss : BossBase
         return true;
     }
 
+    // Colores de los efectos de la transicion.
+    private static readonly Color FeatherDark = new Color(0.08f, 0.07f, 0.14f, 1f);
+    private static readonly Color FeatherViolet = new Color(0.45f, 0.2f, 0.72f, 1f);
+    private static readonly Color EnergyViolet = new Color(0.72f, 0.38f, 1f, 1f);
+    private static readonly Color EnergyPink = new Color(1f, 0.55f, 0.95f, 1f);
+
+    private Coroutine barRoutine;
+
+    /// <summary>
+    /// Muerte de la primera fase + resurreccion en la segunda:
+    ///  1) El cuervo se sacude, grita y cae (la animacion de muerte de siempre, con mas efectos) mientras la barra de vida
+    ///     ROJA desaparece con un fade.
+    ///  2) Queda tirado unos segundos.
+    ///  3) Una energia violeta se junta sobre el cuerpo...
+    ///  4) ...y resurge renovado en su segunda forma: barra de vida NUEVA violeta (con el otro nombre) que aparece con un fade
+    ///     y se llena. Despues sigue la segunda fase con normalidad.
+    /// </summary>
     private IEnumerator PossessionTransition()
     {
         ClearHazards();
@@ -841,45 +893,145 @@ public class SorcererCrowBoss : BossBase
 
         RefreshDamageable();
 
-        // 1) "Parece" que el cuervo cayo: la pelea parece terminada.
-        CameraShake.Play(0.45f, 0.22f);
-        if (damageFlash != null)
-            damageFlash.SetPersistentTint(new Color(0.55f, 0.55f, 0.6f, 1f));
+        // Centro del cuerpo para los efectos (no depende de que el collider recien reactivado ya tenga bounds validos).
+        Transform room = RoomTransform();
+        Vector2 body = (Vector2)transform.position + Vector2.up * 0.1f;
+        Color grayTint = new Color(0.55f, 0.55f, 0.6f, 1f);
+        Vector3 fallenOffset = Vector3.down * 0.5f;
+        float t;
 
-        float t = 0f;
-        const float collapse = 0.9f;
-        while (t < collapse)
+        // ---------------------------------------------------------- 1) MUERTE de la primera fase
+        RunBarRoutine(FadeBarOut(0.25f, barFadeOutTime));
+
+        CameraShake.Play(0.8f, 0.34f);
+        AudioManager.PlayBossHurt();
+        CrowDeathFx.ScreenFlash(Color.white, 0.4f, 0.04f, 0.45f);
+        CrowDeathFx.Ring(body, room, new Color(0.9f, 0.8f, 1f, 0.95f), 0.8f, 8f, 0.8f);
+        CrowDeathFx.FeatherBurst(body, room, 40, 2.5f, 7f, 1.9f, 4.5f, FeatherDark, FeatherViolet);
+
+        // Se sacude y "grita": se hincha un poco mientras el color se va apagando.
+        t = 0f;
+        while (t < deathConvulseTime)
         {
-            float k = t / collapse;
-            SetVisualScale(new Vector3(1f + 0.1f * k, 1f - 0.45f * k, 1f));
+            float k = Mathf.Clamp01(t / Mathf.Max(0.01f, deathConvulseTime));
+            float swell = 1f + 0.14f * Mathf.Sin(k * Mathf.PI);
+            SetVisualScale(new Vector3(swell, swell, 1f));
+
             if (visual != null)
-                visual.localPosition = baseVisualPos + Vector3.down * (0.5f * k);
+            {
+                visual.localRotation = Quaternion.Euler(0f, 0f, Mathf.Sin(Time.time * 55f) * 7f * (1f - 0.4f * k));
+                visual.localPosition = baseVisualPos + (Vector3)(Random.insideUnitCircle * 0.06f);
+            }
+
+            SetTint(Color.Lerp(Color.white, grayTint, k));
             t += Time.deltaTime;
             yield return null;
         }
 
-        yield return new WaitForSeconds(1.6f);
+        // Cae: la animacion de muerte de siempre (se aplasta y se hunde), ahora mas pesada y con plumas.
+        bool collapseFeathers = false;
+        t = 0f;
+        while (t < deathCollapseTime)
+        {
+            float k = Mathf.Clamp01(t / Mathf.Max(0.01f, deathCollapseTime));
+            float fall = k * k;
+            SetVisualScale(new Vector3(1f + 0.1f * fall, 1f - 0.45f * fall, 1f));
 
-        // 2) Se revela poseido.
+            if (visual != null)
+            {
+                visual.localRotation = Quaternion.Euler(0f, 0f, Mathf.Sin(Time.time * 30f) * 3f * (1f - k));
+                visual.localPosition = baseVisualPos + fallenOffset * fall;
+            }
+
+            SetTint(grayTint);
+
+            if (!collapseFeathers && k >= 0.45f)
+            {
+                collapseFeathers = true;
+                CrowDeathFx.FeatherBurst(body, room, 14, 0.8f, 3f, 1.5f, 5f, FeatherDark, FeatherDark);
+            }
+
+            t += Time.deltaTime;
+            yield return null;
+        }
+
+        if (visual != null)
+        {
+            visual.localRotation = Quaternion.identity;
+            visual.localPosition = baseVisualPos + fallenOffset;
+        }
+
+        SetVisualScale(new Vector3(1.1f, 0.55f, 1f));
+
+        // Golpe contra el piso.
+        CameraShake.Play(0.35f, 0.2f);
+        CrowDeathFx.FeatherBurst(body + Vector2.down * 0.4f, room, 16, 1.5f, 4f, 1.1f, 3f, FeatherDark, FeatherViolet);
+
+        // ---------------------------------------------------------- 2) Queda tirado unos segundos
+        yield return new WaitForSeconds(deathLieTime);
+
+        // ---------------------------------------------------------- 3) La energia violeta se junta sobre el cuerpo
+        CrowDeathFx.Converge(body, room, 46, 5.2f, rebirthChargeTime, EnergyViolet, EnergyPink);
+
+        Color chargeTint = new Color(0.8f, 0.6f, 1f, 1f);
+        float nextShake = 0f;
+        t = 0f;
+        while (t < rebirthChargeTime)
+        {
+            float k = Mathf.Clamp01(t / Mathf.Max(0.01f, rebirthChargeTime));
+
+            // Temblores cada vez mas fuertes.
+            if (t >= nextShake)
+            {
+                CameraShake.Play(0.28f, Mathf.Lerp(0.05f, 0.24f, k));
+                nextShake += 0.22f;
+            }
+
+            float pulse = 0.5f + 0.5f * Mathf.Sin(Time.time * (10f + 14f * k));
+            SetTint(Color.Lerp(grayTint, Color.Lerp(chargeTint, Color.white, pulse * 0.5f), k * k));
+
+            if (visual != null)
+                visual.localPosition = baseVisualPos + fallenOffset + (Vector3)(Random.insideUnitCircle * (0.02f + 0.07f * k));
+
+            t += Time.deltaTime;
+            yield return null;
+        }
+
+        // ---------------------------------------------------------- 4) RESURGE renovado en su segunda forma
+        // La barra nueva se prepara ANTES de cambiar de fase: invisible y vacia (despues aparece con un fade y se llena).
+        barOpacity = 0f;
+        barFill = 0f;
+
         possessed = true;
         if (visualRenderer != null)
             visualRenderer.sprite = CrowArt.Body(true);
-        if (damageFlash != null)
-            damageFlash.SetPersistentTint(possessedTint);
+        SetTint(possessedTint);
 
         if (enemyHealth != null)
             enemyHealth.Refill(phaseTwoHealth);
 
-        CameraShake.Play(0.7f, 0.32f);
+        RunBarRoutine(BarRebirth());
+
+        CameraShake.Play(1f, 0.45f);
+        AudioManager.PlayBossHurt();
+        CrowDeathFx.ScreenFlash(new Color(0.88f, 0.72f, 1f), 0.65f, 0.05f, 0.55f);
+        CrowDeathFx.Ring(body, room, new Color(0.78f, 0.4f, 1f, 0.95f), 0.8f, 12f, 0.95f);
+        CrowDeathFx.FeatherBurst(body, room, 55, 4f, 10f, 1.2f, 0f, EnergyViolet, EnergyPink);
+        CrowDeathFx.FeatherBurst(body, room, 26, 2f, 6f, 1.8f, 3f, FeatherDark, FeatherViolet);
+        StartCoroutine(DelayedRing(0.16f, body, room, new Color(1f, 0.7f, 1f, 0.8f), 0.6f, 8f, 0.8f));
 
         t = 0f;
-        const float reveal = 0.5f;
-        while (t < reveal)
+        while (t < rebirthRiseTime)
         {
-            float k = t / reveal;
-            SetVisualScale(new Vector3(Mathf.Lerp(1.1f, 1.15f, k), Mathf.Lerp(0.55f, 1.15f, k), 1f));
+            float k = Mathf.Clamp01(t / Mathf.Max(0.01f, rebirthRiseTime));
+            float rise = EaseOutBack(k);
+            float pop = 1f + 0.18f * Mathf.Sin(k * Mathf.PI);
+
+            SetVisualScale(new Vector3(Mathf.Lerp(1.1f, 1f, k) * pop, Mathf.Lerp(0.55f, 1f, rise) * pop, 1f));
+
             if (visual != null)
-                visual.localPosition = Vector3.Lerp(baseVisualPos + Vector3.down * 0.5f, baseVisualPos, k);
+                visual.localPosition = Vector3.LerpUnclamped(baseVisualPos + fallenOffset, baseVisualPos, rise);
+
             t += Time.deltaTime;
             yield return null;
         }
@@ -888,7 +1040,82 @@ public class SorcererCrowBoss : BossBase
         phaseTransitionPending = false;
         RefreshDamageable();
 
+        // Despues el BossRoutine sigue con su pausa normal y arranca los ataques de la segunda fase.
         yield return new WaitForSeconds(0.8f);
+    }
+
+    // ---------------------------------------------------------------- barra de vida: fades
+
+    private void RunBarRoutine(IEnumerator routine)
+    {
+        if (barRoutine != null)
+            StopCoroutine(barRoutine);
+
+        barRoutine = StartCoroutine(routine);
+    }
+
+    /// <summary>La barra roja de la primera fase se apaga con un fade.</summary>
+    private IEnumerator FadeBarOut(float startDelay, float fadeTime)
+    {
+        if (startDelay > 0f)
+            yield return new WaitForSeconds(startDelay);
+
+        float from = barOpacity;
+        float t = 0f;
+        while (t < fadeTime)
+        {
+            t += Time.deltaTime;
+            barOpacity = Mathf.Lerp(from, 0f, Mathf.Clamp01(t / Mathf.Max(0.01f, fadeTime)));
+            yield return null;
+        }
+
+        barOpacity = 0f;
+        barRoutine = null;
+    }
+
+    /// <summary>La barra violeta de la segunda fase aparece con un fade y se llena de 0 al maximo.</summary>
+    private IEnumerator BarRebirth()
+    {
+        barOpacity = 0f;
+        barFill = 0f;
+
+        float total = Mathf.Max(barFadeInTime, barFillTime);
+        float t = 0f;
+        while (t < total)
+        {
+            t += Time.deltaTime;
+            barOpacity = Mathf.Clamp01(t / Mathf.Max(0.01f, barFadeInTime));
+
+            float fill = Mathf.Clamp01(t / Mathf.Max(0.01f, barFillTime));
+            barFill = 1f - (1f - fill) * (1f - fill);
+            yield return null;
+        }
+
+        barOpacity = 1f;
+        barFill = -1f; // desde ahora la barra muestra la vida real
+        barRoutine = null;
+    }
+
+    private IEnumerator DelayedRing(float delay, Vector2 position, Transform parent, Color color, float startDiameter, float endDiameter, float time)
+    {
+        yield return new WaitForSeconds(delay);
+        CrowDeathFx.Ring(position, parent, color, startDiameter, endDiameter, time);
+    }
+
+    private void SetTint(Color color)
+    {
+        if (damageFlash != null)
+            damageFlash.SetPersistentTint(color);
+        else if (visualRenderer != null)
+            visualRenderer.color = color;
+    }
+
+    private static float EaseOutBack(float x)
+    {
+        const float c1 = 1.70158f;
+        const float c3 = c1 + 1f;
+        float p = x - 1f;
+        return 1f + c3 * p * p * p + c1 * p * p;
     }
 
     private void HandleDeath()

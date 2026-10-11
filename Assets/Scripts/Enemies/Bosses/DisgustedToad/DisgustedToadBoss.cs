@@ -61,6 +61,8 @@ public class DisgustedToadBoss : BossBase
     [SerializeField] private float slimeFlightTime = 0.8f;
     [SerializeField] private float afterSpitRecovery = 0.6f;
 
+    public override string BarTitle => "Disgusted Toad";
+
     private Vector3 baseVisualPos = Vector3.zero;
     private Vector3 baseVisualScale = Vector3.one;
     private Quaternion baseVisualRot = Quaternion.identity;

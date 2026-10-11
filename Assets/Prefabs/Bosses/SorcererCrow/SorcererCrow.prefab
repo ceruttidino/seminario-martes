@@ -213,7 +213,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1acd55b0552163419170306de275025, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
-  maxHealth: 100
+  maxHealth: 300
   damageFlash: {fileID: 0}
 --- !u!114 &4600605529067181269
 MonoBehaviour:
@@ -234,8 +234,8 @@ MonoBehaviour:
   damageFlash: {fileID: -5744563512138347244}
   visual: {fileID: 2703743124187829367}
   visualRenderer: {fileID: 5203324526313156524}
-  phaseOneHealth: 100
-  phaseTwoHealth: 120
+  phaseOneHealth: 300
+  phaseTwoHealth: 240
 --- !u!114 &-5744563512138347244
 MonoBehaviour:
   m_ObjectHideFlags: 0
