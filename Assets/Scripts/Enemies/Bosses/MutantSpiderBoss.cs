@@ -191,6 +191,7 @@ public class MutantSpiderBoss : BossBase
     private Collider2D playerBodyCollider;
     private bool meleeActive;
     private bool isMeleeAttacking;
+    private bool isWebAttacking;
 
     private void Update()
     {
@@ -202,7 +203,7 @@ public class MutantSpiderBoss : BossBase
 
     private void TryStartMelee()
     {
-        if (isDead || isOnCeiling || enemyAttack == null || !enemyAttack.enabled)
+        if (isDead || isOnCeiling || isWebAttacking || enemyAttack == null || !enemyAttack.enabled)
             return;
 
         if (!enemyAttack.CanAttack() || !enemyAttack.HasTargetInReach())
@@ -545,6 +546,9 @@ public class MutantSpiderBoss : BossBase
 
     private IEnumerator WebShotAttack()
     {
+        // Mientras dispara telarañas no puede morder
+        isWebAttacking = true;
+
         StopMovement();
         FacePlayer();
 
@@ -559,6 +563,8 @@ public class MutantSpiderBoss : BossBase
             ShootWeb(roomParent);
             yield return new WaitForSeconds(delayBetweenWebShots);
         }
+
+        isWebAttacking = false;
     }
 
     private void ShootWeb(Transform roomParent)
@@ -614,6 +620,7 @@ public class MutantSpiderBoss : BossBase
     {
         meleeActive = false;
         isMeleeAttacking = false;
+        isWebAttacking = false;
         AudioManager.StopLoop();
         StopBoss();
         StopMovement();
