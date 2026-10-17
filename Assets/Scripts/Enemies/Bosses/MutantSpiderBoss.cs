@@ -43,9 +43,9 @@ public class MutantSpiderBoss : BossBase
 
     [Header("Victory")]
     [SerializeField] private GameObject victoryDoorPrefab;
-    [SerializeField] private Transform[] victoryDoorSpawnPoints; 
-    [SerializeField] private Transform entryDoorPoint;          
-    [SerializeField] private Transform roomCenterPoint;          
+    [SerializeField] private Transform[] victoryDoorSpawnPoints;
+    [SerializeField] private Transform entryDoorPoint;
+    [SerializeField] private Transform roomCenterPoint;
 
     [Header("Victory - Rotación de puerta por pared (Z)")]
     [SerializeField] private float doorRotUp = 0f;
@@ -55,6 +55,10 @@ public class MutantSpiderBoss : BossBase
 
     [Header("Melee")]
     [SerializeField] private EnemyAttack enemyAttack;
+    [Tooltip("Tiempo entre que arranca la animacion de ataque y el golpe real. Ajustar al frame de impacto del clip (frame / sample rate).")]
+    [SerializeField] private float meleeWindup = 0.25f;
+    [Tooltip("Tiempo quieta despues del golpe antes de volver a moverse.")]
+    [SerializeField] private float meleeRecovery = 0.3f;
 
     public override string BarTitle => "Mutant Spider";
 
@@ -115,6 +119,11 @@ public class MutantSpiderBoss : BossBase
             StopMovement();
 
             yield return PauseBetweenAttacks();
+            if (isDead) yield break;
+
+            // No arrancar un ataque especial a mitad de un mordisco
+            while (isMeleeAttacking && !isDead)
+                yield return null;
             if (isDead) yield break;
 
             BossAttackType nextAttack = ChooseNextAttack();
@@ -181,22 +190,63 @@ public class MutantSpiderBoss : BossBase
     private const float MeleeStopGap = 0.1f;
     private Collider2D playerBodyCollider;
     private bool meleeActive;
+    private bool isMeleeAttacking;
 
     private void Update()
     {
-        // El cuerpo de la Araña es solido: si el jugador lo toca tiene que recibir el golpe SIEMPRE (tambien mientras
-        // dispara telarañas o descansa), no solo mientras la Araña lo persigue.
-        if (meleeActive)
-            TryMelee();
+        // El cuerpo de la Araña es solido: si el jugador está en alcance tiene que recibir el golpe SIEMPRE (tambien
+        // mientras dispara telarañas o descansa), no solo mientras la Araña lo persigue.
+        if (meleeActive && !isMeleeAttacking)
+            TryStartMelee();
     }
 
-    private void TryMelee()
+    private void TryStartMelee()
     {
         if (isDead || isOnCeiling || enemyAttack == null || !enemyAttack.enabled)
             return;
 
-        if (enemyAttack.TryAttack())
+        if (!enemyAttack.CanAttack() || !enemyAttack.HasTargetInReach())
+            return;
+
+        StartCoroutine(MeleeRoutine());
+    }
+
+    private IEnumerator MeleeRoutine()
+    {
+        isMeleeAttacking = true;
+        StopMovement();
+        FacePlayer();
+
+        if (animator != null)
+            animator.SetTrigger("MeleeAttack");
+
+        yield return new WaitForSeconds(meleeWindup);
+
+        // TryAttack vuelve a chequear el alcance: si el jugador se corrió durante el windup, lo esquivó.
+        if (!isDead && !isOnCeiling && enemyAttack != null && enemyAttack.TryAttack())
             AudioManager.PlaySpiderMelee();
+
+        yield return new WaitForSeconds(meleeRecovery);
+
+        isMeleeAttacking = false;
+    }
+
+    /// <summary>Orienta el Animator (MoveX/MoveY, 4 direcciones) hacia el jugador sin activar IsMoving.</summary>
+    private void FacePlayer()
+    {
+        if (player == null || animator == null || rb == null)
+            return;
+
+        Vector2 dir = (Vector2)player.position - rb.position;
+        if (dir.sqrMagnitude < 0.0001f)
+            return;
+
+        lastMoveDirection = Mathf.Abs(dir.x) > Mathf.Abs(dir.y)
+            ? (dir.x > 0 ? Vector2.right : Vector2.left)
+            : (dir.y > 0 ? Vector2.up : Vector2.down);
+
+        animator.SetFloat("MoveX", lastMoveDirection.x);
+        animator.SetFloat("MoveY", lastMoveDirection.y);
     }
 
     /// <summary>Distancia entre la superficie del cuerpo de la Araña y la del cuerpo del jugador (negativa si se solapan).</summary>
@@ -242,6 +292,15 @@ public class MutantSpiderBoss : BossBase
                 yield break;
             }
 
+            // Mientras muerde, queda quieta y no toca la animacion de movimiento
+            if (isMeleeAttacking)
+            {
+                rb.linearVelocity = Vector2.zero;
+                timer += Time.deltaTime;
+                yield return null;
+                continue;
+            }
+
             Vector2 toPlayer = (Vector2)player.position - rb.position;
             float distance = toPlayer.magnitude;
             Vector2 direction = distance > 0.001f ? toPlayer / distance : lastMoveDirection;
@@ -261,8 +320,6 @@ public class MutantSpiderBoss : BossBase
                 rb.linearVelocity = direction * Mathf.Min(moveSpeed, step);
             }
             UpdateMovementAnimation(direction);
-
-            TryMelee();
 
             timer += Time.deltaTime;
             yield return null;
@@ -489,6 +546,7 @@ public class MutantSpiderBoss : BossBase
     private IEnumerator WebShotAttack()
     {
         StopMovement();
+        FacePlayer();
 
         if (animator != null)
             animator.SetTrigger("WebAttack");
@@ -555,6 +613,7 @@ public class MutantSpiderBoss : BossBase
     private void HandleDeath()
     {
         meleeActive = false;
+        isMeleeAttacking = false;
         AudioManager.StopLoop();
         StopBoss();
         StopMovement();

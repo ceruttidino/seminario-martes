@@ -45,6 +45,17 @@ public class EnemyAttack : MonoBehaviour
         }
     }
 
+    private void EnsureFilter()
+    {
+        if (filterReady) return;
+
+        targetFilter = new ContactFilter2D();
+        targetFilter.useLayerMask = true;
+        targetFilter.layerMask = targetLayer;
+        targetFilter.useTriggers = true;
+        filterReady = true;
+    }
+
     /// <summary>
     /// Centro y radio (en mundo) del cuerpo del enemigo, calculados con sus colliders solidos. El golpe se mide desde
     /// ahi y NO desde el pivot del transform: el collider puede estar desplazado y puede ser mucho mas grande que el
@@ -99,18 +110,33 @@ public class EnemyAttack : MonoBehaviour
         return Time.time >= lastAttackTime + attackCooldown;
     }
 
+    /// <summary>
+    /// Indica si hay un objetivo dañable dentro del alcance, SIN aplicar daño. Sirve para arrancar un windup
+    /// (animacion de ataque) antes de pegar.
+    /// </summary>
+    public bool HasTargetInReach()
+    {
+        EnsureFilter();
+
+        GetBody(out Vector2 center, out float radius);
+        float reach = Mathf.Max(attackRange, radius + surfaceReach);
+
+        int count = Physics2D.OverlapCircle(center, reach, targetFilter, hitBuffer);
+        for (int i = 0; i < count; i++)
+        {
+            Collider2D hit = hitBuffer[i];
+            if (hit != null && hit.GetComponentInParent<IDamageable>() != null)
+                return true;
+        }
+
+        return false;
+    }
+
     public bool TryAttack()
     {
         if (!CanAttack()) return false;
 
-        if (!filterReady)
-        {
-            targetFilter = new ContactFilter2D();
-            targetFilter.useLayerMask = true;
-            targetFilter.layerMask = targetLayer;
-            targetFilter.useTriggers = true;
-            filterReady = true;
-        }
+        EnsureFilter();
 
         GetBody(out Vector2 center, out float radius);
         float reach = Mathf.Max(attackRange, radius + surfaceReach);
