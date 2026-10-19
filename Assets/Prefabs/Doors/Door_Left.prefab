@@ -27,13 +27,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 90502887153106031}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
   m_LocalPosition: {x: -8.5, y: 0, z: 0}
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
 --- !u!212 &3381417683772869088
 SpriteRenderer:
   serializedVersion: 2
@@ -83,8 +83,8 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 4958401518586451488, guid: 25b507beb54f7674780382a453daf5d7, type: 3}
-  m_Color: {r: 0.645283, g: 0.31975025, b: 0, a: 1}
+  m_Sprite: {fileID: 21300000, guid: cf39080d283bdacd0a843bfeaa31a08b, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -127,17 +127,17 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.1350773, y: 0.0017542914}
+  m_Offset: {x: 0.02008181, y: -0.088151395}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.59375, y: 1}
+    oldSize: {x: 1.078125, y: 0.71875}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.7298454, y: 0.37548655}
+  m_Size: {x: 0.32422507, y: 0.55529773}
   m_EdgeRadius: 0
 --- !u!114 &4371038297179224817
 MonoBehaviour:
@@ -153,8 +153,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RoomDoor
   direction: 2
   isLocked: 0
-  spriteRenderer: {fileID: 0}
-  normalDoorSprite: {fileID: 4976125646568474354, guid: 33cd2fc56208f5a4a8ee74c10ba2ad03, type: 3}
+  spriteRenderer: {fileID: 3381417683772869088}
+  currentDoorType: 0
+  normalDoorSprite: {fileID: 21300000, guid: cf39080d283bdacd0a843bfeaa31a08b, type: 3}
   shopDoorSprite: {fileID: 21300000, guid: bc65ac4a1d765d0469b27cf6ad62aef5, type: 3}
   bossDoorSprite: {fileID: 3757799029200383541, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
   lockedDoorSprite: {fileID: 1485597978798215358, guid: 6dc5eb9bea0a093655825043236956e4, type: 3}

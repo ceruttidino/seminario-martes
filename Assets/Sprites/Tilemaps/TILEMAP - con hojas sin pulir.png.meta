@@ -1,0 +1,1573 @@
+fileFormatVersion: 2
+guid: 76c37e6d1ec4a9b4a9e2ad405c5e5027
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -1370332816506982607
+    second: TILEMAP - con hojas sin pulir_0
+  - first:
+      213: -4099274452862275259
+    second: TILEMAP - con hojas sin pulir_1
+  - first:
+      213: -3231885525482662372
+    second: TILEMAP - con hojas sin pulir_2
+  - first:
+      213: 3220758753414542521
+    second: TILEMAP - con hojas sin pulir_3
+  - first:
+      213: 5956768882394418965
+    second: TILEMAP - con hojas sin pulir_4
+  - first:
+      213: -1822743346781380921
+    second: TILEMAP - con hojas sin pulir_5
+  - first:
+      213: 5739470469684898492
+    second: TILEMAP - con hojas sin pulir_6
+  - first:
+      213: 6845032469838528017
+    second: TILEMAP - con hojas sin pulir_7
+  - first:
+      213: -8353362467476649028
+    second: TILEMAP - con hojas sin pulir_8
+  - first:
+      213: -7888692597279818232
+    second: TILEMAP - con hojas sin pulir_9
+  - first:
+      213: 9062189532742231289
+    second: TILEMAP - con hojas sin pulir_10
+  - first:
+      213: 150824081323837118
+    second: TILEMAP - con hojas sin pulir_11
+  - first:
+      213: 5210893042111572820
+    second: TILEMAP - con hojas sin pulir_12
+  - first:
+      213: -3321397294855662419
+    second: TILEMAP - con hojas sin pulir_13
+  - first:
+      213: 8291760487276754173
+    second: TILEMAP - con hojas sin pulir_14
+  - first:
+      213: -8305009352585033107
+    second: TILEMAP - con hojas sin pulir_15
+  - first:
+      213: -752437665008266509
+    second: TILEMAP - con hojas sin pulir_16
+  - first:
+      213: -6715323109846344311
+    second: TILEMAP - con hojas sin pulir_17
+  - first:
+      213: 4766634975838163406
+    second: TILEMAP - con hojas sin pulir_18
+  - first:
+      213: -7058674781684012636
+    second: TILEMAP - con hojas sin pulir_19
+  - first:
+      213: -6314976079975453216
+    second: TILEMAP - con hojas sin pulir_20
+  - first:
+      213: 2663507850448467860
+    second: TILEMAP - con hojas sin pulir_21
+  - first:
+      213: -7597377006694964979
+    second: TILEMAP - con hojas sin pulir_22
+  - first:
+      213: 7154973843741459087
+    second: TILEMAP - con hojas sin pulir_23
+  - first:
+      213: -1138208024754250381
+    second: TILEMAP - con hojas sin pulir_24
+  - first:
+      213: -2138865135791180947
+    second: TILEMAP - con hojas sin pulir_25
+  - first:
+      213: -1636265216999300257
+    second: TILEMAP - con hojas sin pulir_26
+  - first:
+      213: -4900456726192013202
+    second: TILEMAP - con hojas sin pulir_27
+  - first:
+      213: -5128608256266435120
+    second: TILEMAP - con hojas sin pulir_28
+  - first:
+      213: 5376845148981041952
+    second: TILEMAP - con hojas sin pulir_29
+  - first:
+      213: 4813027296933625580
+    second: TILEMAP - con hojas sin pulir_30
+  - first:
+      213: -1791095756757720938
+    second: TILEMAP - con hojas sin pulir_31
+  - first:
+      213: -5890407575938134275
+    second: TILEMAP - con hojas sin pulir_32
+  - first:
+      213: 7735811578680413524
+    second: TILEMAP - con hojas sin pulir_33
+  - first:
+      213: 7584456948824549355
+    second: TILEMAP - con hojas sin pulir_34
+  - first:
+      213: 694095377137216684
+    second: TILEMAP - con hojas sin pulir_35
+  - first:
+      213: -2512882206005767690
+    second: TILEMAP - con hojas sin pulir_36
+  - first:
+      213: 9060741208869187230
+    second: TILEMAP - con hojas sin pulir_37
+  - first:
+      213: 7698050299486387237
+    second: TILEMAP - con hojas sin pulir_38
+  - first:
+      213: 3062368967680527104
+    second: TILEMAP - con hojas sin pulir_39
+  - first:
+      213: 8477525301996190893
+    second: TILEMAP - con hojas sin pulir_40
+  - first:
+      213: 7030912950937911015
+    second: TILEMAP - con hojas sin pulir_41
+  - first:
+      213: -297473613848144679
+    second: TILEMAP - con hojas sin pulir_42
+  - first:
+      213: -2891431685535040275
+    second: TILEMAP - con hojas sin pulir_43
+  - first:
+      213: 1953506352786955544
+    second: TILEMAP - con hojas sin pulir_44
+  - first:
+      213: 6348531737050913040
+    second: TILEMAP - con hojas sin pulir_45
+  - first:
+      213: -7876698903210426628
+    second: TILEMAP - con hojas sin pulir_46
+  - first:
+      213: 3676125633495810537
+    second: TILEMAP - con hojas sin pulir_47
+  - first:
+      213: 2704463105047513442
+    second: TILEMAP - con hojas sin pulir_48
+  - first:
+      213: 5795762256028402134
+    second: TILEMAP - con hojas sin pulir_49
+  - first:
+      213: -3856183570240142409
+    second: TILEMAP - con hojas sin pulir_50
+  - first:
+      213: -8232178118025735594
+    second: TILEMAP - con hojas sin pulir_51
+  - first:
+      213: 6413723341191119485
+    second: TILEMAP - con hojas sin pulir_52
+  - first:
+      213: 3668316363749934501
+    second: TILEMAP - con hojas sin pulir_53
+  - first:
+      213: -1016398085804115153
+    second: TILEMAP - con hojas sin pulir_54
+  - first:
+      213: -7749072089186124580
+    second: TILEMAP - con hojas sin pulir_55
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: TILEMAP - con hojas sin pulir_0
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 392
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 13f6a0050999bfce0800000000000000
+      internalID: -1370332816506982607
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - con hojas sin pulir_1
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 327
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5417f40aa937c17c0800000000000000
+      internalID: -4099274452862275259
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - con hojas sin pulir_2
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 392
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c1611e2ec390623d0800000000000000
+      internalID: -3231885525482662372
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - con hojas sin pulir_3
+      rect:
+        serializedVersion: 2
+        x: 66
+        y: 326
+        width: 66
+        height: 66
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9b4f08c950f62bc20800000000000000
+      internalID: 3220758753414542521
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - con hojas sin pulir_4
+      rect:
+        serializedVersion: 2
+        x: 132
+        y: 392
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 51f483cfcb1baa250800000000000000
+      internalID: 5956768882394418965
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - con hojas sin pulir_5
+      rect:
+        serializedVersion: 2
+        x: 131
+        y: 326
+        width: 66
+        height: 66
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7ce936a559054b6e0800000000000000
+      internalID: -1822743346781380921
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - con hojas sin pulir_6
+      rect:
+        serializedVersion: 2
+        x: 197
+        y: 392
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cbaa960bbf1b6af40800000000000000
+      internalID: 5739470469684898492
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - con hojas sin pulir_7
+      rect:
+        serializedVersion: 2
+        x: 196
+        y: 326
+        width: 66
+        height: 66
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 11e7db8c3c07efe50800000000000000
+      internalID: 6845032469838528017
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - con hojas sin pulir_8
+      rect:
+        serializedVersion: 2
+        x: 262
+        y: 392
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cbb49f50815e21c80800000000000000
+      internalID: -8353362467476649028
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - con hojas sin pulir_9
+      rect:
+        serializedVersion: 2
+        x: 261
+        y: 326
+        width: 66
+        height: 66
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 80ef1ecf0ebb58290800000000000000
+      internalID: -7888692597279818232
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - con hojas sin pulir_10
+      rect:
+        serializedVersion: 2
+        x: 327
+        y: 392
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9f42d52dd5d53cd70800000000000000
+      internalID: 9062189532742231289
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - con hojas sin pulir_11
+      rect:
+        serializedVersion: 2
+        x: 326
+        y: 326
+        width: 66
+        height: 66
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eb6c1eee3b5d71200800000000000000
+      internalID: 150824081323837118
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - con hojas sin pulir_12
+      rect:
+        serializedVersion: 2
+        x: 391
+        y: 391
+        width: 66
+        height: 66
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 45b6d910d9fc05840800000000000000
+      internalID: 5210893042111572820
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - con hojas sin pulir_13
+      rect:
+        serializedVersion: 2
+        x: 391
+        y: 326
+        width: 66
+        height: 66
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: da45f2202c608e1d0800000000000000
+      internalID: -3321397294855662419
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - con hojas sin pulir_14
+      rect:
+        serializedVersion: 2
+        x: 457
+        y: 392
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: df430c64b30421370800000000000000
+      internalID: 8291760487276754173
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - con hojas sin pulir_15
+      rect:
+        serializedVersion: 2
+        x: 457
+        y: 327
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d6a4fd2eefdaebc80800000000000000
+      internalID: -8305009352585033107
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - con hojas sin pulir_16
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 262
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3f2de852eedce85f0800000000000000
+      internalID: -752437665008266509
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - con hojas sin pulir_17
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 197
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 98d13adf5316ec2a0800000000000000
+      internalID: -6715323109846344311
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - con hojas sin pulir_18
+      rect:
+        serializedVersion: 2
+        x: 66
+        y: 261
+        width: 66
+        height: 66
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ec159cc714d762240800000000000000
+      internalID: 4766634975838163406
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - con hojas sin pulir_19
+      rect:
+        serializedVersion: 2
+        x: 66
+        y: 196
+        width: 66
+        height: 66
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4a967bc3fac8a0e90800000000000000
+      internalID: -7058674781684012636
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - con hojas sin pulir_20
+      rect:
+        serializedVersion: 2
+        x: 131
+        y: 261
+        width: 66
+        height: 66
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0ed69f3a6b2bc58a0800000000000000
+      internalID: -6314976079975453216
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - con hojas sin pulir_21
+      rect:
+        serializedVersion: 2
+        x: 131
+        y: 196
+        width: 66
+        height: 66
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 497f172374ea6f420800000000000000
+      internalID: 2663507850448467860
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - con hojas sin pulir_22
+      rect:
+        serializedVersion: 2
+        x: 196
+        y: 261
+        width: 66
+        height: 66
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d01e9337dd1b09690800000000000000
+      internalID: -7597377006694964979
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - con hojas sin pulir_23
+      rect:
+        serializedVersion: 2
+        x: 196
+        y: 196
+        width: 66
+        height: 66
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f82cb6d5dc29b4360800000000000000
+      internalID: 7154973843741459087
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - con hojas sin pulir_24
+      rect:
+        serializedVersion: 2
+        x: 261
+        y: 261
+        width: 66
+        height: 66
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 37d160cf4d54430f0800000000000000
+      internalID: -1138208024754250381
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - con hojas sin pulir_25
+      rect:
+        serializedVersion: 2
+        x: 261
+        y: 196
+        width: 66
+        height: 66
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d63f2bebd793152e0800000000000000
+      internalID: -2138865135791180947
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - con hojas sin pulir_26
+      rect:
+        serializedVersion: 2
+        x: 326
+        y: 261
+        width: 66
+        height: 66
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f53ed665471da49e0800000000000000
+      internalID: -1636265216999300257
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - con hojas sin pulir_27
+      rect:
+        serializedVersion: 2
+        x: 326
+        y: 196
+        width: 66
+        height: 66
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e60c62e32941efbb0800000000000000
+      internalID: -4900456726192013202
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - con hojas sin pulir_28
+      rect:
+        serializedVersion: 2
+        x: 391
+        y: 261
+        width: 66
+        height: 66
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0d58a15a6f583d8b0800000000000000
+      internalID: -5128608256266435120
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - con hojas sin pulir_29
+      rect:
+        serializedVersion: 2
+        x: 391
+        y: 196
+        width: 66
+        height: 66
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 02b1c4ddc246e9a40800000000000000
+      internalID: 5376845148981041952
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - con hojas sin pulir_30
+      rect:
+        serializedVersion: 2
+        x: 457
+        y: 262
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ceebcf773de4bc240800000000000000
+      internalID: 4813027296933625580
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - con hojas sin pulir_31
+      rect:
+        serializedVersion: 2
+        x: 457
+        y: 197
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6902fbb16efb427e0800000000000000
+      internalID: -1791095756757720938
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - con hojas sin pulir_32
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 132
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dfe00f5b481114ea0800000000000000
+      internalID: -5890407575938134275
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - con hojas sin pulir_33
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 67
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 45d899c05af1b5b60800000000000000
+      internalID: 7735811578680413524
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - con hojas sin pulir_34
+      rect:
+        serializedVersion: 2
+        x: 66
+        y: 131
+        width: 66
+        height: 66
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: be72ee82967614960800000000000000
+      internalID: 7584456948824549355
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - con hojas sin pulir_35
+      rect:
+        serializedVersion: 2
+        x: 66
+        y: 66
+        width: 66
+        height: 66
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cac218a611ce1a900800000000000000
+      internalID: 694095377137216684
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - con hojas sin pulir_36
+      rect:
+        serializedVersion: 2
+        x: 131
+        y: 131
+        width: 66
+        height: 66
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6f150ac82f2702dd0800000000000000
+      internalID: -2512882206005767690
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - con hojas sin pulir_37
+      rect:
+        serializedVersion: 2
+        x: 131
+        y: 66
+        width: 66
+        height: 66
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e9e2464af183ebd70800000000000000
+      internalID: 9060741208869187230
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - con hojas sin pulir_38
+      rect:
+        serializedVersion: 2
+        x: 196
+        y: 131
+        width: 66
+        height: 66
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 52cb9fb16f7f4da60800000000000000
+      internalID: 7698050299486387237
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - con hojas sin pulir_39
+      rect:
+        serializedVersion: 2
+        x: 196
+        y: 66
+        width: 66
+        height: 66
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 00b07c9d958bf7a20800000000000000
+      internalID: 3062368967680527104
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - con hojas sin pulir_40
+      rect:
+        serializedVersion: 2
+        x: 261
+        y: 131
+        width: 66
+        height: 66
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dac7ed7a85836a570800000000000000
+      internalID: 8477525301996190893
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - con hojas sin pulir_41
+      rect:
+        serializedVersion: 2
+        x: 261
+        y: 66
+        width: 66
+        height: 66
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7eef857d312d29160800000000000000
+      internalID: 7030912950937911015
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - con hojas sin pulir_42
+      rect:
+        serializedVersion: 2
+        x: 326
+        y: 131
+        width: 66
+        height: 66
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9d4978403592fdbf0800000000000000
+      internalID: -297473613848144679
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - con hojas sin pulir_43
+      rect:
+        serializedVersion: 2
+        x: 326
+        y: 66
+        width: 66
+        height: 66
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: decff5393329fd7d0800000000000000
+      internalID: -2891431685535040275
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - con hojas sin pulir_44
+      rect:
+        serializedVersion: 2
+        x: 391
+        y: 131
+        width: 66
+        height: 66
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 81dd5508daf3c1b10800000000000000
+      internalID: 1953506352786955544
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - con hojas sin pulir_45
+      rect:
+        serializedVersion: 2
+        x: 391
+        y: 66
+        width: 66
+        height: 66
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 01996389af38a1850800000000000000
+      internalID: 6348531737050913040
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - con hojas sin pulir_46
+      rect:
+        serializedVersion: 2
+        x: 457
+        y: 132
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cfefe6f741850b290800000000000000
+      internalID: -7876698903210426628
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - con hojas sin pulir_47
+      rect:
+        serializedVersion: 2
+        x: 457
+        y: 67
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9e1c93669c8340330800000000000000
+      internalID: 3676125633495810537
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - con hojas sin pulir_48
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 2
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 269c18c7dde288520800000000000000
+      internalID: 2704463105047513442
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - con hojas sin pulir_49
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 2
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6d18039801fae6050800000000000000
+      internalID: 5795762256028402134
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - con hojas sin pulir_50
+      rect:
+        serializedVersion: 2
+        x: 132
+        y: 2
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7b3832b49751c7ac0800000000000000
+      internalID: -3856183570240142409
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - con hojas sin pulir_51
+      rect:
+        serializedVersion: 2
+        x: 197
+        y: 2
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 652155b1e9d61cd80800000000000000
+      internalID: -8232178118025735594
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - con hojas sin pulir_52
+      rect:
+        serializedVersion: 2
+        x: 262
+        y: 2
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d72045fb56f120950800000000000000
+      internalID: 6413723341191119485
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - con hojas sin pulir_53
+      rect:
+        serializedVersion: 2
+        x: 327
+        y: 2
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5a541191c4a78e230800000000000000
+      internalID: 3668316363749934501
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - con hojas sin pulir_54
+      rect:
+        serializedVersion: 2
+        x: 392
+        y: 2
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f2b3249735705e1f0800000000000000
+      internalID: -1016398085804115153
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - con hojas sin pulir_55
+      rect:
+        serializedVersion: 2
+        x: 457
+        y: 2
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cdcba21cdf3c57490800000000000000
+      internalID: -7749072089186124580
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: f8a98794fd0bdba4ab2c32dd528bdb3d
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      TILEMAP - con hojas sin pulir_0: -1370332816506982607
+      TILEMAP - con hojas sin pulir_1: -4099274452862275259
+      TILEMAP - con hojas sin pulir_10: 9062189532742231289
+      TILEMAP - con hojas sin pulir_11: 150824081323837118
+      TILEMAP - con hojas sin pulir_12: 5210893042111572820
+      TILEMAP - con hojas sin pulir_13: -3321397294855662419
+      TILEMAP - con hojas sin pulir_14: 8291760487276754173
+      TILEMAP - con hojas sin pulir_15: -8305009352585033107
+      TILEMAP - con hojas sin pulir_16: -752437665008266509
+      TILEMAP - con hojas sin pulir_17: -6715323109846344311
+      TILEMAP - con hojas sin pulir_18: 4766634975838163406
+      TILEMAP - con hojas sin pulir_19: -7058674781684012636
+      TILEMAP - con hojas sin pulir_2: -3231885525482662372
+      TILEMAP - con hojas sin pulir_20: -6314976079975453216
+      TILEMAP - con hojas sin pulir_21: 2663507850448467860
+      TILEMAP - con hojas sin pulir_22: -7597377006694964979
+      TILEMAP - con hojas sin pulir_23: 7154973843741459087
+      TILEMAP - con hojas sin pulir_24: -1138208024754250381
+      TILEMAP - con hojas sin pulir_25: -2138865135791180947
+      TILEMAP - con hojas sin pulir_26: -1636265216999300257
+      TILEMAP - con hojas sin pulir_27: -4900456726192013202
+      TILEMAP - con hojas sin pulir_28: -5128608256266435120
+      TILEMAP - con hojas sin pulir_29: 5376845148981041952
+      TILEMAP - con hojas sin pulir_3: 3220758753414542521
+      TILEMAP - con hojas sin pulir_30: 4813027296933625580
+      TILEMAP - con hojas sin pulir_31: -1791095756757720938
+      TILEMAP - con hojas sin pulir_32: -5890407575938134275
+      TILEMAP - con hojas sin pulir_33: 7735811578680413524
+      TILEMAP - con hojas sin pulir_34: 7584456948824549355
+      TILEMAP - con hojas sin pulir_35: 694095377137216684
+      TILEMAP - con hojas sin pulir_36: -2512882206005767690
+      TILEMAP - con hojas sin pulir_37: 9060741208869187230
+      TILEMAP - con hojas sin pulir_38: 7698050299486387237
+      TILEMAP - con hojas sin pulir_39: 3062368967680527104
+      TILEMAP - con hojas sin pulir_4: 5956768882394418965
+      TILEMAP - con hojas sin pulir_40: 8477525301996190893
+      TILEMAP - con hojas sin pulir_41: 7030912950937911015
+      TILEMAP - con hojas sin pulir_42: -297473613848144679
+      TILEMAP - con hojas sin pulir_43: -2891431685535040275
+      TILEMAP - con hojas sin pulir_44: 1953506352786955544
+      TILEMAP - con hojas sin pulir_45: 6348531737050913040
+      TILEMAP - con hojas sin pulir_46: -7876698903210426628
+      TILEMAP - con hojas sin pulir_47: 3676125633495810537
+      TILEMAP - con hojas sin pulir_48: 2704463105047513442
+      TILEMAP - con hojas sin pulir_49: 5795762256028402134
+      TILEMAP - con hojas sin pulir_5: -1822743346781380921
+      TILEMAP - con hojas sin pulir_50: -3856183570240142409
+      TILEMAP - con hojas sin pulir_51: -8232178118025735594
+      TILEMAP - con hojas sin pulir_52: 6413723341191119485
+      TILEMAP - con hojas sin pulir_53: 3668316363749934501
+      TILEMAP - con hojas sin pulir_54: -1016398085804115153
+      TILEMAP - con hojas sin pulir_55: -7749072089186124580
+      TILEMAP - con hojas sin pulir_6: 5739470469684898492
+      TILEMAP - con hojas sin pulir_7: 6845032469838528017
+      TILEMAP - con hojas sin pulir_8: -8353362467476649028
+      TILEMAP - con hojas sin pulir_9: -7888692597279818232
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

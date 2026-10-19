@@ -83,7 +83,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 4976125646568474354, guid: 33cd2fc56208f5a4a8ee74c10ba2ad03, type: 3}
+  m_Sprite: {fileID: 21300000, guid: cf39080d283bdacd0a843bfeaa31a08b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -127,17 +127,17 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.00438565, y: 0.2565158}
+  m_Offset: {x: 0.019795485, y: 0.23502147}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 0.59375}
+    oldSize: {x: 1.078125, y: 0.71875}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.40881735, y: 1.1411303}
+  m_Size: {x: 0.32463115, y: 1.184119}
   m_EdgeRadius: 0
 --- !u!114 &2671611768058451403
 MonoBehaviour:
@@ -155,7 +155,7 @@ MonoBehaviour:
   isLocked: 0
   spriteRenderer: {fileID: 1745578233889521194}
   currentDoorType: 0
-  normalDoorSprite: {fileID: 4976125646568474354, guid: 33cd2fc56208f5a4a8ee74c10ba2ad03, type: 3}
+  normalDoorSprite: {fileID: 21300000, guid: cf39080d283bdacd0a843bfeaa31a08b, type: 3}
   shopDoorSprite: {fileID: 21300000, guid: bc65ac4a1d765d0469b27cf6ad62aef5, type: 3}
   bossDoorSprite: {fileID: 3757799029200383541, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
   lockedDoorSprite: {fileID: 1485597978798215358, guid: 6dc5eb9bea0a093655825043236956e4, type: 3}
