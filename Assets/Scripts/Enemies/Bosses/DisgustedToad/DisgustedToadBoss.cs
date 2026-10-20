@@ -2,23 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// Jerarquía del prefab:
+//  DisgustedToad (Rigidbody2D Dynamic sin gravedad, CircleCollider2D, EnemyHealth, DisgustedToadBoss, [BossBuffSpawner])
+//   ├─ Shadow   (SpriteRenderer: óvalo oscuro, queda en el piso)
+//   ├─ Visual   (SpriteRenderer + Animator: es lo que "salta")
+//   │    └─ Mouth (Transform vacío en la boca)
+//   └─ Tongue   (LineRenderer + BoxCollider2D + ToadTongue)  <- hijo del ROOT, no de Visual
+//        └─ TongueTip (SpriteRenderer opcional)
+// IMPORTANTE: el prefab ya NO debe tener EnemyAttack (el daño por contacto lo maneja este script).
 public class DisgustedToadBoss : BossBase
 {
     private enum ToadAttackType { TongueLash, SlimeBurst }
-
-    [Header("Debug")]                                      
-    [SerializeField] private bool logAttackChoice = true;
 
     [Header("References")]
     [SerializeField] private Transform player;
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private Collider2D bodyCollider;
     [SerializeField] private EnemyHealth enemyHealth;
-
-    [Header("Ataque 1 - Saltos")]
-    [SerializeField] private int contactDamage = 1;                 
-    [SerializeField] private float contactRangeTiles = 0.4f;        
-    [SerializeField] private float landingPushMargin = 0.35f;       
+    // BORRADO: [SerializeField] private EnemyAttack enemyAttack;
 
     [Header("Visual")]
     [SerializeField] private Transform visual;
@@ -43,6 +44,11 @@ public class DisgustedToadBoss : BossBase
     [SerializeField] private float landingDamageRadiusTiles = 1.1f;
     [SerializeField] private int landingDamage = 1;
     [SerializeField] private bool invulnerableInAir = true;
+    [SerializeField] private int contactDamage = 1;                 // NUEVO
+    [Tooltip("Distancia extra al borde del cuerpo para el daño por contacto.")]
+    [SerializeField] private float contactRangeTiles = 0.4f;        // NUEVO
+    [Tooltip("Cuánto separa al jugador del borde del cuerpo si le cae encima.")]
+    [SerializeField] private float landingPushMargin = 0.35f;       // NUEVO
 
     [Header("Ataque 2 - Lengua")]
     [SerializeField] private ToadTongue tongue;
@@ -61,7 +67,8 @@ public class DisgustedToadBoss : BossBase
     [SerializeField] private float slimeFlightTime = 0.8f;
     [SerializeField] private float afterSpitRecovery = 0.6f;
 
-    public override string BarTitle => "Disgusted Toad";
+    [Header("Debug")]                                        // NUEVO
+    [SerializeField] private bool logAttackChoice = true;    // NUEVO
 
     private Vector3 baseVisualPos = Vector3.zero;
     private Vector3 baseVisualScale = Vector3.one;
@@ -76,6 +83,7 @@ public class DisgustedToadBoss : BossBase
         if (rb == null) rb = GetComponent<Rigidbody2D>();
         if (bodyCollider == null) bodyCollider = GetComponent<Collider2D>();
         if (enemyHealth == null) enemyHealth = GetComponent<EnemyHealth>();
+        // BORRADO: if (enemyAttack == null) enemyAttack = GetComponent<EnemyAttack>();
         if (visual == null) visual = transform.Find("Visual");
         if (visual != null && visualRenderer == null) visualRenderer = visual.GetComponent<SpriteRenderer>();
         if (visual != null && animator == null) animator = visual.GetComponent<Animator>();
@@ -149,8 +157,8 @@ public class DisgustedToadBoss : BossBase
         }
 
         float distance = Vector2.Distance(rb.position, player.position);
-        float threshold = tongueMinDistanceTiles * tileSize;                                                     
-        ToadAttackType chosen = distance >= threshold ? ToadAttackType.TongueLash : ToadAttackType.SlimeBurst;   
+        float threshold = tongueMinDistanceTiles * tileSize;                                                     // CAMBIADO
+        ToadAttackType chosen = distance >= threshold ? ToadAttackType.TongueLash : ToadAttackType.SlimeBurst;   // CAMBIADO
 
         if (logAttackChoice) // NUEVO
             Debug.Log($"[Toad] Distancia: {distance:F1} u ({distance / tileSize:F1} tiles). Lengua desde {threshold:F1} u → {chosen}");
@@ -174,7 +182,7 @@ public class DisgustedToadBoss : BossBase
             float t = 0f;
             while (t < landingRecovery && !isDead)
             {
-                TryContactDamage();
+                TryContactDamage(); // CAMBIADO: antes enemyAttack.TryAttack() cada frame, sin control de apilado
                 t += Time.deltaTime;
                 yield return null;
             }
@@ -271,7 +279,7 @@ public class DisgustedToadBoss : BossBase
         if (shadow != null && !airborne) shadow.localScale = baseShadowScale;
     }
 
-    private void TryLandingDamage(Vector2 landPosition)
+    private void TryLandingDamage(Vector2 landPosition) // CAMBIADO
     {
         if (player == null) return;
 
@@ -281,9 +289,10 @@ public class DisgustedToadBoss : BossBase
         if (landingDamage > 0)
             BossPlayerUtils.DamagePlayer(player.gameObject, landingDamage);
 
-        PushPlayerOut(landPosition); // que no quede atrapado debajo del sapo
+        PushPlayerOut(landPosition); // NUEVO: que no quede atrapado debajo del sapo
     }
 
+    // NUEVO
     private void TryContactDamage()
     {
         if (player == null || contactDamage <= 0 || isAirborne) return;
@@ -293,6 +302,7 @@ public class DisgustedToadBoss : BossBase
             BossPlayerUtils.DamagePlayer(player.gameObject, contactDamage);
     }
 
+    // NUEVO
     private void PushPlayerOut(Vector2 center)
     {
         Rigidbody2D playerRb = player.GetComponent<Rigidbody2D>();
@@ -315,6 +325,7 @@ public class DisgustedToadBoss : BossBase
         }
     }
 
+    // NUEVO
     private float GetBodyRadius()
     {
         CircleCollider2D circle = bodyCollider as CircleCollider2D;
@@ -520,5 +531,15 @@ public class DisgustedToadBoss : BossBase
     {
         RoomInstance room = GetComponentInParent<RoomInstance>();
         return room != null ? room.transform : transform.parent;
+    }
+
+    // NUEVO: seleccioná el sapo en la escena para ver los rangos
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = new Color(1f, 0.3f, 0.6f);   // rosa: distancia mínima para la lengua
+        Gizmos.DrawWireSphere(transform.position, tongueMinDistanceTiles * tileSize);
+
+        Gizmos.color = new Color(0.4f, 1f, 0.3f);   // verde: tamaño del charco de baba
+        Gizmos.DrawWireSphere(transform.position, slimeRadiusTiles * tileSize);
     }
 }

@@ -414,6 +414,7 @@ GameObject:
   - component: {fileID: 6225070230786402365}
   - component: {fileID: 8123456789012345678}
   - component: {fileID: 7858921322861327637}
+  - component: {fileID: 1868603469052458027}
   m_Layer: 9
   m_Name: Player
   m_TagString: Player
@@ -729,7 +730,19 @@ MonoBehaviour:
     m_ActionId: f4a8c2e1-3b7d-4f9a-8e2c-1d5b6a7c8e9f
     m_ActionName: 'Player/Aim[/Keyboard/upArrow,/Keyboard/downArrow,/Keyboard/leftArrow,/Keyboard/rightArrow]'
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: Cheats, Assembly-CSharp
+        m_MethodName: OnCheat
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: cc1cca0b-3e3e-4e9e-8a00-6753210c9abd
     m_ActionName: 'Player/CheatConsole[/Keyboard/backquote]'
   m_NeverAutoSwitchControlSchemes: 0
@@ -759,6 +772,7 @@ MonoBehaviour:
   turnAcceleration: 50
   inputDeadzone: 0.1
   instantStop: 0
+  attackMoveMultiplier: 0.75
 --- !u!114 &5312510268511530110
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -773,6 +787,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAttack
   quickAttack: {fileID: 6354491309245815682}
   areaAttack: {fileID: 1785173488312657902}
+  areaAttackBufferTime: 0.15
 --- !u!114 &6354491309245815682
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -796,11 +811,31 @@ MonoBehaviour:
     m_Bits: 64
   animator: {fileID: 6671336775965671393}
   spriteRenderer: {fileID: 0}
+  playerSquash: {fileID: 0}
   damage: 10
-  cooldown: 0.5
+  cooldown: 0.75
   attackDistance: 1
   attackBoxSize: {x: 1.2, y: 0.8}
   attackActiveDuration: 0.25
+  hitDelay: 0
+  comboResetTime: 0.6
+  lungeSpeed: 6
+  lungeDuration: 0.1
+  lungeOnHitMultiplier: 0.3
+  attackSlowDuration: 0.15
+  knockbackForce: 10
+  hitStopDuration: 0.05
+  hitStopPerExtraEnemy: 0.015
+  shakeTrauma: 0.2
+  cameraKick: 0.1
+  attackSquash: {x: 1.15, y: 0.88}
+  attackVfxPrefab: {fileID: 7725699764038781745, guid: 6e2c69b01a7fec3469cf4c29060b581c, type: 3}
+  vfxDistance: 1
+  vfxLifetime: 0.5
+  vfxFollowsPlayer: 1
+  vfxAngleOffset: -90
+  alternateSlashVfx: 1
+  swingIndexParam: 
   sfxSource: {fileID: 7881586116371696920}
 --- !u!114 &1785173488312657902
 MonoBehaviour:
@@ -823,10 +858,21 @@ MonoBehaviour:
   animator: {fileID: 6671336775965671393}
   playerMovement: {fileID: 0}
   playerDash: {fileID: 0}
+  playerSquash: {fileID: 0}
   damage: 20
   cooldown: 2
-  radius: 2
+  radius: 1.2
   attackActiveDuration: 0.3
+  knockbackForce: 15
+  hitStopDuration: 0.08
+  hitStopPerExtraEnemy: 0.01
+  shakeTraumaOnHit: 0.45
+  shakeTraumaOnWhiff: 0.2
+  attackSquash: {x: 1.3, y: 0.75}
+  attackSlowDuration: 0.25
+  attackVfxPrefab: {fileID: 6246440627469621124, guid: 8ad4a27aa2b78d34db2019eb0ee8d0ac, type: 3}
+  vfxLifetime: 0.5
+  vfxFollowsPlayer: 1
   sfxSource: {fileID: 718493228437957988}
 --- !u!114 &7840586562795469529
 MonoBehaviour:
@@ -840,7 +886,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a765c66e54f7e5341aab59e1fe40efda, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
-  playerHealthCap: 20
+  playerHealthCap: 12
   playerMaxHealth: 6
   playerHealth: 6
   canGetHurt: 1
@@ -853,6 +899,10 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  fullHeartSprite: {fileID: 21300000, guid: e793c6ec211e3354eb62e547b4714082, type: 3}
+  halfHeartSprite: {fileID: 21300000, guid: a84d06551b6b13c46a794e63c9215825, type: 3}
+  emptyHeartSprite: {fileID: 21300000, guid: 93cd08ad1dc96494a841775a2e04279c, type: 3}
+  poisonedHeartColor: {r: 0.25, g: 0.85, b: 0.28, a: 1}
   sfxSource: {fileID: 5460443969507782636}
 --- !u!114 &8932515960615368468
 MonoBehaviour:
@@ -977,9 +1027,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AuraHandler
   aura: {fileID: 7537119443682579791}
-  AuraDuration: 0
   auraDuration: 1
-  A: 1
+--- !u!114 &1868603469052458027
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7409795251022180326}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f2dbd93812af5246815ba44243c6d1a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SquashStretch
+  target: {fileID: 0}
+  returnSpeed: 18
 --- !u!1 &7537119443682579791
 GameObject:
   m_ObjectHideFlags: 0

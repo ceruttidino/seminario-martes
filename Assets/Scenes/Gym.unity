@@ -10574,6 +10574,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 127b6f7272ac37948877f6f97ff496f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AreaAttack
+--- !u!114 &1074406347
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1052212338}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b5d5a2a114d4e5488e74b25cf97ca3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerHurtFeedback
+  playerMovement: {fileID: 0}
+  spriteRenderer: {fileID: 0}
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  hitStopDuration: 0.1
+  shakeTrauma: 0.55
+  cameraKick: 0.15
+  lethalHitStopDuration: 0.15
+  lethalShakeTrauma: 1
+  knockbackDistance: 0.6
+  knockbackDuration: 0.15
+  sourceSearchRadius: 2.5
+  blinkEnabled: 1
+  blinkInterval: 0.08
+  blinkDelay: 0.1
+  hurtAudioSource: {fileID: 0}
+  hurtClips: []
 --- !u!1 &1095159264
 GameObject:
   m_ObjectHideFlags: 0
@@ -15932,6 +15962,165 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2069515433}
   m_CullTransparentMesh: 1
+--- !u!1 &2082300939
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2082300942}
+  - component: {fileID: 2082300941}
+  - component: {fileID: 2082300940}
+  m_Layer: 0
+  m_Name: CombatFeedback
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!82 &2082300940
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2082300939}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 0.302
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &2082300941
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2082300939}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ddab7d7a8f5f7a24ba0577d9fa7cc7fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CombatFeedback
+  hitStopEnabled: 1
+  maxHitStop: 0.15
+  hitStopTimeScale: 0.02
+  shakeTarget: {fileID: 0}
+  maxShakeOffset: 0.3
+  maxShakeAngle: 0
+  shakeFrequency: 25
+  traumaDecay: 2.5
+  kickReturnSpeed: 20
+  hitSparkPrefab: {fileID: 3028307233063514455, guid: 3ca4fa5ee254e1a41976424f68dfeb12, type: 3}
+  hitSparkLifetime: 0.5
+  hitSparkAngleOffset: 0
+  hitAudioSource: {fileID: 2082300940}
+  hitClips:
+  - {fileID: 8300000, guid: 268af91c918fb8743a22d74193ccd242, type: 3}
+  hitPitchRange: {x: 0.9, y: 1.1}
+  minTimeBetweenHitSounds: 0.03
+--- !u!4 &2082300942
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2082300939}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.64054, y: 0.16609, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2100873261
 GameObject:
   m_ObjectHideFlags: 0
@@ -16375,34 +16564,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1785173488312657902, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
-      propertyPath: radius
-      value: 1.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 1785173488312657902, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
-      propertyPath: attackVfxPrefab
-      value: 
-      objectReference: {fileID: 6246440627469621124, guid: 8ad4a27aa2b78d34db2019eb0ee8d0ac, type: 3}
-    - target: {fileID: 2442127025827706028, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
-      propertyPath: m_ActionEvents.Array.size
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 2442127025827706028, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
-      propertyPath: m_ActionEvents.Array.data[8].m_ActionId
-      value: cc1cca0b-3e3e-4e9e-8a00-6753210c9abd
-      objectReference: {fileID: 0}
-    - target: {fileID: 2442127025827706028, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
-      propertyPath: m_ActionEvents.Array.data[8].m_ActionName
-      value: 'Player/CheatConsole[/Keyboard/backquote]'
-      objectReference: {fileID: 0}
-    - target: {fileID: 2442127025827706028, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
-      propertyPath: m_ActionEvents.Array.data[8].m_PersistentCalls.m_Calls.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2442127025827706028, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
-      propertyPath: m_ActionEvents.Array.data[8].m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 2442127025827706028, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
       propertyPath: m_ActionEvents.Array.data[5].m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -16411,62 +16572,42 @@ PrefabInstance:
       propertyPath: m_ActionEvents.Array.data[8].m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 691211042}
-    - target: {fileID: 2442127025827706028, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
-      propertyPath: m_ActionEvents.Array.data[8].m_PersistentCalls.m_Calls.Array.data[0].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 2442127025827706028, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
-      propertyPath: m_ActionEvents.Array.data[8].m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OnCheat
-      objectReference: {fileID: 0}
-    - target: {fileID: 2442127025827706028, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
-      propertyPath: m_ActionEvents.Array.data[8].m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: Cheats, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 2442127025827706028, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
-      propertyPath: m_ActionEvents.Array.data[8].m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
-    - target: {fileID: 6354491309245815682, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
-      propertyPath: cooldown
-      value: 0.75
+    - target: {fileID: 6225070230786402365, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6354491309245815682, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
       propertyPath: vfxDistance
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6354491309245815682, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
-      propertyPath: attackDistance
-      value: 1
+      propertyPath: vfxLifetime
+      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 6354491309245815682, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
       propertyPath: vfxAngleOffset
-      value: -90
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6354491309245815682, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
+      propertyPath: attackBoxSize.x
+      value: 0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 6354491309245815682, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
+      propertyPath: attackBoxSize.y
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6354491309245815682, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
       propertyPath: attackVfxPrefab
       value: 
-      objectReference: {fileID: 7725699764038781745, guid: 6e2c69b01a7fec3469cf4c29060b581c, type: 3}
+      objectReference: {fileID: 3468082337772140813, guid: 5a4bd54df0c47334fa0097377597e535, type: 3}
+    - target: {fileID: 6354491309245815682, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
+      propertyPath: vfxCenterOffset.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7409795251022180326, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 7840586562795469529, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
-      propertyPath: fullHeartSprite
-      value: 
-      objectReference: {fileID: 21300000, guid: e793c6ec211e3354eb62e547b4714082, type: 3}
-    - target: {fileID: 7840586562795469529, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
-      propertyPath: halfHeartSprite
-      value: 
-      objectReference: {fileID: 21300000, guid: a84d06551b6b13c46a794e63c9215825, type: 3}
-    - target: {fileID: 7840586562795469529, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
-      propertyPath: playerHealthCap
-      value: 12
-      objectReference: {fileID: 0}
-    - target: {fileID: 7840586562795469529, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
-      propertyPath: emptyHeartSprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 93cd08ad1dc96494a841775a2e04279c, type: 3}
     - target: {fileID: 7840586562795469529, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
       propertyPath: 'hearts.Array.data[0]'
       value: 
@@ -16491,14 +16632,13 @@ PrefabInstance:
       propertyPath: 'hearts.Array.data[5]'
       value: 
       objectReference: {fileID: 1961078270}
-    - target: {fileID: 7858921322861327637, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
-      propertyPath: A
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7409795251022180326, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1074406347}
   m_SourcePrefab: {fileID: 100100000, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
 --- !u!1001 &3790582539949757998
 PrefabInstance:
@@ -16601,3 +16741,4 @@ SceneRoots:
   - {fileID: 1240830711}
   - {fileID: 3790582539949757998}
   - {fileID: 1865377243}
+  - {fileID: 2082300942}

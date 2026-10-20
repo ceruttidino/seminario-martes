@@ -8,12 +8,27 @@ public class AreaAttack : MonoBehaviour, IAttack
     [SerializeField] private Animator animator;
     [SerializeField] private PlayerMovement playerMovement;
     [SerializeField] private PlayerDash playerDash;
+    [SerializeField] private SquashStretch playerSquash; // NUEVO
 
     [Header("Area Attack")]
     [SerializeField] private float damage = 20f;
     [SerializeField] private float cooldown = 2f;
     [SerializeField] private float radius = 2f;
     [SerializeField] private float attackActiveDuration = 0.3f;
+
+    [Header("Feel - Knockback")] // NUEVO
+    [Tooltip("Más fuerte que el quick attack: es el golpe pesado")]
+    [SerializeField] private float knockbackForce = 15f; // NUEVO
+
+    [Header("Feel - Hit Stop / Camera")] // NUEVO
+    [SerializeField] private float hitStopDuration = 0.08f; // NUEVO
+    [SerializeField] private float hitStopPerExtraEnemy = 0.01f; // NUEVO
+    [SerializeField] private float shakeTraumaOnHit = 0.45f; // NUEVO
+    [Tooltip("La explosión sacude un poco aunque no pegue a nadie")]
+    [SerializeField] private float shakeTraumaOnWhiff = 0.2f; // NUEVO
+    [SerializeField] private Vector2 attackSquash = new Vector2(1.3f, 0.75f); // NUEVO
+    [Tooltip("El ataque pesado 'planta' al player un instante (camina más lento)")]
+    [SerializeField] private float attackSlowDuration = 0.25f; // NUEVO
 
     [Header("Attack VFX")]
     [SerializeField] private GameObject attackVfxPrefab;
@@ -37,6 +52,9 @@ public class AreaAttack : MonoBehaviour, IAttack
 
         if (playerDash == null)
             playerDash = GetComponent<PlayerDash>();
+
+        if (playerSquash == null) // NUEVO
+            playerSquash = GetComponentInChildren<SquashStretch>();
     }
 
     public float CooldownRemaining
@@ -83,43 +101,44 @@ public class AreaAttack : MonoBehaviour, IAttack
                 playerMovement.SetAttackAnimationActive(true);
 
             animator.SetTrigger("AreaAttack");
-            SpawnAttackVfx();
         }
+
+        SpawnAttackVfx(); // CAMBIADO: antes solo salía si había Animator asignado
+
+        if (playerSquash != null) // NUEVO
+            playerSquash.Punch(attackSquash);
+
+        if (playerMovement != null) // NUEVO: sin lunge, solo slow
+            playerMovement.ApplyAttackLunge(Vector2.zero, 0f, 0f, attackSlowDuration);
 
         Performed?.Invoke(transform.position, radius);
 
         LayerMask combinedMask = enemyLayer | trashLayer;
-
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, radius, combinedMask);
 
-        foreach (Collider2D hit in hits)
+        // CAMBIADO: resolución compartida. Knockback radial (alejando del centro de la explosión)
+        Vector2 origin = transform.position;
+        AttackHitResolver.HitResult result = AttackHitResolver.Resolve(
+            hits, origin, damage, knockbackForce,
+            c => (Vector2)c.transform.position - origin);
+
+        // NUEVO: feedback
+        CombatFeedback fx = CombatFeedback.Instance;
+        if (fx == null) return;
+
+        if (result.AnyHit)
         {
-            // El shell no se "daña": se empuja alejándolo del centro de la explosión.
-            TurtleShell shell = hit.GetComponentInParent<TurtleShell>();
-            if (shell != null)
-            {
-                Vector2 pushDirection = (Vector2)hit.transform.position - (Vector2)transform.position;
-                shell.Push(pushDirection);
-                continue;
-            }
+            float stop = result.enemiesHit > 0
+                ? hitStopDuration + Mathf.Max(0, result.enemiesHit - 1) * hitStopPerExtraEnemy
+                : hitStopDuration * 0.5f;
 
-            Supercontainer supercontainer = hit.GetComponentInParent<Supercontainer>();
-            if (supercontainer != null)
-            {
-                supercontainer.NotifyPlayerHit();
-                continue;
-            }
-
-            IDamageable damageable = hit.GetComponentInParent<IDamageable>();
-
-            if (damageable != null)
-            {
-                damageable.TakeDamage(damage);
-            }
-            else if (hit.TryGetComponent<BreakableTrash>(out BreakableTrash trash))
-            {
-                trash.TakeHit(damage);
-            }
+            fx.HitStop(stop);
+            fx.AddTrauma(shakeTraumaOnHit);
+            fx.PlayHitSound();
+        }
+        else
+        {
+            fx.AddTrauma(shakeTraumaOnWhiff);
         }
     }
 
@@ -154,6 +173,10 @@ public class AreaAttack : MonoBehaviour, IAttack
         if (attackVfxPrefab == null) return;
 
         GameObject vfx = Instantiate(attackVfxPrefab, transform.position, Quaternion.identity);
+
+        // NUEVO: el VFX escala con el radio (si agarrás upgrades de rango, el efecto lo refleja).
+        // Asume que el prefab está hecho para radio = 2 (el valor por defecto).
+        vfx.transform.localScale *= radius / 2f;
 
         if (vfxFollowsPlayer)
             vfx.transform.SetParent(transform, worldPositionStays: true);

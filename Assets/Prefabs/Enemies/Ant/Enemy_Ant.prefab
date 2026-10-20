@@ -19,6 +19,8 @@ GameObject:
   - component: {fileID: 8918091845439713338}
   - component: {fileID: 8546525372491809007}
   - component: {fileID: 7600000000000000001}
+  - component: {fileID: 1637718665553093893}
+  - component: {fileID: -820870379591195939}
   m_Layer: 3
   m_Name: Enemy_Ant
   m_TagString: Untagged
@@ -193,6 +195,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
   maxHealth: 30
   damageFlash: {fileID: 8546525372491809007}
+  SuppressHitFeedback: 0
 --- !u!114 &-2046340648554966154
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -222,6 +225,14 @@ MonoBehaviour:
   speed: 3
   animator: {fileID: 0}
   spriteRenderer: {fileID: 8208979293606837074}
+  obstacleLayers:
+    serializedVersion: 2
+    m_Bits: 1089
+  avoidanceRadius: 0.3
+  avoidanceLookahead: 0.6
+  stuckDistanceThreshold: 0.15
+  stuckTimeWindow: 0.4
+  escapeDuration: 0.5
 --- !u!114 &8918091845439713338
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -265,6 +276,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f1c9d3a8b2e4f57a0c6d4e2b9f81a35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HungryAnt
+  tileSize: 1
+  minWanderTiles: 6
+  maxWanderTiles: 7
+  wanderSpeed: 2.4
+  minStillTime: 1.2
+  maxStillTime: 2.4
+  detectionRange: 1.5
+  alertTime: 0.5
+  attackDuration: 5
+  attackMoveSpeed: 2.8
+  aoeRadius: 0.9
+  aoeTickInterval: 0.4
+  aoeDamage: 1
+  recoverTime: 0.25
+  dizzyDuration: 3
+  aggroCooldownAfterDizzy: 1
+  knockbackDistance: 3.2
+  knockbackDuration: 0.28
   frontFrames:
   - {fileID: 6140265055159734981, guid: c5e4842020f0c3b46a2751b1809f8e24, type: 3}
   - {fileID: 108763179088579731, guid: c5e4842020f0c3b46a2751b1809f8e24, type: 3}
@@ -303,6 +332,8 @@ MonoBehaviour:
   - {fileID: 5200710040969109208, guid: 9da0e72ae016acb9ab6540358104e56c, type: 3}
   - {fileID: 2126957220415730353, guid: 9da0e72ae016acb9ab6540358104e56c, type: 3}
   - {fileID: 8117704394929795217, guid: 9da0e72ae016acb9ab6540358104e56c, type: 3}
+  attackWindupFrameCount: 6
+  attackSpinFrameCount: 8
   dizzyFrames:
   - {fileID: 6690064972121587167, guid: c963273dc438ab8492cdd9a6f5877c68, type: 3}
   - {fileID: 1535253399838489452, guid: c963273dc438ab8492cdd9a6f5877c68, type: 3}
@@ -321,6 +352,51 @@ MonoBehaviour:
   - {fileID: 7217563630111352663, guid: 72dca817fdf4acedc4fca6c50d804d6f, type: 3}
   - {fileID: 4781895680182842214, guid: 72dca817fdf4acedc4fca6c50d804d6f, type: 3}
   - {fileID: 4190592560934176980, guid: 72dca817fdf4acedc4fca6c50d804d6f, type: 3}
+  walkFps: 12
+  spinFps: 20
+  dizzyFps: 6
+  deathFps: 14
+--- !u!114 &1637718665553093893
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8734249323408576011}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3c1abe2fc950e846904cd7996e2a4e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HitReaction
+  rb: {fileID: 0}
+  knockbackResistance: 0
+  knockbackDuration: 0.15
+  obstacleMask:
+    serializedVersion: 2
+    m_Bits: 0
+  stunDuration: 0.2
+  renderersToFlash: []
+  flashMaterial: {fileID: 2100000, guid: 90a0bd6a56486894ea1126a5cf1f5bfe, type: 2}
+  flashColor: {r: 1, g: 1, b: 1, a: 1}
+  flashDuration: 0.08
+  squash: {fileID: 0}
+  hitSquashScale: {x: 1.3, y: 0.75}
+  animator: {fileID: 0}
+  hitTriggerParam: 
+--- !u!114 &-820870379591195939
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8734249323408576011}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f2dbd93812af5246815ba44243c6d1a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SquashStretch
+  target: {fileID: 0}
+  returnSpeed: 18
 --- !u!1 &8871834171099964277
 GameObject:
   m_ObjectHideFlags: 0

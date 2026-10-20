@@ -6,6 +6,7 @@ public class EnemyMovement : MonoBehaviour, IMovement
     [SerializeField] private float speed = 3f;
     public float Speed => speed;
     private Rigidbody2D rb;
+    private HitReaction hitReaction; // NUEVO
 
     [SerializeField] private Animator animator;
     [SerializeField] private SpriteRenderer spriteRenderer;
@@ -51,13 +52,14 @@ public class EnemyMovement : MonoBehaviour, IMovement
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        hitReaction = GetComponent<HitReaction>(); // NUEVO
 
         if (animator == null)
         {
             animator = GetComponent<Animator>();
         }
 
-        if (spriteRenderer  == null)
+        if (spriteRenderer == null)
         {
             spriteRenderer = GetComponent<SpriteRenderer>();
         }
@@ -86,6 +88,15 @@ public class EnemyMovement : MonoBehaviour, IMovement
 
     public void Move(Vector2 direction, float speedOverride, bool avoidObstacles)
     {
+        // NUEVO: mientras está golpeado no se mueve. La velocidad la maneja el knockback de HitReaction
+        // y la animación queda congelada en el frame del golpe.
+        if (hitReaction != null && hitReaction.IsStunned)
+        {
+            if (animator != null)
+                animator.SetFloat("AnimSpeed", 0f);
+            return;
+        }
+
         Vector2 steered = direction;
         if (avoidObstacles)
             steered = ApplyPathfinding(direction);

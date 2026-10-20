@@ -1607,6 +1607,11 @@ MonoBehaviour:
   - {fileID: 7368240045080889273}
   diggingSpotPrefab: {fileID: 3611433241170528407, guid: 7367a0a007b04e74d875d4e74d4a5fa3, type: 3}
   chanceToHaveDiggingSpots: 35
+  enemyGroups: []
+  spawnSpread: 0.45
+  spawnBlockingLayers:
+    serializedVersion: 2
+    m_Bits: 1024
   enemyPrefab: {fileID: 1000001, guid: 66f14781c1d04b228b9694b3d657150e, type: 3}
   enemySpawnPoints:
   - {fileID: 3471704183191795967}

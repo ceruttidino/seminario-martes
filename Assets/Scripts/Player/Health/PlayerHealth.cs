@@ -14,6 +14,8 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     [SerializeField] float invulTime = 1.5f;
     [SerializeField] private DamageFlash damageFlash;
 
+    [SerializeField] private PlayerHurtFeedback hurtFeedback;
+
     [Header("UI")]
     [SerializeField] GameObject[] hearts;
     [SerializeField] private Sprite fullHeartSprite;
@@ -43,6 +45,9 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         PlayerFeetMarker.EnsureOn(gameObject);
         if (GetComponent<PlayerWalkableClamp>() == null)
             gameObject.AddComponent<PlayerWalkableClamp>();
+
+        if (hurtFeedback == null) // NUEVO: lo busca solo si te olvidaste de asignarlo
+            hurtFeedback = GetComponent<PlayerHurtFeedback>();
     }
 
     void Start()
@@ -79,10 +84,17 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         if (damageFlash != null)
             damageFlash.Flash(iFrames);
 
-        CameraShake.Play();
+        // CAMBIADO: antes solo era CameraShake.Play(). Ahora, si está el PlayerHurtFeedback,
+        // hace hit stop + shake + knockback + parpadeo (y no se sacude la cámara dos veces).
+        // Se llama ANTES de Die() para que el feedback de muerte salga antes de desactivar los controles.
+        bool lethal = playerHealth <= 0;
+        if (hurtFeedback != null)
+            hurtFeedback.Play(iFrames, lethal);
+        else
+            CameraShake.Play();
 
         CancelInvoke(nameof(DesInvul));
-        if (playerHealth <= 0)
+        if (lethal) // CAMBIADO: usa la variable de arriba (mismo resultado que antes)
         {
             Die();
         }

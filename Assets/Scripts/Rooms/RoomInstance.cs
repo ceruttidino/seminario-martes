@@ -18,13 +18,22 @@ public class RoomInstance : MonoBehaviour
     [SerializeField][Range(0f, 100f)] private float chanceToHaveDiggingSpots = 30f;
     private bool diggingSpotsGenerated = false;
 
-    [Header("Enemies")]
+    [Header("Enemies")] // CAMBIADO
+    [Tooltip("Grupos de enemigos de esta room. Cada grupo: qué enemigo, cuántos y en qué spawn points.")]
+    [SerializeField] private List<EnemySpawnGroup> enemyGroups = new List<EnemySpawnGroup>(); // NUEVO
+    [Tooltip("Si hay más enemigos que spawn points, los que se repiten aparecen en un círculo de este radio alrededor del punto.")]
+    [SerializeField] private float spawnSpread = 0.45f; // NUEVO
+    [Tooltip("Opcional: capas sólidas (paredes, rocas). Si se asignan, los enemigos repartidos evitan aparecer encima de ellas.")]
+    [SerializeField] private LayerMask spawnBlockingLayers; // NUEVO
+
+    [Header("Enemies (Legacy: un solo tipo)")] // CAMBIADO: se mantiene para no romper las rooms viejas
+    [Tooltip("Solo se usa si la lista 'Enemy Groups' de arriba está vacía.")]
     [SerializeField] private GameObject enemyPrefab;
     [SerializeField] private Transform[] enemySpawnPoints;
 
     [Header("Room Clear Reward")]
-    [Tooltip("Si está asignada, reemplaza los valores locales de abajo.")] // NUEVO
-    [SerializeField] private RoomRewardTable rewardTable;                 // NUEVO
+    [Tooltip("Si está asignada, reemplaza los valores locales de abajo.")]
+    [SerializeField] private RoomRewardTable rewardTable;
     [SerializeField] private Transform rewardSpawnPoint;
     [SerializeField] private List<RoomReward> possibleRewards = new List<RoomReward>();
     [SerializeField][Range(0f, 100f)] private float chanceToSpawnReward = 40f;
@@ -33,7 +42,7 @@ public class RoomInstance : MonoBehaviour
 
     private bool rewardSpawned = false;
 
-    // NUEVO: valores efectivos (tabla compartida si está asignada, si no los locales de la room)
+    // valores efectivos (tabla compartida si está asignada, si no los locales de la room)
     private float RewardChance => rewardTable != null ? rewardTable.chanceToSpawnReward : chanceToSpawnReward;
     private List<RoomReward> Rewards => rewardTable != null ? rewardTable.rewards : possibleRewards;
     private List<ObjectBuffSO> RewardBuffs => rewardTable != null ? rewardTable.possibleBuffs : possibleRewardBuffs;
@@ -45,6 +54,14 @@ public class RoomInstance : MonoBehaviour
     private bool checkingCombatClear = false;
     private bool awaitingEnemySpawn = false;
 
+    // NUEVO: un enemigo a spawnear (qué prefab y en qué posición exacta)
+    private struct EnemySpawnEntry
+    {
+        public GameObject prefab;
+        public Vector3 position;
+    }
+
+    private static readonly Collider2D[] spawnCheckBuffer = new Collider2D[1]; // NUEVO
 
     private Dictionary<DoorDirection, Transform> spawnPointLookup = new Dictionary<DoorDirection, Transform>();
     private Dictionary<DoorDirection, RoomDoor> doorLookup = new Dictionary<DoorDirection, RoomDoor>();
@@ -61,6 +78,15 @@ public class RoomInstance : MonoBehaviour
 
         if (GetComponent<RoomPathGrid>() == null)
             gameObject.AddComponent<RoomPathGrid>();
+    }
+
+    // NUEVO: mantiene los grupos coherentes (máx >= mín) y les pone un título legible en el Inspector
+    private void OnValidate()
+    {
+        if (enemyGroups == null) return;
+
+        foreach (EnemySpawnGroup group in enemyGroups)
+            group?.Validate();
     }
 
     private void BuildLookups()
@@ -193,7 +219,7 @@ public class RoomInstance : MonoBehaviour
 
     private void EnsureBossExitDoor()
     {
-        BossBase boss = GetComponentInChildren<BossBase>(true); // CAMBIADO: antes MutantSpiderBoss
+        BossBase boss = GetComponentInChildren<BossBase>(true);
         if (boss != null)
         {
             boss.EnsureExitDoor(GetBossExitDirection());
@@ -247,7 +273,11 @@ public class RoomInstance : MonoBehaviour
         foreach (EnemyHealth existing in GetComponentsInChildren<EnemyHealth>(true))
             RegisterEnemy(existing);
 
-        if (enemyPrefab == null || enemySpawnPoints == null || enemySpawnPoints.Length == 0)
+        // CAMBIADO: antes se chequeaba solo enemyPrefab + enemySpawnPoints.
+        // Ahora se arma el plan completo (todos los grupos) y se decide con eso.
+        List<EnemySpawnEntry> plan = BuildSpawnPlan();
+
+        if (plan.Count == 0)
         {
             if (HasLivingEnemies())
             {
@@ -260,10 +290,11 @@ public class RoomInstance : MonoBehaviour
         combatActive = true;
         awaitingEnemySpawn = true;
         LockDoors();
-        StartCoroutine(SpawnEnemiesDelayed());
+        StartCoroutine(SpawnEnemiesDelayed(plan)); // CAMBIADO: recibe el plan
     }
 
-    private IEnumerator SpawnEnemiesDelayed()
+    // CAMBIADO: antes recorría enemySpawnPoints con un solo prefab. Ahora recibe el plan con todos los grupos.
+    private IEnumerator SpawnEnemiesDelayed(List<EnemySpawnEntry> plan)
     {
         List<GameObject> heldExisting = new List<GameObject>();
         foreach (EnemyHealth existing in GetComponentsInChildren<EnemyHealth>(true))
@@ -275,15 +306,8 @@ public class RoomInstance : MonoBehaviour
             heldExisting.Add(existing.gameObject);
         }
 
-        List<Transform> points = new List<Transform>();
-        foreach (Transform point in enemySpawnPoints)
-        {
-            if (point != null)
-                points.Add(point);
-        }
-
-        foreach (Transform point in points)
-            EnemySummon.PlaySmoke(point.position);
+        foreach (EnemySpawnEntry entry in plan) // CAMBIADO: humo en la posición exacta de cada enemigo
+            EnemySummon.PlaySmoke(entry.position);
 
         float start = Time.time;
         while (Time.time - start < EnemySummon.Delay || AnyDoorAnimating())
@@ -295,9 +319,9 @@ public class RoomInstance : MonoBehaviour
                 EnemySummon.Release(held);
         }
 
-        foreach (Transform point in points)
+        foreach (EnemySpawnEntry entry in plan) // CAMBIADO: cada entrada tiene su propio prefab
         {
-            GameObject enemyGO = Instantiate(enemyPrefab, point.position, Quaternion.identity, transform);
+            GameObject enemyGO = Instantiate(entry.prefab, entry.position, Quaternion.identity, transform);
             RegisterEnemy(enemyGO);
         }
 
@@ -307,6 +331,127 @@ public class RoomInstance : MonoBehaviour
 
         if (!HasLivingEnemies())
             EndCombat();
+    }
+
+    // NUEVO
+    /// <summary>
+    /// Arma la lista de enemigos a spawnear: recorre cada grupo, sortea su cantidad y le asigna posiciones.
+    /// Si la lista de grupos está vacía, usa los campos legacy (un solo tipo en todos los puntos).
+    /// </summary>
+    private List<EnemySpawnEntry> BuildSpawnPlan()
+    {
+        List<EnemySpawnEntry> plan = new List<EnemySpawnEntry>();
+
+        // Cuántas veces se usó cada punto (sirve para repartir sin encimar, incluso entre grupos que comparten puntos)
+        Dictionary<Transform, int> pointUses = new Dictionary<Transform, int>();
+
+        if (enemyGroups != null && enemyGroups.Count > 0)
+        {
+            foreach (EnemySpawnGroup group in enemyGroups)
+            {
+                if (group == null) continue;
+                AddGroupToPlan(group.enemyPrefab, group.RollCount(), group.spawnPoints, group.randomizePoints, plan, pointUses);
+            }
+        }
+        else if (enemyPrefab != null && enemySpawnPoints != null)
+        {
+            // Legacy: igual que antes, un enemigo por punto
+            int legacyCount = 0;
+            foreach (Transform p in enemySpawnPoints)
+                if (p != null) legacyCount++;
+
+            AddGroupToPlan(enemyPrefab, legacyCount, enemySpawnPoints, false, plan, pointUses);
+        }
+
+        return plan;
+    }
+
+    // NUEVO
+    private void AddGroupToPlan(GameObject prefab, int count, Transform[] spawnPoints, bool randomize,
+                                List<EnemySpawnEntry> plan, Dictionary<Transform, int> pointUses)
+    {
+        if (prefab == null || count <= 0) return;
+
+        List<Transform> points = new List<Transform>();
+        if (spawnPoints != null)
+        {
+            foreach (Transform p in spawnPoints)
+                if (p != null) points.Add(p);
+        }
+
+        if (points.Count == 0)
+        {
+            Debug.LogWarning($"[RoomInstance] {name}: el grupo de '{prefab.name}' no tiene spawn points asignados.");
+            return;
+        }
+
+        if (randomize)
+        {
+            for (int i = 0; i < points.Count; i++)
+            {
+                int r = Random.Range(i, points.Count);
+                (points[i], points[r]) = (points[r], points[i]);
+            }
+        }
+
+        // Primero los puntos que nadie usó todavía (de este u otro grupo), después los ya usados
+        List<Transform> ordered = new List<Transform>(points.Count);
+        foreach (Transform p in points)
+            if (!pointUses.ContainsKey(p)) ordered.Add(p);
+        foreach (Transform p in points)
+            if (pointUses.ContainsKey(p)) ordered.Add(p);
+
+        for (int i = 0; i < count; i++)
+        {
+            Transform point = ordered[i % ordered.Count];
+
+            pointUses.TryGetValue(point, out int uses);
+            pointUses[point] = uses + 1;
+
+            plan.Add(new EnemySpawnEntry
+            {
+                prefab = prefab,
+                position = GetSpreadPosition(point.position, uses)
+            });
+        }
+    }
+
+    // NUEVO
+    /// <summary>
+    /// El primer enemigo en un punto aparece justo encima. Los siguientes se reparten en un círculo
+    /// alrededor (ángulo dorado: quedan parejos y no se enciman).
+    /// </summary>
+    private Vector3 GetSpreadPosition(Vector3 center, int useIndex)
+    {
+        if (useIndex == 0 || spawnSpread <= 0f)
+            return center;
+
+        const float goldenAngle = 137.5f;
+
+        // Prueba algunas posiciones alrededor por si la primera cae sobre una pared/roca
+        for (int attempt = 0; attempt < 6; attempt++)
+        {
+            float angle = (useIndex + attempt * 2) * goldenAngle * Mathf.Deg2Rad;
+            Vector3 candidate = center + new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f) * spawnSpread;
+
+            if (IsSpawnSpotFree(candidate))
+                return candidate;
+        }
+
+        return center;
+    }
+
+    // NUEVO
+    private bool IsSpawnSpotFree(Vector3 position)
+    {
+        if (spawnBlockingLayers.value == 0)
+            return true;
+
+        ContactFilter2D filter = new ContactFilter2D();
+        filter.SetLayerMask(spawnBlockingLayers);
+        filter.useTriggers = false;
+
+        return Physics2D.OverlapCircle(position, 0.2f, filter, spawnCheckBuffer) == 0;
     }
 
     public void SpawnEnemyWithSummon(GameObject prefab, Vector3 position)
@@ -499,10 +644,10 @@ public class RoomInstance : MonoBehaviour
                 return;
         }
 
-        if (Rewards == null || Rewards.Count == 0) // CAMBIADO: antes possibleRewards
+        if (Rewards == null || Rewards.Count == 0)
             return;
 
-        if (Random.value * 100f > RewardChance) // CAMBIADO: antes chanceToSpawnReward
+        if (Random.value * 100f > RewardChance)
             return;
 
         GameObject prefab = PickWeightedReward();
@@ -521,7 +666,7 @@ public class RoomInstance : MonoBehaviour
     {
         float totalWeight = 0f;
 
-        foreach (RoomReward reward in Rewards) // CAMBIADO: antes possibleRewards
+        foreach (RoomReward reward in Rewards)
         {
             if (reward == null || reward.prefab == null) continue;
             if (!IsRewardAvailable(reward.prefab)) continue;
@@ -532,7 +677,7 @@ public class RoomInstance : MonoBehaviour
 
         float roll = Random.Range(0f, totalWeight);
 
-        foreach (RoomReward reward in Rewards) // CAMBIADO: antes possibleRewards
+        foreach (RoomReward reward in Rewards)
         {
             if (reward == null || reward.prefab == null) continue;
             if (!IsRewardAvailable(reward.prefab)) continue;
@@ -566,10 +711,10 @@ public class RoomInstance : MonoBehaviour
         UpgradePickup pickup = spawned.GetComponent<UpgradePickup>();
         if (pickup == null) return;
 
-        if (RewardBuffs == null || RewardBuffs.Count == 0) // CAMBIADO: antes possibleRewardBuffs
+        if (RewardBuffs == null || RewardBuffs.Count == 0)
             return;
 
-        ObjectBuffSO chosen = BuffPool.PickRandom(RewardBuffs); // CAMBIADO: antes possibleRewardBuffs
+        ObjectBuffSO chosen = BuffPool.PickRandom(RewardBuffs);
 
         if (chosen == null)
         {
@@ -586,6 +731,17 @@ public class RoomInstance : MonoBehaviour
                 sr.sprite = chosen.icon;
         }
     }
+
+    // NUEVO: colores para distinguir los spawn points de cada grupo en la escena
+    private static readonly Color[] GroupGizmoColors =
+    {
+        new Color(1f, 0.3f, 0.3f),   // rojo
+        new Color(1f, 0.6f, 0.1f),   // naranja
+        new Color(0.8f, 0.3f, 1f),   // violeta
+        new Color(0.2f, 0.9f, 0.9f), // celeste
+        new Color(1f, 0.9f, 0.2f),   // amarillo
+        new Color(0.4f, 1f, 0.4f)    // verde claro
+    };
 
     private void OnDrawGizmos()
     {
@@ -604,6 +760,32 @@ public class RoomInstance : MonoBehaviour
                 if (point != null && point.spawnPoint != null)
                 {
                     Gizmos.DrawSphere(point.spawnPoint.position, 0.12f);
+                }
+            }
+        }
+
+        // NUEVO: spawn points de enemigos, un color por grupo + círculo de reparto
+        if (enemyGroups != null)
+        {
+            for (int g = 0; g < enemyGroups.Count; g++)
+            {
+                EnemySpawnGroup group = enemyGroups[g];
+                if (group == null || group.spawnPoints == null) continue;
+
+                Color c = GroupGizmoColors[g % GroupGizmoColors.Length];
+
+                foreach (Transform p in group.spawnPoints)
+                {
+                    if (p == null) continue;
+
+                    Gizmos.color = c;
+                    Gizmos.DrawSphere(p.position, 0.14f);
+
+                    if (spawnSpread > 0f)
+                    {
+                        Gizmos.color = new Color(c.r, c.g, c.b, 0.35f);
+                        Gizmos.DrawWireSphere(p.position, spawnSpread);
+                    }
                 }
             }
         }
@@ -628,4 +810,3 @@ public class RoomInstance : MonoBehaviour
         }
     }
 }
-

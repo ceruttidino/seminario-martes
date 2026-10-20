@@ -112,6 +112,8 @@ GameObject:
   - component: {fileID: 2622927903208743674}
   - component: {fileID: 3760653420944755557}
   - component: {fileID: 8302202950370894844}
+  - component: {fileID: -8988283923690889856}
+  - component: {fileID: 2395540348449511498}
   m_Layer: 3
   m_Name: Enemy_Snail
   m_TagString: Untagged
@@ -286,6 +288,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
   maxHealth: 20
   damageFlash: {fileID: 2622927903208743674}
+  SuppressHitFeedback: 0
 --- !u!114 &5901369088641778859
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -315,6 +318,14 @@ MonoBehaviour:
   speed: 3
   animator: {fileID: 8302202950370894844}
   spriteRenderer: {fileID: 1610651138796991159}
+  obstacleLayers:
+    serializedVersion: 2
+    m_Bits: 1089
+  avoidanceRadius: 0.3
+  avoidanceLookahead: 0.6
+  stuckDistanceThreshold: 0.15
+  stuckTimeWindow: 0.4
+  escapeDuration: 0.5
 --- !u!114 &3955632396312354887
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -375,6 +386,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAttack
   damage: 1
   attackRange: 0.6
+  surfaceReach: 0.35
   attackCooldown: 1
   targetLayer:
     serializedVersion: 2
@@ -401,3 +413,44 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &-8988283923690889856
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8283417630010587146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3c1abe2fc950e846904cd7996e2a4e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HitReaction
+  rb: {fileID: 0}
+  knockbackResistance: 0
+  knockbackDuration: 0.15
+  obstacleMask:
+    serializedVersion: 2
+    m_Bits: 0
+  stunDuration: 0.2
+  renderersToFlash: []
+  flashMaterial: {fileID: 2100000, guid: 90a0bd6a56486894ea1126a5cf1f5bfe, type: 2}
+  flashColor: {r: 1, g: 1, b: 1, a: 1}
+  flashDuration: 0.08
+  squash: {fileID: 0}
+  hitSquashScale: {x: 1.3, y: 0.75}
+  animator: {fileID: 0}
+  hitTriggerParam: 
+--- !u!114 &2395540348449511498
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8283417630010587146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f2dbd93812af5246815ba44243c6d1a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SquashStretch
+  target: {fileID: 0}
+  returnSpeed: 18

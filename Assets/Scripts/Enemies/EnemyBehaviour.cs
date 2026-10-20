@@ -17,9 +17,11 @@ public class EnemyBehaviour : MonoBehaviour
     private PoisonousSnake poisonousSnake;
     private RegeneratingRat regeneratingRat;
     private VanishingOwl vanishingOwl;
+    private HitReaction hitReaction; // NUEVO
 
     private void Awake()
     {
+        hitReaction = GetComponent<HitReaction>(); // NUEVO
         movement = GetComponent<EnemyMovement>();
         attack = GetComponent<EnemyAttack>();
         explosiveHedgehog = GetComponent<ExplosiveHedgehog>();
@@ -31,6 +33,9 @@ public class EnemyBehaviour : MonoBehaviour
 
     private void Update()
     {
+        // NUEVO: durante el stun la máquina de estados se pausa (no persigue ni ataca)
+        if (hitReaction != null && hitReaction.IsStunned) return;
+
         currentState?.Tick();
     }
 

@@ -40,6 +40,16 @@ public class PlayerMovement : MonoBehaviour
     [Header("Feel")]
     [SerializeField] private bool instantStop = false;
 
+    [Header("Attack Feel")] // NUEVO
+    [Tooltip("Multiplicador de velocidad mientras dura el slow del ataque (1 = sin slow)")]
+    [SerializeField, Range(0.1f, 1f)] private float attackMoveMultiplier = 0.75f; // NUEVO
+
+    // NUEVO: lunge del ataque (pasito hacia adelante). No bloquea acciones, así se puede encadenar golpes.
+    private float lungeTimer;
+    private float lungeDuration;
+    private Vector2 lungeVelocity;
+    private float attackSlowTimer;
+
     [Header("Public Variables")]
     public Vector2 LastLookDirection => lastFacingDirection;
     public Vector2 LastFacingDirection => lastFacingDirection;
@@ -69,8 +79,8 @@ public class PlayerMovement : MonoBehaviour
         if (GetComponent<PlayerWalkableClamp>() == null)
             gameObject.AddComponent<PlayerWalkableClamp>();
 
-        slowStatus = GetComponent<PlayerSlowStatus>();           
-        if (slowStatus == null)                                     
+        slowStatus = GetComponent<PlayerSlowStatus>();
+        if (slowStatus == null)
             slowStatus = gameObject.AddComponent<PlayerSlowStatus>();
     }
 
@@ -93,6 +103,7 @@ public class PlayerMovement : MonoBehaviour
     {
         moveInput = Vector2.zero;
         moveDirection = Vector2.zero;
+        CancelAttackMovement(); // NUEVO
 
         if (rb != null)
             rb.linearVelocity = Vector2.zero;
@@ -120,6 +131,8 @@ public class PlayerMovement : MonoBehaviour
         if (direction.sqrMagnitude < 0.0001f)
             direction = -lastFacingDirection;
 
+        CancelAttackMovement(); // NUEVO: un knockback recibido corta el lunge
+
         duration = Mathf.Max(0.05f, duration);
         knockbackTotal = duration;
         knockbackTimer = duration;
@@ -144,8 +157,36 @@ public class PlayerMovement : MonoBehaviour
             animator.SetFloat("Speed", 0f);
     }
 
+    // NUEVO
+    /// <summary>
+    /// Lo llaman los ataques: da un impulso corto hacia 'direction' (lunge) que se funde con el input del jugador,
+    /// y aplica un slow de 'slowDuration' segundos para que el golpe tenga peso.
+    /// </summary>
+    public void ApplyAttackLunge(Vector2 direction, float speed, float duration, float slowDuration)
+    {
+        if (IsActionLocked || IsDashing()) return;
+
+        attackSlowTimer = Mathf.Max(attackSlowTimer, slowDuration);
+
+        if (speed <= 0f || duration <= 0f || direction.sqrMagnitude < 0.0001f || rb == null)
+            return;
+
+        lungeDuration = duration;
+        lungeTimer = duration;
+        lungeVelocity = direction.normalized * speed;
+        rb.linearVelocity = lungeVelocity;
+    }
+
+    // NUEVO
+    private void CancelAttackMovement()
+    {
+        lungeTimer = 0f;
+        attackSlowTimer = 0f;
+    }
+
     public void Stun(float duration)
     {
+        CancelAttackMovement(); // NUEVO
         stunTimer = Mathf.Max(stunTimer, duration);
         if (rb != null)
             rb.linearVelocity = Vector2.zero;
@@ -192,10 +233,32 @@ public class PlayerMovement : MonoBehaviour
         }
 
         if (playerDash != null && playerDash.IsDashing)
+        {
+            CancelAttackMovement(); // CAMBIADO: el dash corta el lunge para que no "reviva" al terminar
             return;
+        }
 
         float speedMultiplier = slowStatus != null ? slowStatus.SpeedMultiplier : 1f;
+
+        // NUEVO: slow mientras ataca
+        if (attackSlowTimer > 0f)
+        {
+            attackSlowTimer -= Time.fixedDeltaTime;
+            speedMultiplier *= attackMoveMultiplier;
+        }
+
         Vector2 targetVelocity = moveInput * moveSpeed * speedMultiplier;
+
+        // NUEVO: lunge. Arranca con el impulso y se funde suave con la velocidad que pide el input
+        if (lungeTimer > 0f)
+        {
+            lungeTimer -= Time.fixedDeltaTime;
+            float k = Mathf.Clamp01(lungeTimer / lungeDuration);
+            rb.linearVelocity = Vector2.Lerp(targetVelocity, lungeVelocity, k * k);
+            UpdateAnimator();
+            return;
+        }
+
         Vector2 currentVelocity = rb.linearVelocity;
 
         float accelRate;
