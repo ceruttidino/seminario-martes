@@ -134,7 +134,7 @@ Transform:
   m_GameObject: {fileID: 317444336967845193}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.86, y: 2.58, z: 0}
+  m_LocalPosition: {x: 4, y: 2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1222,7 +1222,7 @@ Transform:
   m_GameObject: {fileID: 2763956980297343242}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.27, y: 0.43, z: 0}
+  m_LocalPosition: {x: -4, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1459,7 +1459,7 @@ Transform:
   m_GameObject: {fileID: 5049620747046742321}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.70257, y: -0.42731, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1538,16 +1538,28 @@ MonoBehaviour:
   diggingSpotLocations: []
   diggingSpotPrefab: {fileID: 0}
   chanceToHaveDiggingSpots: 35
-  enemyGroups: []
+  enemyGroups:
+  - name: Enemy_Ant x2 (2 puntos)
+    enemyPrefab: {fileID: 8734249323408576011, guid: 23b9ec134f2fcab418d04cee4d163d96, type: 3}
+    minCount: 2
+    maxCount: 2
+    spawnPoints:
+    - {fileID: 3471704183191795967}
+    - {fileID: 5164564913664960502}
+    randomizePoints: 0
+  - name: Enemy_Snail x1 (1 puntos)
+    enemyPrefab: {fileID: 8283417630010587146, guid: 93c36bf4b30107349ba48fa2a8110986, type: 3}
+    minCount: 1
+    maxCount: 1
+    spawnPoints:
+    - {fileID: 6337749241437438592}
+    randomizePoints: 0
   spawnSpread: 0.45
   spawnBlockingLayers:
     serializedVersion: 2
     m_Bits: 1024
   enemyPrefab: {fileID: 8734249323408576011, guid: 23b9ec134f2fcab418d04cee4d163d96, type: 3}
-  enemySpawnPoints:
-  - {fileID: 3471704183191795967}
-  - {fileID: 6337749241437438592}
-  - {fileID: 5164564913664960502}
+  enemySpawnPoints: []
   rewardTable: {fileID: 11400000, guid: f19d51b0d5757954b8e83cb559953a24, type: 2}
   rewardSpawnPoint: {fileID: 3433356471583780192}
   possibleRewards: []
@@ -3160,7 +3172,7 @@ Transform:
   m_GameObject: {fileID: 8095621345767813894}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.89, y: -2.04, z: 0}
+  m_LocalPosition: {x: 4, y: -2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
