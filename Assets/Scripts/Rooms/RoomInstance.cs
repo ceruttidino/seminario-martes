@@ -654,13 +654,102 @@ public class RoomInstance : MonoBehaviour
         GameObject prefab = PickWeightedReward();
         if (prefab == null) return;
 
-        Vector3 spawnPosition = rewardSpawnPoint != null
-            ? rewardSpawnPoint.position
-            : transform.position;
-
+        Vector3 spawnPosition = FindClearRewardPosition(prefab);
         GameObject spawned = Instantiate(prefab, spawnPosition, Quaternion.identity, transform);
 
         ConfigureRewardBuff(spawned);
+    }
+
+    private Vector3 FindClearRewardPosition(GameObject prefab)
+    {
+        Vector3 origin = rewardSpawnPoint != null ? rewardSpawnPoint.position : transform.position;
+        origin.z = 0f;
+
+        float radius = EstimateRewardRadius(prefab);
+        if (IsDropSpotFree(origin, radius))
+            return origin;
+
+        const int directions = 12;
+        for (int ring = 1; ring <= 12; ring++)
+        {
+            float dist = ring * 0.4f;
+            for (int i = 0; i < directions; i++)
+            {
+                float angle = i * (360f / directions) * Mathf.Deg2Rad;
+                Vector3 candidate = origin + new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f) * dist;
+                if (!IsInsideRewardArea(candidate))
+                    continue;
+                if (IsDropSpotFree(candidate, radius))
+                    return candidate;
+            }
+        }
+
+        if (DungeonNavMesh.SampleWalkable(origin, out Vector2 walkable, 3.5f)
+            && IsInsideRewardArea(walkable)
+            && IsDropSpotFree(walkable, radius))
+            return walkable;
+
+        return origin;
+    }
+
+    private bool IsInsideRewardArea(Vector3 position)
+    {
+        RoomBakedNavMesh baked = GetComponent<RoomBakedNavMesh>();
+        Bounds area = baked != null
+            ? baked.InteriorBounds
+            : new Bounds(transform.position, new Vector3(14f, 6f, 1f));
+        area.Expand(new Vector3(-0.35f, -0.35f, 0f));
+        return area.Contains(new Vector3(position.x, position.y, area.center.z));
+    }
+
+    private bool IsDropSpotFree(Vector3 position, float radius)
+    {
+        Collider2D[] hits = Physics2D.OverlapCircleAll(position, radius);
+        for (int i = 0; i < hits.Length; i++)
+        {
+            Collider2D hit = hits[i];
+            if (hit == null || !hit.enabled || hit.isTrigger)
+                continue;
+            if (hit.GetComponent<LootPickup>() != null)
+                continue;
+            if (hit.GetComponent<UpgradePickup>() != null)
+                continue;
+            if (hit.GetComponent<PlayerHealth>() != null || hit.CompareTag("Player"))
+                continue;
+            if (hit.GetComponent<EnemyHealth>() != null)
+                continue;
+            if (hit.GetComponent<RoomDoor>() != null)
+                continue;
+            if (RoomNavMeshBuild.NameContains(hit.gameObject.name, "floor"))
+                continue;
+            return false;
+        }
+
+        if (DungeonNavMesh.Instance != null && DungeonNavMesh.Instance.IsReady
+            && !DungeonNavMesh.SampleWalkable(position, out _, radius + 0.15f))
+            return false;
+
+        return true;
+    }
+
+    private static float EstimateRewardRadius(GameObject prefab)
+    {
+        if (prefab == null)
+            return 0.35f;
+
+        if (prefab.GetComponent<BreakableTrash>() != null)
+            return 0.45f;
+
+        Collider2D col = prefab.GetComponent<Collider2D>();
+        if (col != null)
+        {
+            Vector2 size = col.bounds.size;
+            if (size.x < 0.05f && size.y < 0.05f && col is BoxCollider2D box)
+                size = Vector2.Scale(box.size, prefab.transform.localScale);
+            return Mathf.Clamp(Mathf.Max(size.x, size.y) * 0.5f, 0.28f, 0.6f);
+        }
+
+        return 0.35f;
     }
 
     private GameObject PickWeightedReward()

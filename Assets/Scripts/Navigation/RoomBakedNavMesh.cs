@@ -2,8 +2,9 @@ using UnityEngine;
 using UnityEngine.AI;
 
 /// <summary>
-/// NavMesh 2D bakeado en el editor. El recuadro verde se puede ajustar a mano
-/// en la Scene (componente seleccionado) y después bakear esa room.
+/// NavMesh 2D bakeado en el editor. Las rooms nuevas en Prefabs/Room Prefabs
+/// se bakean solas al guardar el prefab o al entrar a Play. El recuadro verde
+/// se puede ajustar a mano en la Scene y volver a bakear.
 /// </summary>
 [DisallowMultipleComponent]
 [ExecuteAlways]

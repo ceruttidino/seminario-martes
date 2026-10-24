@@ -76,9 +76,10 @@ public class UpgradePickup : MonoBehaviour
     private void TryCollect(Collider2D collision)
     {
         if (collected || upgradeToGrant == null) return;
-        if (!collision.CompareTag("Player")) return;
 
         PlayerUpgradeManager manager = collision.GetComponentInParent<PlayerUpgradeManager>();
+        if (manager == null && collision.attachedRigidbody != null)
+            manager = collision.attachedRigidbody.GetComponent<PlayerUpgradeManager>();
         if (manager == null) return;
 
         // Cada item se puede tener una sola vez: si ya lo tiene, este pickup sobra.

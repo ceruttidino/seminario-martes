@@ -9,15 +9,16 @@ public class LootPickup : MonoBehaviour
 
     [SerializeField] private AudioSource pickupSfx;
 
-    private bool canBePickedUp = false;
+    private bool canBePickedUp;
     private bool collected;
     private float spawnTime;
-
     private int rolledScrapAmount = 1;
 
     private void Awake()
     {
-        GetComponent<Collider2D>().isTrigger = true;
+        Collider2D col = GetComponent<Collider2D>();
+        col.isTrigger = true;
+        EnsurePickupSize(col);
     }
 
     private void Start()
@@ -44,14 +45,21 @@ public class LootPickup : MonoBehaviour
         TryCollect(other);
     }
 
+    public void SetLootItem(LootItem item)
+    {
+        lootItem = item;
+    }
+
     private void TryCollect(Collider2D other)
     {
-        if (collected || !canBePickedUp) return;
-        if (!other.CompareTag("Player")) return;
+        if (collected || !canBePickedUp || lootItem == null)
+            return;
 
-        bool applied = ApplyLoot(other.gameObject);
+        GameObject player = ResolvePlayer(other);
+        if (player == null)
+            return;
 
-        if (!applied)
+        if (!ApplyLoot(player))
             return;
 
         collected = true;
@@ -65,10 +73,23 @@ public class LootPickup : MonoBehaviour
             Destroy(gameObject);
     }
 
+    private static GameObject ResolvePlayer(Collider2D other)
+    {
+        if (other == null)
+            return null;
+
+        if (other.attachedRigidbody != null && other.attachedRigidbody.CompareTag("Player"))
+            return other.attachedRigidbody.gameObject;
+
+        if (other.CompareTag("Player"))
+            return other.gameObject;
+
+        PlayerHealth health = other.GetComponentInParent<PlayerHealth>();
+        return health != null ? health.gameObject : null;
+    }
+
     private bool ApplyLoot(GameObject player)
     {
-        if (lootItem == null) return false;
-
         switch (lootItem.lootType)
         {
             case LootType.Scrap:
@@ -82,28 +103,49 @@ public class LootPickup : MonoBehaviour
                 PlayerHealth health = player.GetComponent<PlayerHealth>();
                 PlayerPoisonStatus poison = player.GetComponent<PlayerPoisonStatus>();
                 if (health == null) return false;
-                if (health.IsHealthFull && (poison == null || !poison.IsPoisoned)) return false;
-                health.PlayerHeal(lootItem.healthAmount);
+                if (health.IsHealthFull && (poison == null || !poison.IsPoisoned))
+                    return false;
+
+                int heal = lootItem.healthAmount > 0 ? lootItem.healthAmount : 2;
+                health.PlayerHeal(heal);
                 return true;
 
             case LootType.Key:
                 PlayerKeys keys = player.GetComponent<PlayerKeys>();
                 if (keys == null) return false;
-                keys.AddKeys(lootItem.keyAmount);
+                keys.AddKeys(Mathf.Max(1, lootItem.keyAmount));
                 return true;
 
             case LootType.Upgrade:
                 PlayerUpgradeManager upgradeManager = player.GetComponent<PlayerUpgradeManager>();
                 if (upgradeManager == null || lootItem.upgradeSO == null) return false;
-                // Cada item se puede tener una sola vez: si ya lo tiene no se recoge.
                 return upgradeManager.CollectUpgrade(lootItem.upgradeSO);
         }
+
         return false;
     }
 
-    public void SetLootItem(LootItem item)
+    private static void EnsurePickupSize(Collider2D col)
     {
-        lootItem = item;
+        const float minWorld = 0.5f;
+        if (col is BoxCollider2D box)
+        {
+            Vector2 world = Vector2.Scale(box.size, col.transform.lossyScale);
+            if (world.x < minWorld || world.y < minWorld)
+            {
+                float sx = Mathf.Abs(col.transform.lossyScale.x);
+                float sy = Mathf.Abs(col.transform.lossyScale.y);
+                box.size = new Vector2(
+                    Mathf.Max(box.size.x, sx > 0.01f ? minWorld / sx : minWorld),
+                    Mathf.Max(box.size.y, sy > 0.01f ? minWorld / sy : minWorld));
+            }
+        }
+        else if (col is CircleCollider2D circle)
+        {
+            float scale = Mathf.Max(Mathf.Abs(col.transform.lossyScale.x), Mathf.Abs(col.transform.lossyScale.y));
+            if (circle.radius * scale < minWorld * 0.5f)
+                circle.radius = scale > 0.01f ? (minWorld * 0.5f) / scale : minWorld;
+        }
     }
 
     private void NotifyInventoryPickup()

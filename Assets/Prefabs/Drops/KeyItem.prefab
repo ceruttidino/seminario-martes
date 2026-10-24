@@ -139,7 +139,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.50470304, y: 0.5080936}
+  m_Size: {x: 0.85, y: 0.85}
   m_EdgeRadius: 0
 --- !u!114 &5194391407452285506
 MonoBehaviour:
@@ -154,7 +154,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LootPickup
   pickupDelay: 0.6
-  lootItem: {fileID: 0}
+  lootItem: {fileID: 11400000, guid: 6e742bd491757ac4ea0c0fba76ef9cdc, type: 2}
   pickupSfx: {fileID: 531731411836854771}
 --- !u!82 &531731411836854771
 AudioSource:

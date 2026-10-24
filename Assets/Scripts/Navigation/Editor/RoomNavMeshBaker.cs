@@ -18,6 +18,26 @@ public static class RoomNavMeshBaker
     {
         EditorApplication.playModeStateChanged -= OnPlayModeChanged;
         EditorApplication.playModeStateChanged += OnPlayModeChanged;
+        PrefabStage.prefabSaved -= OnPrefabSaved;
+        PrefabStage.prefabSaved += OnPrefabSaved;
+    }
+
+    private static void OnPrefabSaved(GameObject prefabContents)
+    {
+        if (prefabContents == null || prefabContents.GetComponent<RoomInstance>() == null)
+            return;
+
+        PrefabStage stage = PrefabStageUtility.GetCurrentPrefabStage();
+        if (stage == null || string.IsNullOrEmpty(stage.assetPath))
+            return;
+        if (!stage.assetPath.Replace("\\", "/").StartsWith(RoomPrefabsFolder))
+            return;
+
+        RoomBakedNavMesh baked = prefabContents.GetComponent<RoomBakedNavMesh>();
+        if (baked != null && baked.HasData && baked.UseManualInterior)
+            return;
+
+        EditorApplication.delayCall += () => BakePrefab(stage.assetPath);
     }
 
     private static void OnPlayModeChanged(PlayModeStateChange state)
@@ -295,10 +315,13 @@ public class RoomBakedNavMeshEditor : Editor
         RoomBakedNavMesh baked = (RoomBakedNavMesh)target;
 
         EditorGUILayout.HelpBox(
+            "Room nueva: creala en Prefabs/Room Prefabs (o Difficulty-2/3). Al guardar el prefab o al entrar a Play, Unity bakea el NavMesh si falta.\n\n" +
+            "Ajuste manual:\n" +
             "1) Abrí el prefab de la room.\n" +
-            "2) En la Scene, arrastrá el recuadro VERDE hasta el borde interno de las paredes (sin taparlas).\n" +
-            "3) Los recuadros ROJOS son las piedras: tienen que coincidir con su collider.\n" +
-            "4) Tocá Bakear NavMesh de esta room.",
+            "2) Arrastrá el recuadro VERDE hasta el borde interno de las paredes.\n" +
+            "3) Los recuadros ROJOS son las piedras.\n" +
+            "4) Tocá Bakear NavMesh de esta room.\n\n" +
+            "También: Raccgeon > Bakear NavMesh faltantes / de todas las rooms.",
             MessageType.Info);
 
         DrawDefaultInspector();
@@ -472,4 +495,48 @@ public class RoomBakedNavMeshEditor : Editor
             new Vector3(min.x, max.y, 0f)
         };
     }
+}
+
+public class RoomNavMeshPrefabProcessor : AssetPostprocessor
+{
+    private static void OnPostprocessAllAssets(
+        string[] importedAssets,
+        string[] deletedAssets,
+        string[] movedAssets,
+        string[] movedFromAssetPaths)
+    {
+        if (EditorApplication.isPlayingOrWillChangePlaymode)
+            return;
+
+        List<string> pending = new List<string>();
+        for (int i = 0; i < importedAssets.Length; i++)
+        {
+            string path = importedAssets[i];
+            if (string.IsNullOrEmpty(path) || !path.EndsWith(".prefab"))
+                continue;
+            if (!path.Replace("\\", "/").StartsWith(RoomNavMeshBakerFolder))
+                continue;
+
+            GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+            if (prefab == null || prefab.GetComponent<RoomInstance>() == null)
+                continue;
+
+            RoomBakedNavMesh baked = prefab.GetComponent<RoomBakedNavMesh>();
+            if (baked != null && baked.HasData)
+                continue;
+
+            pending.Add(path);
+        }
+
+        if (pending.Count == 0)
+            return;
+
+        EditorApplication.delayCall += () =>
+        {
+            for (int i = 0; i < pending.Count; i++)
+                RoomNavMeshBaker.BakePrefab(pending[i]);
+        };
+    }
+
+    private const string RoomNavMeshBakerFolder = "Assets/Prefabs/Room Prefabs";
 }
