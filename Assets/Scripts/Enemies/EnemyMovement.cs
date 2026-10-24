@@ -101,7 +101,9 @@ public class EnemyMovement : MonoBehaviour, IMovement
         if (avoidObstacles)
             steered = ApplyPathfinding(direction);
 
-        steered = SmoothDirection(steered);
+        bool usingNavMesh = DungeonNavMesh.Instance != null && DungeonNavMesh.Instance.IsReady;
+        if (!usingNavMesh)
+            steered = SmoothDirection(steered);
 
         if (avoidObstacles && IsImmediatelyBlocked(steered))
             steered = ApplyObstacleAvoidance(steered);
@@ -129,15 +131,10 @@ public class EnemyMovement : MonoBehaviour, IMovement
             return;
         }
 
-        if (toTarget.magnitude <= 1.35f)
+        if (toTarget.magnitude <= 0.45f && DungeonNavMesh.HasClearLine(from, worldTarget))
         {
-            RoomPathGrid grid = RoomPathGrid.For(transform);
-            bool clear = grid == null || grid.HasClearLine(from, worldTarget, avoidanceRadius * 0.7f);
-            if (clear)
-            {
-                Move(toTarget.normalized, speedOverride, false);
-                return;
-            }
+            Move(toTarget.normalized, speedOverride, false);
+            return;
         }
 
         hasExplicitGoal = true;
@@ -181,6 +178,16 @@ public class EnemyMovement : MonoBehaviour, IMovement
         {
             escapeTimer = escapeDuration;
             escapeAngleJitter = UnityEngine.Random.Range(60f, 150f) * (UnityEngine.Random.value < 0.5f ? 1f : -1f);
+
+            Vector2 side = RotateVector(desiredDirection.sqrMagnitude > 0.01f
+                ? desiredDirection.normalized
+                : lastFacingDirection, escapeAngleJitter);
+            Vector2 probe = currentPos + side.normalized * 1.1f;
+            if (DungeonNavMesh.SampleWalkable(probe, out Vector2 walkable, 1.4f))
+            {
+                cachedPathStep = walkable;
+                lastPathGoal = walkable;
+            }
         }
 
         stuckWindowStartPos = currentPos;
@@ -197,6 +204,16 @@ public class EnemyMovement : MonoBehaviour, IMovement
         Vector2 goal = hasExplicitGoal
             ? explicitGoal
             : from + (desiredDirection / magnitude) * 2.4f;
+
+        if (DungeonNavMesh.TryGetNextCorner(from, goal, out Vector2 navStep))
+        {
+            cachedPathStep = navStep;
+            lastPathGoal = goal;
+            Vector2 toNav = navStep - from;
+            if (toNav.sqrMagnitude >= 0.04f)
+                return toNav.normalized * magnitude;
+            return desiredDirection;
+        }
 
         RoomPathGrid grid = RoomPathGrid.For(transform);
         if (grid == null)

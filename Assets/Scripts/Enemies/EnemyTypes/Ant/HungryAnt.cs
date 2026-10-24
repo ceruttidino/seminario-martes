@@ -584,8 +584,13 @@ public class HungryAnt : MonoBehaviour
                 float angle = (startAngle + i * 30f) * Mathf.Deg2Rad;
                 Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
                 Vector2 candidate = from + direction * distance;
+                if (DungeonNavMesh.SampleWalkable(candidate, out Vector2 snapped, 0.8f))
+                    candidate = snapped;
 
-                if (grid != null && (!grid.IsWalkableWorld(candidate) || !grid.HasClearLine(from, candidate, 0.3f)))
+                bool blocked = DungeonNavMesh.Instance != null && DungeonNavMesh.Instance.IsReady
+                    ? !DungeonNavMesh.HasClearLine(from, candidate)
+                    : grid != null && (!grid.IsWalkableWorld(candidate) || !grid.HasClearLine(from, candidate, 0.3f));
+                if (blocked)
                     continue;
 
                 target = candidate;

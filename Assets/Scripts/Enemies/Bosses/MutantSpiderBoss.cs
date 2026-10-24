@@ -305,6 +305,12 @@ public class MutantSpiderBoss : BossBase
             Vector2 toPlayer = (Vector2)player.position - rb.position;
             float distance = toPlayer.magnitude;
             Vector2 direction = distance > 0.001f ? toPlayer / distance : lastMoveDirection;
+            if (DungeonNavMesh.TryGetNextCorner(rb.position, player.position, out Vector2 navCorner))
+            {
+                Vector2 toNav = navCorner - rb.position;
+                if (toNav.sqrMagnitude > 0.0001f)
+                    direction = toNav.normalized;
+            }
 
             // La distancia se mide entre las SUPERFICIES de los colliders (no entre pivots): asi la Araña frena
             // pegada al jugador sin empujarlo, y desde ahi el golpe melee (EnemyAttack.Reach) siempre conecta.

@@ -504,6 +504,7 @@ public class RoomInstance : MonoBehaviour
     {
         RoomPathGrid grid = GetComponent<RoomPathGrid>();
         grid?.Invalidate();
+        DungeonNavMesh.Instance?.Rebuild(this);
     }
 
     public void LockDoors()

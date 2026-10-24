@@ -1539,6 +1539,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8855914108497674385}
   - component: {fileID: 5081486977560716221}
+  - component: {fileID: 7251918859440488899}
   m_Layer: 10
   m_Name: Enemy_Room_2
   m_TagString: Untagged
@@ -1621,6 +1622,26 @@ MonoBehaviour:
   possibleRewards: []
   chanceToSpawnReward: 40
   possibleRewardBuffs: []
+--- !u!114 &7251918859440488899
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5206472789810506396}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88c0ffff07bc55945a93b000c001a572, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RoomBakedNavMesh
+  navMeshData: {fileID: 23800000, guid: fac763b6a16435444b4db41249e136e0, type: 2}
+  useManualInterior: 0
+  interiorCenter: {x: 0, y: 1.0042948, z: 0}
+  interiorSize: {x: 17.81579, y: 8.017731, z: 1}
+  floorInset: 0
+  agentRadius: 0.02
+  voxelSize: 0.03
+  carveWalls: 1
 --- !u!1 &5413412434907751617
 GameObject:
   m_ObjectHideFlags: 0

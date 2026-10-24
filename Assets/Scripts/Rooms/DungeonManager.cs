@@ -63,6 +63,7 @@ public class DungeonManager : MonoBehaviour
         Instance = this;
         BuffPool.Reset();
         ChallengeRunState.Reset();
+        DungeonNavMesh.Ensure();
     }
 
     private void Start()
@@ -403,6 +404,8 @@ public class DungeonManager : MonoBehaviour
 
         if (currentRoomInstance != null && currentRoomInstance.IsInCombat)
             TabMenuUI.CloseCurrent();
+
+        DungeonNavMesh.Ensure().RequestBake(currentRoomInstance);
     }
 
     private void MovePlayerToCorrectSpawn(DoorDirection? entryDirection)

@@ -2206,6 +2206,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8855914108497674385}
   - component: {fileID: 5081486977560716221}
+  - component: {fileID: 796958092984615922}
   m_Layer: 0
   m_Name: Room_Start
   m_TagString: Untagged
@@ -2264,6 +2265,11 @@ MonoBehaviour:
   diggingSpotLocations: []
   diggingSpotPrefab: {fileID: 0}
   chanceToHaveDiggingSpots: 30
+  enemyGroups: []
+  spawnSpread: 0.45
+  spawnBlockingLayers:
+    serializedVersion: 2
+    m_Bits: 0
   enemyPrefab: {fileID: 0}
   enemySpawnPoints: []
   rewardTable: {fileID: 0}
@@ -2271,6 +2277,26 @@ MonoBehaviour:
   possibleRewards: []
   chanceToSpawnReward: 40
   possibleRewardBuffs: []
+--- !u!114 &796958092984615922
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5206472789810506396}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88c0ffff07bc55945a93b000c001a572, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RoomBakedNavMesh
+  navMeshData: {fileID: 23800000, guid: feef433b548093247a859d4be19095aa, type: 2}
+  useManualInterior: 0
+  interiorCenter: {x: -0.22000027, y: 0.73182225, z: 0}
+  interiorSize: {x: 17.81579, y: 8.562675, z: 1}
+  floorInset: 0
+  agentRadius: 0.02
+  voxelSize: 0.03
+  carveWalls: 1
 --- !u!1 &5413412434907751617
 GameObject:
   m_ObjectHideFlags: 0

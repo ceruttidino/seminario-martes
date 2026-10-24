@@ -325,6 +325,11 @@ public class StealChallengeGuard : MonoBehaviour
 
     private bool MoveTowards(Vector3 target, float speed, float dt)
     {
+        Vector2 from = transform.position;
+        Vector2 goal = target;
+        if (DungeonNavMesh.TryGetNextCorner(from, goal, out Vector2 navCorner))
+            target = navCorner;
+
         Vector3 flatTarget = new Vector3(target.x, target.y, transform.position.z);
         Vector3 delta = flatTarget - transform.position;
 
