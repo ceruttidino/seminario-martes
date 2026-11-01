@@ -12,6 +12,9 @@ public class PlayerInteraction : MonoBehaviour
 
     private IInteractable currentInteractable;
 
+    
+    [SerializeField] private GameObject interactableAdvice;
+
     private void Update()
     {
         if (GamePause.IsGameplayFrozen) return;
@@ -35,7 +38,7 @@ public class PlayerInteraction : MonoBehaviour
 
         if (colliders.Length > 0)
         {
-            
+
             foundInteractable = colliders[0].GetComponent<IInteractable>();
         }
 
@@ -44,6 +47,9 @@ public class PlayerInteraction : MonoBehaviour
             if (currentInteractable != null)
             {
                 currentInteractable.ShowHighlight(false);
+
+                ShowInteractionKey(false);
+
             }
 
             currentInteractable = foundInteractable;
@@ -51,6 +57,8 @@ public class PlayerInteraction : MonoBehaviour
             if (currentInteractable != null)
             {
                 currentInteractable.ShowHighlight(true);
+
+                ShowInteractionKey(true);
             }
         }
     }
@@ -59,5 +67,10 @@ public class PlayerInteraction : MonoBehaviour
     {
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(interactionPoint == null ? transform.position : interactionPoint.position, interactionRadius);
+    }
+
+    public void ShowInteractionKey(bool boolean) 
+    {
+        interactableAdvice.SetActive(boolean);
     }
 }
