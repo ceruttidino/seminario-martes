@@ -509,7 +509,7 @@ public class HungryAnt : MonoBehaviour
             if (target == null)
                 continue;
 
-            target.TakeDamage(aoeDamage);
+            target.TakeDamage(aoeDamage, gameObject);
             return;
         }
     }

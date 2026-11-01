@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerHealth : MonoBehaviour, IDamageable
+public class PlayerHealth : MonoBehaviour, IDamageable, ISourcedDamageable
 {
     [Header("regular Health")]
     [SerializeField] int playerHealthCap = 20;
@@ -31,6 +31,9 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     private float invulnerableUntil;
 
     public event Action OnPlayerDeath;
+
+    /// <summary>Último atacante que REALMENTE aplicó daño (los golpes durante i-frames no cuentan). Null si fue sin source.</summary>
+    public DamageSourceInfo LastDamageSource { get; private set; }
 
     void Awake()
     {
@@ -67,7 +70,17 @@ public class PlayerHealth : MonoBehaviour, IDamageable
 
     public void TakeDamage(float damage)
     {
+        // Sin source explícito: se usa el de DamageContext si alguien lo pusheó (BossPlayerUtils, etc.).
+        TakeDamage(damage, DamageContext.Current);
+    }
+
+    public void TakeDamage(float damage, GameObject source)
+    {
         if (!CanTakeHit || playerHealth <= 0) return;
+
+        // Se registra DESPUÉS del guard: un golpe bloqueado por invulnerabilidad no te "mata".
+        // Un golpe sin source deja null a propósito: si no sabemos quién fue, no mostramos al anterior.
+        LastDamageSource = DamageSourceInfo.From(source);
 
         AudioManager.PlaySfx(GameSfx.PlayerHit, sfxSource != null ? sfxSource.clip : null);
 

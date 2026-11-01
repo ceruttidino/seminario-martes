@@ -63,7 +63,7 @@ public class RegeneratingRat : MonoBehaviour
         if (distance > attackHitRange) return;
 
         IDamageable damageable = player.GetComponent<IDamageable>();
-        damageable?.TakeDamage(attackDamage);
+        damageable?.TakeDamageFrom(attackDamage, gameObject);
     }
 
     public void OnReviveAnimationComplete()

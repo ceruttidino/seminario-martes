@@ -15,7 +15,7 @@ MonoBehaviour:
   roomID: 
   type: 1
   prefab: {fileID: 0}
-  level: 1
+  level: 2
   availableDoors: 
   challengeId: 
   challengeDoorSprite: {fileID: 0}

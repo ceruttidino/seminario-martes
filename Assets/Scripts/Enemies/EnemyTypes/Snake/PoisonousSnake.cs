@@ -90,7 +90,7 @@ public class PoisonousSnake : MonoBehaviour
 
         if (poisonStatus.IsPoisoned)
         {
-            player.GetComponent<IDamageable>()?.TakeDamage(attackDamage);
+            player.GetComponent<IDamageable>()?.TakeDamageFrom(attackDamage, gameObject);
         }
         else
         {

@@ -152,7 +152,7 @@ public class EnemyAttack : MonoBehaviour
             IDamageable damageable = hit.GetComponentInParent<IDamageable>();
             if (damageable == null) continue;
 
-            damageable.TakeDamage(damage);
+            damageable.TakeDamageFrom(damage, gameObject);
             lastAttackTime = Time.time;
             return true;
         }

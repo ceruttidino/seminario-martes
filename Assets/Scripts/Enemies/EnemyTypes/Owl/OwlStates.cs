@@ -146,7 +146,7 @@ public class OwlAttackState : IEnemyState
         if (Vector2.Distance(self.position, player.position) <= owl.AttackRadius
             && player.TryGetComponent<IDamageable>(out var target))
         {
-            target.TakeDamage(owl.HeartDamage);
+            target.TakeDamageFrom(owl.HeartDamage, owl.gameObject);
         }
     }
 

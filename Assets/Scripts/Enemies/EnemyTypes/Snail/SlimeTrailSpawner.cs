@@ -23,6 +23,7 @@ public class SlimeTrailSpawner : MonoBehaviour
         if (activeSlimes.Count >= maxSlimeInstances) return;
 
         GameObject slime = Instantiate(slimePrefab, transform.position, Quaternion.identity);
+        DamageOwner.Assign(slime, gameObject);
         slime.transform.SetParent(transform.parent);
         activeSlimes.Add(slime);
     }

@@ -185,7 +185,7 @@ public class ExplosiveHedgehog : MonoBehaviour
             if (targetRb != null && knockedBack.Add(targetRb) && damageable is not PlayerHealth)
                 ApplyKnockbackToRigidbody(targetRb, knockDirection, explosionKnockbackForce);
 
-            damageable.TakeDamage(ResolveExplosionDamage(damageable));
+            damageable.TakeDamageFrom(ResolveExplosionDamage(damageable), gameObject);
         }
 
         if (enemyHealth != null)

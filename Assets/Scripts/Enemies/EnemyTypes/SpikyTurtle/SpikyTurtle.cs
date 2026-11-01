@@ -110,7 +110,7 @@ public class SpikyTurtle : MonoBehaviour
             return;
 
         hitPlayerThisCharge = true;
-        player.GetComponent<IDamageable>()?.TakeDamage(chargeDamage);
+        player.GetComponent<IDamageable>()?.TakeDamageFrom(chargeDamage, gameObject);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -120,7 +120,7 @@ public class SpikyTurtle : MonoBehaviour
         if (!collision.gameObject.CompareTag("Player")) return;
 
         IDamageable damageable = collision.gameObject.GetComponent<IDamageable>();
-        damageable?.TakeDamage(chargeDamage);
+        damageable?.TakeDamageFrom(chargeDamage, gameObject);
     }
 
     private void OnCollisionStay2D(Collision2D collision)

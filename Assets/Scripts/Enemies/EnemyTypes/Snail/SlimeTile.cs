@@ -18,7 +18,8 @@ public class SlimeTile : MonoBehaviour
 
             if (dmg != null)
             {
-                dmg.TakeDamage(damage);
+                // El dueño real (quien dejó la baba) sale del DamageOwner que le pone el spawner.
+                dmg.TakeDamageFrom(damage, gameObject);
             }
         }
     }
