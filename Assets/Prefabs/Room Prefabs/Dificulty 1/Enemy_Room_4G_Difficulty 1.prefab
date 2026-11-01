@@ -1645,10 +1645,10 @@ MonoBehaviour:
     - {fileID: 7521101011816568500}
     - {fileID: 7635884149643378109}
     randomizePoints: 0
-  - name: Enemy_Rat x1-2 (1 puntos)
+  - name: Enemy_Rat x1 (1 puntos)
     enemyPrefab: {fileID: 5136333534524507215, guid: 1010f75008e5eec49a330b3df2c0c32a, type: 3}
     minCount: 1
-    maxCount: 2
+    maxCount: 1
     spawnPoints:
     - {fileID: 1743121995519854011}
     randomizePoints: 0

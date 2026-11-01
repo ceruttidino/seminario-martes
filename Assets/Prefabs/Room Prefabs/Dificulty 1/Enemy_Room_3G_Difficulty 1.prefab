@@ -1572,14 +1572,6 @@ MonoBehaviour:
   diggingSpotPrefab: {fileID: 3611433241170528407, guid: 7367a0a007b04e74d875d4e74d4a5fa3, type: 3}
   chanceToHaveDiggingSpots: 35
   enemyGroups:
-  - name: Enemy_Snake x2 (2 puntos)
-    enemyPrefab: {fileID: 1000001, guid: 66f14781c1d04b228b9694b3d657150e, type: 3}
-    minCount: 2
-    maxCount: 2
-    spawnPoints:
-    - {fileID: 3471704183191795967}
-    - {fileID: 5322316272545738267}
-    randomizePoints: 0
   - name: Enemy_Ant x2 (2 puntos)
     enemyPrefab: {fileID: 8734249323408576011, guid: 23b9ec134f2fcab418d04cee4d163d96, type: 3}
     minCount: 2
