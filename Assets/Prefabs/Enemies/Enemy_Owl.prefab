@@ -414,7 +414,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::VanishingOwl
   stalkSpeed: 3.5
   flyStraight: 0
-  startForm: 2
+  startForm: 1
   revealedSpawnDuration: 1
   revealDistance: 1
   attackRadius: 1

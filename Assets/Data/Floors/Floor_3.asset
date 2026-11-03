@@ -27,7 +27,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 66fcd5a463965564b8abcf69ab0dc937, type: 2}
   - {fileID: 11400000, guid: 2babfab453f67004bb14b8105a7f365f, type: 2}
   bossRooms:
-  - {fileID: 11400000, guid: 09afa8773228cf647a498813f48a7890, type: 2}
+  - {fileID: 11400000, guid: 9539081151e85a74c89e29ceab35f447, type: 2}
   shopRoom: {fileID: 11400000, guid: f10ce6dcea31fa248884456a6e790d1c, type: 2}
   challengeRooms:
   - {fileID: 11400000, guid: 16b9995ef1dc39444982e0161e1e9e69, type: 2}
