@@ -128,9 +128,19 @@ public class MinimapUI : MonoBehaviour
     {
         foreach (var pair in node.neighboors)
         {
-            if (pair.Value != null && pair.Value.hasBeenVisited)
-                return true;
+            RoomNode other = pair.Value;
+            if (other == null || !other.hasBeenVisited)
+                continue;
+
+            // El spawn no revela las salas de al lado: al empezar un piso solo se ve la sala actual.
+            if (other.uniqueNodeID == "Start")
+                continue;
+            if (other.information != null && other.information.type == RoomType.Start)
+                continue;
+
+            return true;
         }
+
         return false;
     }
 
