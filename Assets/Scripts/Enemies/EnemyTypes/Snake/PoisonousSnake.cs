@@ -55,6 +55,8 @@ public class PoisonousSnake : MonoBehaviour
     [SerializeField] private float fireRangeTiles = 10f;
     [Tooltip("GDD: si el jugador se acerca a menos de 3 tiles, la serpiente se aleja.")]
     [SerializeField] private float tooCloseTiles = 3f;
+    [Tooltip("Si el jugador ya esta envenenado y se le acerca (la persigue) dentro de esta distancia, huye y no escupe.")]
+    [SerializeField] private float fleeIfChasedTiles = 8f;
     [Tooltip("Distancia 'apropiada' de disparo: al alejarse, se detiene cuando queda a esta distancia del jugador.")]
     [SerializeField] private float comfortDistanceTiles = 6f;
     [Tooltip("Cuantas unidades de Unity mide 1 tile.")]
@@ -102,6 +104,7 @@ public class PoisonousSnake : MonoBehaviour
     private bool shotBlocked;
     private float calmUntil;
     private float retreatSuppressedUntil;
+    private float lastPlayerDistance = -1f;
 
     private ContactFilter2D sightFilter;
     private readonly RaycastHit2D[] sightBuffer = new RaycastHit2D[10];
@@ -114,6 +117,7 @@ public class PoisonousSnake : MonoBehaviour
     public float FireRange => fireRangeTiles * tileSize;
     public float TooCloseRange => tooCloseTiles * tileSize;
     public float ComfortDistance => comfortDistanceTiles * tileSize;
+    public float FleeIfChasedRange => fleeIfChasedTiles * tileSize;
     public float RoamSpeed => roamSpeed;
     public float RepositionSpeed => repositionSpeed;
     public float RetreatSpeed => retreatSpeed;
@@ -187,6 +191,37 @@ public class PoisonousSnake : MonoBehaviour
     public void SuppressRetreat(float seconds)
     {
         retreatSuppressedUntil = Time.time + seconds;
+    }
+
+    public bool IsPlayerPoisoned(Transform player)
+    {
+        if (player == null)
+            return false;
+
+        PlayerPoisonStatus poison = player.GetComponent<PlayerPoisonStatus>();
+        return poison != null && poison.IsPoisoned;
+    }
+
+    /// <summary>
+    /// true si el jugador se esta acercando. Se llama una vez por frame desde el estado activo.
+    /// </summary>
+    public bool NotePlayerDistance(float distance)
+    {
+        bool closing = lastPlayerDistance >= 0f && distance < lastPlayerDistance - 0.02f;
+        lastPlayerDistance = distance;
+        return closing;
+    }
+
+    /// <summary>El jugador ya esta envenenado y la esta persiguiendo: hay que huir, no escupir.</summary>
+    public bool ShouldFleeBecauseChased(Transform player, float distance, bool closingIn)
+    {
+        if (!IsPlayerPoisoned(player))
+            return false;
+
+        if (distance <= TooCloseRange)
+            return true;
+
+        return closingIn && distance <= FleeIfChasedRange;
     }
 
     // ------------------------------------------------------------------ disparo

@@ -190,7 +190,7 @@ public class DungeonManager : MonoBehaviour
             GamePause.SetPaused(false);
 
         if (screenFader != null)
-            yield return StartCoroutine(screenFader.FadeOut());
+            yield return StartCoroutine(screenFader.FadeOutOver(0.9f));
 
         try
         {
@@ -210,7 +210,10 @@ public class DungeonManager : MonoBehaviour
         }
 
         if (screenFader != null)
-            yield return StartCoroutine(screenFader.FadeIn());
+        {
+            yield return StartCoroutine(screenFader.HoldBlack(0.7f));
+            yield return StartCoroutine(screenFader.FadeInOver(0.95f));
+        }
 
         isTransitioning = false;
     }

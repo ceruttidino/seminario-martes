@@ -56,11 +56,21 @@ public class SnakeRoamState : IEnemyState
         Vector2 playerPosition = player.position;
         Vector2 toPlayer = playerPosition - position;
         float distance = toPlayer.magnitude;
+        bool closingIn = snake.NotePlayerDistance(distance);
+        bool poisoned = snake.IsPlayerPoisoned(player);
 
         // 1) Muy cerca del jugador: se aleja (GDD: 3 tiles).
-        if (distance <= snake.TooCloseRange && !snake.RetreatSuppressed)
+        //    Si ya lo enveneno y el jugador la persigue, tambien huye, y no vuelve a escupir.
+        if ((distance <= snake.TooCloseRange && !snake.RetreatSuppressed) || snake.ShouldFleeBecauseChased(player, distance, closingIn))
         {
             behaviour.SetState(new SnakeRetreatState(player, movement, self, behaviour, snake));
+            return;
+        }
+
+        if (poisoned)
+        {
+            seeTimer = 0f;
+            Wander(position, playerPosition);
             return;
         }
 

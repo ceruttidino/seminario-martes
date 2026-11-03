@@ -39,7 +39,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
+  m_LocalScale: {x: 1.2, y: 1.2, z: 1.2}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -258,9 +258,9 @@ MonoBehaviour:
   projectileSpeed: 6.5
   projectileLifetime: 2.6
   attackDamage: 1
-  muzzleSideDistance: 0.95
-  muzzleFrontDistance: 0.45
-  muzzleHeight: 0.12
+  muzzleSideDistance: 0.76
+  muzzleFrontDistance: 0.36
+  muzzleHeight: 0.1
   companionPrefab: {fileID: 5136333534524507215, guid: 1010f75008e5eec49a330b3df2c0c32a, type: 3}
 --- !u!114 &1000013
 MonoBehaviour:

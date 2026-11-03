@@ -65,10 +65,13 @@ public class SnakeAttackState : IEnemyState
             return;
         }
 
-        // Le acerto al jugador: termino el ataque, vuelve a acechar.
-        if (!snake.Engaged)
+        // Le acerto al jugador, o el jugador ya esta envenenado: deja de escupir.
+        if (!snake.Engaged || snake.IsPlayerPoisoned(player))
         {
-            behaviour.SetState(new SnakeRoamState(player, movement, self, behaviour, snake));
+            if (snake.IsPlayerPoisoned(player))
+                behaviour.SetState(new SnakeRetreatState(player, movement, self, behaviour, snake));
+            else
+                behaviour.SetState(new SnakeRoamState(player, movement, self, behaviour, snake));
             return;
         }
 

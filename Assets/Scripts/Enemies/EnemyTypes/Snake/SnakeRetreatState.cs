@@ -48,9 +48,21 @@ public class SnakeRetreatState : IEnemyState
         Vector2 position = self.position;
         Vector2 playerPosition = player.position;
         float distance = Vector2.Distance(position, playerPosition);
+        bool closingIn = snake.NotePlayerDistance(distance);
+        bool poisoned = snake.IsPlayerPoisoned(player);
 
         // Ya esta a la distancia apropiada: vuelve a lo suyo (seguir atacando si ya habia empezado, si no acechar).
-        if (distance >= snake.ComfortDistance)
+        // Envenenado: no ataca. Solo deja de huir cuando el jugador ya no la persigue y quedo un poco mas lejos.
+        if (poisoned)
+        {
+            bool stillChased = closingIn || distance < snake.ComfortDistance;
+            if (!stillChased)
+            {
+                behaviour.SetState(new SnakeRoamState(player, movement, self, behaviour, snake));
+                return;
+            }
+        }
+        else if (distance >= snake.ComfortDistance)
         {
             if (snake.Engaged)
                 behaviour.SetState(new SnakeAttackState(player, movement, self, behaviour, snake, false));
@@ -60,12 +72,12 @@ public class SnakeRetreatState : IEnemyState
         }
 
         // Acorralada: no puede alejarse mas (dos ventanas seguidas sin avanzar). Dispara en vez de quedarse inmovil
-        // (y no vuelve a huir por un momento).
+        // (y no vuelve a huir por un momento). Si el jugador esta envenenado, no dispara: busca otro rumbo.
         if (stuckWatch.Tick(position, Time.deltaTime))
         {
             stuckCount++;
 
-            if (stuckCount >= 2)
+            if (stuckCount >= 2 && !poisoned)
             {
                 behaviour.SetState(new SnakeAttackState(player, movement, self, behaviour, snake, true));
                 return;
