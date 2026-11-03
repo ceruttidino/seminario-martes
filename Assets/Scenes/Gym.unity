@@ -4644,6 +4644,7 @@ MonoBehaviour:
   finalBossRoomInformation: {fileID: 11400000, guid: fd78f3ab18ef4475b2dc4c9cd17e98fd, type: 2}
   challengeRoomInformations:
   - {fileID: 11400000, guid: 3633e5cd41e13af47a9fc9b113be2923, type: 2}
+  buffRoomInformation: {fileID: 11400000, guid: f2999fc0799c61245afdf8442d03ed64, type: 2}
   transitionDelay: 0.1
   maxFloor: 3
   minimapUI: {fileID: 901950001}

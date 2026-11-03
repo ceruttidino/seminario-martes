@@ -13,6 +13,7 @@ public class DungeonManager : MonoBehaviour
     [SerializeField] private DungeonProgression dungeonProgression;
 
     private bool challengeSpawned = false;
+    private bool buffRoomSpawned = false;
 
     [Header("Dungeon Configuration")]
     [SerializeField] private RoomInformation startRoomInformation;
@@ -25,6 +26,8 @@ public class DungeonManager : MonoBehaviour
     [Tooltip("Boss del ULTIMO piso (nivel 3): siempre el mismo, el Cuervo.")]
     [SerializeField] private RoomInformation finalBossRoomInformation;
     [SerializeField] private List<RoomInformation> challengeRoomInformations = new List<RoomInformation>();
+    [Tooltip("Room de buff (Connection Room). Una por piso, en todos los niveles.")]
+    [SerializeField] private RoomInformation buffRoomInformation;
 
     [Header("Transition")]
     [SerializeField] private float transitionDelay = 0.5f;
@@ -139,6 +142,7 @@ public class DungeonManager : MonoBehaviour
     private void BuildNewDungeon()
     {
         challengeSpawned = false;
+        buffRoomSpawned = false;
         ChallengeRunState.Reset();
 
         if (dungeonProgression != null)
@@ -147,7 +151,7 @@ public class DungeonManager : MonoBehaviour
         List<RoomInformation> floorRooms = GetNormalRoomsForFloor(currentFloor);
 
         dungeonLayout = new DungeonLayout();
-        dungeonLayout.Build(startRoomInformation, floorRooms, shopRoomInformation, PickBossRoomInformationForFloor(), challengeRoomInformations);
+        dungeonLayout.Build(startRoomInformation, floorRooms, shopRoomInformation, PickBossRoomInformationForFloor(), challengeRoomInformations, buffRoomInformation);
 
         currentNode = dungeonLayout.StartNode;
         currentNode.isCurrentRoom = true;
@@ -157,6 +161,10 @@ public class DungeonManager : MonoBehaviour
             dungeonProgression?.RegisterGeneratedRoom(RoomType.Normal);
 
         EnterRoomSafely(currentNode, null);
+
+        // La primera room ya deja colgadas Shop, Boss, Challenge y Buff si hay puerta libre.
+        if (firstRoom != null)
+            GenerateConnections(firstRoom);
 
         if (currentNode.spawnedInstance != null)
             currentNode.spawnedInstance.ConfigureDoors(currentNode);
@@ -438,6 +446,8 @@ public class DungeonManager : MonoBehaviour
         }
 
         int created = 0;
+        bool missingEssential = MissingEssentialRoom();
+        dungeonLayout.SetPreferSpareDoors(missingEssential);
 
         foreach (DoorDirection dir in directions)
         {
@@ -475,52 +485,66 @@ public class DungeonManager : MonoBehaviour
             }
         }
 
+        dungeonLayout.SetPreferSpareDoors(false);
+        EnsureEssentialRooms();
+    }
+
+    private bool MissingEssentialRoom()
+    {
+        bool shopMissing = dungeonProgression == null || !dungeonProgression.HasSpawnedShop();
+        bool bossMissing = dungeonProgression == null || !dungeonProgression.HasSpawnedBoss();
+        bool challengeMissing = HasPendingChallenges() && !challengeSpawned;
+        bool buffMissing = buffRoomInformation != null && !buffRoomSpawned;
+        return shopMissing || bossMissing || challengeMissing || buffMissing;
+    }
+
+    /// <summary>
+    /// Shop, Boss, Challenge y Buff Room tienen que existir en cada piso. Se cuelgan de una puerta libre
+    /// (la del prefab, nunca una inventada) y se reintenta en cada room nueva hasta que entren.
+    /// </summary>
+    private void EnsureEssentialRooms()
+    {
+        if (!buffRoomSpawned)
+            TryForceBuffSmart();
+
         if (dungeonProgression != null && !dungeonProgression.HasSpawnedShop())
             TryForceShopSmart();
 
-        if (dungeonProgression != null && dungeonProgression.HasSpawnedShop() && !dungeonProgression.HasSpawnedBoss())
-            TryForceBossSmart();
-
         if (!challengeSpawned)
             TryForceChallengeSmart();
+
+        // La boss se cuelga en el extremo, cuando el piso ya tiene recorrido. Si todavía no entró, se reintenta.
+        if (dungeonProgression != null && dungeonProgression.HasSpawnedShop() && !dungeonProgression.HasSpawnedBoss()
+            && dungeonLayout.GetAllRooms().Count >= 10)
+            TryForceBossSmart();
     }
 
     private bool TryForceShopSmart()
     {
-        RoomNode bestNode = null;
-        float bestDistance = -1f;
+        return TryAttachEssential(RoomType.Shop, farthestFirst: true);
+    }
 
-        foreach (RoomNode node in dungeonLayout.GetAllRooms())
-        {
-            if (node.uniqueNodeID == "Start")
-                continue;
-
-            if (node.information == null || node.information.type == RoomType.Shop || node.information.type == RoomType.Boss)
-                continue;
-
-            float dist = node.gridPosition.magnitude;
-            if (dist > bestDistance)
-            {
-                bestDistance = dist;
-                bestNode = node;
-            }
-        }
-
-        if (bestNode == null)
+    private bool TryForceBuffSmart()
+    {
+        if (buffRoomSpawned || buffRoomInformation == null)
             return false;
 
-        foreach (DoorDirection dir in System.Enum.GetValues(typeof(DoorDirection)))
+        foreach (RoomNode host in HostsForEssentials(farthestFirst: false))
         {
-            if (bestNode.HasNeighbor(dir))
-                continue;
-
-            RoomNode newNode = dungeonLayout.CreateNextRoom(bestNode, dir, RoomType.Shop, out bool createdNew);
-            if (createdNew && newNode != null && newNode.information.type == RoomType.Shop)
+            foreach (DoorDirection dir in ShuffledDirections())
             {
-                dungeonProgression?.RegisterGeneratedRoom(RoomType.Shop);
+                if (host.HasNeighbor(dir))
+                    continue;
 
-                if (bestNode.spawnedInstance != null)
-                    bestNode.spawnedInstance.ConfigureDoors(bestNode);
+                RoomNode buffNode = dungeonLayout.CreateBuffRoom(host, dir, out bool createdNew);
+                if (!createdNew || buffNode == null)
+                    continue;
+
+                buffRoomSpawned = true;
+                dungeonProgression?.RegisterGeneratedRoom(RoomType.Normal);
+
+                if (host.spawnedInstance != null)
+                    host.spawnedInstance.ConfigureDoors(host);
 
                 return true;
             }
@@ -529,46 +553,91 @@ public class DungeonManager : MonoBehaviour
         return false;
     }
 
-    private bool TryForceBossSmart()
+    private bool TryAttachEssential(RoomType type, bool farthestFirst)
     {
-        if (dungeonProgression == null || !dungeonProgression.HasSpawnedShop())
-            return false;
-
-        List<RoomNode> candidates = new List<RoomNode>();
-
-        foreach (RoomNode node in dungeonLayout.GetAllRooms())
+        foreach (RoomNode host in HostsForEssentials(farthestFirst))
         {
-            if (node.uniqueNodeID == "Start")
-                continue;
-
-            if (node.information == null || node.information.type == RoomType.Shop || node.information.type == RoomType.Boss)
-                continue;
-
-            candidates.Add(node);
-        }
-
-        candidates.Sort((a, b) =>
-            b.gridPosition.magnitude.CompareTo(a.gridPosition.magnitude)
-        );
-
-        foreach (RoomNode node in candidates)
-        {
-            foreach (DoorDirection dir in System.Enum.GetValues(typeof(DoorDirection)))
+            foreach (DoorDirection dir in ShuffledDirections())
             {
-                if (node.HasNeighbor(dir))
+                if (host.HasNeighbor(dir))
                     continue;
 
-                RoomNode newNode = dungeonLayout.CreateNextRoom(node, dir, RoomType.Boss, out bool createdNew);
-                if (createdNew && newNode != null && newNode.information.type == RoomType.Boss)
-                {
-                    dungeonProgression?.RegisterGeneratedRoom(RoomType.Boss);
-                    return true;
-                }
+                RoomNode createdNode = dungeonLayout.CreateNextRoom(host, dir, type, out bool createdNew);
+                if (!createdNew || createdNode == null || createdNode.information == null || createdNode.information.type != type)
+                    continue;
+
+                dungeonProgression?.RegisterGeneratedRoom(type);
+
+                if (host.spawnedInstance != null)
+                    host.spawnedInstance.ConfigureDoors(host);
+
+                return true;
             }
         }
 
-        Debug.LogWarning("No se pudo forzar la Boss Room en ningún lugar válido.");
         return false;
+    }
+
+    private List<RoomNode> HostsForEssentials(bool farthestFirst)
+    {
+        List<RoomNode> hosts = new List<RoomNode>();
+
+        foreach (RoomNode node in dungeonLayout.GetAllRooms())
+        {
+            if (node == null || node.information == null)
+                continue;
+
+            if (node.information.type == RoomType.Shop || node.information.type == RoomType.Boss || node.information.type == RoomType.Challenge)
+                continue;
+
+            hosts.Add(node);
+        }
+
+        if (farthestFirst)
+        {
+            hosts.Sort((a, b) => b.gridPosition.sqrMagnitude.CompareTo(a.gridPosition.sqrMagnitude));
+        }
+        else
+        {
+            for (int i = 0; i < hosts.Count; i++)
+            {
+                int swap = Random.Range(i, hosts.Count);
+                RoomNode temp = hosts[i];
+                hosts[i] = hosts[swap];
+                hosts[swap] = temp;
+            }
+        }
+
+        return hosts;
+    }
+
+    private static List<DoorDirection> ShuffledDirections()
+    {
+        List<DoorDirection> directions = new List<DoorDirection>
+        {
+            DoorDirection.Up,
+            DoorDirection.Down,
+            DoorDirection.Left,
+            DoorDirection.Right
+        };
+
+        for (int i = 0; i < directions.Count; i++)
+        {
+            int swap = Random.Range(i, directions.Count);
+            DoorDirection temp = directions[i];
+            directions[i] = directions[swap];
+            directions[swap] = temp;
+        }
+
+        return directions;
+    }
+
+    private bool TryForceBossSmart()
+    {
+        if (dungeonProgression == null || !dungeonProgression.HasSpawnedShop() || dungeonProgression.HasSpawnedBoss())
+            return false;
+
+        return TryAttachEssential(RoomType.Boss, farthestFirst: true);
     }
 
     private bool TryForceChallengeSmart()

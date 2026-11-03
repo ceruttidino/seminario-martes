@@ -14,27 +14,41 @@ public class DungeonLayout
 
     private RoomInformation shopRoomInformation;
     private RoomInformation bossRoomInformation;
+    private RoomInformation buffRoomInformation;
     private List<RoomInformation> challengeRoomInformations = new List<RoomInformation>();
 
     private bool shopAlreadyGenerated;
     private bool bossAlreadyGenerated;
     private bool challengeAlreadyGenerated;
+    private bool buffAlreadyGenerated;
+    private bool preferRoomsWithSpareDoor;
+    private RoomInformation forcedSelection;
 
     public RoomNode StartNode { get; private set; }
 
-    public void Build(RoomInformation startRoom, List<RoomInformation> normalRooms, RoomInformation shopRoom, RoomInformation bossRoom, List<RoomInformation> challengeRooms)
+    public void Build(RoomInformation startRoom, List<RoomInformation> normalRooms, RoomInformation shopRoom, RoomInformation bossRoom, List<RoomInformation> challengeRooms, RoomInformation buffRoom = null)
     {
         generatedRooms.Clear();
         grid.Clear();
         allNormalRooms.Clear();
         remainingNormalRooms.Clear();
+        buffRoomInformation = buffRoom;
+        buffAlreadyGenerated = false;
+        preferRoomsWithSpareDoor = false;
+        forcedSelection = null;
 
         if (normalRooms != null)
         {
             foreach (RoomInformation room in normalRooms)
             {
-                if (room != null && room.prefab != null && room.availableDoors != null && room.availableDoors.Count > 0)
-                    allNormalRooms.Add(room);
+                if (room == null || room.prefab == null || room.availableDoors == null || room.availableDoors.Count == 0)
+                    continue;
+
+                // La buff room se coloca aparte, una vez por piso. No entra en el sorteo normal.
+                if (buffRoom != null && room == buffRoom)
+                    continue;
+
+                allNormalRooms.Add(room);
             }
         }
 
@@ -146,7 +160,16 @@ public class DungeonLayout
     private RoomInformation SelectRoom(RoomType roomType, DoorDirection requiredEntrance)
     {
         if (roomType == RoomType.Normal)
+        {
+            if (forcedSelection != null)
+            {
+                RoomInformation forced = forcedSelection;
+                forcedSelection = null;
+                return forced.prefab != null && forced.HasDoor(requiredEntrance) ? forced : null;
+            }
+
             return PickNormalWithDoor(requiredEntrance);
+        }
 
         if (roomType == RoomType.Shop)
         {
@@ -203,7 +226,29 @@ public class DungeonLayout
         return PickFromPool(remainingNormalRooms, requiredEntrance);
     }
 
-    private static RoomInformation PickFromPool(List<RoomInformation> pool, DoorDirection requiredEntrance)
+    public void SetPreferSpareDoors(bool prefer)
+    {
+        preferRoomsWithSpareDoor = prefer;
+    }
+
+    public RoomNode CreateBuffRoom(RoomNode fromNode, DoorDirection exitDirection, out bool createdNew)
+    {
+        createdNew = false;
+
+        if (buffAlreadyGenerated || buffRoomInformation == null || buffRoomInformation.prefab == null)
+            return null;
+
+        forcedSelection = buffRoomInformation;
+        RoomNode node = CreateNextRoom(fromNode, exitDirection, RoomType.Normal, out createdNew);
+        forcedSelection = null;
+
+        if (createdNew)
+            buffAlreadyGenerated = true;
+
+        return node;
+    }
+
+    private RoomInformation PickFromPool(List<RoomInformation> pool, DoorDirection requiredEntrance)
     {
         List<RoomInformation> valid = new List<RoomInformation>();
         foreach (RoomInformation room in pool)
@@ -214,6 +259,15 @@ public class DungeonLayout
 
         if (valid.Count == 0)
             return null;
+
+        // Mientras falten shop / boss / challenge / buff, se prefieren prefabs con una puerta de sobra
+        // para poder colgar esas rooms sin inventar puertas.
+        if (preferRoomsWithSpareDoor)
+        {
+            List<RoomInformation> spacious = valid.FindAll(room => room.availableDoors != null && room.availableDoors.Count >= 2);
+            if (spacious.Count > 0)
+                valid = spacious;
+        }
 
         RoomInformation selected = valid[Random.Range(0, valid.Count)];
         pool.Remove(selected);

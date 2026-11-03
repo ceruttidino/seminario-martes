@@ -55,7 +55,6 @@ public class RoomDoor : MonoBehaviour
     private bool playerInRange = false;
     private GameObject currentPlayer;
     private GameObject cachedPlayer;
-    private Collider2D cachedPlayerCollider;
     private Collider2D doorCollider;
     private bool pendingUnlock;
     private Action pendingUnlockComplete;
@@ -118,10 +117,22 @@ public class RoomDoor : MonoBehaviour
         if (visible)
         {
             // Se crea recien cuando hace falta: la mayoria de las puertas nunca lo necesita.
+            // Si el cartel falla, la ganzua con F sigue funcionando igual.
             if (unlockPrompt == null)
-                unlockPrompt = InteractPrompt.Create(transform, InwardDirection() * UnlockPromptDistance);
+            {
+                try
+                {
+                    unlockPrompt = InteractPrompt.Create(transform, InwardDirection() * UnlockPromptDistance);
+                }
+                catch (System.Exception exception)
+                {
+                    Debug.LogException(exception, this);
+                }
+            }
             else
+            {
                 unlockPrompt.SetWorldOffset(InwardDirection() * UnlockPromptDistance);
+            }
         }
 
         if (unlockPrompt != null)
@@ -135,31 +146,22 @@ public class RoomDoor : MonoBehaviour
         if (cachedPlayer == null)
         {
             cachedPlayer = GameObject.FindGameObjectWithTag("Player");
-            cachedPlayerCollider = cachedPlayer != null ? cachedPlayer.GetComponent<Collider2D>() : null;
         }
 
         if (cachedPlayer == null) return false;
 
         if (doorCollider == null)
             doorCollider = GetComponent<Collider2D>();
-        if (doorCollider == null) return false;
 
+        // Distancia al borde de la puerta, sin Physics2D.Distance: esa llamada (entre el trigger
+        // de la puerta y el collider del jugador) puede colgar el editor al apretar F.
         Vector2 playerPosition = cachedPlayer.transform.position;
-        float distance;
+        Vector2 doorPoint = doorCollider != null
+            ? (Vector2)doorCollider.bounds.ClosestPoint(playerPosition)
+            : (Vector2)transform.position;
 
-        if (cachedPlayerCollider != null && cachedPlayerCollider.enabled && doorCollider.enabled)
-        {
-            ColliderDistance2D result = doorCollider.Distance(cachedPlayerCollider);
-            distance = result.isValid
-                ? result.distance
-                : Vector2.Distance(doorCollider.ClosestPoint(playerPosition), playerPosition);
-        }
-        else
-        {
-            distance = Vector2.Distance(doorCollider.ClosestPoint(playerPosition), playerPosition);
-        }
-
-        if (distance > LockpickRange) return false;
+        if (Vector2.Distance(doorPoint, playerPosition) > LockpickRange)
+            return false;
 
         player = cachedPlayer;
         return true;

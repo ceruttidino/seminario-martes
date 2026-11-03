@@ -310,21 +310,18 @@ public class BossExitDoor : MonoBehaviour
         hasTriggered = true;
 
         DungeonManager dungeon = DungeonManager.Instance;
-        VictoryManager victoryManager = FindFirstObjectByType<VictoryManager>();
 
-        if (dungeon != null && dungeon.IsFinalFloor)
+        // Pisos intermedios: cruzar la puerta hace un fade directo al siguiente nivel.
+        // La pantalla de "Siguiente piso / Salir" queda solo para el boss final.
+        if (dungeon != null && !dungeon.IsFinalFloor)
         {
-            if (victoryManager != null)
-                victoryManager.TriggerVictory();
+            dungeon.StartNextFloor();
             return;
         }
 
+        VictoryManager victoryManager = FindFirstObjectByType<VictoryManager>();
         if (victoryManager != null)
             victoryManager.TriggerVictory();
-
-        // Si no hay pantalla de victoria (o no se pudo abrir), el piso siguiente arranca igual.
-        if (victoryManager == null || !VictoryManager.IsOpen)
-            dungeon?.StartNextFloor();
     }
 
     private void FitCollider(Sprite sprite)
