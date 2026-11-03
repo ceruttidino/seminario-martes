@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 153741655258516657}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -5, y: -1.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -97,7 +97,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: -4.0304523}
+  m_Offset: {x: 0, y: -4.5859284}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -107,7 +107,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 17.81579, y: 1.9780457}
+  m_Size: {x: 17.81579, y: 0.8670931}
   m_EdgeRadius: 0
 --- !u!1 &286501893508358687
 GameObject:
@@ -166,6 +166,37 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 5, y: -1.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2657517024740406438}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1691831192244250907
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7887064572690564433}
+  m_Layer: 10
+  m_Name: EnemySpawnPoint_4
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7887064572690564433
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1691831192244250907}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 5, y: 1.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1260,6 +1291,7 @@ Transform:
   - {fileID: 2129132330157794497}
   - {fileID: 2879880745647821419}
   - {fileID: 9046649796451033040}
+  - {fileID: 7887064572690564433}
   m_Father: {fileID: 8855914108497674385}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3857411769287756706
@@ -1363,7 +1395,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.013158798, y: 4.045583}
+  m_Offset: {x: -0.013158798, y: 4.7368426}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -1373,7 +1405,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 17.815788, y: 1.9614692}
+  m_Size: {x: 17.815788, y: 0.5789499}
   m_EdgeRadius: 0
 --- !u!1 &4878072035826389770
 GameObject:
@@ -1549,12 +1581,13 @@ MonoBehaviour:
     - {fileID: 2129132330157794497}
     - {fileID: 2879880745647821419}
     randomizePoints: 0
-  - name: Enemy_Ant x1 (1 puntos)
-    enemyPrefab: {fileID: 8734249323408576011, guid: 23b9ec134f2fcab418d04cee4d163d96, type: 3}
-    minCount: 1
-    maxCount: 1
+  - name: Enemy_Rat x2 (2 puntos)
+    enemyPrefab: {fileID: 5136333534524507215, guid: 1010f75008e5eec49a330b3df2c0c32a, type: 3}
+    minCount: 2
+    maxCount: 2
     spawnPoints:
     - {fileID: 9046649796451033040}
+    - {fileID: 7887064572690564433}
     randomizePoints: 0
   spawnSpread: 0.45
   spawnBlockingLayers:
@@ -1579,7 +1612,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88c0ffff07bc55945a93b000c001a572, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RoomBakedNavMesh
-  navMeshData: {fileID: 23800000, guid: 1e46dc333aeb5c4498bfdec2aa2765d8, type: 2}
+  navMeshData: {fileID: 23800000, guid: c304f5950135b5f4fbca52702d22d6ac, type: 2}
   useManualInterior: 1
   interiorCenter: {x: 0, y: 0, z: 0}
   interiorSize: {x: 14, y: 6, z: 1}
@@ -1689,7 +1722,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 7.984052, y: -0.039474487}
+  m_Offset: {x: 8.7, y: -0.039474487}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -1699,7 +1732,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 2.0108461, y: 10.026318}
+  m_Size: {x: 0.5789509, y: 10.026318}
   m_EdgeRadius: 0
 --- !u!1 &6597239768020939801
 GameObject:
@@ -1895,7 +1928,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -7.983427, y: 0}
+  m_Offset: {x: -8.65, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -1905,7 +1938,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1.9120936, y: 10.02632}
+  m_Size: {x: 0.5789509, y: 10.02632}
   m_EdgeRadius: 0
 --- !u!1 &7942455390066402997
 GameObject:
@@ -3490,10 +3523,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Pinchos 2.0_0 (1)
       objectReference: {fileID: 0}
-    - target: {fileID: 5131706071498355050, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
-      propertyPath: trapState
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 6237948275465655689, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
       propertyPath: m_LocalScale.x
       value: 1.582
@@ -3642,10 +3671,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Pinchos 2.0_0 (13)
       objectReference: {fileID: 0}
-    - target: {fileID: 5131706071498355050, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
-      propertyPath: trapState
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 6237948275465655689, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
       propertyPath: m_LocalScale.x
       value: 1.582
@@ -3719,10 +3744,6 @@ PrefabInstance:
     - target: {fileID: 3143626894951431959, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
       propertyPath: m_Name
       value: Pinchos 2.0_0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5131706071498355050, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
-      propertyPath: trapState
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6237948275465655689, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
       propertyPath: m_LocalScale.x
@@ -3997,7 +4018,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5131706071498355050, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
       propertyPath: trapState
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6237948275465655689, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
       propertyPath: m_LocalScale.x
@@ -4137,7 +4158,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5131706071498355050, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
       propertyPath: trapState
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6237948275465655689, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
       propertyPath: m_LocalScale.x
@@ -4350,7 +4371,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5131706071498355050, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
       propertyPath: trapState
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6237948275465655689, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
       propertyPath: m_LocalScale.x
@@ -4653,7 +4674,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5131706071498355050, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
       propertyPath: trapState
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6237948275465655689, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
       propertyPath: m_LocalScale.x
@@ -4728,10 +4749,6 @@ PrefabInstance:
     - target: {fileID: 3143626894951431959, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
       propertyPath: m_Name
       value: Pinchos 2.0_0 (12)
-      objectReference: {fileID: 0}
-    - target: {fileID: 5131706071498355050, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
-      propertyPath: trapState
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6237948275465655689, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
       propertyPath: m_LocalScale.x

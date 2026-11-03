@@ -3326,10 +3326,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Pinchos 2.0_0 (16)
       objectReference: {fileID: 0}
-    - target: {fileID: 5131706071498355050, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
-      propertyPath: trapState
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 6237948275465655689, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
       propertyPath: m_LocalScale.x
       value: 1.582
@@ -3481,10 +3477,6 @@ PrefabInstance:
     - target: {fileID: 3143626894951431959, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
       propertyPath: m_Name
       value: Pinchos 2.0_0 (12)
-      objectReference: {fileID: 0}
-    - target: {fileID: 5131706071498355050, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
-      propertyPath: trapState
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6237948275465655689, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
       propertyPath: m_LocalScale.x
@@ -3710,7 +3702,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5131706071498355050, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
       propertyPath: trapState
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6237948275465655689, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
       propertyPath: m_LocalScale.x
@@ -3933,10 +3925,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Pinchos 2.0_0 (8)
       objectReference: {fileID: 0}
-    - target: {fileID: 5131706071498355050, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
-      propertyPath: trapState
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 6237948275465655689, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
       propertyPath: m_LocalScale.x
       value: 1.582
@@ -4013,7 +4001,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5131706071498355050, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
       propertyPath: trapState
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6237948275465655689, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
       propertyPath: m_LocalScale.x
@@ -4088,10 +4076,6 @@ PrefabInstance:
     - target: {fileID: 3143626894951431959, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
       propertyPath: m_Name
       value: Pinchos 2.0_0 (9)
-      objectReference: {fileID: 0}
-    - target: {fileID: 5131706071498355050, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
-      propertyPath: trapState
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6237948275465655689, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
       propertyPath: m_LocalScale.x
@@ -4316,7 +4300,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5131706071498355050, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
       propertyPath: trapState
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6237948275465655689, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
       propertyPath: m_LocalScale.x
@@ -4392,10 +4376,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Pinchos 2.0_0 (5)
       objectReference: {fileID: 0}
-    - target: {fileID: 5131706071498355050, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
-      propertyPath: trapState
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 6237948275465655689, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
       propertyPath: m_LocalScale.x
       value: 1.582
@@ -4469,10 +4449,6 @@ PrefabInstance:
     - target: {fileID: 3143626894951431959, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
       propertyPath: m_Name
       value: Pinchos 2.0_0 (13)
-      objectReference: {fileID: 0}
-    - target: {fileID: 5131706071498355050, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
-      propertyPath: trapState
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6237948275465655689, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
       propertyPath: m_LocalScale.x
@@ -4848,7 +4824,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5131706071498355050, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
       propertyPath: trapState
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6237948275465655689, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
       propertyPath: m_LocalScale.x
@@ -5004,7 +4980,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5131706071498355050, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
       propertyPath: trapState
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6237948275465655689, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
       propertyPath: m_LocalScale.x
@@ -5160,7 +5136,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5131706071498355050, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
       propertyPath: trapState
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6237948275465655689, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
       propertyPath: m_LocalScale.x
