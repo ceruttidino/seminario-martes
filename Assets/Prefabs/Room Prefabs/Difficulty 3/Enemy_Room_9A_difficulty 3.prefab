@@ -3909,6 +3909,14 @@ PrefabInstance:
       value: CommonBag
       objectReference: {fileID: 0}
     - target: {fileID: 4211959711514281528, guid: 3ab77cdbc74300e488c3d2366e68fa52, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4211959711514281528, guid: 3ab77cdbc74300e488c3d2366e68fa52, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4211959711514281528, guid: 3ab77cdbc74300e488c3d2366e68fa52, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.24
       objectReference: {fileID: 0}

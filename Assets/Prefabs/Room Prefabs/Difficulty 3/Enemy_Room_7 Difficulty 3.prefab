@@ -165,7 +165,7 @@ Transform:
   m_GameObject: {fileID: 1353245460366590363}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4, y: -2, z: 0}
+  m_LocalPosition: {x: 4, y: -1.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1289,7 +1289,7 @@ Transform:
   m_GameObject: {fileID: 2466941775663739834}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4, y: 2, z: 0}
+  m_LocalPosition: {x: -4, y: 1.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1684,10 +1684,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88c0ffff07bc55945a93b000c001a572, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RoomBakedNavMesh
-  navMeshData: {fileID: 23800000, guid: 6d2c5167e8c2a2d4c80a215eec3fe9f1, type: 2}
-  useManualInterior: 0
-  interiorCenter: {x: 0, y: 1.008217, z: 0}
-  interiorSize: {x: 17.81579, y: 8.009887, z: 1}
+  navMeshData: {fileID: 23800000, guid: 9b4545b0b995b7945a35eb2dd0e02229, type: 2}
+  useManualInterior: 1
+  interiorCenter: {x: -0.00000047683716, y: 0.016035557, z: 0}
+  interiorSize: {x: 13.975087, y: 6.025524, z: 1}
   floorInset: 0
   agentRadius: 0.02
   voxelSize: 0.03
@@ -3770,7 +3770,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3909959430953273375, guid: d6e52d7acadd6c84aa0fec6501ead838, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 3909959430953273375, guid: d6e52d7acadd6c84aa0fec6501ead838, type: 3}
       propertyPath: m_LocalPosition.z
@@ -4063,7 +4063,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3909959430953273375, guid: d6e52d7acadd6c84aa0fec6501ead838, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2
+      value: -1.5
       objectReference: {fileID: 0}
     - target: {fileID: 3909959430953273375, guid: d6e52d7acadd6c84aa0fec6501ead838, type: 3}
       propertyPath: m_LocalPosition.z
@@ -4260,7 +4260,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3909959430953273375, guid: d6e52d7acadd6c84aa0fec6501ead838, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2
+      value: -1.5
       objectReference: {fileID: 0}
     - target: {fileID: 3909959430953273375, guid: d6e52d7acadd6c84aa0fec6501ead838, type: 3}
       propertyPath: m_LocalPosition.z
@@ -4322,7 +4322,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3909959430953273375, guid: d6e52d7acadd6c84aa0fec6501ead838, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 3909959430953273375, guid: d6e52d7acadd6c84aa0fec6501ead838, type: 3}
       propertyPath: m_LocalPosition.z

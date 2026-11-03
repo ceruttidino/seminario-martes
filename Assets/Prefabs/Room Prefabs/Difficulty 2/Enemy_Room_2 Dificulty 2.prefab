@@ -1614,8 +1614,8 @@ MonoBehaviour:
   diggingSpotPrefab: {fileID: 0}
   chanceToHaveDiggingSpots: 35
   enemyGroups:
-  - name: SpikyTurtle x2 (2 puntos)
-    enemyPrefab: {fileID: 3526715613216376611, guid: 71c68d685d14cf245bfa6cb088bed3b5, type: 3}
+  - name: Enemy_Snail x2 (2 puntos)
+    enemyPrefab: {fileID: 8283417630010587146, guid: 93c36bf4b30107349ba48fa2a8110986, type: 3}
     minCount: 2
     maxCount: 2
     spawnPoints:
@@ -1653,7 +1653,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88c0ffff07bc55945a93b000c001a572, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RoomBakedNavMesh
-  navMeshData: {fileID: 23800000, guid: 6db05701c4d52aa449405037ea91bd07, type: 2}
+  navMeshData: {fileID: 23800000, guid: 2e76bc37237ee7445afc88ecb8504abf, type: 2}
   useManualInterior: 0
   interiorCenter: {x: 0, y: 1.0009654, z: 0}
   interiorSize: {x: 17.81579, y: 8.024389, z: 1}
