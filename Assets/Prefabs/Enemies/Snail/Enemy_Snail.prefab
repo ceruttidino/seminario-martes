@@ -339,9 +339,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d519f4fabe2545847be09fdef4d208a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SlimeTrailSpawner
-  slimePrefab: {fileID: 2487840858659179355, guid: 7810dde463577ef40ba4bda2ba57c33f, type: 3}
-  spawnInterval: 0.5
-  maxSlimeInstances: 15
+  trailOffset: {x: 0, y: 0}
+  settings:
+    width: 0.28
+    wobble: 0.25
+    minPointDistance: 0.12
+    maxPoints: 80
+    lifetime: 3
+    dryStart: 0.6
+    spreadTime: 0.12
+    bodyColor: {r: 0.55, g: 0.85, b: 0.35, a: 0.75}
+    shineEnabled: 1
+    shineColor: {r: 0.9, g: 1, b: 0.75, a: 0.55}
+    shineWidth: 0.3
+    shineOffset: {x: 0, y: 0.025}
+    material: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+    sortingLayerName: Enemy
+    sortingOrder: 1
+    damage: 1
+    damageInterval: 0.5
+    dangerFraction: 0.85
+    hitWidthFraction: 0.8
+    playerFeetOffset: {x: 0, y: 0}
+    slowPercent: 0
+    slowLinger: 0.2
 --- !u!114 &6028116143686986758
 MonoBehaviour:
   m_ObjectHideFlags: 0

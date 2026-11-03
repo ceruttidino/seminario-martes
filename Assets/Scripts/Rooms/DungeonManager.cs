@@ -15,7 +15,11 @@ public class DungeonManager : MonoBehaviour
     private bool challengeSpawned = false;
     private bool buffRoomSpawned = false;
 
-    [Header("Dungeon Configuration")]
+    [Header("Levels")] // NUEVO
+    [Tooltip("Un FloorConfig por nivel, en orden (elemento 0 = nivel 1). La cantidad de elementos define cuántos niveles tiene el juego. Vacía = funciona como antes.")]
+    [SerializeField] private List<DungeonFloorConfig> floors = new List<DungeonFloorConfig>(); // NUEVO
+
+    [Header("Dungeon Configuration (general / por defecto)")] // CAMBIADO: se usa cuando un nivel no define su propio valor
     [SerializeField] private RoomInformation startRoomInformation;
     [SerializeField] private List<RoomInformation> normalRoomInformations = new List<RoomInformation>();
     [SerializeField] private RoomInformation shopRoomInformation;
@@ -33,7 +37,7 @@ public class DungeonManager : MonoBehaviour
     [SerializeField] private float transitionDelay = 0.5f;
 
     [Header("Progression")]
-    [Tooltip("Último nivel jugable. Al matar el boss en este nivel, el juego termina en vez de generar el siguiente piso.")]
+    [Tooltip("Último nivel jugable. Al matar el boss en este nivel, el juego termina en vez de generar el siguiente piso. Si la lista 'Floors' tiene elementos, se ignora y manda la cantidad de Floors.")] // CAMBIADO
     [SerializeField] private int maxFloor = 3;
 
     [Header("UI")]
@@ -51,9 +55,44 @@ public class DungeonManager : MonoBehaviour
     private readonly List<RoomInformation> usedRandomBosses = new List<RoomInformation>();
 
     public int CurrentFloor => currentFloor;
-    public int MaxFloor => maxFloor;
-    public bool IsFinalFloor => currentFloor >= maxFloor;
+    public int MaxFloor => floors != null && floors.Count > 0 ? floors.Count : maxFloor; // CAMBIADO: la lista de niveles manda
+    public bool IsFinalFloor => currentFloor >= MaxFloor; // CAMBIADO
     public RoomInstance CurrentRoom => currentRoomInstance;
+
+    // NUEVO: config del nivel actual (null si no hay lista de niveles o falta ese elemento)
+    public DungeonFloorConfig CurrentFloorConfig =>
+        floors != null && currentFloor >= 1 && currentFloor <= floors.Count ? floors[currentFloor - 1] : null;
+
+    // NUEVO: valores efectivos del nivel actual (el del FloorConfig si lo tiene, si no el general)
+    private RoomInformation CurrentStartRoom => PickRoom(CurrentFloorConfig != null ? CurrentFloorConfig.startRoom : null, startRoomInformation);
+    private RoomInformation CurrentShopRoom => PickRoom(CurrentFloorConfig != null ? CurrentFloorConfig.shopRoom : null, shopRoomInformation);
+
+    private RoomInformation CurrentBuffRoom
+    {
+        get
+        {
+            DungeonFloorConfig config = CurrentFloorConfig;
+            if (config != null && config.noBuffRoom) return null;
+            return PickRoom(config != null ? config.buffRoom : null, buffRoomInformation);
+        }
+    }
+
+    private List<RoomInformation> CurrentChallengeRooms
+    {
+        get
+        {
+            DungeonFloorConfig config = CurrentFloorConfig;
+            if (config != null && config.noChallengeRoom) return new List<RoomInformation>();
+            if (config != null && config.HasChallengeRooms) return config.challengeRooms;
+            return challengeRoomInformations;
+        }
+    }
+
+    // NUEVO: los campos de Unity sin asignar no siempre son "null de C#", por eso no se usa ??
+    private static RoomInformation PickRoom(RoomInformation preferred, RoomInformation fallback)
+    {
+        return preferred != null ? preferred : fallback;
+    }
 
     private void Awake()
     {
@@ -84,6 +123,12 @@ public class DungeonManager : MonoBehaviour
 
     private List<RoomInformation> GetNormalRoomsForFloor(int floor)
     {
+        // NUEVO: si el nivel tiene FloorConfig con rooms, se usan esas
+        DungeonFloorConfig config = CurrentFloorConfig;
+        if (config != null && config.HasNormalRooms)
+            return config.normalRooms.FindAll(r => r != null);
+
+        // Si no, el sistema viejo: filtrar por el campo 'level' de cada RoomInformation
         List<RoomInformation> filtered = normalRoomInformations.FindAll(
             r => r != null && r.level == floor
         );
@@ -105,6 +150,11 @@ public class DungeonManager : MonoBehaviour
     /// </summary>
     private RoomInformation PickBossRoomInformationForFloor()
     {
+        // NUEVO: si el nivel tiene su propio pool de bosses, se elige de ahí (sin repetir bosses de niveles anteriores)
+        DungeonFloorConfig config = CurrentFloorConfig;
+        if (config != null && config.HasBossRooms)
+            return PickBossFromPool(config.bossRooms);
+
         if (IsFinalFloor && finalBossRoomInformation != null && finalBossRoomInformation.prefab != null)
         {
             Debug.Log($"[DungeonManager] Piso {currentFloor} (final): boss = {finalBossRoomInformation.roomID}");
@@ -139,19 +189,59 @@ public class DungeonManager : MonoBehaviour
         return chosen;
     }
 
+    // NUEVO: elige un boss del pool de un nivel. Prefiere los que todavía no salieron en la partida;
+    // si todos ya salieron (o el pool tiene uno solo), puede repetir.
+    private RoomInformation PickBossFromPool(List<RoomInformation> source)
+    {
+        List<RoomInformation> pool = new List<RoomInformation>();
+        foreach (RoomInformation info in source)
+        {
+            if (info != null && info.prefab != null && !pool.Contains(info))
+                pool.Add(info);
+        }
+
+        if (pool.Count == 0)
+            return bossRoomInformation;
+
+        List<RoomInformation> available = pool.FindAll(info => !usedRandomBosses.Contains(info));
+        if (available.Count == 0)
+            available = pool;
+
+        RoomInformation chosen = available[Random.Range(0, available.Count)];
+        if (!usedRandomBosses.Contains(chosen))
+            usedRandomBosses.Add(chosen);
+
+        Debug.Log($"[DungeonManager] Piso {currentFloor} ({CurrentFloorConfig?.floorName}): boss = {chosen.roomID}");
+        return chosen;
+    }
+
     private void BuildNewDungeon()
     {
         challengeSpawned = false;
         buffRoomSpawned = false;
         ChallengeRunState.Reset();
 
+        DungeonFloorConfig config = CurrentFloorConfig; // NUEVO
+
         if (dungeonProgression != null)
+        {
             dungeonProgression.PrepareFloor(currentFloor);
+
+            // NUEVO: el nivel puede definir su propio largo
+            if (config != null && config.overrideRoomCounts)
+                dungeonProgression.OverrideRoomCounts(config.roomsBeforeShop, config.roomsBeforeBoss);
+        }
+
+        if (config != null) // NUEVO
+            Debug.Log($"[DungeonManager] Generando piso {currentFloor}/{MaxFloor}: {config.floorName}");
+        else if (floors != null && floors.Count > 0)
+            Debug.LogWarning($"[DungeonManager] El piso {currentFloor} no tiene FloorConfig asignado: se usa la configuración general.");
 
         List<RoomInformation> floorRooms = GetNormalRoomsForFloor(currentFloor);
 
         dungeonLayout = new DungeonLayout();
-        dungeonLayout.Build(startRoomInformation, floorRooms, shopRoomInformation, PickBossRoomInformationForFloor(), challengeRoomInformations, buffRoomInformation);
+        // CAMBIADO: cada room especial sale del nivel actual (o de la config general si el nivel no la define)
+        dungeonLayout.Build(CurrentStartRoom, floorRooms, CurrentShopRoom, PickBossRoomInformationForFloor(), CurrentChallengeRooms, CurrentBuffRoom);
 
         currentNode = dungeonLayout.StartNode;
         currentNode.isCurrentRoom = true;
@@ -497,7 +587,7 @@ public class DungeonManager : MonoBehaviour
         bool shopMissing = dungeonProgression == null || !dungeonProgression.HasSpawnedShop();
         bool bossMissing = dungeonProgression == null || !dungeonProgression.HasSpawnedBoss();
         bool challengeMissing = HasPendingChallenges() && !challengeSpawned;
-        bool buffMissing = buffRoomInformation != null && !buffRoomSpawned;
+        bool buffMissing = CurrentBuffRoom != null && !buffRoomSpawned; // CAMBIADO: buff room del nivel actual
         return shopMissing || bossMissing || challengeMissing || buffMissing;
     }
 
@@ -529,7 +619,7 @@ public class DungeonManager : MonoBehaviour
 
     private bool TryForceBuffSmart()
     {
-        if (buffRoomSpawned || buffRoomInformation == null)
+        if (buffRoomSpawned || CurrentBuffRoom == null) // CAMBIADO: buff room del nivel actual
             return false;
 
         foreach (RoomNode host in HostsForEssentials(farthestFirst: false))
@@ -713,7 +803,7 @@ public class DungeonManager : MonoBehaviour
 
     private bool HasPendingChallenges()
     {
-        foreach (RoomInformation info in challengeRoomInformations)
+        foreach (RoomInformation info in CurrentChallengeRooms) // CAMBIADO: challenges del nivel actual
         {
             if (info == null || info.prefab == null)
                 continue;

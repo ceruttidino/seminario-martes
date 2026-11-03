@@ -17,8 +17,8 @@ public class AreaAttack : MonoBehaviour, IAttack
     [SerializeField] private float attackActiveDuration = 0.3f;
 
     [Header("Feel - Knockback")] // NUEVO
-    [Tooltip("Más fuerte que el quick attack: es el golpe pesado. Empuja ≈ fuerza x 0.04 tiles (45 ≈ 1.8 tiles). Los jefes y el topo no se empujan.")]
-    [SerializeField] private float knockbackForce = 45f; // CAMBIADO: antes 15 (0.6 tile)
+    [Tooltip("Más fuerte que el quick attack: es el golpe pesado")]
+    [SerializeField] private float knockbackForce = 15f; // NUEVO
 
     [Header("Feel - Hit Stop / Camera")] // NUEVO
     [SerializeField] private float hitStopDuration = 0.08f; // NUEVO
@@ -34,6 +34,13 @@ public class AreaAttack : MonoBehaviour, IAttack
     [SerializeField] private GameObject attackVfxPrefab;
     [SerializeField] private float vfxLifetime = 0.5f;
     [SerializeField] private bool vfxFollowsPlayer = true;
+
+    [Header("Spin Slash VFX")] // NUEVO
+    [Tooltip("Prefab con SpinSlashVfx (slash de 360°). Convive con el Attack VFX de arriba: si no querés el viejo, dejalo vacío.")]
+    [SerializeField] private GameObject spinSlashPrefab; // NUEVO
+    [Tooltip("Corrige dónde está el 'centro' del player. Si el pivot del sprite está en los pies, subilo (ej: 0, 0.4).")]
+    [SerializeField] private Vector2 spinSlashCenterOffset = Vector2.zero; // NUEVO
+    [SerializeField] private float spinSlashLifetime = 0.4f; // NUEVO
 
     [SerializeField] private AudioSource sfxSource;
 
@@ -104,6 +111,7 @@ public class AreaAttack : MonoBehaviour, IAttack
         }
 
         SpawnAttackVfx(); // CAMBIADO: antes solo salía si había Animator asignado
+        SpawnSpinSlash(); // NUEVO
 
         if (playerSquash != null) // NUEVO
             playerSquash.Punch(attackSquash);
@@ -183,6 +191,29 @@ public class AreaAttack : MonoBehaviour, IAttack
 
         if (vfxLifetime > 0f)
             Destroy(vfx, vfxLifetime);
+    }
+
+    // NUEVO
+    private void SpawnSpinSlash()
+    {
+        if (spinSlashPrefab == null) return;
+
+        Vector3 spawnPos = transform.position + (Vector3)spinSlashCenterOffset;
+        GameObject vfx = Instantiate(spinSlashPrefab, spawnPos, Quaternion.identity);
+
+        if (vfxFollowsPlayer)
+            vfx.transform.SetParent(transform, worldPositionStays: true);
+
+        // El giro arranca hacia donde mira el player y usa el radio real del ataque
+        SpinSlashVfx spin = vfx.GetComponent<SpinSlashVfx>();
+        if (spin != null)
+        {
+            Vector2 facing = playerMovement != null ? playerMovement.LastFacingDirection : Vector2.down;
+            spin.Setup(radius, facing);
+        }
+
+        if (spinSlashLifetime > 0f)
+            Destroy(vfx, spinSlashLifetime);
     }
 
 }

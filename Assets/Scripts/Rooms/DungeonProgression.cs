@@ -36,6 +36,13 @@ public class DungeonProgression : MonoBehaviour
         }
     }
 
+    // NUEVO: un nivel con FloorConfig puede pisar el largo calculado automáticamente
+    public void OverrideRoomCounts(int beforeShop, int beforeBoss)
+    {
+        roomsBeforeShop = Mathf.Max(1, beforeShop);
+        roomsBeforeBoss = Mathf.Max(1, beforeBoss);
+    }
+
     public RoomType GetNextRoomType()
     {
         if (!shopSpawned)
