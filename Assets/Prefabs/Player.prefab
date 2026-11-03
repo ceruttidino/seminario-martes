@@ -906,6 +906,29 @@ MonoBehaviour:
   halfHeartSprite: {fileID: 21300000, guid: a84d06551b6b13c46a794e63c9215825, type: 3}
   emptyHeartSprite: {fileID: 21300000, guid: 93cd08ad1dc96494a841775a2e04279c, type: 3}
   poisonedHeartColor: {r: 0.25, g: 0.85, b: 0.28, a: 1}
+  poisonedFullFrames:
+  - {fileID: 776000001, guid: 7aa45b8dd98344359cef54fcf0ee1395, type: 3}
+  - {fileID: 776000002, guid: 7aa45b8dd98344359cef54fcf0ee1395, type: 3}
+  - {fileID: 776000003, guid: 7aa45b8dd98344359cef54fcf0ee1395, type: 3}
+  - {fileID: 776000004, guid: 7aa45b8dd98344359cef54fcf0ee1395, type: 3}
+  - {fileID: 776000005, guid: 7aa45b8dd98344359cef54fcf0ee1395, type: 3}
+  - {fileID: 776000006, guid: 7aa45b8dd98344359cef54fcf0ee1395, type: 3}
+  - {fileID: 776000007, guid: 7aa45b8dd98344359cef54fcf0ee1395, type: 3}
+  - {fileID: 776000008, guid: 7aa45b8dd98344359cef54fcf0ee1395, type: 3}
+  - {fileID: 776000009, guid: 7aa45b8dd98344359cef54fcf0ee1395, type: 3}
+  - {fileID: 776000010, guid: 7aa45b8dd98344359cef54fcf0ee1395, type: 3}
+  poisonedHalfFrames:
+  - {fileID: 777000001, guid: ac2282d467164926aca0a6cfaf277040, type: 3}
+  - {fileID: 777000002, guid: ac2282d467164926aca0a6cfaf277040, type: 3}
+  - {fileID: 777000003, guid: ac2282d467164926aca0a6cfaf277040, type: 3}
+  - {fileID: 777000004, guid: ac2282d467164926aca0a6cfaf277040, type: 3}
+  - {fileID: 777000005, guid: ac2282d467164926aca0a6cfaf277040, type: 3}
+  - {fileID: 777000006, guid: ac2282d467164926aca0a6cfaf277040, type: 3}
+  - {fileID: 777000007, guid: ac2282d467164926aca0a6cfaf277040, type: 3}
+  - {fileID: 777000008, guid: ac2282d467164926aca0a6cfaf277040, type: 3}
+  - {fileID: 777000009, guid: ac2282d467164926aca0a6cfaf277040, type: 3}
+  - {fileID: 777000010, guid: ac2282d467164926aca0a6cfaf277040, type: 3}
+  poisonedHeartFps: 10
   sfxSource: {fileID: 5460443969507782636}
 --- !u!114 &8932515960615368468
 MonoBehaviour:

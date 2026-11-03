@@ -12,14 +12,39 @@ public class MinimapUI : MonoBehaviour
     [SerializeField] private float iconScale = 1.3f;
     [SerializeField] private Vector2 roomGap = new Vector2(10f, 10f);
 
+    [Header("Vista")]
+    [Tooltip("Escala del contenido del mapa (1 = tamano normal). MinimapExpander la baja en el minimapa chico (siempre visible) para que entren mas salas y la sube al expandirlo.")]
+    [SerializeField] private float viewScale = 1f;
+
     private Vector2 originalIconSize;
     private Vector2 iconSize;
     private Vector2 roomSpacing;
+    private RoomNode currentNode;
 
     private DungeonManager dungeonManager;
     private readonly Dictionary<RoomNode, MinimapRoomIcon> roomIcons = new Dictionary<RoomNode, MinimapRoomIcon>();
 
     public MinimapRoomIcon RoomIconPrefab => roomIconPrefab;
+
+    public float ViewScale => viewScale;
+
+    /// <summary>Cambia el zoom del contenido y vuelve a centrar la sala actual.</summary>
+    public void SetViewScale(float scale)
+    {
+        viewScale = Mathf.Max(0.05f, scale);
+
+        if (mapContainer != null)
+            mapContainer.localScale = new Vector3(viewScale, viewScale, 1f);
+
+        Recenter();
+    }
+
+    /// <summary>Vuelve a centrar el mapa en la sala actual (con el zoom actual).</summary>
+    public void Recenter()
+    {
+        if (currentNode != null && mapContainer != null && roomSpacing != Vector2.zero)
+            CenterOnRoom(currentNode);
+    }
 
     public void Configure(RectTransform container, MinimapRoomIcon iconPrefab)
     {
@@ -36,6 +61,7 @@ public class MinimapUI : MonoBehaviour
         originalIconSize = roomIconPrefab.GetComponent<RectTransform>().sizeDelta;
         iconSize = originalIconSize * iconScale;
         roomSpacing = iconSize + roomGap;
+        mapContainer.localScale = new Vector3(viewScale, viewScale, 1f);
 
         BuildMap();
         RefreshMap();
@@ -87,12 +113,15 @@ public class MinimapUI : MonoBehaviour
 
     private void CenterOnRoom(RoomNode room)
     {
+        currentNode = room;
+
         Vector2 roomPos = new Vector2(
             room.gridPosition.x * roomSpacing.x,
             room.gridPosition.y * roomSpacing.y
         );
 
-        mapContainer.anchoredPosition = -roomPos;
+        // El contenedor se escala desde su centro: la posicion de la sala escala igual.
+        mapContainer.anchoredPosition = -roomPos * viewScale;
     }
 
     private bool IsAdjacentToVisited(RoomNode node)

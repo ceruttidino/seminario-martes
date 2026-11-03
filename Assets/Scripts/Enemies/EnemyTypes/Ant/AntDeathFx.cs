@@ -27,9 +27,10 @@ public class AntDeathFx : MonoBehaviour
         renderer.sprite = frames[0];
 
         // Mismo material y orden de dibujo que la hormiga (y color blanco: la hormiga puede estar en pleno flash rojo).
+        // El material se pide a HitReaction: con el golpe final la hormiga tiene puesto el de flash blanco.
         if (source != null)
         {
-            renderer.sharedMaterial = source.sharedMaterial;
+            renderer.sharedMaterial = HitReaction.RestMaterialOf(source);
             renderer.sortingLayerID = source.sortingLayerID;
             renderer.sortingOrder = source.sortingOrder;
         }

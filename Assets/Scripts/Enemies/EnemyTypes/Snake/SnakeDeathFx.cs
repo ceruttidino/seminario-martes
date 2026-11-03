@@ -27,9 +27,10 @@ public sealed class SnakeDeathFx : MonoBehaviour
         renderer.sprite = frames[0];
 
         // Mismo material y orden de dibujo que la serpiente (y color blanco: puede estar en pleno flash rojo / envenenada).
+        // El material se pide a HitReaction: con el golpe final la serpiente tiene puesto el de flash blanco.
         if (source != null)
         {
-            renderer.sharedMaterial = source.sharedMaterial;
+            renderer.sharedMaterial = HitReaction.RestMaterialOf(source);
             renderer.sortingLayerID = source.sortingLayerID;
             renderer.sortingOrder = source.sortingOrder;
         }

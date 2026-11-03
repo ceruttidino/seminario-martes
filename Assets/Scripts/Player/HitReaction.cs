@@ -66,6 +66,34 @@ public class HitReaction : MonoBehaviour
     private static readonly RaycastHit2D[] castHits = new RaycastHit2D[4];
     private const float Skin = 0.02f;
 
+    /// <summary>
+    /// Material "de verdad" de un sprite del enemigo. El golpe final llega con el material de flash blanco puesto
+    /// (ReceiveHit corre antes que TakeDamage), asi que un efecto de muerte que copie sharedMaterial directamente sale
+    /// como una silueta blanca. Los efectos de muerte piden el material por aca.
+    /// </summary>
+    public static Material RestMaterialOf(SpriteRenderer renderer)
+    {
+        if (renderer == null)
+            return null;
+
+        HitReaction reaction = renderer.GetComponentInParent<HitReaction>();
+        return reaction != null ? reaction.GetRestMaterial(renderer) : renderer.sharedMaterial;
+    }
+
+    private Material GetRestMaterial(SpriteRenderer renderer)
+    {
+        if (isFlashing && renderers != null && savedMaterials != null)
+        {
+            for (int i = 0; i < renderers.Length; i++)
+            {
+                if (renderers[i] == renderer && savedMaterials[i] != null)
+                    return savedMaterials[i];
+            }
+        }
+
+        return renderer.sharedMaterial;
+    }
+
     private void Awake()
     {
         if (rb == null) rb = GetComponent<Rigidbody2D>();

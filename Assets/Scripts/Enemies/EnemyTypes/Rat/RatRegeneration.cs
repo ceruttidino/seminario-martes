@@ -6,6 +6,8 @@ public class RatRegeneration : MonoBehaviour
     [SerializeField] private GameObject ratPrefab;
     [SerializeField] private float regenTime = 3f;
     [SerializeField] private float reducedHealth = 3f;
+    [Tooltip("Que parte de la animacion de muerte (0-1) pasa antes de que aparezca el cuerpo.")]
+    [SerializeField, Range(0f, 1f)] private float bodyRevealPoint = 0.6f;
     public bool isRegenerating = true;
 
     private EnemyHealth health;
@@ -29,5 +31,10 @@ public class RatRegeneration : MonoBehaviour
 
         RatBody bodyScript = body.GetComponent<RatBody>();
         bodyScript.Init(regenTime, reducedHealth);
+
+        // Con animacion de muerte (hoja RataDerrota): el cuerpo aparece cuando la rata ya se esta desvaneciendo.
+        EnemyDeathAnimation deathAnimation = GetComponent<EnemyDeathAnimation>();
+        if (deathAnimation != null && deathAnimation.HasFrames)
+            bodyScript.HideVisualFor(deathAnimation.Duration * bodyRevealPoint);
     }
 }

@@ -309,11 +309,22 @@ public class BossExitDoor : MonoBehaviour
 
         hasTriggered = true;
 
+        DungeonManager dungeon = DungeonManager.Instance;
         VictoryManager victoryManager = FindFirstObjectByType<VictoryManager>();
+
+        if (dungeon != null && dungeon.IsFinalFloor)
+        {
+            if (victoryManager != null)
+                victoryManager.TriggerVictory();
+            return;
+        }
+
         if (victoryManager != null)
             victoryManager.TriggerVictory();
-        else
-            DungeonManager.Instance?.StartNextFloor();
+
+        // Si no hay pantalla de victoria (o no se pudo abrir), el piso siguiente arranca igual.
+        if (victoryManager == null || !VictoryManager.IsOpen)
+            dungeon?.StartNextFloor();
     }
 
     private void FitCollider(Sprite sprite)

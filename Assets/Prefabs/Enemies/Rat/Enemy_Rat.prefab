@@ -115,6 +115,7 @@ GameObject:
   - component: {fileID: 1190308387966114794}
   - component: {fileID: 7395963893139532433}
   - component: {fileID: -2873037169283217047}
+  - component: {fileID: 5074211563325364289}
   m_Layer: 3
   m_Name: Enemy_Rat
   m_TagString: Untagged
@@ -398,6 +399,7 @@ MonoBehaviour:
   ratPrefab: {fileID: 5136333534524507215}
   regenTime: 3
   reducedHealth: 3
+  bodyRevealPoint: 0.6
   isRegenerating: 1
 --- !u!114 &642305526718991060
 MonoBehaviour:
@@ -514,3 +516,33 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SquashStretch
   target: {fileID: 0}
   returnSpeed: 18
+--- !u!114 &5074211563325364289
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5136333534524507215}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29ee365a4cc8450a882ab9efd7bc952b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyDeathAnimation
+  frames:
+  - {fileID: 771000001, guid: 53bf2b181b8f4773b309bbc0df65c50f, type: 3}
+  - {fileID: 771000002, guid: 53bf2b181b8f4773b309bbc0df65c50f, type: 3}
+  - {fileID: 771000003, guid: 53bf2b181b8f4773b309bbc0df65c50f, type: 3}
+  - {fileID: 771000004, guid: 53bf2b181b8f4773b309bbc0df65c50f, type: 3}
+  - {fileID: 771000005, guid: 53bf2b181b8f4773b309bbc0df65c50f, type: 3}
+  - {fileID: 771000006, guid: 53bf2b181b8f4773b309bbc0df65c50f, type: 3}
+  - {fileID: 771000007, guid: 53bf2b181b8f4773b309bbc0df65c50f, type: 3}
+  - {fileID: 771000008, guid: 53bf2b181b8f4773b309bbc0df65c50f, type: 3}
+  - {fileID: 771000009, guid: 53bf2b181b8f4773b309bbc0df65c50f, type: 3}
+  fps: 14
+  startFrame: 0
+  lastFrameFade: 0
+  source: {fileID: 0}
+  shadow: {fileID: 0}
+  sortingBoost: 0
+  copyFlip: 1
+  useLiveScale: 0

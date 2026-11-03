@@ -38,8 +38,18 @@ public class ExplosiveHedgehog : MonoBehaviour
     [Header("Feedback")]
     [SerializeField] private DamageFlash damageFlash;
 
+    [Header("Hoja de muerte (ErizoSoloExplosion)")]
+    [Tooltip("Ultimos segundos de la cuenta regresiva en los que el erizo muestra los primeros cuadros de su hoja (se hincha y las puntas se ponen naranjas antes de estallar). El estallido de las puas es el resto de la hoja y lo reproduce EnemyDeathAnimation.")]
+    [SerializeField] private float preBurstDuration = 0.6f;
+    [Tooltip("Cantidad de cuadros de esa previa (los primeros de la hoja). El cuadro siguiente ya es el estallido.")]
+    [SerializeField] private int preBurstFrames = 12;
+
     private EnemyHealth enemyHealth;
     private Rigidbody2D rb;
+    private SpriteRenderer spriteRenderer;
+    private Animator animator;
+    private EnemyDeathAnimation deathAnimation;
+    private bool preBurstActive;
     private bool hasExploded;
     private bool deforming;
     private float deformProgress;
@@ -59,6 +69,9 @@ public class ExplosiveHedgehog : MonoBehaviour
     {
         enemyHealth = GetComponent<EnemyHealth>();
         rb = GetComponent<Rigidbody2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        animator = GetComponent<Animator>();
+        deathAnimation = GetComponent<EnemyDeathAnimation>();
         restScale = transform.localScale;
 
         if (damageFlash == null)
@@ -101,6 +114,7 @@ public class ExplosiveHedgehog : MonoBehaviour
     public void UpdateArmingFeedback(float normalizedProgress)
     {
         deformProgress = Mathf.Clamp01(normalizedProgress);
+        UpdatePreBurst();
     }
 
     public void EndArmingFeedback()
@@ -109,6 +123,52 @@ public class ExplosiveHedgehog : MonoBehaviour
         deformProgress = 0f;
         transform.localScale = restScale;
         damageFlash?.StopLoopFlash();
+        StopPreBurst();
+    }
+
+    /// <summary>
+    /// Ultimos instantes de la cuenta regresiva: el sprite pasa a los primeros cuadros de la hoja ErizoSoloExplosion
+    /// (se hincha y las puntas se ponen naranjas). Al estallar, EnemyDeathAnimation sigue desde el cuadro del estallido.
+    /// No cambia los tiempos: la cuenta regresiva y el dano son los de siempre.
+    /// </summary>
+    private void UpdatePreBurst()
+    {
+        if (preBurstDuration <= 0f || spriteRenderer == null || deathAnimation == null || !deathAnimation.HasFrames)
+            return;
+
+        Sprite[] frames = deathAnimation.Frames;
+        int last = Mathf.Min(preBurstFrames, frames.Length) - 1;
+        if (last < 0)
+            return;
+
+        float remaining = countdownDuration * (1f - deformProgress);
+        if (remaining > preBurstDuration)
+        {
+            StopPreBurst();
+            return;
+        }
+
+        if (!preBurstActive)
+        {
+            preBurstActive = true;
+            if (animator != null)
+                animator.enabled = false;
+        }
+
+        float u = 1f - remaining / preBurstDuration;
+        int index = Mathf.Clamp(Mathf.FloorToInt(u * (last + 1)), 0, last);
+        if (frames[index] != null)
+            spriteRenderer.sprite = frames[index];
+    }
+
+    private void StopPreBurst()
+    {
+        if (!preBurstActive)
+            return;
+
+        preBurstActive = false;
+        if (animator != null)
+            animator.enabled = true;
     }
 
     public void ApplyHitKnockback(Vector2 fromPosition)
@@ -128,10 +188,20 @@ public class ExplosiveHedgehog : MonoBehaviour
         if (hasExploded) return;
         hasExploded = true;
 
+        // La animacion de muerte sigue desde el tamano hinchado en el que quedo el erizo (antes de que se resetee la escala).
+        if (deathAnimation != null)
+            deathAnimation.ScaleOverride = transform.lossyScale;
+
         EndArmingFeedback();
         CameraShake.Play(0.38f, 0.32f);
 
         Vector2 center = transform.position;
+
+        // Efecto visual de la explosion (fogonazo, onda, bola de fuego, brasas, puas y humo), dibujado por codigo.
+        // Solo es visual: el dano, el radio y el empuje son los de abajo.
+        RoomInstance blastRoom = GetComponentInParent<RoomInstance>();
+        BlastFx.Explosion(center, explosionRadius, blastRoom != null ? blastRoom.transform : transform.parent);
+
         LayerMask explosionMask = damageLayers | destructibleLayers;
         Collider2D[] hits = Physics2D.OverlapCircleAll(center, explosionRadius, explosionMask);
 

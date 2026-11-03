@@ -1,36 +1,55 @@
 using UnityEngine;
 
 /// <summary>
-/// OBSOLETO: antes decidia sobre la marcha cuando aparecian la Shop y la Boss. Ahora el piso ENTERO se genera al empezar
-/// (DungeonLayout) y esto ya no interviene en el layout. Se conserva porque DungeonManager lo tiene asignado en la escena.
+/// Decide sobre la marcha cuándo aparecen Shop y Boss. Cada piso es más largo que el anterior;
+/// el primero ya sale más extenso que el valor viejo de 2-3 rooms.
 /// </summary>
 public class DungeonProgression : MonoBehaviour
 {
-    [Header("Limits")]
-    [SerializeField] private int normalRoomsBeforeShop = 2;
-    [SerializeField] private int normalRoomsBeforeBoss = 1;
+    [Header("Floor 1 (base)")]
+    [SerializeField] private int normalRoomsBeforeShop = 7;
+    [SerializeField] private int normalRoomsBeforeBoss = 5;
 
-    private int currentNormalRoomsCount = 0;
-    private bool shopSpawned = false;
-    private bool bossSpawned = false;
+    [Header("Scaling")]
+    [Tooltip("Rooms extra (antes de shop y después de shop) que se suman en cada piso siguiente.")]
+    [SerializeField] private int extraRoomsPerFloor = 2;
+
+    private int currentNormalRoomsCount;
+    private bool shopSpawned;
+    private bool bossSpawned;
+    private int roomsBeforeShop;
+    private int roomsBeforeBoss;
+
+    public void PrepareFloor(int floor)
+    {
+        ResetProgression();
+
+        int extra = Mathf.Max(0, floor - 1) * Mathf.Max(0, extraRoomsPerFloor);
+        roomsBeforeShop = Mathf.Max(4, normalRoomsBeforeShop + extra);
+        roomsBeforeBoss = Mathf.Max(3, normalRoomsBeforeBoss + extra);
+
+        // El primer piso era el más corto: se le da un piso extra de margen respecto del valor viejo.
+        if (floor <= 1)
+        {
+            roomsBeforeShop = Mathf.Max(roomsBeforeShop, 7);
+            roomsBeforeBoss = Mathf.Max(roomsBeforeBoss, 5);
+        }
+    }
 
     public RoomType GetNextRoomType()
     {
         if (!shopSpawned)
         {
-            if (currentNormalRoomsCount >= normalRoomsBeforeShop)
-            {
+            if (currentNormalRoomsCount >= roomsBeforeShop)
                 return RoomType.Shop;
-            }
+
             return RoomType.Normal;
         }
 
         if (!bossSpawned)
         {
-            if (shopSpawned && currentNormalRoomsCount >= normalRoomsBeforeBoss)
-            {
+            if (shopSpawned && currentNormalRoomsCount >= roomsBeforeBoss)
                 return RoomType.Boss;
-            }
 
             return RoomType.Normal;
         }
@@ -55,7 +74,6 @@ public class DungeonProgression : MonoBehaviour
                 bossSpawned = true;
                 break;
         }
-
     }
 
     public bool HasSpawnedShop()
@@ -73,6 +91,7 @@ public class DungeonProgression : MonoBehaviour
         currentNormalRoomsCount = 0;
         shopSpawned = false;
         bossSpawned = false;
+        roomsBeforeShop = Mathf.Max(4, normalRoomsBeforeShop);
+        roomsBeforeBoss = Mathf.Max(3, normalRoomsBeforeBoss);
     }
-
 }

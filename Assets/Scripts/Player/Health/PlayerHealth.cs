@@ -23,11 +23,23 @@ public class PlayerHealth : MonoBehaviour, IDamageable, ISourcedDamageable
     [SerializeField] private Sprite emptyHeartSprite;
     [SerializeField] private Color poisonedHeartColor = new Color(0.25f, 0.85f, 0.28f, 1f);
 
+    [Header("UI - corazones envenenados (animados)")]
+    [Tooltip("Cuadros del corazon lleno envenenado (hoja CorazonEnvenenado). Si falta alguna de las dos listas, los corazones se tiñen de verde como antes.")]
+    [SerializeField] private Sprite[] poisonedFullFrames;
+    [Tooltip("Cuadros del medio corazon envenenado (hoja CorazonEnvenenadoMedio).")]
+    [SerializeField] private Sprite[] poisonedHalfFrames;
+    [SerializeField] private float poisonedHeartFps = 10f;
+
     [SerializeField] private AudioSource sfxSource;
 
+    private enum HeartKind : byte { Empty, Half, Full }
+
     private Image[] heartImages;
+    private HeartKind[] heartKinds;
     private PlayerPoisonStatus poisonStatus;
     private bool heartsPoisoned;
+    private float poisonAnimStart;
+    private int lastPoisonFrame = -1;
     private float invulnerableUntil;
 
     public event Action OnPlayerDeath;
@@ -38,6 +50,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable, ISourcedDamageable
     void Awake()
     {
         heartImages = new Image[hearts.Length];
+        heartKinds = new HeartKind[hearts.Length];
         for (int i = 0; i < hearts.Length; i++)
             heartImages[i] = hearts[i].GetComponent<Image>();
 
@@ -195,8 +208,19 @@ public class PlayerHealth : MonoBehaviour, IDamageable, ISourcedDamageable
             hearts[i].SetActive(i < playerMaxHealth / 2);
     }
 
+    // Con las hojas del corazon envenenado asignadas, los corazones llenos / medios usan esas animaciones (el vacio no
+    // cambia). Sin ellas se tiñen de verde, como antes.
+    private bool HasPoisonedFrames =>
+        poisonedFullFrames != null && poisonedFullFrames.Length > 0 &&
+        poisonedHalfFrames != null && poisonedHalfFrames.Length > 0;
+
+    private bool AnimatePoisonedHearts => heartsPoisoned && HasPoisonedFrames;
+
     private void UpdateHearts(int healthAmount)
     {
+        bool animated = AnimatePoisonedHearts;
+        int frame = animated ? CurrentPoisonFrame() : 0;
+
         int remaining = healthAmount;
         for (int i = 0; i < playerMaxHealth / 2; i++)
         {
@@ -204,26 +228,67 @@ public class PlayerHealth : MonoBehaviour, IDamageable, ISourcedDamageable
 
             if (remaining > 1)
             {
-                heartImages[i].sprite = fullHeartSprite;
+                heartKinds[i] = HeartKind.Full;
+                heartImages[i].sprite = animated ? PoisonedFrame(poisonedFullFrames, frame, fullHeartSprite) : fullHeartSprite;
                 remaining -= 2;
             }
             else if (remaining == 1)
             {
-                heartImages[i].sprite = halfHeartSprite;
+                heartKinds[i] = HeartKind.Half;
+                heartImages[i].sprite = animated ? PoisonedFrame(poisonedHalfFrames, frame, halfHeartSprite) : halfHeartSprite;
                 remaining -= 1;
             }
             else
             {
+                heartKinds[i] = HeartKind.Empty;
                 heartImages[i].sprite = emptyHeartSprite;
             }
 
-            heartImages[i].color = heartsPoisoned ? poisonedHeartColor : Color.white;
+            // Animados: el sprite ya trae el color. Sin animacion: tinte verde de antes.
+            heartImages[i].color = heartsPoisoned && !animated ? poisonedHeartColor : Color.white;
         }
+
+        lastPoisonFrame = frame;
+    }
+
+    private void Update()
+    {
+        if (!AnimatePoisonedHearts || heartImages == null)
+            return;
+
+        int frame = CurrentPoisonFrame();
+        if (frame == lastPoisonFrame)
+            return;
+
+        lastPoisonFrame = frame;
+        for (int i = 0; i < heartImages.Length; i++)
+        {
+            if (heartImages[i] == null || hearts[i] == null || !hearts[i].activeSelf)
+                continue;
+
+            if (heartKinds[i] == HeartKind.Full)
+                heartImages[i].sprite = PoisonedFrame(poisonedFullFrames, frame, fullHeartSprite);
+            else if (heartKinds[i] == HeartKind.Half)
+                heartImages[i].sprite = PoisonedFrame(poisonedHalfFrames, frame, halfHeartSprite);
+        }
+    }
+
+    // Tiempo sin escala: la animacion sigue corriendo con el juego en pausa o con hit stop.
+    private int CurrentPoisonFrame()
+    {
+        return Mathf.Max(0, Mathf.FloorToInt((Time.unscaledTime - poisonAnimStart) * Mathf.Max(1f, poisonedHeartFps)));
+    }
+
+    private static Sprite PoisonedFrame(Sprite[] frames, int frame, Sprite fallback)
+    {
+        Sprite sprite = frames[frame % frames.Length];
+        return sprite != null ? sprite : fallback;
     }
 
     private void HandlePoisonChanged(bool poisoned)
     {
         heartsPoisoned = poisoned;
+        poisonAnimStart = Time.unscaledTime;
         UpdateHearts(playerHealth);
     }
     public int CurrentHealth => playerHealth;

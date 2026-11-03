@@ -23,6 +23,43 @@ public class RatBody : MonoBehaviour, IDamageable
         reducedHealth = reducedHp;
     }
 
+    /// <summary>
+    /// Oculta el cuerpo durante 'seconds' (y le saca el collider): mientras la rata reproduce su animacion de muerte
+    /// el cuerpo todavia no tiene que verse ni poder golpearse. Aparece cuando la rata ya se esta desvaneciendo.
+    /// </summary>
+    public void HideVisualFor(float seconds)
+    {
+        if (seconds <= 0f || !isActiveAndEnabled)
+            return;
+
+        StartCoroutine(HideVisualRoutine(seconds));
+    }
+
+    private IEnumerator HideVisualRoutine(float seconds)
+    {
+        SpriteRenderer[] renderers = GetComponentsInChildren<SpriteRenderer>(true);
+        Collider2D[] colliders = GetComponents<Collider2D>();
+
+        for (int i = 0; i < renderers.Length; i++)
+            renderers[i].enabled = false;
+        for (int i = 0; i < colliders.Length; i++)
+            colliders[i].enabled = false;
+
+        yield return new WaitForSeconds(seconds);
+
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            if (renderers[i] != null)
+                renderers[i].enabled = true;
+        }
+
+        for (int i = 0; i < colliders.Length; i++)
+        {
+            if (colliders[i] != null)
+                colliders[i].enabled = true;
+        }
+    }
+
     private void Update()
     {
         if (regenerating) return;

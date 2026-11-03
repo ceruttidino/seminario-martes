@@ -127,12 +127,9 @@ public class RoomInstance : MonoBehaviour
             DoorDirection direction = pair.Key;
             RoomDoor door = pair.Value;
 
+            // Solo se muestra una puerta si hay una room vecina real. Forzar la de entrada sin vecino
+            // era lo que dejaba puertas fantasma o escondía la de vuelta.
             bool shouldBeActive = node.HasNeighbor(direction);
-
-            if (forcedDoor.HasValue && direction == forcedDoor.Value)
-            {
-                shouldBeActive = true;
-            }
 
             door.gameObject.SetActive(shouldBeActive);
 

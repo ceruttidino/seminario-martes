@@ -114,6 +114,7 @@ GameObject:
   - component: {fileID: 8302202950370894844}
   - component: {fileID: -8988283923690889856}
   - component: {fileID: 2395540348449511498}
+  - component: {fileID: 615069227763657372}
   m_Layer: 3
   m_Name: Enemy_Snail
   m_TagString: Untagged
@@ -454,3 +455,35 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SquashStretch
   target: {fileID: 0}
   returnSpeed: 18
+--- !u!114 &615069227763657372
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8283417630010587146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29ee365a4cc8450a882ab9efd7bc952b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyDeathAnimation
+  frames:
+  - {fileID: 772000001, guid: 1e129ba1b0ea49d99188859d581d0ee6, type: 3}
+  - {fileID: 772000002, guid: 1e129ba1b0ea49d99188859d581d0ee6, type: 3}
+  - {fileID: 772000003, guid: 1e129ba1b0ea49d99188859d581d0ee6, type: 3}
+  - {fileID: 772000004, guid: 1e129ba1b0ea49d99188859d581d0ee6, type: 3}
+  - {fileID: 772000005, guid: 1e129ba1b0ea49d99188859d581d0ee6, type: 3}
+  - {fileID: 772000006, guid: 1e129ba1b0ea49d99188859d581d0ee6, type: 3}
+  - {fileID: 772000007, guid: 1e129ba1b0ea49d99188859d581d0ee6, type: 3}
+  - {fileID: 772000008, guid: 1e129ba1b0ea49d99188859d581d0ee6, type: 3}
+  - {fileID: 772000009, guid: 1e129ba1b0ea49d99188859d581d0ee6, type: 3}
+  - {fileID: 772000010, guid: 1e129ba1b0ea49d99188859d581d0ee6, type: 3}
+  - {fileID: 772000011, guid: 1e129ba1b0ea49d99188859d581d0ee6, type: 3}
+  fps: 14
+  startFrame: 0
+  lastFrameFade: 0
+  source: {fileID: 0}
+  shadow: {fileID: 0}
+  sortingBoost: 0
+  copyFlip: 1
+  useLiveScale: 0

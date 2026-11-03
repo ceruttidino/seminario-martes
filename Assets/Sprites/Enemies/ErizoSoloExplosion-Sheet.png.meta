@@ -1,0 +1,754 @@
+fileFormatVersion: 2
+guid: 48d892ea4a7d4b7d9d153d2c4f669394
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 775000001
+    second: ErizoSoloExplosion-Sheet_0
+  - first:
+      213: 775000002
+    second: ErizoSoloExplosion-Sheet_1
+  - first:
+      213: 775000003
+    second: ErizoSoloExplosion-Sheet_2
+  - first:
+      213: 775000004
+    second: ErizoSoloExplosion-Sheet_3
+  - first:
+      213: 775000005
+    second: ErizoSoloExplosion-Sheet_4
+  - first:
+      213: 775000006
+    second: ErizoSoloExplosion-Sheet_5
+  - first:
+      213: 775000007
+    second: ErizoSoloExplosion-Sheet_6
+  - first:
+      213: 775000008
+    second: ErizoSoloExplosion-Sheet_7
+  - first:
+      213: 775000009
+    second: ErizoSoloExplosion-Sheet_8
+  - first:
+      213: 775000010
+    second: ErizoSoloExplosion-Sheet_9
+  - first:
+      213: 775000011
+    second: ErizoSoloExplosion-Sheet_10
+  - first:
+      213: 775000012
+    second: ErizoSoloExplosion-Sheet_11
+  - first:
+      213: 775000013
+    second: ErizoSoloExplosion-Sheet_12
+  - first:
+      213: 775000014
+    second: ErizoSoloExplosion-Sheet_13
+  - first:
+      213: 775000015
+    second: ErizoSoloExplosion-Sheet_14
+  - first:
+      213: 775000016
+    second: ErizoSoloExplosion-Sheet_15
+  - first:
+      213: 775000017
+    second: ErizoSoloExplosion-Sheet_16
+  - first:
+      213: 775000018
+    second: ErizoSoloExplosion-Sheet_17
+  - first:
+      213: 775000019
+    second: ErizoSoloExplosion-Sheet_18
+  - first:
+      213: 775000020
+    second: ErizoSoloExplosion-Sheet_19
+  - first:
+      213: 775000021
+    second: ErizoSoloExplosion-Sheet_20
+  - first:
+      213: 775000022
+    second: ErizoSoloExplosion-Sheet_21
+  - first:
+      213: 775000023
+    second: ErizoSoloExplosion-Sheet_22
+  - first:
+      213: 775000024
+    second: ErizoSoloExplosion-Sheet_23
+  - first:
+      213: 775000025
+    second: ErizoSoloExplosion-Sheet_24
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 41
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: ErizoSoloExplosion-Sheet_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 41
+        height: 40
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e592d94c91d847f8b87a522721ccb49d
+      internalID: 775000001
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ErizoSoloExplosion-Sheet_1
+      rect:
+        serializedVersion: 2
+        x: 41
+        y: 0
+        width: 41
+        height: 40
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 860a46d5291c48bca48df91eafedf463
+      internalID: 775000002
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ErizoSoloExplosion-Sheet_2
+      rect:
+        serializedVersion: 2
+        x: 82
+        y: 0
+        width: 41
+        height: 40
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7075adcf47d943aba4faee38fd9ea626
+      internalID: 775000003
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ErizoSoloExplosion-Sheet_3
+      rect:
+        serializedVersion: 2
+        x: 123
+        y: 0
+        width: 41
+        height: 40
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 481143cc732947ed94bbd9a8b828ddf3
+      internalID: 775000004
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ErizoSoloExplosion-Sheet_4
+      rect:
+        serializedVersion: 2
+        x: 164
+        y: 0
+        width: 41
+        height: 40
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a2cc3f418c2f43d09ed6f8882e4abbb7
+      internalID: 775000005
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ErizoSoloExplosion-Sheet_5
+      rect:
+        serializedVersion: 2
+        x: 205
+        y: 0
+        width: 41
+        height: 40
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8f3936903a7142f1b8d2fa891ddbb349
+      internalID: 775000006
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ErizoSoloExplosion-Sheet_6
+      rect:
+        serializedVersion: 2
+        x: 246
+        y: 0
+        width: 41
+        height: 40
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 60534e87343f46ffbda4d85ca59666c0
+      internalID: 775000007
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ErizoSoloExplosion-Sheet_7
+      rect:
+        serializedVersion: 2
+        x: 287
+        y: 0
+        width: 41
+        height: 40
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e322a800599f43a8be1bed7cab8aef48
+      internalID: 775000008
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ErizoSoloExplosion-Sheet_8
+      rect:
+        serializedVersion: 2
+        x: 328
+        y: 0
+        width: 41
+        height: 40
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ea885c1e31a34510af323917de4f0558
+      internalID: 775000009
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ErizoSoloExplosion-Sheet_9
+      rect:
+        serializedVersion: 2
+        x: 369
+        y: 0
+        width: 41
+        height: 40
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 577cbeaa743b4a4aa53419a84f5495fe
+      internalID: 775000010
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ErizoSoloExplosion-Sheet_10
+      rect:
+        serializedVersion: 2
+        x: 410
+        y: 0
+        width: 41
+        height: 40
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 10c323a741844a78b41147ea5c95e753
+      internalID: 775000011
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ErizoSoloExplosion-Sheet_11
+      rect:
+        serializedVersion: 2
+        x: 451
+        y: 0
+        width: 41
+        height: 40
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 246fe23ce1da462f9a396dd96f9f5584
+      internalID: 775000012
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ErizoSoloExplosion-Sheet_12
+      rect:
+        serializedVersion: 2
+        x: 492
+        y: 0
+        width: 41
+        height: 40
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eacb1207cd684b3eb50a2f271c22a40a
+      internalID: 775000013
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ErizoSoloExplosion-Sheet_13
+      rect:
+        serializedVersion: 2
+        x: 532
+        y: 0
+        width: 41
+        height: 40
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f661071914ee476d85ee299876e055e5
+      internalID: 775000014
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ErizoSoloExplosion-Sheet_14
+      rect:
+        serializedVersion: 2
+        x: 573
+        y: 0
+        width: 41
+        height: 40
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 88e3b10f98fb4e509c2f19f5a00fc0c8
+      internalID: 775000015
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ErizoSoloExplosion-Sheet_15
+      rect:
+        serializedVersion: 2
+        x: 614
+        y: 0
+        width: 41
+        height: 40
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 313f8744a53f436e875ee060c7ac5640
+      internalID: 775000016
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ErizoSoloExplosion-Sheet_16
+      rect:
+        serializedVersion: 2
+        x: 655
+        y: 0
+        width: 41
+        height: 40
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d9b6e20b301b47a3a246bee6e493e6dd
+      internalID: 775000017
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ErizoSoloExplosion-Sheet_17
+      rect:
+        serializedVersion: 2
+        x: 696
+        y: 0
+        width: 41
+        height: 40
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6eb1ec3835fa4d19989114d6867d3238
+      internalID: 775000018
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ErizoSoloExplosion-Sheet_18
+      rect:
+        serializedVersion: 2
+        x: 737
+        y: 0
+        width: 41
+        height: 40
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4a0eba0a01b643748cc032af23e5636c
+      internalID: 775000019
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ErizoSoloExplosion-Sheet_19
+      rect:
+        serializedVersion: 2
+        x: 778
+        y: 0
+        width: 41
+        height: 40
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5ab317491990497eb4a3574ba3af1745
+      internalID: 775000020
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ErizoSoloExplosion-Sheet_20
+      rect:
+        serializedVersion: 2
+        x: 819
+        y: 0
+        width: 41
+        height: 40
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cb6efc9862b2438fa5e1f37c22762ac8
+      internalID: 775000021
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ErizoSoloExplosion-Sheet_21
+      rect:
+        serializedVersion: 2
+        x: 860
+        y: 0
+        width: 41
+        height: 40
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 134a6e7326174ca2be21df5a7effbec5
+      internalID: 775000022
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ErizoSoloExplosion-Sheet_22
+      rect:
+        serializedVersion: 2
+        x: 901
+        y: 0
+        width: 41
+        height: 40
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 721a9ba94ced4e5297d82b317f585a27
+      internalID: 775000023
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ErizoSoloExplosion-Sheet_23
+      rect:
+        serializedVersion: 2
+        x: 942
+        y: 0
+        width: 41
+        height: 40
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 96723bfb684a47b1bb0a828dc6509d62
+      internalID: 775000024
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ErizoSoloExplosion-Sheet_24
+      rect:
+        serializedVersion: 2
+        x: 983
+        y: 0
+        width: 41
+        height: 40
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c3ced7447c734df28b97ae487debd596
+      internalID: 775000025
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: cc682d6138a8438b9925079dc056efcc
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      ErizoSoloExplosion-Sheet_0: 775000001
+      ErizoSoloExplosion-Sheet_1: 775000002
+      ErizoSoloExplosion-Sheet_2: 775000003
+      ErizoSoloExplosion-Sheet_3: 775000004
+      ErizoSoloExplosion-Sheet_4: 775000005
+      ErizoSoloExplosion-Sheet_5: 775000006
+      ErizoSoloExplosion-Sheet_6: 775000007
+      ErizoSoloExplosion-Sheet_7: 775000008
+      ErizoSoloExplosion-Sheet_8: 775000009
+      ErizoSoloExplosion-Sheet_9: 775000010
+      ErizoSoloExplosion-Sheet_10: 775000011
+      ErizoSoloExplosion-Sheet_11: 775000012
+      ErizoSoloExplosion-Sheet_12: 775000013
+      ErizoSoloExplosion-Sheet_13: 775000014
+      ErizoSoloExplosion-Sheet_14: 775000015
+      ErizoSoloExplosion-Sheet_15: 775000016
+      ErizoSoloExplosion-Sheet_16: 775000017
+      ErizoSoloExplosion-Sheet_17: 775000018
+      ErizoSoloExplosion-Sheet_18: 775000019
+      ErizoSoloExplosion-Sheet_19: 775000020
+      ErizoSoloExplosion-Sheet_20: 775000021
+      ErizoSoloExplosion-Sheet_21: 775000022
+      ErizoSoloExplosion-Sheet_22: 775000023
+      ErizoSoloExplosion-Sheet_23: 775000024
+      ErizoSoloExplosion-Sheet_24: 775000025
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

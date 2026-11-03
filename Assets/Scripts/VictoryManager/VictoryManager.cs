@@ -171,6 +171,9 @@ public class VictoryManager : MonoBehaviour
         if (victoryScreen != null)
             victoryScreen.SetActive(false);
 
+        if (finalVictoryScreen != null)
+            finalVictoryScreen.SetActive(false);
+
         if (DungeonManager.Instance != null)
             DungeonManager.Instance.StartNextFloor();
     }

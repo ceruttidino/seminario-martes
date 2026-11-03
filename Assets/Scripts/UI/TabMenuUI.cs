@@ -26,14 +26,15 @@ public class TabMenuUI : MonoBehaviour
     [Header("Siempre visible")]
     [SerializeField] private Button tabButton;
 
+    [Header("Minimapa (siempre visible; con TAB se expande)")]
+    [SerializeField] private MinimapExpander minimapExpander;
+
     [Header("Solo con TAB")]
     [SerializeField] private GameObject dimOverlay;
     [SerializeField] private GameObject[] inventoryPanels;
 
-    [Header("Inventario de buffs")]
-    [SerializeField] private Image[] buffSlotImages;
-    [SerializeField] private TMP_Text[] buffSlotNames;
-    [SerializeField] private TMP_Text[] buffSlotCounts;
+    [Header("Inventario de buffs (grilla con descripcion al pasar el mouse)")]
+    [SerializeField] private BuffGridUI buffGrid;
 
     [Header("Avisos de pickup")]
     [SerializeField] private GameObject toastContainer;
@@ -65,6 +66,8 @@ public class TabMenuUI : MonoBehaviour
             dimOverlay.SetActive(false);
 
         SetInventoryVisible(false);
+        if (minimapExpander != null)
+            minimapExpander.SetExpanded(false, true);
         HideAllToasts();
     }
 
@@ -117,8 +120,10 @@ public class TabMenuUI : MonoBehaviour
 
         HideAllToasts();
         open = true;
-        RefreshBuffSlots();
         SetInventoryVisible(true);
+        RefreshBuffGrid();
+        if (minimapExpander != null)
+            minimapExpander.SetExpanded(true);
     }
 
     public void Close()
@@ -126,7 +131,11 @@ public class TabMenuUI : MonoBehaviour
         if (!open) return;
 
         open = false;
+        if (buffGrid != null)
+            buffGrid.ResetHover();
         SetInventoryVisible(false);
+        if (minimapExpander != null)
+            minimapExpander.SetExpanded(false);
     }
 
     public static bool CombatBlocksTab()
@@ -320,62 +329,12 @@ public class TabMenuUI : MonoBehaviour
         }
     }
 
-    private void RefreshBuffSlots()
+    private void RefreshBuffGrid()
     {
-        if (buffSlotImages == null) return;
+        if (buffGrid == null) return;
 
         PlayerUpgradeManager manager = FindFirstObjectByType<PlayerUpgradeManager>();
-        List<UpgradeSO> collected = manager != null ? manager.GetCollectedUpgrades() : null;
-
-        var counts = new Dictionary<UpgradeSO, int>();
-        var order = new List<UpgradeSO>();
-
-        if (collected != null)
-        {
-            for (int i = 0; i < collected.Count; i++)
-            {
-                UpgradeSO upgrade = collected[i];
-                if (upgrade == null) continue;
-
-                if (counts.ContainsKey(upgrade))
-                    counts[upgrade]++;
-                else
-                {
-                    counts[upgrade] = 1;
-                    order.Add(upgrade);
-                }
-            }
-        }
-
-        for (int i = 0; i < buffSlotImages.Length; i++)
-        {
-            Image slot = buffSlotImages[i];
-            if (slot == null) continue;
-
-            bool hasItem = i < order.Count;
-            GameObject row = slot.transform.parent != null ? slot.transform.parent.gameObject : slot.gameObject;
-            row.SetActive(hasItem);
-
-            if (!hasItem) continue;
-
-            UpgradeSO upgrade = order[i];
-            slot.enabled = true;
-            slot.sprite = upgrade.icon;
-            slot.color = Color.white;
-
-            if (buffSlotNames != null && i < buffSlotNames.Length && buffSlotNames[i] != null)
-            {
-                buffSlotNames[i].text = EnglishItemName(upgrade.upgradeName);
-                buffSlotNames[i].enabled = true;
-            }
-
-            if (buffSlotCounts != null && i < buffSlotCounts.Length && buffSlotCounts[i] != null)
-            {
-                int times = counts[upgrade];
-                buffSlotCounts[i].text = times > 1 ? $"x{times}" : string.Empty;
-                buffSlotCounts[i].enabled = times > 1;
-            }
-        }
+        buffGrid.Refresh(manager != null ? manager.GetCollectedUpgrades() : null);
     }
 
     private static Sprite FindTabSprite()

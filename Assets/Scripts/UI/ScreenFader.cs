@@ -12,10 +12,12 @@ public class ScreenFader : MonoBehaviour
         float t = 0;
         while (t < 1)
         {
-            t += Time.deltaTime * fadeSpeed;
+            t += Time.unscaledDeltaTime * fadeSpeed;
             SetAlpha(t);
             yield return null;
         }
+
+        SetAlpha(1f);
     }
 
     public IEnumerator FadeIn()
@@ -23,16 +25,21 @@ public class ScreenFader : MonoBehaviour
         float t = 1;
         while (t > 0)
         {
-            t -= Time.deltaTime * fadeSpeed;
+            t -= Time.unscaledDeltaTime * fadeSpeed;
             SetAlpha(t);
             yield return null;
         }
+
+        SetAlpha(0f);
     }
 
     private void SetAlpha(float a)
     {
+        if (fadeImage == null)
+            return;
+
         Color c = fadeImage.color;
-        c.a = a;
+        c.a = Mathf.Clamp01(a);
         fadeImage.color = c;
     }
 }

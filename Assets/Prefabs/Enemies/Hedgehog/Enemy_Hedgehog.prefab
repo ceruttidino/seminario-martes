@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: 3319335485734253217}
   - component: {fileID: -3667985628560047063}
   - component: {fileID: 1246283040022741660}
+  - component: {fileID: 764110015723118419}
   m_Layer: 3
   m_Name: Enemy_Hedgehog
   m_TagString: Untagged
@@ -306,6 +307,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 65
   damageFlash: {fileID: 1100172250346497802}
+  preBurstDuration: 0.6
+  preBurstFrames: 12
 --- !u!114 &8841000000000000003
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -381,3 +384,48 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SquashStretch
   target: {fileID: 0}
   returnSpeed: 18
+--- !u!114 &764110015723118419
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2596313271398130789}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29ee365a4cc8450a882ab9efd7bc952b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyDeathAnimation
+  frames:
+  - {fileID: 775000001, guid: 48d892ea4a7d4b7d9d153d2c4f669394, type: 3}
+  - {fileID: 775000002, guid: 48d892ea4a7d4b7d9d153d2c4f669394, type: 3}
+  - {fileID: 775000003, guid: 48d892ea4a7d4b7d9d153d2c4f669394, type: 3}
+  - {fileID: 775000004, guid: 48d892ea4a7d4b7d9d153d2c4f669394, type: 3}
+  - {fileID: 775000005, guid: 48d892ea4a7d4b7d9d153d2c4f669394, type: 3}
+  - {fileID: 775000006, guid: 48d892ea4a7d4b7d9d153d2c4f669394, type: 3}
+  - {fileID: 775000007, guid: 48d892ea4a7d4b7d9d153d2c4f669394, type: 3}
+  - {fileID: 775000008, guid: 48d892ea4a7d4b7d9d153d2c4f669394, type: 3}
+  - {fileID: 775000009, guid: 48d892ea4a7d4b7d9d153d2c4f669394, type: 3}
+  - {fileID: 775000010, guid: 48d892ea4a7d4b7d9d153d2c4f669394, type: 3}
+  - {fileID: 775000011, guid: 48d892ea4a7d4b7d9d153d2c4f669394, type: 3}
+  - {fileID: 775000012, guid: 48d892ea4a7d4b7d9d153d2c4f669394, type: 3}
+  - {fileID: 775000013, guid: 48d892ea4a7d4b7d9d153d2c4f669394, type: 3}
+  - {fileID: 775000014, guid: 48d892ea4a7d4b7d9d153d2c4f669394, type: 3}
+  - {fileID: 775000015, guid: 48d892ea4a7d4b7d9d153d2c4f669394, type: 3}
+  - {fileID: 775000016, guid: 48d892ea4a7d4b7d9d153d2c4f669394, type: 3}
+  - {fileID: 775000017, guid: 48d892ea4a7d4b7d9d153d2c4f669394, type: 3}
+  - {fileID: 775000018, guid: 48d892ea4a7d4b7d9d153d2c4f669394, type: 3}
+  - {fileID: 775000019, guid: 48d892ea4a7d4b7d9d153d2c4f669394, type: 3}
+  - {fileID: 775000020, guid: 48d892ea4a7d4b7d9d153d2c4f669394, type: 3}
+  - {fileID: 775000021, guid: 48d892ea4a7d4b7d9d153d2c4f669394, type: 3}
+  - {fileID: 775000022, guid: 48d892ea4a7d4b7d9d153d2c4f669394, type: 3}
+  - {fileID: 775000023, guid: 48d892ea4a7d4b7d9d153d2c4f669394, type: 3}
+  - {fileID: 775000024, guid: 48d892ea4a7d4b7d9d153d2c4f669394, type: 3}
+  fps: 20
+  startFrame: 12
+  lastFrameFade: 0
+  source: {fileID: 0}
+  shadow: {fileID: 0}
+  sortingBoost: 15
+  copyFlip: 0
+  useLiveScale: 1

@@ -114,6 +114,7 @@ GameObject:
   - component: {fileID: 8465836667740861933}
   - component: {fileID: -3288538801856917683}
   - component: {fileID: 343286491842383556}
+  - component: {fileID: 3112379287255017635}
   m_Layer: 3
   m_Name: Enemy_Owl
   m_TagString: Untagged
@@ -470,6 +471,40 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SquashStretch
   target: {fileID: 0}
   returnSpeed: 18
+--- !u!114 &3112379287255017635
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8734249323408576011}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29ee365a4cc8450a882ab9efd7bc952b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyDeathAnimation
+  frames:
+  - {fileID: 773000001, guid: 5024ea347bd043df9cc3f4302259fb39, type: 3}
+  - {fileID: 773000002, guid: 5024ea347bd043df9cc3f4302259fb39, type: 3}
+  - {fileID: 773000003, guid: 5024ea347bd043df9cc3f4302259fb39, type: 3}
+  - {fileID: 773000004, guid: 5024ea347bd043df9cc3f4302259fb39, type: 3}
+  - {fileID: 773000005, guid: 5024ea347bd043df9cc3f4302259fb39, type: 3}
+  - {fileID: 773000006, guid: 5024ea347bd043df9cc3f4302259fb39, type: 3}
+  - {fileID: 773000007, guid: 5024ea347bd043df9cc3f4302259fb39, type: 3}
+  - {fileID: 773000008, guid: 5024ea347bd043df9cc3f4302259fb39, type: 3}
+  - {fileID: 773000009, guid: 5024ea347bd043df9cc3f4302259fb39, type: 3}
+  - {fileID: 773000010, guid: 5024ea347bd043df9cc3f4302259fb39, type: 3}
+  - {fileID: 773000011, guid: 5024ea347bd043df9cc3f4302259fb39, type: 3}
+  - {fileID: 773000012, guid: 5024ea347bd043df9cc3f4302259fb39, type: 3}
+  - {fileID: 773000013, guid: 5024ea347bd043df9cc3f4302259fb39, type: 3}
+  fps: 14
+  startFrame: 0
+  lastFrameFade: 0
+  source: {fileID: 0}
+  shadow: {fileID: 0}
+  sortingBoost: 0
+  copyFlip: 1
+  useLiveScale: 0
 --- !u!1 &8871834171099964277
 GameObject:
   m_ObjectHideFlags: 0
