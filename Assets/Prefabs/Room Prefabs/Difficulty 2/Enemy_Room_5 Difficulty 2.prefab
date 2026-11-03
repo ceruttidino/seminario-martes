@@ -1651,7 +1651,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88c0ffff07bc55945a93b000c001a572, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RoomBakedNavMesh
-  navMeshData: {fileID: 23800000, guid: 05061166d27bb844b861a2e86961e9de, type: 2}
+  navMeshData: {fileID: 23800000, guid: acc1ea8244205ac42be96ee040fec203, type: 2}
   useManualInterior: 0
   interiorCenter: {x: 0, y: 0.993212, z: 0}
   interiorSize: {x: 17.81579, y: 8.039896, z: 1}

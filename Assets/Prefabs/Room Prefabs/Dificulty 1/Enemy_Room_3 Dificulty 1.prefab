@@ -1559,7 +1559,7 @@ MonoBehaviour:
   rewardTable: {fileID: 11400000, guid: f19d51b0d5757954b8e83cb559953a24, type: 2}
   rewardSpawnPoint: {fileID: 8480581397439297830}
   possibleRewards: []
-  chanceToSpawnReward: 0
+  chanceToSpawnReward: 40
   possibleRewardBuffs: []
 --- !u!114 &6103341015510973049
 MonoBehaviour:

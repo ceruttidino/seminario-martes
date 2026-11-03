@@ -1573,8 +1573,8 @@ MonoBehaviour:
   diggingSpotPrefab: {fileID: 0}
   chanceToHaveDiggingSpots: 35
   enemyGroups:
-  - name: Enemy_Ant x2 (2 puntos)
-    enemyPrefab: {fileID: 8734249323408576011, guid: 23b9ec134f2fcab418d04cee4d163d96, type: 3}
+  - name: SpikyTurtle x2 (2 puntos)
+    enemyPrefab: {fileID: 3526715613216376611, guid: 71c68d685d14cf245bfa6cb088bed3b5, type: 3}
     minCount: 2
     maxCount: 2
     spawnPoints:

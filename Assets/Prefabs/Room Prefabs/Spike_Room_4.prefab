@@ -3818,7 +3818,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5131706071498355050, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
       propertyPath: trapState
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6237948275465655689, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
       propertyPath: m_LocalScale.x
@@ -3896,7 +3896,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5131706071498355050, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
       propertyPath: trapState
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6237948275465655689, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
       propertyPath: m_LocalScale.x
@@ -4052,7 +4052,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5131706071498355050, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
       propertyPath: trapState
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6237948275465655689, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
       propertyPath: m_LocalScale.x
@@ -4130,7 +4130,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5131706071498355050, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
       propertyPath: trapState
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6237948275465655689, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
       propertyPath: m_LocalScale.x
@@ -4678,7 +4678,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5131706071498355050, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
       propertyPath: trapState
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6237948275465655689, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
       propertyPath: m_LocalScale.x
@@ -4915,7 +4915,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5131706071498355050, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
       propertyPath: trapState
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6237948275465655689, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
       propertyPath: m_LocalScale.x
@@ -5144,7 +5144,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5131706071498355050, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
       propertyPath: trapState
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6237948275465655689, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
       propertyPath: m_LocalScale.x
@@ -5222,7 +5222,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5131706071498355050, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
       propertyPath: trapState
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6237948275465655689, guid: 19e6907bb1272c84e82b506620821a44, type: 3}
       propertyPath: m_LocalScale.x
