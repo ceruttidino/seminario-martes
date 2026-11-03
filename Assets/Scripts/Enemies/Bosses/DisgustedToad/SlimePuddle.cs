@@ -46,6 +46,13 @@ public class SlimePuddle : MonoBehaviour
         if (visual == null)
             visual = GetComponentInChildren<SpriteRenderer>();
 
+        // Aspecto de baba del jefe Slime (brillos, burbujas). Solo visual: el area de dano se calcula igual que antes.
+        if (visual != null)
+        {
+            visual.sprite = SlimeArt.Puddle();
+            visual.color = Color.white;
+        }
+
         Collider2D oldCollider = GetComponent<Collider2D>();
         if (oldCollider != null)
             oldCollider.enabled = false;

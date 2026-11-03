@@ -48,7 +48,10 @@ public class RoomDoor : MonoBehaviour
     private Coroutine doorAnimRoutine;
 
     private const float LockpickRange = 1.35f;
+    // Distancia (hacia el interior de la room) a la que flota el cartel "F" de la puerta con candado.
+    private const float UnlockPromptDistance = 0.85f;
 
+    private InteractPrompt unlockPrompt;
     private bool playerInRange = false;
     private GameObject currentPlayer;
     private GameObject cachedPlayer;
@@ -73,17 +76,56 @@ public class RoomDoor : MonoBehaviour
 
     private void Update()
     {
-        if (GamePause.IsGameplayFrozen) return;
+        if (GamePause.IsGameplayFrozen)
+        {
+            SetUnlockPromptVisible(false);
+            return;
+        }
 
-        if (!isLocked || isAnimating || !IsShopDoor) return;
-        if (Keyboard.current == null || !Keyboard.current.fKey.wasPressedThisFrame) return;
+        if (!isLocked || isAnimating || !IsShopDoor)
+        {
+            SetUnlockPromptVisible(false);
+            return;
+        }
 
         // La ganzua se usa estando CERCA de la puerta. Antes dependia de los eventos del trigger
         // (enter/exit), asi que solo andaba parado en una posicion muy especifica.
-        if (!TryGetNearbyPlayer(out GameObject player)) return;
-        if (RoomBlocksLockpick()) return;
+        bool nearPlayer = TryGetNearbyPlayer(out GameObject player) && !RoomBlocksLockpick();
+
+        // Cartel "F" flotante: aparece mientras se puede destrabar la puerta (cerca y sin combate).
+        SetUnlockPromptVisible(nearPlayer);
+
+        if (!nearPlayer) return;
+        if (Keyboard.current == null || !Keyboard.current.fKey.wasPressedThisFrame) return;
 
         TryUnlock(player);
+    }
+
+    /// <summary>Hacia donde queda el interior de la room respecto de esta puerta (la puerta esta en la pared).</summary>
+    private Vector3 InwardDirection()
+    {
+        switch (direction)
+        {
+            case DoorDirection.Up: return Vector3.down;
+            case DoorDirection.Down: return Vector3.up;
+            case DoorDirection.Left: return Vector3.right;
+            default: return Vector3.left;
+        }
+    }
+
+    private void SetUnlockPromptVisible(bool visible)
+    {
+        if (visible)
+        {
+            // Se crea recien cuando hace falta: la mayoria de las puertas nunca lo necesita.
+            if (unlockPrompt == null)
+                unlockPrompt = InteractPrompt.Create(transform, InwardDirection() * UnlockPromptDistance);
+            else
+                unlockPrompt.SetWorldOffset(InwardDirection() * UnlockPromptDistance);
+        }
+
+        if (unlockPrompt != null)
+            unlockPrompt.SetVisible(visible);
     }
 
     private bool TryGetNearbyPlayer(out GameObject player)
@@ -129,6 +171,9 @@ public class RoomDoor : MonoBehaviour
         doorAnimRoutine = null;
         pendingUnlock = false;
         pendingUnlockComplete = null;
+
+        if (unlockPrompt != null)
+            unlockPrompt.SetVisible(false);
     }
 
     public void Initialize(RoomNode node, DoorDirection newDirection)

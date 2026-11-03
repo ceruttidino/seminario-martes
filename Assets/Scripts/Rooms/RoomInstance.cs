@@ -172,7 +172,15 @@ public class RoomInstance : MonoBehaviour
         if (node.information != null && node.information.type == RoomType.Boss)
             EnsureBossExitDoor();
 
-        GenerateDiggingSpots();
+        // Los pozos son decoracion: si algo falla al crearlos se avisa en la consola pero NUNCA se corta la entrada a la room.
+        try
+        {
+            GenerateDiggingSpots();
+        }
+        catch (System.Exception exception)
+        {
+            Debug.LogException(exception, this);
+        }
     }
 
     public bool AnyDoorAnimating()
@@ -246,12 +254,23 @@ public class RoomInstance : MonoBehaviour
         if (diggingSpotLocations == null || diggingSpotLocations.Length == 0 || diggingSpotPrefab == null)
             return;
 
+        // Algunas rooms (ej: los pasillos verticales 8V) traen la lista con huecos vacios, sin Transform asignado. Antes, al
+        // sortear uno de esos huecos, tiraba una excepcion que cortaba la entrada a la room (el jugador quedaba donde estaba,
+        // sin pasar por su spawn). Ahora los huecos se ignoran.
+        List<Transform> availableLocations = new List<Transform>();
+        foreach (Transform location in diggingSpotLocations)
+        {
+            if (location != null)
+                availableLocations.Add(location);
+        }
+
+        if (availableLocations.Count == 0)
+            return;
+
         if (Random.value * 100f <= chanceToHaveDiggingSpots)
         {
-            int maxPossibleSpawns = Mathf.Min(2, diggingSpotLocations.Length);
+            int maxPossibleSpawns = Mathf.Min(2, availableLocations.Count);
             int numToSpawn = Random.Range(1, maxPossibleSpawns + 1);
-
-            List<Transform> availableLocations = new List<Transform>(diggingSpotLocations);
 
             for (int i = 0; i < numToSpawn; i++)
             {

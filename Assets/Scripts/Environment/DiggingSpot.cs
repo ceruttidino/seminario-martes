@@ -13,7 +13,10 @@ public class DiggingSpot : MonoBehaviour, IInteractable
     [Header("Visuales")]
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private Color highlightColor = Color.yellow;
+    [Tooltip("Donde flota el cartel de la tecla F respecto del pozo (unidades de mundo).")]
+    [SerializeField] private Vector3 promptOffset = new Vector3(0f, 0.85f, 0f);
     private Color originalColor;
+    private InteractPrompt prompt;
 
     [Header("Loot (prefab + LootItem por cada tipo)")]
     [SerializeField] private DropEntry heartDrop;
@@ -48,14 +51,24 @@ public class DiggingSpot : MonoBehaviour, IInteractable
             col = gameObject.AddComponent<BoxCollider2D>();
             col.isTrigger = true;
         }
+
+        // Cartel "F" flotante (misma fuente que el resto del juego). Aparece cuando el jugador esta cerca.
+        prompt = InteractPrompt.Create(transform, promptOffset);
     }
 
     public void ShowHighlight(bool show)
     {
-        if (isDug) return;
+        if (isDug)
+        {
+            SetPromptVisible(false);
+            return;
+        }
+
         isPlayerNear = show;
         if (spriteRenderer != null)
             spriteRenderer.color = show ? highlightColor : originalColor;
+
+        SetPromptVisible(show);
     }
 
     public void Interact()
@@ -67,7 +80,19 @@ public class DiggingSpot : MonoBehaviour, IInteractable
             return;
 
         isDug = true;
+        SetPromptVisible(false);
         if (spriteRenderer != null) spriteRenderer.color = originalColor;
+    }
+
+    private void SetPromptVisible(bool visible)
+    {
+        if (prompt != null)
+            prompt.SetVisible(visible);
+    }
+
+    private void OnDisable()
+    {
+        SetPromptVisible(false);
     }
 
     private void CompleteDig()
@@ -107,6 +132,7 @@ public class DiggingSpot : MonoBehaviour, IInteractable
     private void DisableInteraction()
     {
         isPlayerNear = false;
+        SetPromptVisible(false);
 
         Collider2D col = GetComponent<Collider2D>();
         if (col != null)

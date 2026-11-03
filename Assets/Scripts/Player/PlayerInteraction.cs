@@ -12,8 +12,16 @@ public class PlayerInteraction : MonoBehaviour
 
     private IInteractable currentInteractable;
 
-    
+    [Tooltip("OBSOLETO: el cartel de la tecla F ahora lo dibuja cada objeto interactuable (InteractPrompt, con la fuente del juego). Este texto viejo queda apagado.")]
     [SerializeField] private GameObject interactableAdvice;
+
+    private void Awake()
+    {
+        // El texto "F" que colgaba del jugador usaba la fuente por defecto de TextMeshPro y no la del resto del juego.
+        // Ahora el cartel aparece sobre el pozo / puerta / item, asi que el viejo se apaga para no duplicar la letra.
+        if (interactableAdvice != null)
+            interactableAdvice.SetActive(false);
+    }
 
     private void Update()
     {
@@ -45,21 +53,12 @@ public class PlayerInteraction : MonoBehaviour
         if (currentInteractable != foundInteractable)
         {
             if (currentInteractable != null)
-            {
                 currentInteractable.ShowHighlight(false);
-
-                ShowInteractionKey(false);
-
-            }
 
             currentInteractable = foundInteractable;
 
             if (currentInteractable != null)
-            {
                 currentInteractable.ShowHighlight(true);
-
-                ShowInteractionKey(true);
-            }
         }
     }
 
@@ -67,10 +66,5 @@ public class PlayerInteraction : MonoBehaviour
     {
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(interactionPoint == null ? transform.position : interactionPoint.position, interactionRadius);
-    }
-
-    public void ShowInteractionKey(bool boolean) 
-    {
-        interactableAdvice.SetActive(boolean);
     }
 }

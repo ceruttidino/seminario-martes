@@ -1,12 +1,13 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.InputSystem;
 
 /// <summary>
 /// Activa el NavMesh ya bakeado de la room actual. Solo rebuild en runtime
 /// si se rompe una roca/basura (InvalidatePathGrid).
+///
+/// No dibuja nada en pantalla: el NavMesh es solo datos para el pathfinding de los enemigos. Para verlo hay que
+/// abrir el prefab de la room y seleccionar el componente RoomBakedNavMesh (la Scene muestra el piso y los recortes).
 /// </summary>
 [DefaultExecutionOrder(-50)]
 public class DungeonNavMesh : MonoBehaviour
@@ -15,7 +16,6 @@ public class DungeonNavMesh : MonoBehaviour
 
     [SerializeField] private float sampleRadius = 1.6f;
     [SerializeField] private float cornerSkipDistance = 0.28f;
-    [SerializeField] private bool showOverlay = true;
 
     private NavMeshPath sharedPath;
     private NavMeshQueryFilter queryFilter;
@@ -24,9 +24,6 @@ public class DungeonNavMesh : MonoBehaviour
     private RoomInstance pendingRoom;
     private Coroutine bakeRoutine;
     private bool ready;
-    private Mesh overlayMesh;
-    private MeshFilter overlayFilter;
-    private MeshRenderer overlayRenderer;
 
     public RoomInstance CurrentRoom { get; private set; }
     public Bounds InteriorBounds { get; private set; }
@@ -59,7 +56,6 @@ public class DungeonNavMesh : MonoBehaviour
         Instance = this;
         sharedPath = new NavMeshPath();
         queryFilter = RoomNavMeshBuild.CreateFilter();
-        EnsureOverlay();
     }
 
     private void OnDestroy()
@@ -68,12 +64,6 @@ public class DungeonNavMesh : MonoBehaviour
             Instance = null;
 
         RemoveInstance();
-
-        GameObject overlay = GameObject.Find("NavMeshDebugOverlay");
-        if (overlay != null)
-            Destroy(overlay);
-        if (overlayMesh != null)
-            Destroy(overlayMesh);
     }
 
     public void RequestBake(RoomInstance room)
@@ -101,7 +91,7 @@ public class DungeonNavMesh : MonoBehaviour
             yield break;
         }
 
-        BakeRuntime(room);
+        BakeRuntime(room, false);
         bakeRoutine = null;
     }
 
@@ -116,26 +106,24 @@ public class DungeonNavMesh : MonoBehaviour
         {
             InteriorBounds = baked.InteriorBounds;
             BindData(baked.Data);
-            RefreshOverlay();
-            Debug.Log($"[NavMesh] Room '{room.name}': mesh pre-bakeado. Tecla N = overlay.");
             return;
         }
 
-        BakeRuntime(room);
+        BakeRuntime(room, true);
     }
 
-    private void BakeRuntime(RoomInstance room)
+    private void BakeRuntime(RoomInstance room, bool missingBake)
     {
         CurrentRoom = room;
         runtimeData = RoomNavMeshBuild.Build(room, out Bounds interior);
         InteriorBounds = interior;
         BindData(runtimeData);
-        RefreshOverlay();
 
-        NavMeshTriangulation triangulation = NavMesh.CalculateTriangulation();
-        int triangles = triangulation.indices != null ? triangulation.indices.Length / 3 : 0;
-        Debug.Log($"[NavMesh] Bake runtime de '{room.name}': {(IsReady ? "OK" : "FALLÓ")} · {triangles} triángulos · " +
-                  $"piso {InteriorBounds.size.x:0.0}x{InteriorBounds.size.y:0.0}. Tecla N = overlay.");
+        if (missingBake)
+        {
+            Debug.LogWarning($"[NavMesh] La room '{room.name}' no tenía NavMesh pre-bakeado y se bakeó en runtime ({(IsReady ? "OK" : "FALLÓ")}). " +
+                             "Bakealo desde el menú Raccgeon > Bakear NavMesh faltantes.");
+        }
     }
 
     private void BindData(NavMeshData data)
@@ -233,127 +221,5 @@ public class DungeonNavMesh : MonoBehaviour
             return false;
 
         return !NavMesh.Raycast(startHit.position, goalHit.position, out _, Instance.queryFilter);
-    }
-
-    private void Update()
-    {
-        if (Keyboard.current != null && Keyboard.current.nKey.wasPressedThisFrame)
-        {
-            showOverlay = !showOverlay;
-            if (overlayRenderer != null)
-                overlayRenderer.enabled = showOverlay;
-        }
-    }
-
-    private void EnsureOverlay()
-    {
-        GameObject overlay = GameObject.Find("NavMeshDebugOverlay");
-        if (overlay == null)
-            overlay = new GameObject("NavMeshDebugOverlay");
-        overlay.transform.SetParent(null, false);
-        overlay.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
-
-        overlayFilter = overlay.GetComponent<MeshFilter>();
-        if (overlayFilter == null)
-            overlayFilter = overlay.AddComponent<MeshFilter>();
-
-        overlayRenderer = overlay.GetComponent<MeshRenderer>();
-        if (overlayRenderer == null)
-            overlayRenderer = overlay.AddComponent<MeshRenderer>();
-
-        Shader shader = Shader.Find("Sprites/Default");
-        if (shader == null)
-            shader = Shader.Find("Universal Render Pipeline/Unlit");
-        Material material = new Material(shader);
-        material.color = new Color(0.15f, 0.85f, 1f, 0.38f);
-        overlayRenderer.sharedMaterial = material;
-        overlayRenderer.sortingOrder = 40;
-        overlayRenderer.enabled = showOverlay;
-    }
-
-    private void RefreshOverlay()
-    {
-        if (overlayFilter == null)
-            EnsureOverlay();
-
-        if (overlayMesh == null)
-            overlayMesh = new Mesh { name = "NavMeshOverlay" };
-        else
-            overlayMesh.Clear();
-
-        NavMeshTriangulation triangulation = NavMesh.CalculateTriangulation();
-        if (triangulation.vertices == null || triangulation.indices == null || triangulation.indices.Length < 3)
-        {
-            overlayFilter.sharedMesh = overlayMesh;
-            if (overlayRenderer != null)
-                overlayRenderer.enabled = false;
-            return;
-        }
-
-        Bounds clip = InteriorBounds;
-        clip.Expand(0.4f);
-
-        List<Vector3> vertices = new List<Vector3>(triangulation.vertices.Length);
-        List<int> triangles = new List<int>(triangulation.indices.Length);
-        Dictionary<int, int> remap = new Dictionary<int, int>(triangulation.vertices.Length);
-
-        for (int i = 0; i + 2 < triangulation.indices.Length; i += 3)
-        {
-            int ia = triangulation.indices[i];
-            int ib = triangulation.indices[i + 1];
-            int ic = triangulation.indices[i + 2];
-            Vector3 a = triangulation.vertices[ia];
-            Vector3 b = triangulation.vertices[ib];
-            Vector3 c = triangulation.vertices[ic];
-            Vector3 mid = (a + b + c) / 3f;
-            if (!clip.Contains(new Vector3(mid.x, mid.y, clip.center.z)))
-                continue;
-
-            triangles.Add(RemapVertex(vertices, remap, ia, a));
-            triangles.Add(RemapVertex(vertices, remap, ib, b));
-            triangles.Add(RemapVertex(vertices, remap, ic, c));
-        }
-
-        overlayMesh.SetVertices(vertices);
-        overlayMesh.SetTriangles(triangles, 0);
-        overlayMesh.RecalculateBounds();
-        overlayMesh.RecalculateNormals();
-        overlayFilter.sharedMesh = overlayMesh;
-        if (overlayRenderer != null)
-            overlayRenderer.enabled = showOverlay && triangles.Count > 0;
-    }
-
-    private static int RemapVertex(List<Vector3> vertices, Dictionary<int, int> remap, int sourceIndex, Vector3 vertex)
-    {
-        if (remap.TryGetValue(sourceIndex, out int mapped))
-            return mapped;
-
-        vertex.z = -0.05f;
-        mapped = vertices.Count;
-        vertices.Add(vertex);
-        remap.Add(sourceIndex, mapped);
-        return mapped;
-    }
-
-    private void OnDrawGizmos()
-    {
-        if (!ready)
-            return;
-
-        Gizmos.color = new Color(0.2f, 1f, 0.4f, 0.8f);
-        Gizmos.DrawWireCube(InteriorBounds.center, InteriorBounds.size);
-
-        if (overlayMesh == null || overlayMesh.vertexCount == 0)
-            return;
-
-        Gizmos.color = new Color(0.15f, 0.9f, 1f, 0.35f);
-        Vector3[] vertices = overlayMesh.vertices;
-        int[] indices = overlayMesh.triangles;
-        for (int i = 0; i + 2 < indices.Length; i += 3)
-        {
-            Gizmos.DrawLine(vertices[indices[i]], vertices[indices[i + 1]]);
-            Gizmos.DrawLine(vertices[indices[i + 1]], vertices[indices[i + 2]]);
-            Gizmos.DrawLine(vertices[indices[i + 2]], vertices[indices[i]]);
-        }
     }
 }

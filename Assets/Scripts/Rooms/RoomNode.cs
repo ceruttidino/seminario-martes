@@ -16,9 +16,13 @@ public class RoomNode
     public bool isShopUnlocked = false;
     public bool isSealed = false;
 
+    /// <summary>Distancia en rooms desde el Start (la calcula DungeonLayout al armar el piso).</summary>
+    public int depth;
+
     public RoomNode(string id, RoomInformation roomInformation)
     {
         uniqueNodeID = id;
+        name = id;
         information = roomInformation;
     }
 

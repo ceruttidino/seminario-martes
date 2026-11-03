@@ -14,6 +14,17 @@ public class ShopSlot : MonoBehaviour
 
     [SerializeField] GameObject Npc;
 
+    [Tooltip("Donde flota el cartel de la tecla F respecto del item (unidades de mundo).")]
+    [SerializeField] private Vector3 promptOffset = new Vector3(0f, 0.95f, 0f);
+
+    private InteractPrompt prompt;
+
+    private void Awake()
+    {
+        // Cartel "F" flotante: aparece sobre el item mientras el jugador esta cerca y el item sigue a la venta.
+        prompt = InteractPrompt.Create(transform, promptOffset);
+    }
+
     public void SetItem(ShopItemData item)
     {
         ReleaseReservation();
@@ -50,8 +61,28 @@ public class ShopSlot : MonoBehaviour
 
     private void Update()
     {
+        if (GamePause.IsGameplayFrozen)
+        {
+            SetPromptVisible(false);
+            return;
+        }
+
+        SetPromptVisible(playerInRange && itemData != null);
+
         if (playerInRange && Keyboard.current != null && Keyboard.current.fKey.wasPressedThisFrame)
             TryBuy();
+    }
+
+    private void SetPromptVisible(bool visible)
+    {
+        if (prompt != null)
+            prompt.SetVisible(visible);
+    }
+
+    private void OnDisable()
+    {
+        // enabled = false cuando el item se vende / la tienda no tiene stock: ya no hay nada que comprar.
+        SetPromptVisible(false);
     }
 
     private void TryBuy()

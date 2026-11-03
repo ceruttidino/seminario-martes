@@ -19,7 +19,7 @@ GameObject:
   - component: {fileID: 1000015}
   - component: {fileID: 1000013}
   - component: {fileID: 1000014}
-  - component: {fileID: 1000016}
+  - component: {fileID: 1000020}
   - component: {fileID: 7916449587331540508}
   - component: {fileID: 6050282750692242446}
   m_Layer: 3
@@ -93,7 +93,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 753000001, guid: 41aa73136e024f0a972a4be34cf826fd, type: 3}
+  m_Sprite: {fileID: 752000001, guid: 707c89cba0c2460b86aac229031544c8, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -223,7 +223,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyMovement
   speed: 3
-  animator: {fileID: 1000016}
+  animator: {fileID: 0}
   spriteRenderer: {fileID: 1000003}
   obstacleLayers:
     serializedVersion: 2
@@ -245,13 +245,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a44f12629ac4cd0877f2dc406154134, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PoisonousSnake
-  chaseSpeed: 3
-  attackRange: 0.7
-  windupDuration: 0.3
-  biteStunDuration: 0.45
+  fireRangeTiles: 10
+  tooCloseTiles: 3
+  comfortDistanceTiles: 6
+  tileSize: 1
+  roamSpeed: 1.7
+  repositionSpeed: 2.4
+  retreatSpeed: 3.4
+  detectionDelay: 0.55
+  shotCooldown: 1.3
+  calmAfterHit: 4
+  projectileSpeed: 6.5
+  projectileLifetime: 2.6
   attackDamage: 1
-  damageFlash: {fileID: 1000014}
-  fleeSpeed: 4
+  muzzleSideDistance: 0.95
+  muzzleFrontDistance: 0.45
+  muzzleHeight: 0.12
   companionPrefab: {fileID: 5136333534524507215, guid: 1010f75008e5eec49a330b3df2c0c32a, type: 3}
 --- !u!114 &1000013
 MonoBehaviour:
@@ -284,28 +293,95 @@ MonoBehaviour:
   flashColor: {r: 1, g: 0, b: 0, a: 1}
   flashDuration: 0.05
   flashCount: 2
---- !u!95 &1000016
-Animator:
-  serializedVersion: 7
+--- !u!114 &1000020
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1000001}
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 2916d3ff448a4bc9b2ac67d38c193ea8, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c89418d8d9ce48058a3853fbaa1d955c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SnakeAnimator
+  spriteRenderer: {fileID: 1000003}
+  body: {fileID: 1000004}
+  hitReaction: {fileID: 7916449587331540508}
+  idleFrames:
+  - {fileID: 752000001, guid: 707c89cba0c2460b86aac229031544c8, type: 3}
+  - {fileID: 752000002, guid: 707c89cba0c2460b86aac229031544c8, type: 3}
+  - {fileID: 752000003, guid: 707c89cba0c2460b86aac229031544c8, type: 3}
+  - {fileID: 752000004, guid: 707c89cba0c2460b86aac229031544c8, type: 3}
+  - {fileID: 752000005, guid: 707c89cba0c2460b86aac229031544c8, type: 3}
+  - {fileID: 752000006, guid: 707c89cba0c2460b86aac229031544c8, type: 3}
+  - {fileID: 752000007, guid: 707c89cba0c2460b86aac229031544c8, type: 3}
+  walkSideFrames:
+  - {fileID: 761000001, guid: 5760779ee99545e39eca68684a17232e, type: 3}
+  - {fileID: 761000002, guid: 5760779ee99545e39eca68684a17232e, type: 3}
+  - {fileID: 761000003, guid: 5760779ee99545e39eca68684a17232e, type: 3}
+  - {fileID: 761000004, guid: 5760779ee99545e39eca68684a17232e, type: 3}
+  - {fileID: 761000005, guid: 5760779ee99545e39eca68684a17232e, type: 3}
+  - {fileID: 761000006, guid: 5760779ee99545e39eca68684a17232e, type: 3}
+  - {fileID: 761000007, guid: 5760779ee99545e39eca68684a17232e, type: 3}
+  walkBackFrames:
+  - {fileID: 762000001, guid: 545d1dd9bb174088b77cb698c4b87e9a, type: 3}
+  - {fileID: 762000002, guid: 545d1dd9bb174088b77cb698c4b87e9a, type: 3}
+  - {fileID: 762000003, guid: 545d1dd9bb174088b77cb698c4b87e9a, type: 3}
+  - {fileID: 762000004, guid: 545d1dd9bb174088b77cb698c4b87e9a, type: 3}
+  - {fileID: 762000005, guid: 545d1dd9bb174088b77cb698c4b87e9a, type: 3}
+  - {fileID: 762000006, guid: 545d1dd9bb174088b77cb698c4b87e9a, type: 3}
+  - {fileID: 762000007, guid: 545d1dd9bb174088b77cb698c4b87e9a, type: 3}
+  - {fileID: 762000008, guid: 545d1dd9bb174088b77cb698c4b87e9a, type: 3}
+  - {fileID: 762000009, guid: 545d1dd9bb174088b77cb698c4b87e9a, type: 3}
+  - {fileID: 762000010, guid: 545d1dd9bb174088b77cb698c4b87e9a, type: 3}
+  attackFrontFrames:
+  - {fileID: 763000001, guid: dc36a92a64a24d9382db808028424e1f, type: 3}
+  - {fileID: 763000002, guid: dc36a92a64a24d9382db808028424e1f, type: 3}
+  - {fileID: 763000003, guid: dc36a92a64a24d9382db808028424e1f, type: 3}
+  - {fileID: 763000004, guid: dc36a92a64a24d9382db808028424e1f, type: 3}
+  - {fileID: 763000005, guid: dc36a92a64a24d9382db808028424e1f, type: 3}
+  - {fileID: 763000006, guid: dc36a92a64a24d9382db808028424e1f, type: 3}
+  - {fileID: 763000007, guid: dc36a92a64a24d9382db808028424e1f, type: 3}
+  - {fileID: 763000008, guid: dc36a92a64a24d9382db808028424e1f, type: 3}
+  attackSideFrames:
+  - {fileID: 764000001, guid: e26a8744559d48e9930868b6d844e533, type: 3}
+  - {fileID: 764000002, guid: e26a8744559d48e9930868b6d844e533, type: 3}
+  - {fileID: 764000003, guid: e26a8744559d48e9930868b6d844e533, type: 3}
+  - {fileID: 764000004, guid: e26a8744559d48e9930868b6d844e533, type: 3}
+  - {fileID: 764000005, guid: e26a8744559d48e9930868b6d844e533, type: 3}
+  - {fileID: 764000006, guid: e26a8744559d48e9930868b6d844e533, type: 3}
+  - {fileID: 764000007, guid: e26a8744559d48e9930868b6d844e533, type: 3}
+  deathFrames:
+  - {fileID: 765000001, guid: a910306bf6934eefa36ae1f99badbe03, type: 3}
+  - {fileID: 765000002, guid: a910306bf6934eefa36ae1f99badbe03, type: 3}
+  - {fileID: 765000003, guid: a910306bf6934eefa36ae1f99badbe03, type: 3}
+  - {fileID: 765000004, guid: a910306bf6934eefa36ae1f99badbe03, type: 3}
+  - {fileID: 765000005, guid: a910306bf6934eefa36ae1f99badbe03, type: 3}
+  - {fileID: 765000006, guid: a910306bf6934eefa36ae1f99badbe03, type: 3}
+  - {fileID: 765000007, guid: a910306bf6934eefa36ae1f99badbe03, type: 3}
+  - {fileID: 765000008, guid: a910306bf6934eefa36ae1f99badbe03, type: 3}
+  - {fileID: 765000009, guid: a910306bf6934eefa36ae1f99badbe03, type: 3}
+  - {fileID: 765000010, guid: a910306bf6934eefa36ae1f99badbe03, type: 3}
+  - {fileID: 765000011, guid: a910306bf6934eefa36ae1f99badbe03, type: 3}
+  - {fileID: 765000012, guid: a910306bf6934eefa36ae1f99badbe03, type: 3}
+  - {fileID: 765000013, guid: a910306bf6934eefa36ae1f99badbe03, type: 3}
+  projectileFrames:
+  - {fileID: 766000001, guid: 94e085f78de64fa0b4c44f97b42d2d6e, type: 3}
+  - {fileID: 766000002, guid: 94e085f78de64fa0b4c44f97b42d2d6e, type: 3}
+  - {fileID: 766000003, guid: 94e085f78de64fa0b4c44f97b42d2d6e, type: 3}
+  - {fileID: 766000004, guid: 94e085f78de64fa0b4c44f97b42d2d6e, type: 3}
+  - {fileID: 766000005, guid: 94e085f78de64fa0b4c44f97b42d2d6e, type: 3}
+  - {fileID: 766000006, guid: 94e085f78de64fa0b4c44f97b42d2d6e, type: 3}
+  idleFps: 8
+  walkSideFps: 10
+  walkBackFps: 12
+  attackFps: 12
+  deathFps: 14
+  projectileFps: 14
+  attackFrontFireFrame: 5
+  attackSideFireFrame: 3
+  moveThreshold: 0.08
 --- !u!114 &7916449587331540508
 MonoBehaviour:
   m_ObjectHideFlags: 0

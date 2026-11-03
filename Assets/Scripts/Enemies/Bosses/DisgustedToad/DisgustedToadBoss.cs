@@ -77,6 +77,10 @@ public class DisgustedToadBoss : BossBase
     private RigidbodyType2D storedBodyType;
     private bool isAirborne;
     private readonly HashSet<string> animatorParams = new HashSet<string>();
+    private SlimeBossVisual slimeVisual;
+
+    // Nombre que muestra la barra de vida: el jefe ahora es un Slime (solo cambio visual, mismas habilidades).
+    public override string BarTitle => "Disgusted Slime";
 
     protected override void Awake()
     {
@@ -101,11 +105,31 @@ public class DisgustedToadBoss : BossBase
         if (rb != null) storedBodyType = rb.bodyType;
 
         CacheAnimatorParams();
+        SetupSlimeVisual();
 
         if (enemyHealth != null)
             enemyHealth.OnDeath += HandleDeath;
 
         base.Awake();
+    }
+
+    /// <summary>
+    /// Apariencia de Slime: sprites, pupilas y efectos (todo en SlimeBossVisual / SlimeArt). Se arma ANTES de
+    /// base.Awake para que BossBase esconda y muestre tambien las pupilas junto con el resto durante la invocacion.
+    /// </summary>
+    private void SetupSlimeVisual()
+    {
+        if (visual == null || visualRenderer == null)
+            return;
+
+        slimeVisual = visual.GetComponent<SlimeBossVisual>();
+        if (slimeVisual == null)
+            slimeVisual = visual.gameObject.AddComponent<SlimeBossVisual>();
+
+        slimeVisual.Initialize(visualRenderer, mouthPoint, FindRoomParent());
+
+        // Si el Slime te mata, la pantalla de Game Over muestra su cuerpo (y no la sombra del piso).
+        DamagePortrait.Ensure(gameObject, visualRenderer);
     }
 
     private void OnDestroy()
@@ -499,8 +523,18 @@ public class DisgustedToadBoss : BossBase
         foreach (AnimatorControllerParameter p in animator.parameters) animatorParams.Add(p.name);
     }
 
-    private void AnimTrigger(string n) { if (animator != null && animatorParams.Contains(n)) animator.SetTrigger(n); }
-    private void AnimBool(string n, bool v) { if (animator != null && animatorParams.Contains(n)) animator.SetBool(n, v); }
+    private void AnimTrigger(string n)
+    {
+        if (slimeVisual != null) slimeVisual.OnAnimTrigger(n);
+        if (animator != null && animatorParams.Contains(n)) animator.SetTrigger(n);
+    }
+
+    private void AnimBool(string n, bool v)
+    {
+        if (slimeVisual != null) slimeVisual.OnAnimBool(n, v);
+        if (animator != null && animatorParams.Contains(n)) animator.SetBool(n, v);
+    }
+
     private void AnimFloat(string n, float v) { if (animator != null && animatorParams.Contains(n)) animator.SetFloat(n, v); }
 
     // ───── Muerte ─────
@@ -523,6 +557,9 @@ public class DisgustedToadBoss : BossBase
         AnimBool("InAir", false);
         AnimBool("MouthWiggle", false);
         AnimBool("TongueOut", false);
+
+        // El jefe se destruye apenas muere: el derretido lo reproduce un efecto aparte.
+        if (slimeVisual != null) slimeVisual.PlayDeath();
 
         OpenRoomAfterDefeat();
     }

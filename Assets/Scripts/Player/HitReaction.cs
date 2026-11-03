@@ -13,7 +13,7 @@ public class HitReaction : MonoBehaviour
 {
     [Header("Knockback")]
     [SerializeField] private Rigidbody2D rb;
-    [Tooltip("0 = recibe todo el knockback, 1 = inmune (ideal ~0.8-1 para bosses)")]
+    [Tooltip("0 = recibe todo el knockback, 1 = inmune. OJO: los JEFES (BossBase) y el TOPO son inmunes siempre, sin tocar esto.")]
     [SerializeField, Range(0f, 1f)] private float knockbackResistance = 0f;
     [SerializeField] private float knockbackDuration = 0.15f;
     [Tooltip("Solo para Rigidbody2D Kinematic: capas que frenan el knockback (paredes)")]
@@ -43,6 +43,12 @@ public class HitReaction : MonoBehaviour
     public bool IsStunned => Time.time < stunEndTime;
     public bool IsInKnockback => knockbackTimer > 0f;
 
+    /// <summary>
+    /// true si el golpe nunca lo empuja: los jefes y el topo (el golpe igual lo hace parpadear y achatarse, pero no se
+    /// mueve de donde esta).
+    /// </summary>
+    public bool IsKnockbackImmune => knockbackImmune;
+
     /// <summary>Por si otro script quiere reaccionar al golpe (sonido propio, cambiar de estado, etc.)</summary>
     public event System.Action<Vector2> Hit;
 
@@ -55,6 +61,7 @@ public class HitReaction : MonoBehaviour
     private Vector2 knockbackVelocity;
     private float knockbackTimer;
     private float stunEndTime = -999f;
+    private bool knockbackImmune;
 
     private static readonly RaycastHit2D[] castHits = new RaycastHit2D[4];
     private const float Skin = 0.02f;
@@ -63,6 +70,12 @@ public class HitReaction : MonoBehaviour
     {
         if (rb == null) rb = GetComponent<Rigidbody2D>();
         if (squash == null) squash = GetComponentInChildren<SquashStretch>();
+
+        // Todos los enemigos salen despedidos con el golpe del jugador, MENOS los jefes y el topo: los jefes siguen con su
+        // rutina y el topo no se mueve nunca de su pozo.
+        knockbackImmune = knockbackResistance >= 0.999f
+                          || GetComponentInParent<BossBase>() != null
+                          || GetComponentInParent<Mole>() != null;
 
         renderers = (renderersToFlash != null && renderersToFlash.Length > 0)
             ? renderersToFlash
@@ -93,7 +106,7 @@ public class HitReaction : MonoBehaviour
             direction = Random.insideUnitCircle;
         direction.Normalize();
 
-        float finalForce = force * (1f - knockbackResistance);
+        float finalForce = knockbackImmune ? 0f : force * (1f - knockbackResistance);
         bool hasKnockback = finalForce > 0.01f && rb != null;
 
         if (hasKnockback)

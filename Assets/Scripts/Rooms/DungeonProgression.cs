@@ -1,5 +1,9 @@
 using UnityEngine;
 
+/// <summary>
+/// OBSOLETO: antes decidia sobre la marcha cuando aparecian la Shop y la Boss. Ahora el piso ENTERO se genera al empezar
+/// (DungeonLayout) y esto ya no interviene en el layout. Se conserva porque DungeonManager lo tiene asignado en la escena.
+/// </summary>
 public class DungeonProgression : MonoBehaviour
 {
     [Header("Limits")]

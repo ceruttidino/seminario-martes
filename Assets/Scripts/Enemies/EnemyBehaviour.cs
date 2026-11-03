@@ -105,7 +105,7 @@ public class EnemyBehaviour : MonoBehaviour
                     break;
                 }
 
-                SetState(new SnakeChaseState(player, movement, transform, this, poisonousSnake));
+                SetState(new SnakeRoamState(player, movement, transform, this, poisonousSnake));
                 break;
 
             case EnemyType.Owl:
@@ -167,9 +167,9 @@ public class EnemyBehaviour : MonoBehaviour
             turtleCharge.OnWallHit(normal);
         }
 
-        if (currentState is SnakeFleeState snakeFlee)
+        if (currentState is SnakeRetreatState snakeRetreat)
         {
-            snakeFlee.OnWallHit(normal);
+            snakeRetreat.OnWallHit(normal);
         }
     }
 }

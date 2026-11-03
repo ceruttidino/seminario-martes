@@ -37,8 +37,8 @@ public class QuickAttack : MonoBehaviour, IAttack
     [SerializeField] private float attackSlowDuration = 0.15f; // NUEVO
 
     [Header("Feel - Knockback")] // NUEVO
-    [Tooltip("Velocidad inicial del empuje (unidades/seg). 10 con duración 0.15 ≈ medio tile.")]
-    [SerializeField] private float knockbackForce = 10f; // NUEVO
+    [Tooltip("Velocidad inicial del empuje (unidades/seg). Con la duración de 0.15 del HitReaction el enemigo viaja ≈ fuerza x 0.04 tiles: 10 ≈ medio tile, 28 ≈ 1 tile. Los jefes y el topo no se empujan.")]
+    [SerializeField] private float knockbackForce = 28f; // CAMBIADO: antes 10 (medio tile)
 
     [Header("Feel - Hit Stop / Camera")] // NUEVO
     [SerializeField] private float hitStopDuration = 0.05f; // NUEVO

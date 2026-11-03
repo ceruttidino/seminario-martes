@@ -10,9 +10,8 @@ public class DungeonManager : MonoBehaviour
     [SerializeField] private Transform player;
     [SerializeField] private Transform roomParent;
     [SerializeField] private ScreenFader screenFader;
+    [Tooltip("Ya no define el layout: el piso entero se genera al empezar (DungeonLayout). Solo se usa para reiniciar el contador al cambiar de piso.")]
     [SerializeField] private DungeonProgression dungeonProgression;
-
-    private bool challengeSpawned = false;
 
     [Header("Dungeon Configuration")]
     [SerializeField] private RoomInformation startRoomInformation;
@@ -32,6 +31,16 @@ public class DungeonManager : MonoBehaviour
     [Header("Progression")]
     [Tooltip("Último nivel jugable. Al matar el boss en este nivel, el juego termina en vez de generar el siguiente piso.")]
     [SerializeField] private int maxFloor = 3;
+
+    [Header("Level Size")]
+    [Tooltip("Cantidad TOTAL de rooms del piso 1 (incluye Start, Shop, Boss y Challenge). En cada partida se sortea un valor entre X (minimo) e Y (maximo).")]
+    [SerializeField] private Vector2Int floor1Rooms = new Vector2Int(8, 10);
+    [Tooltip("Idem para el piso 2: un poco mas largo que el 1.")]
+    [SerializeField] private Vector2Int floor2Rooms = new Vector2Int(10, 13);
+    [Tooltip("Idem para el piso 3 (y siguientes): el mas largo.")]
+    [SerializeField] private Vector2Int floor3Rooms = new Vector2Int(12, 15);
+    [Tooltip("0 = el piso sale distinto en cada partida. Cualquier otro numero genera SIEMPRE el mismo piso (solo para probar / reproducir un bug). La semilla usada se imprime en la consola al empezar cada piso.")]
+    [SerializeField] private int debugSeed = 0;
 
     [Header("UI")]
     [SerializeField] private MinimapUI minimapUI;
@@ -141,30 +150,87 @@ public class DungeonManager : MonoBehaviour
         return chosen;
     }
 
+    /// <summary>
+    /// Cantidad total de rooms del piso: un valor al azar entre el minimo y el maximo configurados. Cada piso es un
+    /// poco mas largo que el anterior.
+    /// </summary>
+    private int RollRoomCount(int floor)
+    {
+        Vector2Int range = floor <= 1 ? floor1Rooms : (floor == 2 ? floor2Rooms : floor3Rooms);
+
+        int min = Mathf.Max(5, Mathf.Min(range.x, range.y));
+        int max = Mathf.Max(min, Mathf.Max(range.x, range.y));
+
+        return Random.Range(min, max + 1);
+    }
+
+    /// <summary>
+    /// Genera el piso ENTERO de una vez (estilo Isaac): todas las rooms y a donde lleva cada puerta quedan definidas desde
+    /// el principio. Nada esta descubierto: el minimapa solo muestra lo que el jugador va visitando.
+    /// </summary>
     private void BuildNewDungeon()
     {
-        challengeSpawned = false;
-
         // Los challenges se juegan UNA vez por nivel (no por run): al empezar cada piso vuelven a estar disponibles.
         ChallengeRunState.Reset();
 
         List<RoomInformation> floorRooms = GetNormalRoomsForFloor(currentFloor);
+        RoomInformation bossRoom = PickBossRoomInformationForFloor();
+
+        int totalRooms = RollRoomCount(currentFloor);
+        int seed = debugSeed != 0 ? debugSeed + currentFloor : Random.Range(int.MinValue, int.MaxValue);
 
         dungeonLayout = new DungeonLayout();
-        dungeonLayout.Build(startRoomInformation, floorRooms, shopRoomInformation, PickBossRoomInformationForFloor(), challengeRoomInformations);
+        bool generated = dungeonLayout.Generate(startRoomInformation, floorRooms, shopRoomInformation, bossRoom,
+            challengeRoomInformations, totalRooms, seed);
+
+        // Si por configuracion no entro, se prueba con un piso mas chico antes de rendirse.
+        for (int shrink = 1; !generated && shrink <= 3; shrink++)
+        {
+            Debug.LogWarning($"[DungeonManager] Piso {currentFloor}: no se pudo armar con {totalRooms} rooms ({dungeonLayout.LastError}). Reintentando mas chico.");
+            totalRooms = Mathf.Max(5, totalRooms - 2);
+            generated = dungeonLayout.Generate(startRoomInformation, floorRooms, shopRoomInformation, bossRoom,
+                challengeRoomInformations, totalRooms, seed + shrink);
+        }
+
+        if (!generated)
+        {
+            Debug.LogError($"[DungeonManager] Piso {currentFloor}: no se pudo generar el piso ({dungeonLayout.LastError}). Se usa un piso minimo (Start + Boss). Revisar la configuracion de RoomInformation.");
+
+            if (!dungeonLayout.GenerateFallback(startRoomInformation, bossRoom))
+                return;
+        }
+
+        LogLayout(totalRooms, seed);
 
         currentNode = dungeonLayout.StartNode;
         currentNode.isCurrentRoom = true;
 
-        dungeonLayout.CreateNextRoom(currentNode, DoorDirection.Up, RoomType.Normal);
-
-        EnterRoom(currentNode, null);
+        EnterRoomSafely(currentNode, null);
 
         if (currentNode.spawnedInstance != null)
         {
             currentNode.spawnedInstance.ConfigureDoors(currentNode);
         }
+    }
 
+    private void LogLayout(int requestedRooms, int seed)
+    {
+        List<RoomNode> all = dungeonLayout.GetAllRooms();
+
+        int normal = 0, shop = 0, boss = 0, challenge = 0;
+        foreach (RoomNode node in all)
+        {
+            switch (node.information.type)
+            {
+                case RoomType.Normal: normal++; break;
+                case RoomType.Shop: shop++; break;
+                case RoomType.Boss: boss++; break;
+                case RoomType.Challenge: challenge++; break;
+            }
+        }
+
+        Debug.Log($"[DungeonManager] Piso {currentFloor}: {all.Count} rooms (pedidas {requestedRooms}) = Start + {normal} normales + {shop} Shop + {boss} Boss + {challenge} Challenge | semilla {seed} | intentos {dungeonLayout.Attempts}\n" +
+                  "S = Start, o = normal, $ = Shop, B = Boss, C = Challenge\n" + dungeonLayout.ToAscii());
     }
 
     // BuffPool no se resetea: los power-ups ya usados no vuelven a salir en el piso siguiente.
@@ -235,17 +301,15 @@ public class DungeonManager : MonoBehaviour
     {
         isTransitioning = true;
 
-        RoomType nextRoomType = dungeonProgression.GetNextRoomType();
-
-        RoomNode nextNode = TryCreateRoom(exitDirection, nextRoomType, out RoomType finalType);
+        // El piso ya esta generado: la puerta por la que sale el jugador siempre lleva a una room que ya existe, y esa room
+        // tiene la puerta de vuelta en el lado opuesto. No se crea ni se cambia nada al pasar.
+        RoomNode nextNode = currentNode != null ? currentNode.GetNeighbor(exitDirection) : null;
 
         if (nextNode == null)
         {
             isTransitioning = false;
             yield break;
         }
-
-        dungeonProgression.RegisterGeneratedRoom(finalType);
 
         yield return StartCoroutine(screenFader.FadeOut());
 
@@ -269,7 +333,7 @@ public class DungeonManager : MonoBehaviour
 
         currentNode.isCurrentRoom = true;
 
-        EnterRoom(currentNode, entryDirection);
+        EnterRoomSafely(currentNode, entryDirection);
 
         if (previousNode.spawnedInstance != null)
         {
@@ -287,43 +351,20 @@ public class DungeonManager : MonoBehaviour
         isTransitioning = false;
     }
 
-    private RoomNode TryCreateRoom(DoorDirection exitDirection, RoomType requestedType, out RoomType finalType)
+    /// <summary>
+    /// Entra a la room sin que un error de UNA room (un dato roto en un prefab) deje la transicion colgada: el error se
+    /// muestra en la consola, pero la transicion termina igual (la pantalla vuelve a verse y el juego no se traba).
+    /// </summary>
+    private void EnterRoomSafely(RoomNode node, DoorDirection? entryDirection)
     {
-        finalType = requestedType;
-
-        RoomNode node = dungeonLayout.CreateNextRoom(currentNode, exitDirection, requestedType);
-
-        if (node == null && requestedType != RoomType.Normal)
+        try
         {
-            foreach (DoorDirection dir in System.Enum.GetValues(typeof(DoorDirection)))
-            {
-                if (dir == exitDirection) continue;
-
-                node = dungeonLayout.CreateNextRoom(currentNode, dir, requestedType);
-
-                if (node != null)
-                {
-                    finalType = requestedType;
-                    return node;
-                }
-            }
+            EnterRoom(node, entryDirection);
         }
-
-        if (node == null)
+        catch (System.Exception exception)
         {
-            foreach (DoorDirection dir in System.Enum.GetValues(typeof(DoorDirection)))
-            {
-                node = dungeonLayout.CreateNextRoom(currentNode, dir, RoomType.Normal);
-
-                if (node != null)
-                {
-                    finalType = RoomType.Normal;
-                    return node;
-                }
-            }
+            Debug.LogException(exception, this);
         }
-
-        return node;
     }
 
     private void EnterRoom(RoomNode node, DoorDirection? entryDirection)
@@ -388,12 +429,8 @@ public class DungeonManager : MonoBehaviour
                 }
             }
 
+            // Visitada = descubierta: recien ahi el minimapa la muestra (y deja ver las que tiene pegadas).
             node.hasBeenVisited = true;
-
-            if (node.uniqueNodeID != "Start")
-            {
-                GenerateConnections(node);
-            }
         }
         else
         {
@@ -433,264 +470,6 @@ public class DungeonManager : MonoBehaviour
             // autoSyncTransforms está off: sin esto la física sigue en la posición vieja y los enemigos no detectan al jugador.
             Physics2D.SyncTransforms();
         }
-    }
-
-    private void GenerateConnections(RoomNode node)
-    {
-        if (node.information.type == RoomType.Shop || node.information.type == RoomType.Boss || node.information.type == RoomType.Challenge)
-        {
-            return;
-        }
-
-        int maxNewRooms = Random.Range(2, 4);
-
-        List<DoorDirection> directions = new List<DoorDirection>()
-    {
-        DoorDirection.Up,
-        DoorDirection.Down,
-        DoorDirection.Left,
-        DoorDirection.Right
-    };
-
-        for (int i = 0; i < directions.Count; i++)
-        {
-            DoorDirection temp = directions[i];
-            int randomIndex = Random.Range(i, directions.Count);
-            directions[i] = directions[randomIndex];
-            directions[randomIndex] = temp;
-        }
-
-        int created = 0;
-
-        foreach (var dir in directions)
-        {
-            if (created >= maxNewRooms)
-                break;
-
-            if (node.HasNeighbor(dir))
-                continue;
-
-            RoomType type = dungeonProgression.GetNextRoomType();
-
-            RoomNode newNode = dungeonLayout.CreateNextRoom(node, dir, type);
-
-            if (newNode == null)
-            {
-                newNode = dungeonLayout.CreateNextRoom(node, dir, RoomType.Normal);
-
-                if (newNode != null)
-                {
-                    dungeonProgression.RegisterGeneratedRoom(RoomType.Normal);
-                    created++;
-                }
-
-                continue;
-            }
-
-            dungeonProgression.RegisterGeneratedRoom(newNode.information.type);
-            created++;
-        }
-
-        if (!dungeonProgression.HasSpawnedShop())
-        {
-            TryForceShopSmart();
-        }
-
-        if (dungeonProgression.HasSpawnedShop() && !dungeonProgression.HasSpawnedBoss())
-        {
-            TryForceBossSmart();
-        }
-
-        if (!challengeSpawned)
-        {
-            TryForceChallengeSmart();
-        }
-    }
-   
-    private bool TryForceShopSmart()
-    {
-        RoomNode bestNode = null;
-        float bestDistance = -1f;
-
-        foreach (RoomNode node in dungeonLayout.GetAllRooms())
-        {
-            if (node.uniqueNodeID == "Start")
-                continue;
-
-            if (node.information.type == RoomType.Shop || node.information.type == RoomType.Boss)
-                continue;
-
-            float dist = node.gridPosition.magnitude;
-
-            if (dist > bestDistance)
-            {
-                bestDistance = dist;
-                bestNode = node;
-            }
-        }
-
-        if (bestNode == null)
-            return false;
-
-        foreach (DoorDirection dir in System.Enum.GetValues(typeof(DoorDirection)))
-        {
-            if (bestNode.HasNeighbor(dir))
-                continue;
-
-            RoomNode newNode = dungeonLayout.CreateNextRoom(bestNode, dir, RoomType.Shop);
-
-            if (newNode != null && newNode.information.type == RoomType.Shop)
-            {
-                dungeonProgression.RegisterGeneratedRoom(RoomType.Shop);
-
-                if (bestNode.spawnedInstance != null)
-                {
-                    bestNode.spawnedInstance.ConfigureDoors(bestNode);
-                }
-
-                return true;
-            }
-        }
-
-        return false;
-    }
-    private bool TryForceBossSmart()
-    {
-        if (!dungeonProgression.HasSpawnedShop())
-            return false;
-
-        List<RoomNode> candidates = new List<RoomNode>();
-
-        foreach (RoomNode node in dungeonLayout.GetAllRooms())
-        {
-            if (node.uniqueNodeID == "Start")
-                continue;
-
-            if (node.information.type == RoomType.Shop || node.information.type == RoomType.Boss)
-                continue;
-
-            candidates.Add(node);
-        }
-
-        candidates.Sort((a, b) =>
-            b.gridPosition.magnitude.CompareTo(a.gridPosition.magnitude)
-        );
-
-        foreach (RoomNode node in candidates)
-        {
-            foreach (DoorDirection dir in System.Enum.GetValues(typeof(DoorDirection)))
-            {
-                if (node.HasNeighbor(dir))
-                    continue;
-
-                RoomNode newNode = dungeonLayout.CreateNextRoom(node, dir, RoomType.Boss);
-
-                if (newNode != null && newNode.information.type == RoomType.Boss)
-                {
-                    dungeonProgression.RegisterGeneratedRoom(RoomType.Boss);
-                    return true;
-                }
-            }
-        }
-
-        Debug.LogWarning("No se pudo forzar la Boss Room en ningún lugar válido.");
-        return false;
-    }
-
-    private bool TryForceChallengeSmart()
-    {
-        if (!HasPendingChallenges())
-            return false;
-
-        if (challengeSpawned)
-            return false;
-
-        List<RoomNode> candidates = new List<RoomNode>();
-
-        foreach (RoomNode node in dungeonLayout.GetAllRooms())
-        {
-            if (node == null || node.information == null)
-                continue;
-
-            if (node.uniqueNodeID == "Start")
-                continue;
-
-            if (node.information.type != RoomType.Normal)
-                continue;
-
-            candidates.Add(node);
-        }
-
-        for (int i = 0; i < candidates.Count; i++)
-        {
-            int randomIndex = Random.Range(i, candidates.Count);
-
-            RoomNode temp = candidates[i];
-            candidates[i] = candidates[randomIndex];
-            candidates[randomIndex] = temp;
-        }
-
-        foreach (RoomNode node in candidates)
-        {
-            List<DoorDirection> directions = new List<DoorDirection>()
-        {
-            DoorDirection.Up,
-            DoorDirection.Down,
-            DoorDirection.Left,
-            DoorDirection.Right
-        };
-
-            for (int i = 0; i < directions.Count; i++)
-            {
-                int randomIndex = Random.Range(i, directions.Count);
-
-                DoorDirection temp = directions[i];
-                directions[i] = directions[randomIndex];
-                directions[randomIndex] = temp;
-            }
-
-            foreach (DoorDirection dir in directions)
-            {
-                if (node.HasNeighbor(dir))
-                    continue;
-
-                RoomNode challengeNode =
-                    dungeonLayout.CreateNextRoom(
-                        node,
-                        dir,
-                        RoomType.Challenge
-                    );
-
-                if (challengeNode != null &&
-                    challengeNode.information.type == RoomType.Challenge)
-                {
-                    challengeSpawned = true;
-
-                    if (node.spawnedInstance != null)
-                    {
-                        node.spawnedInstance.ConfigureDoors(node);
-                    }
-
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    private bool HasPendingChallenges()
-    {
-        foreach (RoomInformation info in challengeRoomInformations)
-        {
-            if (info == null)
-                continue;
-
-            if (!ChallengeRunState.WasCompleted(info.challengeId))
-                return true;
-        }
-
-        return false;
     }
 
     public void ExpelFromCurrentRoom(bool sealRoom = true)
@@ -752,7 +531,7 @@ public class DungeonManager : MonoBehaviour
         currentNode = targetNode;
         currentNode.isCurrentRoom = true;
 
-        EnterRoom(currentNode, entryDirection);
+        EnterRoomSafely(currentNode, entryDirection);
 
         if (currentNode.spawnedInstance != null)
             currentNode.spawnedInstance.ConfigureDoors(currentNode);

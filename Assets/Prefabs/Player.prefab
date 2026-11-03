@@ -824,7 +824,7 @@ MonoBehaviour:
   lungeDuration: 0.1
   lungeOnHitMultiplier: 0.3
   attackSlowDuration: 0.15
-  knockbackForce: 10
+  knockbackForce: 28
   hitStopDuration: 0.05
   hitStopPerExtraEnemy: 0.015
   shakeTrauma: 0.2
@@ -865,7 +865,7 @@ MonoBehaviour:
   cooldown: 2
   radius: 1.2
   attackActiveDuration: 0.3
-  knockbackForce: 15
+  knockbackForce: 45
   hitStopDuration: 0.08
   hitStopPerExtraEnemy: 0.01
   shakeTraumaOnHit: 0.45

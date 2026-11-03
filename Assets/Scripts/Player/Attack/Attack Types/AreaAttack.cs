@@ -17,8 +17,8 @@ public class AreaAttack : MonoBehaviour, IAttack
     [SerializeField] private float attackActiveDuration = 0.3f;
 
     [Header("Feel - Knockback")] // NUEVO
-    [Tooltip("Más fuerte que el quick attack: es el golpe pesado")]
-    [SerializeField] private float knockbackForce = 15f; // NUEVO
+    [Tooltip("Más fuerte que el quick attack: es el golpe pesado. Empuja ≈ fuerza x 0.04 tiles (45 ≈ 1.8 tiles). Los jefes y el topo no se empujan.")]
+    [SerializeField] private float knockbackForce = 45f; // CAMBIADO: antes 15 (0.6 tile)
 
     [Header("Feel - Hit Stop / Camera")] // NUEVO
     [SerializeField] private float hitStopDuration = 0.08f; // NUEVO

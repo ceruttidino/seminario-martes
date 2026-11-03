@@ -29,11 +29,26 @@ public class ToadTongue : MonoBehaviour
     [Tooltip("Daño al terminar de arrastrarlo. 0 = solo lo arrastra.")]
     [SerializeField] private int pullDamage = 1;
 
+    [Header("Aspecto (tentáculo de baba) - solo visual")]
+    [Tooltip("Cantidad de puntos con los que se dibuja la lengua (más puntos = ondulación más suave).")]
+    [SerializeField] private int visualSegments = 14;
+    [SerializeField] private float coreWidth = 0.30f;
+    [Tooltip("Cuánto más ancho es el contorno oscuro que el cuerpo de la lengua.")]
+    [SerializeField] private float outlineExtra = 0.10f;
+    [Tooltip("Cuánto ondula la lengua mientras está estirada (no cambia el hitbox).")]
+    [SerializeField] private float waveAmplitude = 0.10f;
+    [SerializeField] private float waveSpeed = 13f;
+
     private LineRenderer line;
     private BoxCollider2D hitbox;
     private Vector2 currentTip;
     private GameObject heldPlayer;
     private Rigidbody2D heldRb;
+
+    private LineRenderer outlineLine;
+    private LineRenderer shineLine;
+    private Vector3[] positions;
+    private Vector3[] shinePositions;
 
     public bool IsOut { get; private set; }
 
@@ -42,9 +57,9 @@ public class ToadTongue : MonoBehaviour
         line = GetComponent<LineRenderer>();
         hitbox = GetComponent<BoxCollider2D>();
         line.useWorldSpace = true;
-        line.positionCount = 2;
         hitbox.isTrigger = true;
         if (origin == null) origin = transform.parent;
+        SetupSlimeLook();
         Hide();
     }
 
@@ -54,8 +69,91 @@ public class ToadTongue : MonoBehaviour
     {
         IsOut = false;
         if (line != null) line.enabled = false;
+        if (outlineLine != null) outlineLine.enabled = false;
+        if (shineLine != null) shineLine.enabled = false;
         if (hitbox != null) hitbox.enabled = false;
         if (tip != null) tip.gameObject.SetActive(false);
+    }
+
+    // ───── Aspecto: tentáculo de baba (la lógica de la lengua no cambia) ─────
+
+    private void SetupSlimeLook()
+    {
+        int count = Mathf.Max(2, visualSegments);
+        positions = new Vector3[count];
+        shinePositions = new Vector3[count];
+
+        // Cuerpo de la lengua: verde baba, un poco más fino hacia la punta.
+        ConfigureLine(line, 10, coreWidth, SlimeArt.Base, SlimeArt.Light);
+        outlineLine = CreateExtraLine("TongueOutline", 9, coreWidth + outlineExtra, SlimeArt.Outline, SlimeArt.Outline);
+        shineLine = CreateExtraLine("TongueShine", 11, coreWidth * 0.26f, SlimeArt.Bright, SlimeArt.Bright);
+
+        if (tip == null)
+        {
+            GameObject tipObject = new GameObject("TongueTip");
+            tipObject.transform.SetParent(transform, false);
+
+            SpriteRenderer tipRenderer = tipObject.AddComponent<SpriteRenderer>();
+            tipRenderer.sprite = SlimeArt.TongueTip();
+            tipRenderer.sortingOrder = 12;
+            tipObject.transform.localScale = Vector3.one * ((coreWidth + outlineExtra + 0.08f) / 0.53f);
+            tip = tipObject.transform;
+        }
+    }
+
+    private LineRenderer CreateExtraLine(string objectName, int sortingOrder, float width, Color32 startColor, Color32 endColor)
+    {
+        GameObject go = new GameObject(objectName);
+        go.transform.SetParent(transform, false);
+
+        LineRenderer extra = go.AddComponent<LineRenderer>();
+        extra.sharedMaterial = line.sharedMaterial;
+        extra.useWorldSpace = true;
+        ConfigureLine(extra, sortingOrder, width, startColor, endColor);
+        return extra;
+    }
+
+    private void ConfigureLine(LineRenderer target, int sortingOrder, float width, Color32 startColor, Color32 endColor)
+    {
+        target.positionCount = positions.Length;
+        target.alignment = LineAlignment.View;
+        target.textureMode = LineTextureMode.Stretch;
+        target.numCapVertices = 6;
+        target.numCornerVertices = 4;
+        target.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        target.receiveShadows = false;
+        target.sortingOrder = sortingOrder;
+        target.widthMultiplier = width;
+        target.widthCurve = AnimationCurve.Linear(0f, 1f, 1f, 0.85f);
+        target.startColor = startColor;
+        target.endColor = endColor;
+    }
+
+    /// <summary>Dibuja la lengua ondulando entre la boca y la punta (los extremos quedan fijos).</summary>
+    private void DrawVisual(Vector2 start, Vector2 dir, float length)
+    {
+        Vector2 perp = new Vector2(-dir.y, dir.x);
+        Vector2 shineSide = perp.y >= 0f ? perp : -perp;
+        float amplitude = waveAmplitude * Mathf.Clamp01(length / 2f);
+        float time = Time.time * waveSpeed;
+        int count = positions.Length;
+
+        for (int i = 0; i < count; i++)
+        {
+            float t = i / (count - 1f);
+            float envelope = Mathf.Sin(t * Mathf.PI);
+            float wave = Mathf.Sin(t * 9f - time) * envelope * amplitude;
+
+            Vector2 p = start + dir * (length * t) + perp * wave;
+            positions[i] = new Vector3(p.x, p.y, 0f);
+
+            Vector2 s = p + shineSide * (coreWidth * 0.2f);
+            shinePositions[i] = new Vector3(s.x, s.y, 0f);
+        }
+
+        line.SetPositions(positions);
+        if (outlineLine != null) outlineLine.SetPositions(positions);
+        if (shineLine != null) shineLine.SetPositions(shinePositions);
     }
 
     public void ForceRelease()
@@ -135,6 +233,8 @@ public class ToadTongue : MonoBehaviour
     {
         IsOut = true;
         line.enabled = true;
+        if (outlineLine != null) outlineLine.enabled = true;
+        if (shineLine != null) shineLine.enabled = true;
         hitbox.enabled = true;
         if (tip != null) tip.gameObject.SetActive(true);
     }
@@ -144,8 +244,7 @@ public class ToadTongue : MonoBehaviour
         Vector2 o = origin.position;
         currentTip = o + dir * length;
 
-        line.SetPosition(0, o);
-        line.SetPosition(1, currentTip);
+        DrawVisual(o, dir, length);
 
         transform.position = o;
         transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg);
