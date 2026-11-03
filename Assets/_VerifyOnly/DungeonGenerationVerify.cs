@@ -3,109 +3,123 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-/// <summary>
-/// Verifica el generador dinámico: puertas bidireccionales, sin puertas huérfanas,
-/// y que armar un piso nuevo (como al salir del boss) no se cuelga.
-/// </summary>
+// CAMBIADO (archivo completo): actualizado al sistema nuevo de rooms.
+// Verifica el generador: puertas bidireccionales, sin puertas huérfanas, que armar un piso nuevo
+// no se cuelga, el largo de los niveles y que todos los Floor Config del proyecto estén bien armados.
+//
+// Se corre desde el menú Tools > Dungeon > Verificar generación (el resultado sale en la consola).
+// También se puede correr por línea de comandos con -executeMethod DungeonGenerationVerify.Run.
 public static class DungeonGenerationVerify
 {
+    // NUEVO: antes solo se podía correr por línea de comandos
+    [MenuItem("Tools/Dungeon/Verificar generación")]
+    private static void RunFromMenu()
+    {
+        Run();
+    }
+
     public static void Run()
     {
         int failures = 0;
         RoomInstance dummy = CreateDummyRoom();
+        List<RoomInformation> createdInfos = new List<RoomInformation>();
 
         try
         {
             failures += CheckProgressionLengths();
-            failures += SimulateWalks(dummy, floors: 3, walksPerFloor: 40);
-            failures += SimulateNextFloor(dummy);
+            failures += SimulateWalks(dummy, createdInfos, floors: 3, walksPerFloor: 40);
+            failures += SimulateNextFloor(dummy, createdInfos);
+            failures += CheckProjectFloorConfigs(); // NUEVO
         }
         finally
         {
             if (dummy != null)
                 Object.DestroyImmediate(dummy.gameObject);
+
+            // NUEVO: los RoomInformation de prueba se borran (antes quedaban en memoria)
+            foreach (RoomInformation info in createdInfos)
+            {
+                if (info != null)
+                    Object.DestroyImmediate(info);
+            }
         }
 
         if (failures > 0)
-        {
             Debug.LogError($"[DungeonGenerationVerify] FALLÓ con {failures} error(es).");
-            EditorApplication.Exit(1);
-            return;
-        }
+        else
+            Debug.Log("[DungeonGenerationVerify] OK: generación dinámica, puertas espejo, cambio de piso y Floor Configs.");
 
-        Debug.Log("[DungeonGenerationVerify] OK: generación dinámica, puertas espejo y cambio de piso.");
-        EditorApplication.Exit(0);
+        // CAMBIADO: antes cerraba Unity SIEMPRE. Ahora solo cuando se corre por línea de comandos.
+        if (Application.isBatchMode)
+            EditorApplication.Exit(failures > 0 ? 1 : 0);
     }
 
+    // CAMBIADO: DungeonProgression ya no es un componente y el largo viene de cada Floor Config.
+    // Ahora se verifica que con y sin Shop se generen las rooms normales esperadas antes del Boss.
     private static int CheckProgressionLengths()
     {
-        GameObject host = new GameObject("ProgressionHost");
-        DungeonProgression progression = host.AddComponent<DungeonProgression>();
         int failures = 0;
+        DungeonProgression progression = new DungeonProgression();
 
-        try
+        progression.Configure(7, 5, hasShop: true);
+        int withShop = CountUntilBoss(progression, out bool shopAppeared);
+
+        progression.Configure(7, 5, hasShop: false);
+        int withoutShop = CountUntilBoss(progression, out bool shopAppearedWithoutShop);
+
+        Debug.Log($"[DungeonGenerationVerify] Normales hasta Boss: con shop={withShop}, sin shop={withoutShop}");
+
+        if (withShop != 12 || !shopAppeared)
         {
-            progression.PrepareFloor(1);
-            int floor1 = CountUntilBoss(progression);
-            progression.PrepareFloor(2);
-            int floor2 = CountUntilBoss(progression);
-            progression.PrepareFloor(3);
-            int floor3 = CountUntilBoss(progression);
-
-            Debug.Log($"[DungeonGenerationVerify] Rooms normales hasta Boss: piso1={floor1}, piso2={floor2}, piso3={floor3}");
-
-            if (floor1 < 10)
-            {
-                Debug.LogError($"[DungeonGenerationVerify] El piso 1 quedó corto ({floor1} normales).");
-                failures++;
-            }
-
-            if (floor2 <= floor1 || floor3 <= floor2)
-            {
-                Debug.LogError("[DungeonGenerationVerify] Los pisos no crecen con el progreso.");
-                failures++;
-            }
+            Debug.LogError($"[DungeonGenerationVerify] Con shop se esperaban 12 normales y una Shop (salieron {withShop}, shop={shopAppeared}).");
+            failures++;
         }
-        finally
+
+        if (withoutShop != 12 || shopAppearedWithoutShop)
         {
-            Object.DestroyImmediate(host);
+            Debug.LogError($"[DungeonGenerationVerify] Sin shop se esperaban 12 normales y ninguna Shop (salieron {withoutShop}, shop={shopAppearedWithoutShop}).");
+            failures++;
         }
 
         return failures;
     }
 
-    private static int CountUntilBoss(DungeonProgression progression)
+    private static int CountUntilBoss(DungeonProgression progression, out bool shopAppeared)
     {
         int normals = 0;
         int guard = 0;
+        shopAppeared = false;
+
         while (!progression.HasSpawnedBoss() && guard++ < 80)
         {
             RoomType next = progression.GetNextRoomType();
             if (next == RoomType.Normal)
                 normals++;
+            if (next == RoomType.Shop)
+                shopAppeared = true;
             progression.RegisterGeneratedRoom(next);
         }
 
         return normals;
     }
 
-    private static int SimulateWalks(RoomInstance dummy, int floors, int walksPerFloor)
+    private static int SimulateWalks(RoomInstance dummy, List<RoomInformation> created, int floors, int walksPerFloor)
     {
         int failures = 0;
 
         for (int floor = 1; floor <= floors; floor++)
         {
-            RoomInformation start = MakeInfo("Start", RoomType.Start, dummy, DoorDirection.Up, DoorDirection.Down, DoorDirection.Left, DoorDirection.Right);
-            RoomInformation shop = MakeInfo("Shop", RoomType.Shop, dummy, DoorDirection.Up, DoorDirection.Down, DoorDirection.Left, DoorDirection.Right);
-            RoomInformation boss = MakeInfo("Boss", RoomType.Boss, dummy, DoorDirection.Up, DoorDirection.Down, DoorDirection.Left, DoorDirection.Right);
+            RoomInformation start = MakeInfo(created, "Start", RoomType.Start, dummy, DoorDirection.Up, DoorDirection.Down, DoorDirection.Left, DoorDirection.Right);
+            RoomInformation shop = MakeInfo(created, "Shop", RoomType.Shop, dummy, DoorDirection.Up, DoorDirection.Down, DoorDirection.Left, DoorDirection.Right);
+            RoomInformation boss = MakeInfo(created, "Boss", RoomType.Boss, dummy, DoorDirection.Up, DoorDirection.Down, DoorDirection.Left, DoorDirection.Right);
             List<RoomInformation> normals = new List<RoomInformation>
             {
-                MakeInfo("N_LR", RoomType.Normal, dummy, DoorDirection.Left, DoorDirection.Right),
-                MakeInfo("N_UD", RoomType.Normal, dummy, DoorDirection.Up, DoorDirection.Down),
-                MakeInfo("N_UR", RoomType.Normal, dummy, DoorDirection.Up, DoorDirection.Right),
-                MakeInfo("N_ALL", RoomType.Normal, dummy, DoorDirection.Up, DoorDirection.Down, DoorDirection.Left, DoorDirection.Right),
-                MakeInfo("N_UL", RoomType.Normal, dummy, DoorDirection.Up, DoorDirection.Left),
-                MakeInfo("N_DR", RoomType.Normal, dummy, DoorDirection.Down, DoorDirection.Right)
+                MakeInfo(created, "N_LR", RoomType.Normal, dummy, DoorDirection.Left, DoorDirection.Right),
+                MakeInfo(created, "N_UD", RoomType.Normal, dummy, DoorDirection.Up, DoorDirection.Down),
+                MakeInfo(created, "N_UR", RoomType.Normal, dummy, DoorDirection.Up, DoorDirection.Right),
+                MakeInfo(created, "N_ALL", RoomType.Normal, dummy, DoorDirection.Up, DoorDirection.Down, DoorDirection.Left, DoorDirection.Right),
+                MakeInfo(created, "N_UL", RoomType.Normal, dummy, DoorDirection.Up, DoorDirection.Left),
+                MakeInfo(created, "N_DR", RoomType.Normal, dummy, DoorDirection.Down, DoorDirection.Right)
             };
 
             DungeonLayout layout = new DungeonLayout();
@@ -155,13 +169,13 @@ public static class DungeonGenerationVerify
         return failures;
     }
 
-    private static int SimulateNextFloor(RoomInstance dummy)
+    private static int SimulateNextFloor(RoomInstance dummy, List<RoomInformation> created)
     {
-        RoomInformation start = MakeInfo("Start", RoomType.Start, dummy, DoorDirection.Up, DoorDirection.Down);
-        RoomInformation boss = MakeInfo("Boss", RoomType.Boss, dummy, DoorDirection.Up, DoorDirection.Down);
+        RoomInformation start = MakeInfo(created, "Start", RoomType.Start, dummy, DoorDirection.Up, DoorDirection.Down);
+        RoomInformation boss = MakeInfo(created, "Boss", RoomType.Boss, dummy, DoorDirection.Up, DoorDirection.Down);
         List<RoomInformation> normals = new List<RoomInformation>
         {
-            MakeInfo("N1", RoomType.Normal, dummy, DoorDirection.Up, DoorDirection.Down)
+            MakeInfo(created, "N1", RoomType.Normal, dummy, DoorDirection.Up, DoorDirection.Down)
         };
 
         DungeonLayout first = new DungeonLayout();
@@ -179,6 +193,38 @@ public static class DungeonGenerationVerify
 
         Debug.Log("[DungeonGenerationVerify] Cambio de piso OK (Start + primera room).");
         return 0;
+    }
+
+    // NUEVO: revisa todos los Floor Config del proyecto con la misma validación que usa el juego
+    private static int CheckProjectFloorConfigs()
+    {
+        int failures = 0;
+        string[] guids = AssetDatabase.FindAssets("t:DungeonFloorConfig");
+
+        if (guids.Length == 0)
+        {
+            Debug.LogWarning("[DungeonGenerationVerify] No hay ningún Floor Config en el proyecto todavía.");
+            return 0;
+        }
+
+        foreach (string guid in guids)
+        {
+            string path = AssetDatabase.GUIDToAssetPath(guid);
+            DungeonFloorConfig config = AssetDatabase.LoadAssetAtPath<DungeonFloorConfig>(path);
+            if (config == null) continue;
+
+            if (config.Validate(out string problems))
+            {
+                Debug.Log($"[DungeonGenerationVerify] Floor Config OK: {path}");
+            }
+            else
+            {
+                Debug.LogError($"[DungeonGenerationVerify] {path} tiene problemas:\n{problems}", config);
+                failures++;
+            }
+        }
+
+        return failures;
     }
 
     private static int ValidateGraph(DungeonLayout layout, int floor)
@@ -217,13 +263,16 @@ public static class DungeonGenerationVerify
         return go.AddComponent<RoomInstance>();
     }
 
-    private static RoomInformation MakeInfo(string id, RoomType type, RoomInstance dummy, params DoorDirection[] doors)
+    // CAMBIADO: availableDoors ya no existe; las puertas de prueba se cargan con SetManualDoors
+    private static RoomInformation MakeInfo(List<RoomInformation> created, string id, RoomType type, RoomInstance dummy, params DoorDirection[] doors)
     {
         RoomInformation info = ScriptableObject.CreateInstance<RoomInformation>();
+        info.name = id;
         info.roomID = id;
         info.type = type;
         info.prefab = dummy;
-        info.availableDoors = new List<DoorDirection>(doors);
+        info.SetManualDoors(doors);
+        created.Add(info);
         return info;
     }
 }

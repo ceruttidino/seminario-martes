@@ -41,7 +41,9 @@ public class DungeonLayout
         {
             foreach (RoomInformation room in normalRooms)
             {
-                if (room == null || room.prefab == null || room.availableDoors == null || room.availableDoors.Count == 0)
+                // CAMBIADO: las puertas ahora salen de room.Doors (detectadas del prefab).
+                // Además se ignora cualquier room que no sea Normal, por si quedó en la lista equivocada.
+                if (room == null || room.prefab == null || room.type != RoomType.Normal || room.Doors.Count == 0)
                     continue;
 
                 // La buff room se coloca aparte, una vez por piso. No entra en el sorteo normal.
@@ -264,7 +266,7 @@ public class DungeonLayout
         // para poder colgar esas rooms sin inventar puertas.
         if (preferRoomsWithSpareDoor)
         {
-            List<RoomInformation> spacious = valid.FindAll(room => room.availableDoors != null && room.availableDoors.Count >= 2);
+            List<RoomInformation> spacious = valid.FindAll(room => room.Doors.Count >= 2); // CAMBIADO: room.Doors
             if (spacious.Count > 0)
                 valid = spacious;
         }

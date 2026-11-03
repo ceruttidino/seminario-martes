@@ -1,75 +1,61 @@
 using UnityEngine;
 
-/// <summary>
-/// Decide sobre la marcha cuándo aparecen Shop y Boss. Cada piso es más largo que el anterior;
-/// el primero ya sale más extenso que el valor viejo de 2-3 rooms.
-/// </summary>
-public class DungeonProgression : MonoBehaviour
+// CAMBIADO (archivo completo): ya NO es un componente (sacalo del GameObject del DungeonManager).
+// Solo lleva la cuenta de rooms generadas en el nivel actual y decide cuándo toca Shop y Boss.
+// El largo de cada nivel viene del DungeonFloorConfig (roomsBeforeShop / roomsBeforeBoss).
+public class DungeonProgression
 {
-    [Header("Floor 1 (base)")]
-    [SerializeField] private int normalRoomsBeforeShop = 7;
-    [SerializeField] private int normalRoomsBeforeBoss = 5;
-
-    [Header("Scaling")]
-    [Tooltip("Rooms extra (antes de shop y después de shop) que se suman en cada piso siguiente.")]
-    [SerializeField] private int extraRoomsPerFloor = 2;
-
     private int currentNormalRoomsCount;
     private bool shopSpawned;
     private bool bossSpawned;
-    private int roomsBeforeShop;
-    private int roomsBeforeBoss;
+    private int roomsBeforeShop = 7;
+    private int roomsBeforeBoss = 5;
+    private int extraRoomsAfterBoss;     // NUEVO
+    private int normalRoomsAfterBoss;    // NUEVO
 
-    public void PrepareFloor(int floor)
+    /// <summary>
+    /// NUEVO: false cuando el nivel ya llegó a su tope (salió el boss y se usaron las rooms extra).
+    /// Antes no existía y el nivel crecía para siempre mientras se exploraba.
+    /// </summary>
+    public bool CanCreateNormalRoom => !bossSpawned || normalRoomsAfterBoss < extraRoomsAfterBoss;
+
+    /// <summary>Se llama al empezar cada nivel con los valores de su FloorConfig.</summary>
+    public void Configure(int beforeShop, int beforeBoss, bool hasShop, int extraAfterBoss = 0) // CAMBIADO: + extraAfterBoss
     {
-        ResetProgression();
-
-        int extra = Mathf.Max(0, floor - 1) * Mathf.Max(0, extraRoomsPerFloor);
-        roomsBeforeShop = Mathf.Max(4, normalRoomsBeforeShop + extra);
-        roomsBeforeBoss = Mathf.Max(3, normalRoomsBeforeBoss + extra);
-
-        // El primer piso era el más corto: se le da un piso extra de margen respecto del valor viejo.
-        if (floor <= 1)
-        {
-            roomsBeforeShop = Mathf.Max(roomsBeforeShop, 7);
-            roomsBeforeBoss = Mathf.Max(roomsBeforeBoss, 5);
-        }
-    }
-
-    // NUEVO: un nivel con FloorConfig puede pisar el largo calculado automáticamente
-    public void OverrideRoomCounts(int beforeShop, int beforeBoss)
-    {
+        currentNormalRoomsCount = 0;
+        normalRoomsAfterBoss = 0;                         // NUEVO
+        extraRoomsAfterBoss = Mathf.Max(0, extraAfterBoss); // NUEVO
+        bossSpawned = false;
         roomsBeforeShop = Mathf.Max(1, beforeShop);
         roomsBeforeBoss = Mathf.Max(1, beforeBoss);
+
+        // Nivel sin Shop: se saltea esa etapa y el boss sale después del largo total del nivel
+        shopSpawned = !hasShop;
+        if (!hasShop)
+            roomsBeforeBoss = roomsBeforeShop + roomsBeforeBoss;
     }
 
     public RoomType GetNextRoomType()
     {
         if (!shopSpawned)
-        {
-            if (currentNormalRoomsCount >= roomsBeforeShop)
-                return RoomType.Shop;
-
-            return RoomType.Normal;
-        }
+            return currentNormalRoomsCount >= roomsBeforeShop ? RoomType.Shop : RoomType.Normal;
 
         if (!bossSpawned)
-        {
-            if (shopSpawned && currentNormalRoomsCount >= roomsBeforeBoss)
-                return RoomType.Boss;
-
-            return RoomType.Normal;
-        }
+            return currentNormalRoomsCount >= roomsBeforeBoss ? RoomType.Boss : RoomType.Normal;
 
         return RoomType.Normal;
     }
+
+    /// <summary>true cuando ya se generaron suficientes rooms y el boss todavía no apareció.</summary>
+    public bool IsBossDue => shopSpawned && !bossSpawned && currentNormalRoomsCount >= roomsBeforeBoss;
 
     public void RegisterGeneratedRoom(RoomType roomType)
     {
         switch (roomType)
         {
             case RoomType.Normal:
-                currentNormalRoomsCount++;
+                if (bossSpawned) normalRoomsAfterBoss++; // CAMBIADO: después del boss cuenta contra el tope
+                else currentNormalRoomsCount++;
                 break;
 
             case RoomType.Shop:
@@ -83,22 +69,6 @@ public class DungeonProgression : MonoBehaviour
         }
     }
 
-    public bool HasSpawnedShop()
-    {
-        return shopSpawned;
-    }
-
-    public bool HasSpawnedBoss()
-    {
-        return bossSpawned;
-    }
-
-    public void ResetProgression()
-    {
-        currentNormalRoomsCount = 0;
-        shopSpawned = false;
-        bossSpawned = false;
-        roomsBeforeShop = Mathf.Max(4, normalRoomsBeforeShop);
-        roomsBeforeBoss = Mathf.Max(3, normalRoomsBeforeBoss);
-    }
+    public bool HasSpawnedShop() => shopSpawned;
+    public bool HasSpawnedBoss() => bossSpawned;
 }

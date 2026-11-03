@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using UnityEngine;
+using UnityEngine; // CAMBIADO: se sacó el using de Regex que no se usaba
 
 public class RoomInstance : MonoBehaviour
 {
@@ -47,9 +46,7 @@ public class RoomInstance : MonoBehaviour
     private List<RoomReward> Rewards => rewardTable != null ? rewardTable.rewards : possibleRewards;
     private List<ObjectBuffSO> RewardBuffs => rewardTable != null ? rewardTable.possibleBuffs : possibleRewardBuffs;
 
-    private EnemyBehaviour[] currentEnemies;
-
-    private bool enemiesSpawned = false;
+    private bool enemiesSpawned = false; // CAMBIADO: se sacó 'currentEnemies', que no se usaba
     private bool combatActive = false;
     private bool checkingCombatClear = false;
     private bool awaitingEnemySpawn = false;
@@ -68,6 +65,22 @@ public class RoomInstance : MonoBehaviour
 
     public Transform DefaultSpawnPoint => defaultSpawnPoint;
     public bool IsInCombat => combatActive || awaitingEnemySpawn || HasLivingEnemies();
+
+    // NUEVO: direcciones de las RoomDoor que tiene el prefab. RoomInformation las usa para
+    // saber qué puertas tiene la room sin que haya que cargarlas a mano en el asset.
+    public IEnumerable<DoorDirection> PrefabDoorDirections
+    {
+        get
+        {
+            if (roomDoors == null) yield break;
+
+            foreach (RoomDoor door in roomDoors)
+            {
+                if (door != null)
+                    yield return door.Direction;
+            }
+        }
+    }
 
     private RoomNode currentNode;
     private DoorDirection? entryDirection;

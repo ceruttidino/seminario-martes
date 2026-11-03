@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44ddd2a080d09f740bdd13cd61dd89e7, type: 3}
+  m_Name: Floor_1
+  m_EditorClassIdentifier: Assembly-CSharp::DungeonFloorConfig
+  floorName: Nivel 1
+  startRoom: {fileID: 11400000, guid: 6b9fbd4048b874a4994dd64a68739019, type: 2}
+  normalRooms:
+  - {fileID: 11400000, guid: 656a155a38fcfff42b6c2f272e51cf60, type: 2}
+  bossRooms:
+  - {fileID: 11400000, guid: 09afa8773228cf647a498813f48a7890, type: 2}
+  shopRoom: {fileID: 11400000, guid: f10ce6dcea31fa248884456a6e790d1c, type: 2}
+  challengeRooms:
+  - {fileID: 11400000, guid: 16b9995ef1dc39444982e0161e1e9e69, type: 2}
+  buffRoom: {fileID: 0}
+  roomsBeforeShop: 1
+  roomsBeforeBoss: 1
+  extraRoomsAfterBoss: 0

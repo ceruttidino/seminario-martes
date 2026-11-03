@@ -1,85 +1,102 @@
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 
-// NUEVO (archivo completo)
-// Configuración de UN nivel/piso del dungeon: qué rooms pueden salir en ese nivel.
-// Se crea un asset por nivel (Create > Dungeon > Floor Config) y se ponen en orden
-// en la lista "Floors" del DungeonManager (elemento 0 = nivel 1, elemento 1 = nivel 2, etc.).
-//
-// Cualquier campo que dejes vacío usa el valor general del DungeonManager,
-// así solo configurás lo que cambia entre niveles.
+// CAMBIADO (archivo completo)
+// ÚNICA fuente de verdad de un nivel: qué rooms salen en ese nivel y qué tan largo es.
+// Un asset por nivel (Create > Dungeon > Floor Config), en orden en la lista "Floors" del DungeonManager.
+// Ya no hay valores "generales" ni fallbacks: lo que no está acá, no sale en este nivel.
 // Una misma room puede estar en varios niveles: arrastrala a la lista de cada uno.
-[CreateAssetMenu(fileName = "FloorConfig", menuName = "Dungeon/Floor Config")]
+[CreateAssetMenu(fileName = "Floor_", menuName = "Dungeon/Floor Config")]
 public class DungeonFloorConfig : ScriptableObject
 {
-    [Tooltip("Solo para identificarlo (aparece en la consola al generar el piso). Ej: 'Nivel 1 - Cloacas'")]
-    public string floorName = "Nivel";
+    [Tooltip("Para identificarlo en la consola. Ej: 'Nivel 1 - Cloacas'")]
+    public string floorName = "Nivel 1";
 
-    [Header("Rooms normales")]
-    [Tooltip("Rooms que pueden salir en este nivel. Vacío = se usa el filtro viejo por el campo 'level' de cada RoomInformation.")]
-    public List<RoomInformation> normalRooms = new List<RoomInformation>();
-
-    [Header("Rooms especiales (vacío = usa la del DungeonManager)")]
+    [Header("Obligatorias")]
+    [Tooltip("Room donde arranca el nivel (tipo Start)")]
     public RoomInformation startRoom;
-    public RoomInformation shopRoom;
-
-    [Tooltip("Bosses posibles en este nivel. Si hay varios, sale uno al azar; nunca se repite un boss que ya salió en un nivel anterior (si hay alternativa).")]
+    [Tooltip("Rooms normales que pueden salir en este nivel (tipo Normal)")]
+    public List<RoomInformation> normalRooms = new List<RoomInformation>();
+    [Tooltip("Bosses posibles (tipo Boss). Si hay varios sale uno al azar, sin repetir uno que ya salió en un nivel anterior (si hay alternativa).")]
     public List<RoomInformation> bossRooms = new List<RoomInformation>();
 
-    [Tooltip("Challenge rooms posibles en este nivel.")]
+    [Header("Opcionales (vacío = no aparece en este nivel)")]
+    [Tooltip("Shop del nivel (tipo Shop)")]
+    public RoomInformation shopRoom;
+    [Tooltip("Challenge rooms posibles (tipo Challenge). Sale una por nivel.")]
     public List<RoomInformation> challengeRooms = new List<RoomInformation>();
-    [Tooltip("Tildalo si en este nivel NO tiene que aparecer ninguna challenge room")]
-    public bool noChallengeRoom = false;
-
-    [Tooltip("Room de buff (Connection Room) de este nivel.")]
+    [Tooltip("Room de buff / Connection Room (tipo Normal). Sale una por nivel.")]
     public RoomInformation buffRoom;
-    [Tooltip("Tildalo si en este nivel NO tiene que aparecer la buff room")]
-    public bool noBuffRoom = false;
 
-    [Header("Largo del nivel (opcional)")]
-    [Tooltip("Si está tildado, este nivel ignora el escalado automático de DungeonProgression y usa estos valores")]
-    public bool overrideRoomCounts = false;
+    [Header("Largo del nivel")]
+    [Tooltip("Rooms normales que se generan antes de que pueda aparecer la Shop")]
     [Min(1)] public int roomsBeforeShop = 7;
+    [Tooltip("Rooms normales que se generan después de la Shop antes de que pueda aparecer el Boss")]
     [Min(1)] public int roomsBeforeBoss = 5;
+    [Tooltip("Rooms normales que todavía se pueden generar DESPUÉS de que aparece el Boss (ramas para explorar). 0 = el nivel deja de crecer apenas sale el Boss.")]
+    [Min(0)] public int extraRoomsAfterBoss = 2; // NUEVO: tope del nivel (antes crecía para siempre)
 
-    // ---------------- Helpers (los usa DungeonManager) ----------------
-
-    public bool HasNormalRooms => CountValid(normalRooms) > 0;
-    public bool HasBossRooms => CountValid(bossRooms) > 0;
-    public bool HasChallengeRooms => CountValid(challengeRooms) > 0;
-
-    private static int CountValid(List<RoomInformation> list)
+    /// <summary>Revisa que el nivel esté bien armado. Devuelve false y la lista de problemas si algo falta.</summary>
+    public bool Validate(out string problems)
     {
-        if (list == null) return 0;
+        StringBuilder sb = new StringBuilder();
 
-        int count = 0;
-        foreach (RoomInformation room in list)
-            if (room != null && room.prefab != null) count++;
-        return count;
+        CheckSingle(startRoom, RoomType.Start, "Start Room", required: true, sb);
+        CheckList(normalRooms, RoomType.Normal, "Normal Rooms", required: true, sb);
+        CheckList(bossRooms, RoomType.Boss, "Boss Rooms", required: true, sb);
+        CheckSingle(shopRoom, RoomType.Shop, "Shop Room", required: false, sb);
+        CheckList(challengeRooms, RoomType.Challenge, "Challenge Rooms", required: false, sb);
+        CheckSingle(buffRoom, RoomType.Normal, "Buff Room", required: false, sb);
+
+        problems = sb.ToString();
+        return problems.Length == 0;
     }
 
-    // Avisa en la consola si pusiste una room en la lista equivocada (ej: una Shop en Normal Rooms)
+    private static void CheckSingle(RoomInformation room, RoomType expected, string label, bool required, StringBuilder sb)
+    {
+        if (room == null)
+        {
+            if (required) sb.AppendLine($"- Falta asignar '{label}'.");
+            return;
+        }
+
+        CheckRoom(room, expected, label, sb);
+    }
+
+    private static void CheckList(List<RoomInformation> list, RoomType expected, string label, bool required, StringBuilder sb)
+    {
+        int valid = 0;
+
+        if (list != null)
+        {
+            foreach (RoomInformation room in list)
+            {
+                if (room == null) continue;
+                CheckRoom(room, expected, label, sb);
+                if (room.prefab != null) valid++;
+            }
+        }
+
+        if (required && valid == 0)
+            sb.AppendLine($"- '{label}' está vacía.");
+    }
+
+    private static void CheckRoom(RoomInformation room, RoomType expected, string label, StringBuilder sb)
+    {
+        if (room.prefab == null)
+            sb.AppendLine($"- '{room.name}' (en {label}) no tiene prefab.");
+
+        if (room.type != expected)
+            sb.AppendLine($"- '{room.name}' está en {label} pero su tipo es {room.type} (debería ser {expected}).");
+
+        if (room.prefab != null && room.Doors.Count == 0)
+            sb.AppendLine($"- '{room.name}' no tiene puertas.");
+    }
+
     private void OnValidate()
     {
-        CheckType(normalRooms, RoomType.Normal, "Normal Rooms");
-        CheckType(bossRooms, RoomType.Boss, "Boss Rooms");
-        CheckType(challengeRooms, RoomType.Challenge, "Challenge Rooms");
-
-        if (shopRoom != null && shopRoom.type != RoomType.Shop)
-            Debug.LogWarning($"[FloorConfig] {name}: '{shopRoom.name}' está en Shop Room pero su tipo es {shopRoom.type}.", this);
-
-        if (startRoom != null && startRoom.type != RoomType.Start)
-            Debug.LogWarning($"[FloorConfig] {name}: '{startRoom.name}' está en Start Room pero su tipo es {startRoom.type}.", this);
-    }
-
-    private void CheckType(List<RoomInformation> list, RoomType expected, string listName)
-    {
-        if (list == null) return;
-
-        foreach (RoomInformation room in list)
-        {
-            if (room != null && room.type != expected)
-                Debug.LogWarning($"[FloorConfig] {name}: '{room.name}' está en {listName} pero su tipo es {room.type}.", this);
-        }
+        if (!Validate(out string problems))
+            Debug.LogWarning($"[FloorConfig] '{name}' tiene cosas para revisar:\n{problems}", this);
     }
 }
