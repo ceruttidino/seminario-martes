@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 14000983245137920}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5, y: 0, z: 0}
+  m_LocalPosition: {x: 4.5, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1288,7 +1288,7 @@ Transform:
   m_GameObject: {fileID: 2009127879063540610}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5, y: 0, z: 0}
+  m_LocalPosition: {x: -4.5, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1637,13 +1637,19 @@ MonoBehaviour:
   diggingSpotPrefab: {fileID: 0}
   chanceToHaveDiggingSpots: 35
   enemyGroups:
-  - name: SpikyTurtle x4 (4 puntos)
-    enemyPrefab: {fileID: 3526715613216376611, guid: 71c68d685d14cf245bfa6cb088bed3b5, type: 3}
-    minCount: 4
-    maxCount: 4
+  - name: Enemy_Snail x2 (2 puntos)
+    enemyPrefab: {fileID: 8283417630010587146, guid: 93c36bf4b30107349ba48fa2a8110986, type: 3}
+    minCount: 2
+    maxCount: 2
     spawnPoints:
     - {fileID: 3471704183191795967}
     - {fileID: 513007690863302231}
+    randomizePoints: 0
+  - name: Enemy_Rat x2 (2 puntos)
+    enemyPrefab: {fileID: 5136333534524507215, guid: 1010f75008e5eec49a330b3df2c0c32a, type: 3}
+    minCount: 2
+    maxCount: 2
+    spawnPoints:
     - {fileID: 5667498593838695736}
     - {fileID: 6887658368161030699}
     randomizePoints: 0

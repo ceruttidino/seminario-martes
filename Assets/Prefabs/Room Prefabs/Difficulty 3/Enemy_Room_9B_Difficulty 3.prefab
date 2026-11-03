@@ -1690,10 +1690,10 @@ MonoBehaviour:
   diggingSpotPrefab: {fileID: 0}
   chanceToHaveDiggingSpots: 35
   enemyGroups:
-  - name: Enemy_Rat x2 (4 puntos)
+  - name: Enemy_Rat x4 (4 puntos)
     enemyPrefab: {fileID: 5136333534524507215, guid: 1010f75008e5eec49a330b3df2c0c32a, type: 3}
-    minCount: 2
-    maxCount: 2
+    minCount: 4
+    maxCount: 4
     spawnPoints:
     - {fileID: 2525931838446208959}
     - {fileID: 3881570961760294575}
@@ -1731,7 +1731,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88c0ffff07bc55945a93b000c001a572, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RoomBakedNavMesh
-  navMeshData: {fileID: 23800000, guid: 53d9ad4c0d21d5f40bfab838b390ea95, type: 2}
+  navMeshData: {fileID: 23800000, guid: 54361a7deca2870408611e3f6dc5bd65, type: 2}
   useManualInterior: 0
   interiorCenter: {x: 0, y: 0.99906564, z: 0}
   interiorSize: {x: 17.81579, y: 8.028189, z: 1}
@@ -3929,6 +3929,14 @@ PrefabInstance:
     - target: {fileID: 4130698443354960141, guid: 3ab77cdbc74300e488c3d2366e68fa52, type: 3}
       propertyPath: m_Name
       value: CommonBag
+      objectReference: {fileID: 0}
+    - target: {fileID: 4211959711514281528, guid: 3ab77cdbc74300e488c3d2366e68fa52, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4211959711514281528, guid: 3ab77cdbc74300e488c3d2366e68fa52, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.4
       objectReference: {fileID: 0}
     - target: {fileID: 4211959711514281528, guid: 3ab77cdbc74300e488c3d2366e68fa52, type: 3}
       propertyPath: m_LocalPosition.x

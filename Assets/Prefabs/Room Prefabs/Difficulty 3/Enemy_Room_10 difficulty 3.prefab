@@ -140,68 +140,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 5582182234710786644}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &576824500935693803
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 6495550005429436581}
-  m_Layer: 10
-  m_Name: EnemySpawnPoint_7
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &6495550005429436581
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 576824500935693803}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 5582182234710786644}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &900976159637247513
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3059955544983545424}
-  m_Layer: 10
-  m_Name: EnemySpawnPoint_6
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &3059955544983545424
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 900976159637247513}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.5, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 5582182234710786644}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1922882045659642345
 GameObject:
   m_ObjectHideFlags: 0
@@ -1496,37 +1434,6 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 17.815788, y: 2.0235023}
   m_EdgeRadius: 0
---- !u!1 &4793507855021463765
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 596809592842943578}
-  m_Layer: 10
-  m_Name: EnemySpawnPoint_5
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &596809592842943578
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4793507855021463765}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -2.5, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 5582182234710786644}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4887584115782207371
 GameObject:
   m_ObjectHideFlags: 0
@@ -1591,9 +1498,6 @@ Transform:
   - {fileID: 5322316272545738267}
   - {fileID: 5161536422931314168}
   - {fileID: 4299143481286761453}
-  - {fileID: 596809592842943578}
-  - {fileID: 3059955544983545424}
-  - {fileID: 6495550005429436581}
   m_Father: {fileID: 8855914108497674385}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5206472789810506396
@@ -1659,8 +1563,6 @@ MonoBehaviour:
   - direction: 3
     spawnPoint: {fileID: 9219129157084741237}
   roomDoors:
-  - {fileID: 0}
-  - {fileID: 0}
   - {fileID: 1237818656150308209}
   - {fileID: 8024582676868195165}
   diggingSpotLocations:
@@ -1671,24 +1573,15 @@ MonoBehaviour:
   diggingSpotPrefab: {fileID: 3611433241170528407, guid: 7367a0a007b04e74d875d4e74d4a5fa3, type: 3}
   chanceToHaveDiggingSpots: 35
   enemyGroups:
-  - name: Enemy_Ant x6 (6 puntos)
-    enemyPrefab: {fileID: 8734249323408576011, guid: 23b9ec134f2fcab418d04cee4d163d96, type: 3}
-    minCount: 6
-    maxCount: 6
+  - name: Enemy_Rat x4 (4 puntos)
+    enemyPrefab: {fileID: 5136333534524507215, guid: 1010f75008e5eec49a330b3df2c0c32a, type: 3}
+    minCount: 4
+    maxCount: 4
     spawnPoints:
     - {fileID: 3471704183191795967}
     - {fileID: 5322316272545738267}
     - {fileID: 5161536422931314168}
     - {fileID: 4299143481286761453}
-    - {fileID: 596809592842943578}
-    - {fileID: 3059955544983545424}
-    randomizePoints: 0
-  - name: Enemy_Hedgehog x1 (1 puntos)
-    enemyPrefab: {fileID: 2596313271398130789, guid: b4a14686c8056734b87e9ca8332d0663, type: 3}
-    minCount: 1
-    maxCount: 1
-    spawnPoints:
-    - {fileID: 6495550005429436581}
     randomizePoints: 0
   spawnSpread: 0.45
   spawnBlockingLayers:
