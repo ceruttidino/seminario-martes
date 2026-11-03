@@ -92,6 +92,11 @@ public class PlayerMovement : MonoBehaviour
     private void OnDisable()
     {
         GamePause.GameplayFrozen -= FreezeMovement;
+
+        // Si el script se apaga a mitad del cavado, Unity corta la corrutina y el flag quedaba en true para siempre.
+        isDigging = false;
+        if (animator != null)
+            animator.ResetTrigger("Dig");
     }
 
     void FixedUpdate()
@@ -439,6 +444,7 @@ public class PlayerMovement : MonoBehaviour
             animator.SetFloat("Speed", 0f);
             animator.ResetTrigger("Attack");
             animator.ResetTrigger("AreaAttack");
+            animator.ResetTrigger("Dig");
             animator.SetTrigger("Dig");
         }
 
@@ -448,28 +454,60 @@ public class PlayerMovement : MonoBehaviour
 
     private IEnumerator WaitForDig(System.Action onComplete)
     {
-        float timeout = 2.2f;
+        // La animacion dura 1 segundo. El tope es de respaldo: si el estado no arranca o no avanza,
+        // el jugador no se queda con el movimiento bloqueado.
+        const float timeout = 1.6f;
+        const float enterGrace = 0.35f;
+
+        if (animator == null)
+        {
+            FinishDig(onComplete);
+            yield break;
+        }
+
         float elapsed = 0f;
-        bool enteredDig = animator == null;
+        bool enteredDig = false;
+        float lastSample = -1f;
+        float stalled = 0f;
 
         while (elapsed < timeout)
         {
             if (animator != null)
             {
                 AnimatorStateInfo current = animator.GetCurrentAnimatorStateInfo(0);
-                if (current.shortNameHash == DigHash)
+                bool inDig = current.shortNameHash == DigHash;
+
+                if (inDig)
                 {
                     enteredDig = true;
-                    if (current.normalizedTime >= 1f && !animator.IsInTransition(0))
+                    // Si el trigger sigue prendido, Any State vuelve a entrar a Raccoon_Dig y no termina nunca.
+                    animator.ResetTrigger("Dig");
+
+                    if (!animator.IsInTransition(0) && current.normalizedTime >= 0.98f)
+                        break;
+
+                    float sample = current.normalizedTime;
+                    if (lastSample >= 0f && sample <= lastSample + 0.001f)
+                        stalled += Time.unscaledDeltaTime;
+                    else
+                        stalled = 0f;
+
+                    lastSample = sample;
+                    if (stalled > 0.45f)
                         break;
                 }
                 else if (enteredDig && !animator.IsInTransition(0))
                 {
                     break;
                 }
+                else if (!enteredDig && elapsed > enterGrace)
+                {
+                    break;
+                }
             }
 
-            elapsed += Time.deltaTime;
+            // unscaled: con timeScale en 0 (pausa / hit stop) el contador igual avanza y el bloqueo se suelta.
+            elapsed += Time.unscaledDeltaTime;
             if (rb != null)
                 rb.linearVelocity = Vector2.zero;
             if (animator != null)
@@ -477,8 +515,26 @@ public class PlayerMovement : MonoBehaviour
             yield return null;
         }
 
+        FinishDig(onComplete);
+    }
+
+    private void FinishDig(System.Action onComplete)
+    {
         isDigging = false;
-        onComplete?.Invoke();
+        if (animator != null)
+            animator.ResetTrigger("Dig");
+
+        if (onComplete == null)
+            return;
+
+        try
+        {
+            onComplete.Invoke();
+        }
+        catch (System.Exception exception)
+        {
+            Debug.LogException(exception, this);
+        }
     }
 
     private static Vector2 GetCardinalFacing(Vector2 direction)

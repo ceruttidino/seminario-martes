@@ -40,14 +40,30 @@ public class PlayerInteraction : MonoBehaviour
 
     private void CheckNearbyInteractables()
     {
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(interactionPoint == null ? transform.position : interactionPoint.position, interactionRadius, interactableLayer);
+        Vector2 origin = interactionPoint == null ? (Vector2)transform.position : (Vector2)interactionPoint.position;
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(origin, interactionRadius, interactableLayer);
 
         IInteractable foundInteractable = null;
+        float bestDistance = float.MaxValue;
 
-        if (colliders.Length > 0)
+        for (int i = 0; i < colliders.Length; i++)
         {
+            Collider2D col = colliders[i];
+            if (col == null || !col.enabled)
+                continue;
 
-            foundInteractable = colliders[0].GetComponent<IInteractable>();
+            IInteractable candidate = col.GetComponent<IInteractable>();
+            if (candidate == null)
+                candidate = col.GetComponentInParent<IInteractable>();
+            if (candidate == null)
+                continue;
+
+            float distance = Vector2.Distance(origin, col.bounds.ClosestPoint(origin));
+            if (distance >= bestDistance)
+                continue;
+
+            bestDistance = distance;
+            foundInteractable = candidate;
         }
 
         if (currentInteractable != foundInteractable)

@@ -43,17 +43,36 @@ public class DiggingSpot : MonoBehaviour, IInteractable
         if (spriteRenderer != null) originalColor = spriteRenderer.color;
         if (spawnPoint == null) spawnPoint = transform;
 
-        gameObject.layer = LayerMask.NameToLayer("Interactable");
+        int interactableLayer = LayerMask.NameToLayer("Interactable");
+        if (interactableLayer >= 0)
+            gameObject.layer = interactableLayer;
 
-        BoxCollider2D col = GetComponent<BoxCollider2D>();
-        if (col == null)
+        // El pozo nunca bloquea el cuerpo. Si el prefab trae un collider solido, el jugador se queda pegado encima.
+        Collider2D[] cols = GetComponents<Collider2D>();
+        if (cols.Length == 0)
         {
-            col = gameObject.AddComponent<BoxCollider2D>();
-            col.isTrigger = true;
+            BoxCollider2D created = gameObject.AddComponent<BoxCollider2D>();
+            created.isTrigger = true;
+        }
+        else
+        {
+            for (int i = 0; i < cols.Length; i++)
+            {
+                if (cols[i] != null)
+                    cols[i].isTrigger = true;
+            }
         }
 
         // Cartel "F" flotante (misma fuente que el resto del juego). Aparece cuando el jugador esta cerca.
-        prompt = InteractPrompt.Create(transform, promptOffset);
+        // Si el cartel falla, cavar con F sigue funcionando.
+        try
+        {
+            prompt = InteractPrompt.Create(transform, promptOffset);
+        }
+        catch (System.Exception exception)
+        {
+            Debug.LogException(exception, this);
+        }
     }
 
     public void ShowHighlight(bool show)
@@ -75,13 +94,18 @@ public class DiggingSpot : MonoBehaviour, IInteractable
     {
         if (isDug || !isPlayerNear) return;
 
-        PlayerMovement movement = FindFirstObjectByType<PlayerMovement>();
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        PlayerMovement movement = player != null ? player.GetComponent<PlayerMovement>() : null;
         if (movement == null || !movement.TryPlayDig(CompleteDig))
             return;
 
         isDug = true;
         SetPromptVisible(false);
         if (spriteRenderer != null) spriteRenderer.color = originalColor;
+
+        // Se apaga ya: durante la animacion el jugador esta quieto encima del pozo y, al soltarse,
+        // un collider solido lo dejaba empotrado.
+        ReleaseCollision();
     }
 
     private void SetPromptVisible(bool visible)
@@ -108,6 +132,9 @@ public class DiggingSpot : MonoBehaviour, IInteractable
                 spriteRenderer.enabled = false;
 
             GameObject mole = Instantiate(molePrefab, resultPosition, Quaternion.identity);
+            // El topo no tiene Rigidbody (collider estatico) y nace donde esta parado el jugador.
+            FreePlayerFromMole(mole);
+
             if (room != null)
             {
                 mole.transform.SetParent(room.transform, true);
@@ -129,14 +156,100 @@ public class DiggingSpot : MonoBehaviour, IInteractable
         ShowHole();
     }
 
+    private void ReleaseCollision()
+    {
+        Collider2D[] cols = GetComponentsInChildren<Collider2D>(true);
+        for (int i = 0; i < cols.Length; i++)
+        {
+            if (cols[i] == null)
+                continue;
+
+            cols[i].isTrigger = true;
+            cols[i].enabled = false;
+        }
+    }
+
+    /// <summary>
+    /// Separa al jugador del topo recien salido. El topo queda quieto en el pozo con un circulo solido;
+    /// si el cuerpo del jugador nace adentro, la fisica no lo puede sacar y queda trabado.
+    /// </summary>
+    private static void FreePlayerFromMole(GameObject mole)
+    {
+        if (mole == null)
+            return;
+
+        Collider2D[] moleCols = mole.GetComponentsInChildren<Collider2D>(true);
+        for (int i = 0; i < moleCols.Length; i++)
+        {
+            if (moleCols[i] != null)
+                moleCols[i].enabled = false;
+        }
+
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        Rigidbody2D rb = player != null ? player.GetComponent<Rigidbody2D>() : null;
+        bool cleared = true;
+
+        if (rb != null)
+        {
+            const float clearance = 1.15f;
+            Vector2 origin = mole.transform.position;
+            Vector2 delta = rb.position - origin;
+            if (delta.sqrMagnitude < clearance * clearance)
+            {
+                Vector2 preferred = delta.sqrMagnitude > 0.0001f ? delta.normalized : Vector2.down;
+                Vector2[] dirs =
+                {
+                    preferred,
+                    Vector2.down,
+                    Vector2.up,
+                    Vector2.left,
+                    Vector2.right
+                };
+
+                int wallMask = 1 << 10;
+                Vector2 chosen = origin + preferred * clearance;
+                for (int i = 0; i < dirs.Length; i++)
+                {
+                    Vector2 candidate = origin + dirs[i] * clearance;
+                    if (Physics2D.OverlapCircle(candidate, 0.28f, wallMask) != null)
+                        continue;
+
+                    chosen = candidate;
+                    break;
+                }
+
+                rb.position = chosen;
+                rb.linearVelocity = Vector2.zero;
+                Physics2D.SyncTransforms();
+                cleared = (rb.position - origin).sqrMagnitude >= (clearance * clearance) - 0.01f;
+            }
+        }
+
+        for (int i = 0; i < moleCols.Length; i++)
+        {
+            if (moleCols[i] != null)
+                moleCols[i].enabled = true;
+        }
+
+        if (cleared || player == null)
+            return;
+
+        Collider2D body = player.GetComponent<Collider2D>();
+        if (body == null)
+            return;
+
+        for (int i = 0; i < moleCols.Length; i++)
+        {
+            if (moleCols[i] != null && !moleCols[i].isTrigger)
+                Physics2D.IgnoreCollision(body, moleCols[i]);
+        }
+    }
+
     private void DisableInteraction()
     {
         isPlayerNear = false;
         SetPromptVisible(false);
-
-        Collider2D col = GetComponent<Collider2D>();
-        if (col != null)
-            col.enabled = false;
+        ReleaseCollision();
 
         DiggingPileBlink[] blinks = GetComponentsInChildren<DiggingPileBlink>(true);
         for (int i = 0; i < blinks.Length; i++)

@@ -104,14 +104,20 @@ public class ShopSlot : MonoBehaviour
         PlayerScrap scrap = player.GetComponent<PlayerScrap>();
         if (scrap == null) return;
 
-        if (!scrap.TrySpendScrap(itemData.price)) { Npc.GetComponent<ShopNPCBehabiour>().OnFailedPurchaseSay(); return; }
+        if (!scrap.TrySpendScrap(itemData.price))
+        {
+            if (Npc != null)
+                Npc.GetComponent<ShopNPCBehabiour>()?.OnFailedPurchaseSay();
+            return;
+        }
 
         ApplyEffect(player);
 
         priceText.text = "SOLD";
         enabled = false;
 
-        Npc.GetComponent<ShopNPCBehabiour>().OnPurchaseSay();
+        if (Npc != null)
+            Npc.GetComponent<ShopNPCBehabiour>()?.OnPurchaseSay();
     }
 
     private void ApplyEffect(GameObject buyer)
