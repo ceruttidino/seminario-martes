@@ -1383,6 +1383,7 @@ GameObject:
   - component: {fileID: 8855914108497674385}
   - component: {fileID: 5081486977560716221}
   - component: {fileID: 4292980787889323742}
+  - component: {fileID: 1762659081653843735}
   m_Layer: 10
   m_Name: Treasure_Room_1
   m_TagString: Untagged
@@ -1409,7 +1410,6 @@ Transform:
   - {fileID: 7789988802307065343}
   - {fileID: 275742505849886240}
   - {fileID: 4572118633241601104}
-  - {fileID: 7074811382572428974}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5081486977560716221
@@ -1474,6 +1474,35 @@ MonoBehaviour:
   agentRadius: 0.02
   voxelSize: 0.03
   carveWalls: 1
+--- !u!114 &1762659081653843735
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5206472789810506396}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21237b729b793e44fbad2121609baae5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ConnectionRoomBuffSpawner
+  possibleBuffs:
+  - {fileID: 11400000, guid: 5675c88eff762c940bd6da0c5ca411a6, type: 2}
+  - {fileID: 11400000, guid: 364e1376a750d01409e2adf496dcd8f7, type: 2}
+  - {fileID: 11400000, guid: 6e1dfd62d1a564f46adf26cd11f31943, type: 2}
+  - {fileID: 11400000, guid: 062d624a5553b7847ad44cb0286213d5, type: 2}
+  - {fileID: 11400000, guid: d6f5bd3b522487243b65ca68085c1663, type: 2}
+  - {fileID: 11400000, guid: 260f8898d5a37504fbcd710b73337385, type: 2}
+  - {fileID: 11400000, guid: f6d46cfde9f62fa4992bcb66e1b6e57b, type: 2}
+  - {fileID: 11400000, guid: 0e5231ad66a40d449beb25b681937388, type: 2}
+  - {fileID: 11400000, guid: 0ddc80887a5f55048ab76c1e91f39dca, type: 2}
+  - {fileID: 11400000, guid: aebf8a7492942e44b95ff2fa5c20d2c6, type: 2}
+  - {fileID: 11400000, guid: b476671b8318dc14bb1c6a5d30d758d3, type: 2}
+  - {fileID: 11400000, guid: ca6d2b5ab2a055e46bfa9a690bed6cea, type: 2}
+  - {fileID: 11400000, guid: 0cd3857cb66cb204d9801ca2c531bbd9, type: 2}
+  buffPickupPrefab: {fileID: 3775639117897162198, guid: 9472fbc88cdc96141a1c1a9bef4f25f2, type: 3}
+  existingPickup: {fileID: 0}
+  debugLogs: 1
 --- !u!1 &5413412434907751617
 GameObject:
   m_ObjectHideFlags: 0
@@ -3573,65 +3602,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56a92c2508273164ca7a296df764675b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RoomDoor
---- !u!1001 &6958353844575146318
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 8855914108497674385}
-    m_Modifications:
-    - target: {fileID: 198103972953636832, guid: 5443f03a3acee2543a3d3b3183e03bb2, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 198103972953636832, guid: 5443f03a3acee2543a3d3b3183e03bb2, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 198103972953636832, guid: 5443f03a3acee2543a3d3b3183e03bb2, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 198103972953636832, guid: 5443f03a3acee2543a3d3b3183e03bb2, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 198103972953636832, guid: 5443f03a3acee2543a3d3b3183e03bb2, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 198103972953636832, guid: 5443f03a3acee2543a3d3b3183e03bb2, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 198103972953636832, guid: 5443f03a3acee2543a3d3b3183e03bb2, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 198103972953636832, guid: 5443f03a3acee2543a3d3b3183e03bb2, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 198103972953636832, guid: 5443f03a3acee2543a3d3b3183e03bb2, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 198103972953636832, guid: 5443f03a3acee2543a3d3b3183e03bb2, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8288388510651883771, guid: 5443f03a3acee2543a3d3b3183e03bb2, type: 3}
-      propertyPath: m_Name
-      value: UpgradePickup_Health
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 5443f03a3acee2543a3d3b3183e03bb2, type: 3}
---- !u!4 &7074811382572428974 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 198103972953636832, guid: 5443f03a3acee2543a3d3b3183e03bb2, type: 3}
-  m_PrefabInstance: {fileID: 6958353844575146318}
-  m_PrefabAsset: {fileID: 0}

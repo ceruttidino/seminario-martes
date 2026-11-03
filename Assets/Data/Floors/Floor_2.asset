@@ -31,7 +31,7 @@ MonoBehaviour:
   shopRoom: {fileID: 11400000, guid: f10ce6dcea31fa248884456a6e790d1c, type: 2}
   challengeRooms:
   - {fileID: 11400000, guid: 16b9995ef1dc39444982e0161e1e9e69, type: 2}
-  buffRoom: {fileID: 11400000, guid: 767aeaf41a6ef4147af03889794fc53b, type: 2}
+  buffRoom: {fileID: 11400000, guid: f8bffb1b1582f03418ab11edcdb0c1e7, type: 2}
   roomsBeforeShop: 5
   roomsBeforeBoss: 5
   extraRoomsAfterBoss: 0
