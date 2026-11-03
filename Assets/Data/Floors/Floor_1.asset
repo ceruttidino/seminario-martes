@@ -16,12 +16,23 @@ MonoBehaviour:
   startRoom: {fileID: 11400000, guid: 6b9fbd4048b874a4994dd64a68739019, type: 2}
   normalRooms:
   - {fileID: 11400000, guid: 656a155a38fcfff42b6c2f272e51cf60, type: 2}
+  - {fileID: 11400000, guid: c95051eec30586e44a1339ca7ff32aff, type: 2}
+  - {fileID: 11400000, guid: 57696782f0d0e1247bf29022620f5d8d, type: 2}
+  - {fileID: 11400000, guid: b91d2f8465039ec4482ee2c5289fbf20, type: 2}
+  - {fileID: 11400000, guid: 27d07f7cf599cac4fb814ef381171cd1, type: 2}
+  - {fileID: 11400000, guid: 96663516a79d0cd4a9fa75c19cbbe62d, type: 2}
+  - {fileID: 11400000, guid: e429b2e5e10c7a441af7f0a3e579bc07, type: 2}
+  - {fileID: 11400000, guid: d7f9f343005521644abbe976d7c62017, type: 2}
+  - {fileID: 11400000, guid: cf177ea18b585f14882623847d2d45eb, type: 2}
+  - {fileID: 11400000, guid: 0358d9ba90f4b1949a1eae18578f976f, type: 2}
+  - {fileID: 11400000, guid: 57696782f0d0e1247bf29022620f5d8d, type: 2}
+  - {fileID: 11400000, guid: 16b9995ef1dc39444982e0161e1e9e69, type: 2}
   bossRooms:
   - {fileID: 11400000, guid: 09afa8773228cf647a498813f48a7890, type: 2}
   shopRoom: {fileID: 11400000, guid: f10ce6dcea31fa248884456a6e790d1c, type: 2}
   challengeRooms:
   - {fileID: 11400000, guid: 16b9995ef1dc39444982e0161e1e9e69, type: 2}
-  buffRoom: {fileID: 0}
-  roomsBeforeShop: 1
-  roomsBeforeBoss: 1
+  buffRoom: {fileID: 11400000, guid: 767aeaf41a6ef4147af03889794fc53b, type: 2}
+  roomsBeforeShop: 3
+  roomsBeforeBoss: 3
   extraRoomsAfterBoss: 0

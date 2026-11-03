@@ -15,13 +15,23 @@ MonoBehaviour:
   floorName: Nivel 1
   startRoom: {fileID: 11400000, guid: 6b9fbd4048b874a4994dd64a68739019, type: 2}
   normalRooms:
-  - {fileID: 11400000, guid: 656a155a38fcfff42b6c2f272e51cf60, type: 2}
+  - {fileID: 11400000, guid: da36a86fad7c0ed45b532066acf300a5, type: 2}
+  - {fileID: 11400000, guid: f72ec2c6fc75eab459afa2b6c2327055, type: 2}
+  - {fileID: 11400000, guid: 769078fecb763ed4989a40c4db36c1f6, type: 2}
+  - {fileID: 11400000, guid: fc54366eb9c5af14697eac9a499924d1, type: 2}
+  - {fileID: 11400000, guid: 67be9b1d3245d0346a268533b9bb88d5, type: 2}
+  - {fileID: 11400000, guid: 19e30ace363adbe469af19980d161227, type: 2}
+  - {fileID: 11400000, guid: 39833778167e5de46af0d3bd5d12c895, type: 2}
+  - {fileID: 11400000, guid: 4ae9f0e3ec90bd8478b7af0677b6688e, type: 2}
+  - {fileID: 11400000, guid: 31cba07a26d29cb4faf933974408cabb, type: 2}
+  - {fileID: 11400000, guid: 66fcd5a463965564b8abcf69ab0dc937, type: 2}
+  - {fileID: 11400000, guid: 2babfab453f67004bb14b8105a7f365f, type: 2}
   bossRooms:
   - {fileID: 11400000, guid: 09afa8773228cf647a498813f48a7890, type: 2}
   shopRoom: {fileID: 11400000, guid: f10ce6dcea31fa248884456a6e790d1c, type: 2}
   challengeRooms:
   - {fileID: 11400000, guid: 16b9995ef1dc39444982e0161e1e9e69, type: 2}
-  buffRoom: {fileID: 0}
-  roomsBeforeShop: 1
-  roomsBeforeBoss: 1
+  buffRoom: {fileID: 11400000, guid: 767aeaf41a6ef4147af03889794fc53b, type: 2}
+  roomsBeforeShop: 7
+  roomsBeforeBoss: 7
   extraRoomsAfterBoss: 0
