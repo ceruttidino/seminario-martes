@@ -134,7 +134,7 @@ Transform:
   m_GameObject: {fileID: 317444336967845193}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3, y: 1, z: 0}
+  m_LocalPosition: {x: 3, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1253,7 +1253,7 @@ Transform:
   m_GameObject: {fileID: 3745397938084280709}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3, y: -1, z: 0}
+  m_LocalPosition: {x: -3, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1571,14 +1571,12 @@ MonoBehaviour:
   diggingSpotPrefab: {fileID: 3611433241170528407, guid: 7367a0a007b04e74d875d4e74d4a5fa3, type: 3}
   chanceToHaveDiggingSpots: 35
   enemyGroups:
-  - name: Enemy_Ant x4 (4 puntos)
+  - name: Enemy_Ant x2 (2 puntos)
     enemyPrefab: {fileID: 8734249323408576011, guid: 23b9ec134f2fcab418d04cee4d163d96, type: 3}
-    minCount: 4
-    maxCount: 4
+    minCount: 2
+    maxCount: 2
     spawnPoints:
     - {fileID: 3471704183191795967}
-    - {fileID: 5322316272545738267}
-    - {fileID: 5322316272545738267}
     - {fileID: 5322316272545738267}
     randomizePoints: 0
   - name: Enemy_Owl x1 (1 puntos)
@@ -3415,7 +3413,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6407954711694033859, guid: 7f6cf7c09ca35d940bfa313126bbc961, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 6407954711694033859, guid: 7f6cf7c09ca35d940bfa313126bbc961, type: 3}
       propertyPath: m_LocalPosition.z
@@ -3891,7 +3889,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3909959430953273375, guid: d6e52d7acadd6c84aa0fec6501ead838, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2
+      value: -1.5
       objectReference: {fileID: 0}
     - target: {fileID: 3909959430953273375, guid: d6e52d7acadd6c84aa0fec6501ead838, type: 3}
       propertyPath: m_LocalPosition.z
@@ -3957,7 +3955,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6407954711694033859, guid: 7f6cf7c09ca35d940bfa313126bbc961, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2
+      value: -1.5
       objectReference: {fileID: 0}
     - target: {fileID: 6407954711694033859, guid: 7f6cf7c09ca35d940bfa313126bbc961, type: 3}
       propertyPath: m_LocalPosition.z
@@ -4015,7 +4013,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3909959430953273375, guid: d6e52d7acadd6c84aa0fec6501ead838, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 3909959430953273375, guid: d6e52d7acadd6c84aa0fec6501ead838, type: 3}
       propertyPath: m_LocalPosition.z
