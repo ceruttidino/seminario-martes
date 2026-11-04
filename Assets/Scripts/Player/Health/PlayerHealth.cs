@@ -106,6 +106,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable, ISourcedDamageable
         playerHealth -= Mathf.RoundToInt(damage);
         playerHealth = Mathf.Clamp(playerHealth, 0, playerMaxHealth);
         UpdateHearts(playerHealth);
+        GameMetrics.PlayerDamaged(damage, LastDamageSource != null ? LastDamageSource.Name : "unknown", playerHealth, playerMaxHealth);
 
         if (damageFlash != null)
             damageFlash.Flash(iFrames);
@@ -137,6 +138,9 @@ public class PlayerHealth : MonoBehaviour, IDamageable, ISourcedDamageable
         CancelInvoke(nameof(DesInvul));
         canGetHurt = false;
         invulnerableUntil = float.PositiveInfinity;
+        string source = LastDamageSource != null ? LastDamageSource.Name : "unknown";
+        string enemyType = LastDamageSource != null && LastDamageSource.HasEnemyType ? LastDamageSource.EnemyType.ToString() : "";
+        GameMetrics.PlayerDied(source, enemyType, playerMaxHealth);
         DisablePlayerControls();
         OnPlayerDeath?.Invoke();
     }
@@ -306,6 +310,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable, ISourcedDamageable
 
         playerHealth = Mathf.Max(1, playerHealth - 1);
         UpdateHearts(playerHealth);
+        GameMetrics.PlayerDamaged(1, "poison_tick", playerHealth, playerMaxHealth);
 
         if (playerHealth <= 1)
             poisonStatus?.Cure();

@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -99,6 +99,7 @@ public class BreakableTrash : MonoBehaviour
         ShowOpenVisual();
         BurstTrash();
         SpawnLoot(roomParent);
+        GameMetrics.TrashOpened(trashType == TrashType.GreenContainer ? "green_container" : "bag");
 
         RoomInstance room = GetComponentInParent<RoomInstance>();
         room?.InvalidatePathGrid();

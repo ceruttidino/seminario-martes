@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 [RequireComponent(typeof(Collider2D))]
 public class LootPickup : MonoBehaviour
@@ -63,6 +63,7 @@ public class LootPickup : MonoBehaviour
             return;
 
         collected = true;
+        GameMetrics.LootPicked(lootItem.lootType.ToString().ToLowerInvariant(), "loot");
         NotifyInventoryPickup();
         AudioManager.PlayLoot(lootItem.lootType, lootItem.upgradeSO, pickupSfx != null ? pickupSfx.clip : null);
 
@@ -96,7 +97,7 @@ public class LootPickup : MonoBehaviour
                 PlayerScrap scrap = player.GetComponent<PlayerScrap>();
                 if (scrap == null) return false;
                 rolledScrapAmount = lootItem.RollScrapAmount();
-                scrap.AddScrap(rolledScrapAmount);
+                scrap.AddScrap(rolledScrapAmount, "loot");
                 return true;
 
             case LootType.Health:
@@ -113,13 +114,13 @@ public class LootPickup : MonoBehaviour
             case LootType.Key:
                 PlayerKeys keys = player.GetComponent<PlayerKeys>();
                 if (keys == null) return false;
-                keys.AddKeys(Mathf.Max(1, lootItem.keyAmount));
+                keys.AddKeys(Mathf.Max(1, lootItem.keyAmount), "loot");
                 return true;
 
             case LootType.Upgrade:
                 PlayerUpgradeManager upgradeManager = player.GetComponent<PlayerUpgradeManager>();
                 if (upgradeManager == null || lootItem.upgradeSO == null) return false;
-                return upgradeManager.CollectUpgrade(lootItem.upgradeSO);
+                return upgradeManager.CollectUpgrade(lootItem.upgradeSO, "loot");
         }
 
         return false;

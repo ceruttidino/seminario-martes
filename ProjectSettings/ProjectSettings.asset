@@ -784,11 +784,11 @@ PlayerSettings:
   captureStartupLogs: {}
   activeInputHandler: 1
   windowsGamepadBackendHint: 0
-  cloudProjectId: e6eab6c8-5385-4127-b08a-fdb86d2c0a8d
+  cloudProjectId: aca92094-a4b7-4afb-8341-ae10812c3989
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: seminario-martes 2026-03-17_19-02-45
-  organizationId: dinoceruttibanchio
+  projectName: Raccgeon
+  organizationId: astryr
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   hmiLoadingImage: {fileID: 0}

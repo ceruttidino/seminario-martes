@@ -18,5 +18,5 @@ MonoBehaviour:
   doorSource: 0
   manualDoors: 
   detectedDoors: 
-  challengeId: 
+  challengeId: Supercontainer
   challengeDoorSprite: {fileID: 0}

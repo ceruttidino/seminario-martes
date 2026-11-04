@@ -9,10 +9,11 @@ public static class GamePause
 
     public static event Action GameplayFrozen;
 
-    public static void SetPaused(bool paused)
+    public static void SetPaused(bool paused, string source = null)
     {
         IsPaused = paused;
         Time.timeScale = paused ? 0f : 1f;
+        GameMetrics.NotifyPaused(paused, source);
 
         if (paused)
             NotifyGameplayFrozen();

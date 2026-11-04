@@ -288,6 +288,7 @@ public class RoomInstance : MonoBehaviour
                 Transform spawnLoc = availableLocations[index];
 
                 Instantiate(diggingSpotPrefab, spawnLoc.position, Quaternion.identity, transform);
+                GameMetrics.DigSpotSpawned();
 
                 availableLocations.RemoveAt(index);
             }
@@ -624,6 +625,7 @@ public class RoomInstance : MonoBehaviour
             return;
 
         combatActive = false;
+        GameMetrics.RoomCleared();
 
         TrySpawnClearReward();
 
@@ -685,6 +687,7 @@ public class RoomInstance : MonoBehaviour
 
         Vector3 spawnPosition = FindClearRewardPosition(prefab);
         GameObject spawned = Instantiate(prefab, spawnPosition, Quaternion.identity, transform);
+        GameMetrics.RewardSpawned(prefab.name);
 
         ConfigureRewardBuff(spawned);
     }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -133,6 +133,7 @@ public class GameOverManager : MonoBehaviour
     public void RestartLevel()
     {
         IsOpen = false;
+        GameMetrics.MarkRestart();
         GamePause.SetPaused(false);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }

@@ -102,7 +102,10 @@ public class TabMenuUI : MonoBehaviour
         if (open)
             Close();
         else
+        {
+            GameMetrics.TabOpened();
             Open();
+        }
     }
 
     public static void CloseCurrent()

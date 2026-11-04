@@ -78,6 +78,7 @@ public class StealTheItemChallenge : ChallengeRoomBase
         }
 
         challengeStarted = true;
+        GameMetrics.ChallengeStarted("steal_the_item");
 
         item?.Prepare(this);
 
@@ -110,6 +111,7 @@ public class StealTheItemChallenge : ChallengeRoomBase
         resolving = true;
 
         challengeFinished = true;
+        GameMetrics.ChallengeFinished("steal_the_item", "win", 0);
         MarkRunCompleted();
         ShutDownRoom();
 
@@ -145,6 +147,7 @@ public class StealTheItemChallenge : ChallengeRoomBase
     private IEnumerator FailRoutine(GameObject player)
     {
         challengeFinished = true;
+        GameMetrics.ChallengeFinished("steal_the_item", "fail", 0);
         MarkRunCompleted();
         ShutDownRoom();
 

@@ -44,6 +44,7 @@ public class UpgradePickup : MonoBehaviour
             return false;
 
         claimed = real;
+        GameMetrics.UpgradeOffered(real.upgradeName, "pickup");
         return true;
     }
 

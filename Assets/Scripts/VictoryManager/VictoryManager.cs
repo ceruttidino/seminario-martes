@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
@@ -76,6 +76,8 @@ public class VictoryManager : MonoBehaviour
         if (IsOpen) return;
 
         bool isFinalFloor = DungeonManager.Instance != null && DungeonManager.Instance.IsFinalFloor;
+
+        GameMetrics.FloorCleared(isFinalFloor);
 
         // Si es el último piso y hay panel final, se usa ese; si no, el normal.
         GameObject screenToShow = (isFinalFloor && finalVictoryScreen != null)

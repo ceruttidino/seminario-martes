@@ -44,7 +44,7 @@ public class PauseMenu : MonoBehaviour
         PauseMainMenu();
         pausePanel.SetActive(true);
         pausePanel.transform.SetAsLastSibling();
-        GamePause.SetPaused(true);
+        GamePause.SetPaused(true, "pause_menu");
         isPaused = true;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;

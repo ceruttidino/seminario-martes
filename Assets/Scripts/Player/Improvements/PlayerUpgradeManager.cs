@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerUpgradeManager : MonoBehaviour
@@ -38,7 +38,7 @@ public class PlayerUpgradeManager : MonoBehaviour
     /// <summary>
     /// Aplica la mejora. Cada mejora se puede tener UNA sola vez: si ya la tiene devuelve false y no hace nada.
     /// </summary>
-    public bool CollectUpgrade(UpgradeSO upgrade)
+    public bool CollectUpgrade(UpgradeSO upgrade, string source = "pickup")
     {
         UpgradeSO real = UpgradeRegistry.Resolve(upgrade);
         if (real == null) return false;
@@ -47,6 +47,7 @@ public class PlayerUpgradeManager : MonoBehaviour
         collectedUpgrades.Add(real);
         UpgradeRegistry.MarkOwned(real);
         real.Apply(this);
+        GameMetrics.UpgradeCollected(real.upgradeName, source, collectedUpgrades.Count);
 
         // Animacion de agarre: el mapache se queda quieto mostrando el objeto que acaba de conseguir.
         PlayerBuffPose pose = GetComponent<PlayerBuffPose>();

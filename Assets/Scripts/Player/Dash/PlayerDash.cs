@@ -141,6 +141,7 @@ public class PlayerDash : MonoBehaviour
         }
 
         AudioManager.PlaySfx(GameSfx.Dash, sfxSource != null ? sfxSource.clip : null);
+        GameMetrics.AbilityUsed("dash");
             
 
         StartCoroutine(DashCoroutine(dashDirection));

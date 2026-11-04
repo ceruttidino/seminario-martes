@@ -90,7 +90,7 @@ public class Cheats : MonoBehaviour
                 {
                     if (int.TryParse(command[1], out int Amount))
                     {
-                        player.GetComponent<PlayerScrap>().AddScrap(Amount);
+                        player.GetComponent<PlayerScrap>().AddScrap(Amount, "cheat");
                         consoleText.GetComponent<TextMeshProUGUI>().text = "Adding " + Amount + " Scrap";
                     }                
                     else { consoleText.GetComponent<TextMeshProUGUI>().text = "Invalid amount specified"; }

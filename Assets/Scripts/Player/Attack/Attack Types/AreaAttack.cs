@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 public class AreaAttack : MonoBehaviour, IAttack
 {
@@ -101,6 +101,7 @@ public class AreaAttack : MonoBehaviour, IAttack
         Invoke(nameof(EndAttackWindow), attackActiveDuration);
 
         AudioManager.PlaySfx(GameSfx.AreaAttack, sfxSource != null ? sfxSource.clip : null);
+        GameMetrics.AbilityUsed("area");
 
         if (animator != null)
         {

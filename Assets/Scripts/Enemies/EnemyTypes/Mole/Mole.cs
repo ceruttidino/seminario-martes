@@ -29,7 +29,7 @@ public class Mole : MonoBehaviour
             if (scrap != null)
             {
                 int amountToSteal = Mathf.Min(ammountScrapStolen, scrap.CurrentScrap);
-                scrap.TrySpendScrap(amountToSteal);
+                scrap.TrySpendScrap(amountToSteal, "mole");
             }
         }
 

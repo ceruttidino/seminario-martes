@@ -528,7 +528,12 @@ public class RoomDoor : MonoBehaviour
             keys = player.GetComponentInParent<PlayerKeys>();
 
         if (keys == null || !keys.UseKey())
+        {
+            GameMetrics.LockpickFailed("shop_door");
             return;
+        }
+
+        GameMetrics.LockpickUsed("shop_door");
 
         if (myNode != null)
             myNode.isShopUnlocked = true;

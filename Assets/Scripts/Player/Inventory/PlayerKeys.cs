@@ -15,20 +15,22 @@ public class PlayerKeys : MonoBehaviour
         OnKeysChanged?.Invoke(currentKeys);
     }
 
-    public void AddKeys(int amount)
+    public void AddKeys(int amount, string source = "other")
     {
         if (amount <= 0) return;
 
         currentKeys = Mathf.Min(currentKeys + amount, MaxKeys);
         OnKeysChanged?.Invoke(currentKeys);
+        GameMetrics.CurrencyEarned("keys", amount, currentKeys, source);
     }
 
-    public bool UseKey()
+    public bool UseKey(string sink = "lockpick")
     {
         if (currentKeys <= 0) return false;
 
         currentKeys--;
         OnKeysChanged?.Invoke(currentKeys);
+        GameMetrics.CurrencySpent("keys", 1, currentKeys, sink);
         return true;
     }
 }

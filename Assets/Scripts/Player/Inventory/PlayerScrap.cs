@@ -16,15 +16,16 @@ public class PlayerScrap : MonoBehaviour
         OnScrapChanged?.Invoke(currentScrap);
     }
 
-    public void AddScrap(int amount)
+    public void AddScrap(int amount, string source = "other")
     {
         if (amount <= 0) return;
 
         currentScrap = Mathf.Min(currentScrap + amount, MaxScrap);
         OnScrapChanged?.Invoke(currentScrap);
+        GameMetrics.CurrencyEarned("scrap", amount, currentScrap, source);
     }
 
-    public bool TrySpendScrap(int amount)
+    public bool TrySpendScrap(int amount, string sink = "other")
     {
         if (amount <= 0) return false;
 
@@ -32,6 +33,7 @@ public class PlayerScrap : MonoBehaviour
         {
             currentScrap -= amount;
             OnScrapChanged?.Invoke(currentScrap);
+            GameMetrics.CurrencySpent("scrap", amount, currentScrap, sink);
             return true;
         }
 

@@ -200,6 +200,7 @@ public class DungeonManager : MonoBehaviour
             UpgradeRegistry.ClearReservations();
 
             currentFloor++;
+            GameMetrics.NotifyFloorStarted();
 
             BuildNewDungeon();
 
@@ -401,6 +402,7 @@ public class DungeonManager : MonoBehaviour
             TabMenuUI.CloseCurrent();
 
         DungeonNavMesh.Ensure().RequestBake(currentRoomInstance);
+        GameMetrics.RoomEntered(node, currentRoomInstance != null && currentRoomInstance.IsInCombat);
     }
 
     private void MovePlayerToCorrectSpawn(DoorDirection? entryDirection)

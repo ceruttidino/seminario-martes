@@ -32,7 +32,7 @@ public class ShopItem : MonoBehaviour
         {
             case LootType.Scrap:
                 player.GetComponent<PlayerScrap>()
-                    ?.AddScrap(data.effect.scrapAmount);
+                    ?.AddScrap(data.effect.scrapAmount, "shop");
                 break;
 
             case LootType.Health:
@@ -42,12 +42,12 @@ public class ShopItem : MonoBehaviour
 
             case LootType.Key:
                 player.GetComponent<PlayerKeys>()
-                    ?.AddKeys(data.effect.keyAmount);
+                    ?.AddKeys(data.effect.keyAmount, "shop");
                 break;
 
             case LootType.Upgrade:
                 player.GetComponent<PlayerUpgradeManager>()
-                    ?.CollectUpgrade(data.effect.upgradeSO);
+                    ?.CollectUpgrade(data.effect.upgradeSO, "shop");
                 break;
         }
     }

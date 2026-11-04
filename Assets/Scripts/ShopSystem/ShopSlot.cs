@@ -42,6 +42,9 @@ public class ShopSlot : MonoBehaviour
         UpgradeSO upgrade = GetUpgrade(item);
         if (upgrade != null && UpgradeRegistry.TryReserve(upgrade, this))
             reservedUpgrade = UpgradeRegistry.Resolve(upgrade);
+
+        if (reservedUpgrade != null)
+            GameMetrics.UpgradeOffered(reservedUpgrade.upgradeName, "shop");
     }
 
     /// <summary>La tienda no tiene una mejora disponible para este slot (el player ya las tiene todas).</summary>
@@ -96,6 +99,7 @@ public class ShopSlot : MonoBehaviour
             PlayerUpgradeManager manager = player.GetComponent<PlayerUpgradeManager>();
             if (manager != null && manager.HasUpgrade(upgrade))
             {
+                GameMetrics.ShopPurchaseFailed(itemData.itemName, "upgrade", itemData.price, player.GetComponent<PlayerScrap>() != null ? player.GetComponent<PlayerScrap>().CurrentScrap : 0, "already_owned");
                 SetSoldOut();
                 return;
             }
@@ -104,13 +108,20 @@ public class ShopSlot : MonoBehaviour
         PlayerScrap scrap = player.GetComponent<PlayerScrap>();
         if (scrap == null) return;
 
-        if (!scrap.TrySpendScrap(itemData.price))
+        int scrapBefore = scrap.CurrentScrap;
+        string itemType = itemData.effect != null && itemData.effect.isUpgrade ? "upgrade"
+            : itemData.effect != null ? itemData.effect.lootType.ToString().ToLowerInvariant()
+            : "item";
+
+        if (!scrap.TrySpendScrap(itemData.price, "shop_" + itemType))
         {
+            GameMetrics.ShopPurchaseFailed(itemData.itemName, itemType, itemData.price, scrapBefore, "cant_afford");
             if (Npc != null)
                 Npc.GetComponent<ShopNPCBehabiour>()?.OnFailedPurchaseSay();
             return;
         }
 
+        GameMetrics.ShopPurchase(itemData.itemName, itemType, itemData.price, scrapBefore);
         ApplyEffect(player);
 
         priceText.text = "SOLD";
@@ -133,12 +144,12 @@ public class ShopSlot : MonoBehaviour
 
             case LootType.Key:
                 buyer.GetComponent<PlayerKeys>()
-                    ?.AddKeys(itemData.effect.keyAmount);
+                    ?.AddKeys(itemData.effect.keyAmount, "shop");
                 break;
 
             case LootType.Upgrade:
                 buyer.GetComponent<PlayerUpgradeManager>()
-                    ?.CollectUpgrade(itemData.effect.upgradeSO);
+                    ?.CollectUpgrade(itemData.effect.upgradeSO, "shop");
                 break;
         }
     }

@@ -136,6 +136,7 @@ public class DiggingSpot : MonoBehaviour, IInteractable
 
         if (ShouldSpawnMole())
         {
+            GameMetrics.DigCompleted("mole");
             if (spriteRenderer != null)
                 spriteRenderer.enabled = false;
 

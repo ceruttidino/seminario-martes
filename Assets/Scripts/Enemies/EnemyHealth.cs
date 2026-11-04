@@ -65,6 +65,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     {
         RoomInstance room = GetComponentInParent<RoomInstance>();
         room?.RegisterEnemy(this);
+        GameMetrics.EnemySpawned(this);
     }
 
     public void TakeDamage(float damage)
@@ -107,13 +108,17 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         if (isDead) return;
 
         if (DeathInterceptor != null && DeathInterceptor())
+        {
+            GameMetrics.EnemyKilled(this, true);
             return;
+        }
 
         isDead = true;
         AudioManager.PlayEnemyDeath();
         if (!WillLeaveCorpse())
             BloodPool.Spawn(transform.position, GetComponentInParent<RoomInstance>()?.transform);
         OnDeath?.Invoke();
+        GameMetrics.EnemyKilled(this, false);
         Destroy(gameObject);
     }
 

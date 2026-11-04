@@ -27,6 +27,7 @@ public class ChallengeRoomController : MonoBehaviour
     private bool challengeFinished;
     private bool challengeStarting;
     private int pendingWaveSpawns;
+    private int waveReached;
 
     public bool HoldsDoorsLocked => (challengeStarted || challengeStarting) && !challengeFinished;
 
@@ -82,6 +83,7 @@ public class ChallengeRoomController : MonoBehaviour
 
         challengeStarted = true;
         challengeStarting = false;
+        GameMetrics.ChallengeStarted("supercontainer");
         BuildAllowedPrefabs();
 
         if (container != null)

@@ -1,4 +1,4 @@
-﻿using System.Collections; // NUEVO
+using System.Collections; // NUEVO
 using UnityEngine;
 
 public class QuickAttack : MonoBehaviour, IAttack
@@ -137,6 +137,7 @@ public class QuickAttack : MonoBehaviour, IAttack
         Invoke(nameof(EndAttackWindow), attackActiveDuration);
 
         AudioManager.PlayQuickAttack(sfxSource != null ? sfxSource.clip : null);
+        GameMetrics.AbilityUsed("quick");
 
         if (animator != null)
         {
