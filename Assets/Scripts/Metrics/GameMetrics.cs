@@ -778,7 +778,16 @@ public static class GameMetrics
 
     static string BossIdFromRoom(string id)
     {
-        return BossIdFromName(id);
+        string named = BossIdFromName(id);
+        if (named == "mutant_spider" || named == "disgusted_toad" || named == "sorcerer_crow")
+            return named;
+
+        int floor = Floor();
+        if (floor <= 1)
+            return "mutant_spider";
+        if (floor == 2)
+            return "disgusted_toad";
+        return "sorcerer_crow";
     }
 
     static string BossIdFromName(string name)

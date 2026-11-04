@@ -315,6 +315,7 @@ public class BossExitDoor : MonoBehaviour
         // La pantalla de "Siguiente piso / Salir" queda solo para el boss final.
         if (dungeon != null && !dungeon.IsFinalFloor)
         {
+            GameMetrics.FloorCleared(false);
             dungeon.StartNextFloor();
             return;
         }
