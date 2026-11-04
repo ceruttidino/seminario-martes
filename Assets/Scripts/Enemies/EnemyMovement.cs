@@ -65,6 +65,7 @@ public class EnemyMovement : MonoBehaviour, IMovement
     private bool pendingGoalValid;
     private int wallSlideSign = 1;
     private float bodyRadius = 0.32f;
+    private bool wideBody;
 
     private Vector2 slideVelocity;
     private float slideTimer;
@@ -100,14 +101,42 @@ public class EnemyMovement : MonoBehaviour, IMovement
         obstacleFilter.SetLayerMask(obstacleLayers);
 
         stuckWindowStartPos = rb != null ? rb.position : (Vector2)transform.position;
-        bodyRadius = MeasureBodyRadius();
 
-        // El NavMeshAgent en este bake 2D (la malla esta rotada) devuelve una velocidad
-        // en linea recta hacia el objetivo y la rata se clava en la piedra. El camino
-        // lo calcula DungeonNavMesh; el agente no mueve a nadie.
-        NavMeshAgent existing = GetComponent<NavMeshAgent>();
-        if (existing != null)
-            existing.enabled = false;
+        // Solo la rata es mucho mas ancha que el radio del NavMesh: ella rodea las piedras
+        // por una esquina libre. El resto conserva el recorrido anterior.
+        wideBody = GetComponent<RegeneratingRat>() != null;
+        if (wideBody)
+        {
+            bodyRadius = MeasureBodyRadius();
+            NavMeshAgent existing = GetComponent<NavMeshAgent>();
+            if (existing != null)
+                existing.enabled = false;
+        }
+        else
+        {
+            ConfigureAgent();
+        }
+    }
+
+    private void ConfigureAgent()
+    {
+        agent = GetComponent<NavMeshAgent>();
+        if (agent == null)
+            agent = gameObject.AddComponent<NavMeshAgent>();
+
+        agent.enabled = false;
+        agent.updatePosition = false;
+        agent.updateRotation = false;
+        agent.updateUpAxis = false;
+        agent.obstacleAvoidanceType = ObstacleAvoidanceType.HighQualityObstacleAvoidance;
+        agent.autoBraking = false;
+        agent.autoRepath = true;
+        agent.angularSpeed = 0f;
+        agent.acceleration = 80f;
+        agent.stoppingDistance = 0.05f;
+        agent.baseOffset = 0f;
+        agent.height = 1f;
+        agent.radius = 0.02f;
     }
 
     private float MeasureBodyRadius()
@@ -176,7 +205,7 @@ public class EnemyMovement : MonoBehaviour, IMovement
         Vector2 from = rb != null ? rb.position : (Vector2)transform.position;
         pendingGoalValid = false;
 
-        if (avoidObstacles && navReady && direction.sqrMagnitude > 0.0001f)
+        if (wideBody && avoidObstacles && navReady && direction.sqrMagnitude > 0.0001f)
         {
             Vector2 goal = hasExplicitGoal
                 ? explicitGoal
@@ -195,6 +224,10 @@ public class EnemyMovement : MonoBehaviour, IMovement
             {
                 steered = ApplyPathfinding(direction);
             }
+        }
+        else if (avoidObstacles && navReady && TryAgentDirection(direction, speedOverride, out Vector2 agentDirection))
+        {
+            steered = agentDirection;
         }
         else if (avoidObstacles)
         {
@@ -332,7 +365,7 @@ public class EnemyMovement : MonoBehaviour, IMovement
         if (!handled)
             blocked = PhysicsClamp(from, desired, out next, out normal);
 
-        if (!reportWallHits)
+        if (wideBody && !reportWallHits)
             next = KeepBodyOffObstacles(from, next, speedOverride);
 
         rb.MovePosition(next);
@@ -413,6 +446,71 @@ public class EnemyMovement : MonoBehaviour, IMovement
     {
         int hits = Physics2D.CircleCast(from, probe * 0.92f, dir, obstacleFilter, AvoidanceHitBuffer, distance);
         return hits <= 0;
+    }
+
+    private bool TryAgentDirection(Vector2 desiredDirection, float speedOverride, out Vector2 steered)
+    {
+        steered = desiredDirection;
+        float magnitude = desiredDirection.magnitude;
+        if (magnitude < 0.0001f || !EnsureAgentOnMesh())
+            return false;
+
+        Vector2 from = rb.position;
+        Vector2 goal = hasExplicitGoal
+            ? explicitGoal
+            : from + (desiredDirection / magnitude) * 2.4f;
+
+        if (!DungeonNavMesh.TryProject(goal, out Vector3 goalOnMesh))
+            return false;
+
+        agent.speed = Mathf.Max(0.1f, speedOverride);
+        agent.SetDestination(goalOnMesh);
+
+        Vector3 steer = agent.desiredVelocity;
+        if (steer.sqrMagnitude < 0.04f && agent.hasPath)
+            steer = agent.steeringTarget - agent.nextPosition;
+
+        Vector2 planar = new Vector2(steer.x, steer.y);
+        if (planar.sqrMagnitude < 0.0001f)
+            return false;
+
+        steered = planar.normalized * magnitude;
+        return true;
+    }
+
+    private bool EnsureAgentOnMesh()
+    {
+        if (agent == null || rb == null)
+            return false;
+
+        if (DungeonNavMesh.Instance == null || !DungeonNavMesh.Instance.IsReady)
+        {
+            if (agent.enabled)
+                agent.enabled = false;
+            return false;
+        }
+
+        if (!agent.enabled)
+        {
+            float baked = DungeonNavMesh.Instance != null ? DungeonNavMesh.Instance.AgentRadius : 0.02f;
+            agent.radius = Mathf.Max(0.01f, baked * 0.9f);
+            agent.obstacleAvoidanceType = ObstacleAvoidanceType.HighQualityObstacleAvoidance;
+            agent.updatePosition = false;
+            agent.updateRotation = false;
+            agent.updateUpAxis = false;
+            agent.enabled = true;
+        }
+
+        if (!agent.isOnNavMesh)
+        {
+            if (!DungeonNavMesh.TryProject(rb.position, out Vector3 onMesh) || !agent.Warp(onMesh))
+            {
+                agent.enabled = false;
+                return false;
+            }
+        }
+
+        return agent.isOnNavMesh;
     }
 
     private void SyncAgent(Vector2 planar)
@@ -507,7 +605,8 @@ public class EnemyMovement : MonoBehaviour, IMovement
         {
             escapeTimer = escapeDuration;
             escapeAngleJitter = UnityEngine.Random.Range(60f, 150f) * (UnityEngine.Random.value < 0.5f ? 1f : -1f);
-            wallSlideSign = -wallSlideSign;
+            if (wideBody)
+                wallSlideSign = -wallSlideSign;
 
             Vector2 side = RotateVector(desiredDirection.sqrMagnitude > 0.01f
                 ? desiredDirection.normalized
@@ -540,7 +639,7 @@ public class EnemyMovement : MonoBehaviour, IMovement
             cachedPathStep = navStep;
             lastPathGoal = goal;
             Vector2 toNav = navStep - from;
-            if (toNav.sqrMagnitude >= 0.01f)
+            if (toNav.sqrMagnitude >= 0.04f)
                 return toNav.normalized * magnitude;
 
             return desiredDirection;
