@@ -22,7 +22,7 @@ public sealed class MinimapExpander : MonoBehaviour
 
     [Header("Zoom del contenido del mapa")]
     [Tooltip("Menor a 1: entran mas salas en el minimapa chico.")]
-    [SerializeField] private float compactContentScale = 0.4f;
+    [SerializeField] private float compactContentScale = 0.6f;
     [SerializeField] private float expandedContentScale = 0.9f;
 
     [Header("Transicion")]

@@ -22,6 +22,20 @@ public class RoomInformation : ScriptableObject
     public RoomType type = RoomType.Normal;
     public RoomInstance prefab;
 
+    public bool IsBuffRoom
+    {
+        get
+        {
+            string id = string.IsNullOrEmpty(roomID) ? name : roomID;
+            if (string.IsNullOrEmpty(id))
+                return false;
+
+            return id.StartsWith("Treasure_Room")
+                || id == "Connection_Room_4"
+                || id == "ConnectionRoom4";
+        }
+    }
+
     [Header("Puertas")]
     [Tooltip("Auto: usa todas las RoomDoor del prefab. Manual: usa la lista de abajo (por ejemplo, si el prefab tiene 4 puertas pero esta room solo debería usar 2).")]
     public DoorSource doorSource = DoorSource.AutoFromPrefab;

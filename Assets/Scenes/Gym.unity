@@ -1049,7 +1049,7 @@ MonoBehaviour:
   minimap: {fileID: 901950001}
   compactSize: {x: 204, y: 152}
   expandedSize: {x: 432, y: 322}
-  compactContentScale: 0.4
+  compactContentScale: 0.6
   expandedContentScale: 0.9
   transitionTime: 0.2
 --- !u!1 &104021020

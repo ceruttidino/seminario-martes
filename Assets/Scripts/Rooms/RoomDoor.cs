@@ -20,6 +20,7 @@ public class RoomDoor : MonoBehaviour
     [Header("Door Sprites")]
     [SerializeField] private Sprite normalDoorSprite;
     [SerializeField] private Sprite shopDoorSprite;
+    [SerializeField] private Sprite buffDoorSprite;
     [SerializeField] private Sprite bossDoorSprite;
 
     [Header("Shop Locked Door (Candado)")]
@@ -66,6 +67,7 @@ public class RoomDoor : MonoBehaviour
 
     private bool IsShopDoor => currentDoorType == RoomType.Shop;
     private bool IsBossDoor => currentDoorType == RoomType.Boss;
+    private bool leadsToBuffRoom;
 
     private void Awake()
     {
@@ -229,6 +231,7 @@ public class RoomDoor : MonoBehaviour
         spriteRenderer.color = Color.white;
         myNode = node;
         currentDoorType = type;
+        leadsToBuffRoom = node != null && node.information != null && node.information.IsBuffRoom;
 
         if (type == RoomType.Shop)
         {
@@ -335,6 +338,12 @@ public class RoomDoor : MonoBehaviour
         {
             Sprite open = GetBossOpenSprite();
             if (open != null) spriteRenderer.sprite = open;
+            return;
+        }
+
+        if (leadsToBuffRoom && buffDoorSprite != null)
+        {
+            spriteRenderer.sprite = buffDoorSprite;
             return;
         }
 

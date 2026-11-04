@@ -44,7 +44,7 @@ public class MinimapRoomIcon : MonoBehaviour
         if (IsBossRoom(node))
             return bossSprite;
 
-        if (IsBuffConnectionRoom(node))
+        if (node.information != null && node.information.IsBuffRoom)
             return buffSprite;
 
         if (IsChallengeRoom(node))
@@ -80,17 +80,5 @@ public class MinimapRoomIcon : MonoBehaviour
             return true;
 
         return node.information != null && node.information.type == RoomType.Start;
-    }
-
-    private static bool IsBuffConnectionRoom(RoomNode node)
-    {
-        if (node.information == null)
-            return false;
-
-        string id = node.information.roomID;
-        if (string.IsNullOrEmpty(id))
-            id = node.information.name;
-
-        return id == "Connection_Room_4" || id == "ConnectionRoom4";
     }
 }

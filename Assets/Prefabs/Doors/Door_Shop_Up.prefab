@@ -83,7 +83,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: bc65ac4a1d765d0469b27cf6ad62aef5, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a7d0e11b4c2f4a0e9b6d3f1a8c5e2041, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -155,7 +155,8 @@ MonoBehaviour:
   isLocked: 1
   spriteRenderer: {fileID: 0}
   normalDoorSprite: {fileID: 4976125646568474354, guid: 33cd2fc56208f5a4a8ee74c10ba2ad03, type: 3}
-  shopDoorSprite: {fileID: 21300000, guid: bc65ac4a1d765d0469b27cf6ad62aef5, type: 3}
+  shopDoorSprite: {fileID: 21300000, guid: a7d0e11b4c2f4a0e9b6d3f1a8c5e2041, type: 3}
+  buffDoorSprite: {fileID: 21300000, guid: a7d0e11b4c2f4a0e9b6d3f1a8c5e2042, type: 3}
   bossDoorSprite: {fileID: 3757799029200383541, guid: ecc4c04ccef671fb6c9004cc977e9269, type: 3}
   lockedDoorSprite: {fileID: 1485597978798215358, guid: 6dc5eb9bea0a093655825043236956e4, type: 3}
   unlockAnimationFrames:
