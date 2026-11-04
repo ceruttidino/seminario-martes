@@ -81,21 +81,25 @@ public class RoomDoor : MonoBehaviour
             return;
         }
 
-        if (!isLocked || isAnimating || !IsShopDoor)
+        bool shopCanUnlock = isLocked && !isAnimating && IsShopDoor;
+        bool nearForPrompt = shopCanUnlock && TryGetNearbyPlayer(out _) && !RoomBlocksLockpick();
+        SetUnlockPromptVisible(nearForPrompt);
+
+        if (Keyboard.current == null || !Keyboard.current.fKey.wasPressedThisFrame)
+            return;
+
+        if (!TryGetNearbyPlayer(out GameObject player))
+            return;
+
+        // Con enemigos vivos, F en la puerta no abre nada. Si el cuerpo quedó metido en el marco, lo suelta.
+        if (RoomBlocksLockpick())
         {
-            SetUnlockPromptVisible(false);
+            player.GetComponent<PlayerMovement>()?.ReleaseFromSolids();
             return;
         }
 
-        // La ganzua se usa estando CERCA de la puerta. Antes dependia de los eventos del trigger
-        // (enter/exit), asi que solo andaba parado en una posicion muy especifica.
-        bool nearPlayer = TryGetNearbyPlayer(out GameObject player) && !RoomBlocksLockpick();
-
-        // Cartel "F" flotante: aparece mientras se puede destrabar la puerta (cerca y sin combate).
-        SetUnlockPromptVisible(nearPlayer);
-
-        if (!nearPlayer) return;
-        if (Keyboard.current == null || !Keyboard.current.fKey.wasPressedThisFrame) return;
+        if (!shopCanUnlock)
+            return;
 
         TryUnlock(player);
     }
@@ -557,7 +561,7 @@ public class RoomDoor : MonoBehaviour
 
         if (GamePause.IsGameplayFrozen) return;
 
-        if (!canTrigger || isLocked)
+        if (RoomBlocksLockpick() || !canTrigger || isLocked)
         {
             return;
         }

@@ -65,7 +65,10 @@ public class EnemyMovement : MonoBehaviour, IMovement
     private bool pendingGoalValid;
     private int wallSlideSign = 1;
     private float bodyRadius = 0.32f;
-    private bool wideBody;
+    // La rata tiene una hoja por dirección: no se espeja, y el blend solo recibe un eje (arriba, abajo, izquierda o derecha).
+    private bool directionalSheets;
+    // Rata y búho rodean las piedras por la malla. El resto sigue con el agente de antes.
+    private bool steerAroundRocks;
 
     private Vector2 slideVelocity;
     private float slideTimer;
@@ -104,10 +107,11 @@ public class EnemyMovement : MonoBehaviour, IMovement
 
         stuckWindowStartPos = rb != null ? rb.position : (Vector2)transform.position;
 
-        // Solo la rata es mucho mas ancha que el radio del NavMesh: ella rodea las piedras
-        // por una esquina libre. El resto conserva el recorrido anterior.
-        wideBody = GetComponent<RegeneratingRat>() != null;
-        if (wideBody)
+        // La rata y el búho se traban contra las piedras con el agente chico.
+        // Los dos rodean por una esquina libre. El resto conserva el recorrido anterior.
+        directionalSheets = GetComponent<RegeneratingRat>() != null;
+        steerAroundRocks = directionalSheets || GetComponent<VanishingOwl>() != null;
+        if (steerAroundRocks)
         {
             bodyRadius = MeasureBodyRadius();
             NavMeshAgent existing = GetComponent<NavMeshAgent>();
@@ -207,7 +211,7 @@ public class EnemyMovement : MonoBehaviour, IMovement
         Vector2 from = rb != null ? rb.position : (Vector2)transform.position;
         pendingGoalValid = false;
 
-        if (wideBody && avoidObstacles && navReady && direction.sqrMagnitude > 0.0001f)
+        if (steerAroundRocks && avoidObstacles && navReady && direction.sqrMagnitude > 0.0001f)
         {
             Vector2 goal = hasExplicitGoal
                 ? explicitGoal
@@ -367,7 +371,7 @@ public class EnemyMovement : MonoBehaviour, IMovement
         if (!handled)
             blocked = PhysicsClamp(from, desired, out next, out normal);
 
-        if (wideBody && !reportWallHits)
+        if (steerAroundRocks && !reportWallHits)
             next = KeepBodyOffObstacles(from, next, speedOverride);
 
         rb.MovePosition(next);
@@ -576,9 +580,10 @@ public class EnemyMovement : MonoBehaviour, IMovement
     {
         if (direction.sqrMagnitude < 0.0001f) return;
 
-        lastFacingDirection = direction.normalized;
+        Vector2 facing = directionalSheets ? Cardinal(direction) : direction.normalized;
+        lastFacingDirection = facing.normalized;
 
-        ApplyFacingFlip(direction);
+        ApplyFacingFlip(facing);
 
         if (animator != null)
         {
@@ -592,8 +597,8 @@ public class EnemyMovement : MonoBehaviour, IMovement
         if (spriteRenderer == null || Mathf.Abs(direction.x) < 0.01f)
             return;
 
-        // La rata tiene hoja propia para la derecha y para la izquierda.
-        if (wideBody)
+        // La rata tiene hoja propia para cada lado. Espejarla la deja mirando al revés.
+        if (directionalSheets)
         {
             spriteRenderer.flipX = false;
             return;
@@ -618,7 +623,7 @@ public class EnemyMovement : MonoBehaviour, IMovement
         {
             escapeTimer = escapeDuration;
             escapeAngleJitter = UnityEngine.Random.Range(60f, 150f) * (UnityEngine.Random.value < 0.5f ? 1f : -1f);
-            if (wideBody)
+            if (steerAroundRocks)
                 wallSlideSign = -wallSlideSign;
 
             Vector2 side = RotateVector(desiredDirection.sqrMagnitude > 0.01f
@@ -793,14 +798,27 @@ public class EnemyMovement : MonoBehaviour, IMovement
         float animationPlaybackSpeed = currentSpeed > 0.01f ? 1f : 0f;
         animator.SetFloat("AnimSpeed", animationPlaybackSpeed);
 
-        if (direction != Vector2.zero)
+        if (direction.sqrMagnitude > 0.0001f)
         {
-            lastFacingDirection = direction.normalized;
+            Vector2 facing = direction;
+            // El blend 2D mezcla las cuatro caminatas si el vector es diagonal, y el cuerpo
+            // parece no girar hasta que el eje es casi puro. En la rata se elige un solo eje.
+            if (directionalSheets)
+                facing = Cardinal(direction);
 
-            ApplyFacingFlip(direction);
+            lastFacingDirection = facing.normalized;
+            ApplyFacingFlip(facing);
         }
 
         animator.SetFloat("X", lastFacingDirection.x);
         animator.SetFloat("Y", lastFacingDirection.y);
+    }
+
+    private static Vector2 Cardinal(Vector2 direction)
+    {
+        if (Mathf.Abs(direction.x) >= Mathf.Abs(direction.y))
+            return direction.x >= 0f ? Vector2.right : Vector2.left;
+
+        return direction.y >= 0f ? Vector2.up : Vector2.down;
     }
 }

@@ -51,21 +51,23 @@ public class RegeneratingRat : MonoBehaviour
         if (direction.sqrMagnitude < 0.0001f)
             direction = Vector2.down;
 
+        Vector2 facing = Mathf.Abs(direction.x) >= Mathf.Abs(direction.y)
+            ? (direction.x >= 0f ? Vector2.right : Vector2.left)
+            : (direction.y >= 0f ? Vector2.up : Vector2.down);
+
         SpriteRenderer body = GetComponent<SpriteRenderer>();
-        bool side = Mathf.Abs(direction.x) > Mathf.Abs(direction.y);
         if (body != null)
-            body.flipX = side && direction.x < 0f;
+            body.flipX = facing.x < 0f;
 
         if (animator != null)
         {
-            Vector2 facing = direction.normalized;
             animator.SetFloat("X", facing.x);
             animator.SetFloat("Y", facing.y);
             animator.ResetTrigger("Attack");
             animator.SetTrigger("Attack");
         }
 
-        EnemyMeleeSlash.Spawn(transform.position, direction, 0.72f);
+        EnemyMeleeSlash.Spawn(transform.position, facing, 0.72f);
     }
 
     public void EndAttackFeedback()
@@ -82,9 +84,19 @@ public class RegeneratingRat : MonoBehaviour
     public void TryStrike(Transform player)
     {
         if (player == null) return;
+        StartCoroutine(StrikeWhenSlashIsVisible(player));
+    }
+
+    private System.Collections.IEnumerator StrikeWhenSlashIsVisible(Transform player)
+    {
+        // El arco rojo se dibuja en este frame. El daño espera al siguiente,
+        // que es cuando el slash ya está en pantalla.
+        yield return null;
+
+        if (player == null) yield break;
 
         float distance = Vector2.Distance(transform.position, player.position);
-        if (distance > attackHitRange) return;
+        if (distance > attackHitRange) yield break;
 
         IDamageable damageable = player.GetComponent<IDamageable>();
         damageable?.TakeDamageFrom(attackDamage, gameObject);

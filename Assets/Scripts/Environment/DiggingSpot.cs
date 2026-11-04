@@ -94,6 +94,14 @@ public class DiggingSpot : MonoBehaviour, IInteractable
     {
         if (isDug || !isPlayerNear) return;
 
+        RoomInstance room = GetComponentInParent<RoomInstance>();
+        if (room != null && room.HasLivingEnemies())
+        {
+            GameObject stuckPlayer = GameObject.FindGameObjectWithTag("Player");
+            stuckPlayer?.GetComponent<PlayerMovement>()?.ReleaseFromSolids();
+            return;
+        }
+
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         PlayerMovement movement = player != null ? player.GetComponent<PlayerMovement>() : null;
         if (movement == null || !movement.TryPlayDig(CompleteDig))

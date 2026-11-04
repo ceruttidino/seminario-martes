@@ -31,6 +31,7 @@ public class EnemyMeleeSlash : MonoBehaviour
         EnemyMeleeSlash slash = go.AddComponent<EnemyMeleeSlash>();
         slash.radius = Mathf.Max(0.2f, radius);
         slash.maxWidth = Mathf.Max(0.04f, width);
+        slash.ShowImmediate();
     }
 
     /// <summary>Arco rojo que gira alrededor del enemigo hasta que se llama End.</summary>
@@ -45,7 +46,24 @@ public class EnemyMeleeSlash : MonoBehaviour
         slash.maxWidth = 0.22f;
         slash.arcAngle = 320f;
         slash.spinning = true;
+        slash.ShowImmediate();
         return slash;
+    }
+
+    private void ShowImmediate()
+    {
+        if (line == null)
+            return;
+
+        if (spinning)
+        {
+            DrawArc(-arcAngle * 0.5f + spinAngle, arcAngle, 1f);
+            return;
+        }
+
+        // Nace ya abierto. Si arranca en cero, el daño se ve antes que el arco.
+        timer = sweepTime;
+        DrawArc(-arcAngle * 0.5f, arcAngle, 1f);
     }
 
     public void End()

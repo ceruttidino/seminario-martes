@@ -23,6 +23,7 @@ public class PlayerMovement : MonoBehaviour
     private static readonly int DigHash = Animator.StringToHash("Raccoon_Dig");
     private static readonly int TakeBuffHash = Animator.StringToHash("Raccoon_TakeBuff");
     private bool isDigging;
+    private float digLockUntil;
     private bool isPosing;
 
     // Knockback (ej: golpear a la Hormiga mientras ataca): el jugador sale despedido y no controla el movimiento un instante.
@@ -95,6 +96,7 @@ public class PlayerMovement : MonoBehaviour
 
         // Si el script se apaga a mitad del cavado, Unity corta la corrutina y el flag quedaba en true para siempre.
         isDigging = false;
+        digLockUntil = 0f;
         if (animator != null)
             animator.ResetTrigger("Dig");
     }
@@ -119,6 +121,15 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        if (isDigging && digLockUntil > 0f && Time.unscaledTime > digLockUntil)
+        {
+            isDigging = false;
+            digLockUntil = 0f;
+            if (animator != null)
+                animator.ResetTrigger("Dig");
+            ReleaseFromSolids();
+        }
+
         if (stunTimer > 0f)
         {
             stunTimer -= Time.deltaTime;
@@ -434,7 +445,15 @@ public class PlayerMovement : MonoBehaviour
         if (playerDash != null && playerDash.IsDashing)
             return false;
 
+        // Con enemigos vivos, cavar traba al jugador contra el pozo o la puerta. F no hace nada y, si ya quedó metido, lo suelta.
+        if (RoomHasLivingEnemies())
+        {
+            ReleaseFromSolids();
+            return false;
+        }
+
         isDigging = true;
+        digLockUntil = Time.unscaledTime + 1.8f;
 
         if (rb != null)
             rb.linearVelocity = Vector2.zero;
@@ -521,8 +540,11 @@ public class PlayerMovement : MonoBehaviour
     private void FinishDig(System.Action onComplete)
     {
         isDigging = false;
+        digLockUntil = 0f;
         if (animator != null)
             animator.ResetTrigger("Dig");
+
+        ReleaseFromSolids();
 
         if (onComplete == null)
             return;
@@ -535,6 +557,81 @@ public class PlayerMovement : MonoBehaviour
         {
             Debug.LogException(exception, this);
         }
+    }
+
+    private static bool RoomHasLivingEnemies()
+    {
+        RoomInstance room = DungeonManager.Instance != null ? DungeonManager.Instance.CurrentRoom : null;
+        return room != null && room.HasLivingEnemies();
+    }
+
+    /// <summary>
+    /// Si el centro del cuerpo quedó adentro de un collider sólido (pozo, puerta, pared), lo corre hacia la sala.
+    /// Parado al lado de una pared el centro no está adentro, así que caminar normal no se toca.
+    /// </summary>
+    public void ReleaseFromSolids()
+    {
+        if (rb == null || !CenterIsInsideSolid(rb.position))
+            return;
+
+        Vector2 origin = rb.position;
+        Vector2 inward = Vector2.down;
+        if (DungeonManager.Instance != null && DungeonManager.Instance.CurrentRoom != null)
+        {
+            Vector2 toRoom = (Vector2)DungeonManager.Instance.CurrentRoom.transform.position - origin;
+            if (toRoom.sqrMagnitude > 0.0001f)
+                inward = toRoom.normalized;
+        }
+
+        Vector2[] dirs =
+        {
+            inward,
+            Vector2.down,
+            Vector2.up,
+            Vector2.left,
+            Vector2.right
+        };
+
+        RoomPathGrid grid = null;
+        if (DungeonManager.Instance != null && DungeonManager.Instance.CurrentRoom != null)
+            grid = RoomPathGrid.ForQuick(DungeonManager.Instance.CurrentRoom.transform);
+
+        for (float dist = 0.45f; dist <= 2.1f; dist += 0.35f)
+        {
+            for (int i = 0; i < dirs.Length; i++)
+            {
+                Vector2 candidate = origin + dirs[i] * dist;
+                if (CenterIsInsideSolid(candidate))
+                    continue;
+
+                if (grid != null && grid.IsOverVoid(candidate))
+                    continue;
+
+                rb.position = candidate;
+                rb.linearVelocity = Vector2.zero;
+                Physics2D.SyncTransforms();
+                GetComponent<PlayerWalkableClamp>()?.ResetTo(candidate);
+                return;
+            }
+        }
+    }
+
+    private bool CenterIsInsideSolid(Vector2 point)
+    {
+        Collider2D[] hits = Physics2D.OverlapPointAll(point);
+        for (int i = 0; i < hits.Length; i++)
+        {
+            Collider2D hit = hits[i];
+            if (hit == null || !hit.enabled || hit.isTrigger)
+                continue;
+
+            if (hit.transform == transform || hit.transform.IsChildOf(transform))
+                continue;
+
+            return true;
+        }
+
+        return false;
     }
 
     private static Vector2 GetCardinalFacing(Vector2 direction)

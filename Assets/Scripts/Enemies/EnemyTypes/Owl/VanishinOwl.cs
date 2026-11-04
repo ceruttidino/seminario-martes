@@ -113,9 +113,15 @@ public class VanishingOwl : MonoBehaviour
 
         Vector2 direction = movement != null ? movement.Facing : Vector2.down;
         EnemyMeleeSlash.Spawn(transform.position, direction, 0.85f);
+        StartCoroutine(DamageWhenSlashIsVisible(target));
+    }
 
-        if (target == null) return;
-        if (Vector2.Distance(transform.position, target.position) > attackRadius) return;
+    private IEnumerator DamageWhenSlashIsVisible(Transform target)
+    {
+        yield return null;
+
+        if (target == null) yield break;
+        if (Vector2.Distance(transform.position, target.position) > attackRadius) yield break;
         if (target.TryGetComponent<IDamageable>(out var damageable))
             damageable.TakeDamageFrom(heartDamage, gameObject);
     }

@@ -226,6 +226,9 @@ public class MutantSpiderBoss : BossBase
             : lastMoveDirection;
         EnemyMeleeSlash.Spawn(transform.position, slashDirection, SpiderSlashRadius(), 0.42f);
 
+        // Un frame después: el arco ya está dibujado y el golpe no se adelanta.
+        yield return null;
+
         if (!isDead && !isOnCeiling && enemyAttack != null && enemyAttack.TryAttack())
             AudioManager.PlaySpiderMelee();
 
