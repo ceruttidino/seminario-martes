@@ -65,6 +65,7 @@ public class RegeneratingRat : MonoBehaviour
             animator.SetFloat("Y", facing.y);
             animator.ResetTrigger("Attack");
             animator.SetTrigger("Attack");
+            animator.Update(0f);
         }
 
         EnemyMeleeSlash.Spawn(transform.position, facing, 0.72f);
@@ -84,19 +85,9 @@ public class RegeneratingRat : MonoBehaviour
     public void TryStrike(Transform player)
     {
         if (player == null) return;
-        StartCoroutine(StrikeWhenSlashIsVisible(player));
-    }
-
-    private System.Collections.IEnumerator StrikeWhenSlashIsVisible(Transform player)
-    {
-        // El arco rojo se dibuja en este frame. El daño espera al siguiente,
-        // que es cuando el slash ya está en pantalla.
-        yield return null;
-
-        if (player == null) yield break;
 
         float distance = Vector2.Distance(transform.position, player.position);
-        if (distance > attackHitRange) yield break;
+        if (distance > attackHitRange) return;
 
         IDamageable damageable = player.GetComponent<IDamageable>();
         damageable?.TakeDamageFrom(attackDamage, gameObject);

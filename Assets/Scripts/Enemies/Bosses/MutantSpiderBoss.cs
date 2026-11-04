@@ -188,6 +188,7 @@ public class MutantSpiderBoss : BossBase
 
     // Separacion (entre superficies de colliders) a la que la Araña se detiene frente al jugador.
     private const float MeleeStopGap = 0.1f;
+    private const float MeleeTelegraph = 0.35f;
     private Collider2D playerBodyCollider;
     private bool meleeActive;
     private bool isMeleeAttacking;
@@ -216,20 +217,43 @@ public class MutantSpiderBoss : BossBase
     {
         isMeleeAttacking = true;
         StopMovement();
+
+        float waited = 0f;
+        while (waited < MeleeTelegraph)
+        {
+            if (isDead || isOnCeiling)
+            {
+                isMeleeAttacking = false;
+                yield break;
+            }
+
+            StopMovement();
+            FacePlayer();
+            waited += Time.deltaTime;
+            yield return null;
+        }
+
+        if (isDead || isOnCeiling || enemyAttack == null || !enemyAttack.HasTargetInReach())
+        {
+            isMeleeAttacking = false;
+            yield break;
+        }
+
         FacePlayer();
 
         if (animator != null)
+        {
+            animator.ResetTrigger("MeleeAttack");
             animator.SetTrigger("MeleeAttack");
+            animator.Update(0f);
+        }
 
         Vector2 slashDirection = player != null
             ? (Vector2)player.position - (Vector2)transform.position
             : lastMoveDirection;
         EnemyMeleeSlash.Spawn(transform.position, slashDirection, SpiderSlashRadius(), 0.42f);
 
-        // Un frame después: el arco ya está dibujado y el golpe no se adelanta.
-        yield return null;
-
-        if (!isDead && !isOnCeiling && enemyAttack != null && enemyAttack.TryAttack())
+        if (!isDead && !isOnCeiling && enemyAttack.TryAttack())
             AudioManager.PlaySpiderMelee();
 
         yield return new WaitForSeconds(meleeWindup);
