@@ -33,7 +33,7 @@ public class EnemyMovement : MonoBehaviour, IMovement
         };
 
     private static readonly RaycastHit2D[] AvoidanceHitBuffer = new RaycastHit2D[1];
-    private readonly Collider2D[] overlapBuffer = new Collider2D[4];
+    private readonly Collider2D[] overlapBuffer = new Collider2D[8];
 
     private ContactFilter2D obstacleFilter;
     private Vector2 lastFacingDirection = Vector2.down;
@@ -329,6 +329,15 @@ public class EnemyMovement : MonoBehaviour, IMovement
         if (blocked)
             slideTimer = 0f;
 
+        // La malla es mas fina que el cuerpo. El golpe puede dejar el centro adentro de la piedra.
+        if (steerAroundRocks)
+        {
+            Vector2 free = ExtrudeFromRocks(next);
+            if ((free - next).sqrMagnitude > 0.0001f)
+                slideTimer = 0f;
+            next = free;
+        }
+
         rb.linearVelocity = Vector2.zero;
         rb.MovePosition(next);
         Velocity = (next - from) / Mathf.Max(0.0001f, Time.fixedDeltaTime);
@@ -339,6 +348,20 @@ public class EnemyMovement : MonoBehaviour, IMovement
     private void ApplyPlanarStep(Vector2 steered, float speedOverride, bool reportWallHits)
     {
         rb.linearVelocity = Vector2.zero;
+
+        Vector2 from = rb.position;
+        if (steerAroundRocks)
+        {
+            Vector2 freed = ExtrudeFromRocks(from);
+            if ((freed - from).sqrMagnitude > 0.0001f)
+            {
+                separation = Vector2.zero;
+                rb.MovePosition(freed);
+                Velocity = Vector2.zero;
+                wasBlocked = true;
+                return;
+            }
+        }
 
         Vector2 extra = separation * 0.35f;
         separation = Vector2.zero;
@@ -358,7 +381,6 @@ public class EnemyMovement : MonoBehaviour, IMovement
             extra = Vector2.zero;
         }
 
-        Vector2 from = rb.position;
         Vector2 desired = from + steered.normalized * speedOverride * Time.fixedDeltaTime + extra;
         Vector2 next = desired;
         Vector2 normal = Vector2.zero;
@@ -374,6 +396,9 @@ public class EnemyMovement : MonoBehaviour, IMovement
         if (steerAroundRocks && !reportWallHits)
             next = KeepBodyOffObstacles(from, next, speedOverride);
 
+        if (steerAroundRocks && BodyInsideRock(next))
+            next = from;
+
         rb.MovePosition(next);
         Velocity = (next - from) / Mathf.Max(0.0001f, Time.fixedDeltaTime);
         SyncAgent(next);
@@ -386,6 +411,93 @@ public class EnemyMovement : MonoBehaviour, IMovement
         }
 
         wasBlocked = blocked;
+    }
+
+    private bool BodyInsideRock(Vector2 position)
+    {
+        return TryGetOverlappedRock(position, bodyRadius * 0.72f, out _);
+    }
+
+    /// <summary>
+    /// Saca el centro de la piedra a un punto libre de la malla. ClosestPoint no sirve
+    /// adentro del collider: devuelve el mismo punto y el cuerpo se queda clavado.
+    /// </summary>
+    private Vector2 ExtrudeFromRocks(Vector2 position)
+    {
+        if (!steerAroundRocks || obstacleLayers.value == 0)
+            return position;
+
+        for (int pass = 0; pass < 3; pass++)
+        {
+            if (!TryGetOverlappedRock(position, bodyRadius * 0.72f, out Collider2D rock))
+                return position;
+
+            Vector2 away = position - (Vector2)rock.bounds.center;
+            if (away.sqrMagnitude < 0.0001f)
+                away = Vector2.up;
+            away.Normalize();
+            Vector2 side = new Vector2(-away.y, away.x);
+
+            Vector2[] dirs =
+            {
+                away,
+                (away + side).normalized,
+                (away - side).normalized,
+                side,
+                -side
+            };
+
+            bool freed = false;
+            for (int d = 0; d < dirs.Length && !freed; d++)
+            {
+                for (float distance = 0.08f; distance <= bodyRadius * 3.2f; distance += 0.08f)
+                {
+                    Vector2 candidate = position + dirs[d] * distance;
+                    if (TryGetOverlappedRock(candidate, bodyRadius * 0.55f, out _))
+                        continue;
+
+                    if (DungeonNavMesh.Instance != null && DungeonNavMesh.Instance.IsReady)
+                    {
+                        if (!DungeonNavMesh.SampleWalkable(candidate, out Vector2 onMesh, 0.3f))
+                            continue;
+                        if (TryGetOverlappedRock(onMesh, bodyRadius * 0.55f, out _))
+                            continue;
+                        candidate = onMesh;
+                    }
+
+                    position = candidate;
+                    freed = true;
+                    break;
+                }
+            }
+
+            if (!freed)
+                return position + away * (bodyRadius + 0.05f);
+        }
+
+        return position;
+    }
+
+    private bool TryGetOverlappedRock(Vector2 position, float radius, out Collider2D rock)
+    {
+        rock = null;
+        if (obstacleLayers.value == 0)
+            return false;
+
+        int count = Physics2D.OverlapCircle(position, radius, obstacleFilter, overlapBuffer);
+        for (int i = 0; i < count; i++)
+        {
+            Collider2D col = overlapBuffer[i];
+            if (col == null || col.isTrigger)
+                continue;
+            if (col.transform == transform || col.transform.IsChildOf(transform))
+                continue;
+
+            rock = col;
+            return true;
+        }
+
+        return false;
     }
 
     /// <summary>
@@ -402,10 +514,8 @@ public class EnemyMovement : MonoBehaviour, IMovement
         float probe = bodyRadius * 0.92f;
 
         // Solo si el centro ya esta adentro de la piedra. Si apenas la roza, se desliza por el costado.
-        int overlaps = Physics2D.OverlapCircle(from, bodyRadius * 0.35f, obstacleFilter, overlapBuffer);
-        if (overlaps > 0 && overlapBuffer[0] != null)
+        if (TryGetOverlappedRock(from, bodyRadius * 0.35f, out Collider2D rock))
         {
-            Collider2D rock = overlapBuffer[0];
             Vector2 away = from - (Vector2)rock.ClosestPoint(from);
             if (away.sqrMagnitude < 0.0001f)
                 away = from - (Vector2)rock.bounds.center;
