@@ -9,7 +9,6 @@ public class RatAttackState : IEnemyState
     private readonly RegeneratingRat rat;
 
     private float elapsed;
-    private bool hasStruck;
 
     public RatAttackState(Transform player, EnemyMovement movement, Transform self, EnemyBehaviour behaviour, RegeneratingRat rat)
     {
@@ -23,20 +22,14 @@ public class RatAttackState : IEnemyState
     public void Enter()
     {
         elapsed = 0f;
-        hasStruck = false;
         movement.Move(Vector2.zero);
         rat.BeginAttackFeedback(player.position);
+        rat.TryStrike(player);
     }
 
     public void Tick()
     {
         elapsed += Time.deltaTime;
-
-        if (!hasStruck && elapsed >= rat.HitTiming)
-        {
-            hasStruck = true;
-            rat.TryStrike(player);
-        }
 
         if (elapsed >= rat.AttackDuration)
         {

@@ -108,7 +108,7 @@ public class OwlWindupState : IEnemyState
         owl.Reveal();
         owl.Stop();
         owl.FaceTarget(player.position);
-        owl.TriggerAttack();
+        owl.TriggerAttack(player);
         timer = owl.WindupTime;
     }
 
@@ -142,12 +142,6 @@ public class OwlAttackState : IEnemyState
     public void Enter()
     {
         timer = owl.RecoverTime;
-
-        if (Vector2.Distance(self.position, player.position) <= owl.AttackRadius
-            && player.TryGetComponent<IDamageable>(out var target))
-        {
-            target.TakeDamageFrom(owl.HeartDamage, owl.gameObject);
-        }
     }
 
     public void Tick()

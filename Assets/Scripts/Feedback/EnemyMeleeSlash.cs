@@ -13,9 +13,12 @@ public class EnemyMeleeSlash : MonoBehaviour
     private float sweepTime = 0.06f;
     private float fadeTime = 0.12f;
     private Color color = new Color(0.92f, 0.08f, 0.1f, 1f);
+    private bool spinning;
+    private float spinAngle;
+    private Transform follow;
     private const int Segments = 24;
 
-    public static void Spawn(Vector3 origin, Vector2 direction, float radius)
+    public static void Spawn(Vector3 origin, Vector2 direction, float radius, float width = 0.16f)
     {
         if (direction.sqrMagnitude < 0.0001f)
             direction = Vector2.right;
@@ -27,6 +30,31 @@ public class EnemyMeleeSlash : MonoBehaviour
 
         EnemyMeleeSlash slash = go.AddComponent<EnemyMeleeSlash>();
         slash.radius = Mathf.Max(0.2f, radius);
+        slash.maxWidth = Mathf.Max(0.04f, width);
+    }
+
+    /// <summary>Arco rojo que gira alrededor del enemigo hasta que se llama End.</summary>
+    public static EnemyMeleeSlash BeginRing(Transform follow, float radius)
+    {
+        GameObject go = new GameObject("EnemySpinSlash");
+        go.transform.position = follow != null ? follow.position : Vector3.zero;
+
+        EnemyMeleeSlash slash = go.AddComponent<EnemyMeleeSlash>();
+        slash.follow = follow;
+        slash.radius = Mathf.Max(0.2f, radius);
+        slash.maxWidth = 0.22f;
+        slash.arcAngle = 320f;
+        slash.spinning = true;
+        return slash;
+    }
+
+    public void End()
+    {
+        if (!spinning)
+            return;
+
+        spinning = false;
+        timer = sweepTime;
     }
 
     private void Awake()
@@ -53,6 +81,16 @@ public class EnemyMeleeSlash : MonoBehaviour
 
     private void Update()
     {
+        if (spinning)
+        {
+            if (follow != null)
+                transform.position = follow.position;
+
+            spinAngle += 720f * Time.deltaTime;
+            DrawArc(-arcAngle * 0.5f + spinAngle, arcAngle, 1f);
+            return;
+        }
+
         timer += Time.deltaTime;
 
         float sweep = sweepTime > 0f ? Mathf.Clamp01(timer / sweepTime) : 1f;
@@ -64,19 +102,23 @@ public class EnemyMeleeSlash : MonoBehaviour
         float start = -arcAngle * 0.5f;
         float head = start + arcAngle * headT;
         float tail = Mathf.Lerp(start, head, tailT);
-
-        for (int i = 0; i <= Segments; i++)
-        {
-            float angle = Mathf.Lerp(tail, head, i / (float)Segments) * Mathf.Deg2Rad;
-            line.SetPosition(i, new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f) * radius);
-        }
-
-        line.widthMultiplier = maxWidth * (1f - fade * 0.5f);
-        float alpha = color.a * (1f - fade);
-        line.startColor = new Color(color.r, color.g, color.b, alpha * 0.25f);
-        line.endColor = new Color(color.r, color.g, color.b, alpha);
+        DrawArc(tail, head - tail, 1f - fade);
 
         if (fade >= 1f)
             Destroy(gameObject);
+    }
+
+    private void DrawArc(float startDeg, float spanDeg, float alphaScale)
+    {
+        for (int i = 0; i <= Segments; i++)
+        {
+            float angle = (startDeg + spanDeg * (i / (float)Segments)) * Mathf.Deg2Rad;
+            line.SetPosition(i, new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f) * radius);
+        }
+
+        line.widthMultiplier = maxWidth * (1f - (1f - alphaScale) * 0.5f);
+        float alpha = color.a * alphaScale;
+        line.startColor = new Color(color.r, color.g, color.b, alpha * 0.25f);
+        line.endColor = new Color(color.r, color.g, color.b, alpha);
     }
 }

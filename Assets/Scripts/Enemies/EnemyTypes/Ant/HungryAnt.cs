@@ -117,6 +117,7 @@ public class HungryAnt : MonoBehaviour
     private bool currentLoop;
     private bool currentPaused;
     private float clipTime;
+    private EnemyMeleeSlash spinSlash;
 
     // Mareo: estrellitas girando sobre la cabeza
     private Transform starsRoot;
@@ -165,6 +166,17 @@ public class HungryAnt : MonoBehaviour
 
         if (starsRoot != null)
             Destroy(starsRoot.gameObject);
+
+        EndSpinSlash();
+    }
+
+    private void EndSpinSlash()
+    {
+        if (spinSlash == null)
+            return;
+
+        spinSlash.End();
+        spinSlash = null;
     }
 
     private void OnEnable()
@@ -385,6 +397,8 @@ public class HungryAnt : MonoBehaviour
         stateTimer = Mathf.Max(0.5f, attackDuration - alertTime);
         aoeTimer = 0f;
         PlayClip(ClipSpin, spinFrames, spinFps, true, false);
+        EndSpinSlash();
+        spinSlash = EnemyMeleeSlash.BeginRing(transform, aoeRadius);
     }
 
     private void UpdateAttacking(float dt)
@@ -413,6 +427,7 @@ public class HungryAnt : MonoBehaviour
         state = AntState.Recovering;
         stateTimer = Mathf.Max(0.05f, recoverTime);
         movement.Move(Vector2.zero);
+        EndSpinSlash();
         PlayClip(ClipRecover, recoverFrames != null ? recoverFrames : frontFrames, 8f, false, false);
     }
 

@@ -224,17 +224,26 @@ public class MutantSpiderBoss : BossBase
         Vector2 slashDirection = player != null
             ? (Vector2)player.position - (Vector2)transform.position
             : lastMoveDirection;
-        EnemyMeleeSlash.Spawn(transform.position, slashDirection, 1.15f);
+        EnemyMeleeSlash.Spawn(transform.position, slashDirection, SpiderSlashRadius(), 0.42f);
 
-        yield return new WaitForSeconds(meleeWindup);
-
-        // TryAttack vuelve a chequear el alcance: si el jugador se corrió durante el windup, lo esquivó.
         if (!isDead && !isOnCeiling && enemyAttack != null && enemyAttack.TryAttack())
             AudioManager.PlaySpiderMelee();
+
+        yield return new WaitForSeconds(meleeWindup);
 
         yield return new WaitForSeconds(meleeRecovery);
 
         isMeleeAttacking = false;
+    }
+
+    private float SpiderSlashRadius()
+    {
+        SpriteRenderer body = GetComponent<SpriteRenderer>();
+        if (body == null)
+            return 2.6f;
+
+        Vector3 extents = body.bounds.extents;
+        return Mathf.Max(extents.x, extents.y, 1.6f);
     }
 
     /// <summary>Orienta el Animator (MoveX/MoveY, 4 direcciones) hacia el jugador sin activar IsMoving.</summary>
