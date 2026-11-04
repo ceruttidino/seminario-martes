@@ -6,14 +6,14 @@ public class MinimapRoomIcon : MonoBehaviour
     [SerializeField] private Image roomImage;
     [SerializeField] private GameObject playerIndicator;
 
-    [Header("Colors")]
-    [SerializeField] private Color currentRoomColor = Color.white;
-    [SerializeField] private Color normalVisitedColor = new Color(0.6f, 0.65f, 0.65f);
-    [SerializeField] private Color adjacentRoomColor = new Color(0.2f, 0.2f, 0.2f, 0.7f);
-    [SerializeField] private Color startRoomColor = Color.green;
-    [SerializeField] private Color shopRoomColor = Color.yellow;
-    [SerializeField] private Color bossRoomColor = Color.red;
-    [SerializeField] private Color buffRoomColor = Color.blue;
+    [Header("Iconos")]
+    [SerializeField] private Sprite visitedNormalSprite;
+    [SerializeField] private Sprite hiddenNormalSprite;
+    [SerializeField] private Sprite buffSprite;
+    [SerializeField] private Sprite shopSprite;
+    [SerializeField] private Sprite spawnSprite;
+    [SerializeField] private Sprite bossSprite;
+    [SerializeField] private Sprite challengeSprite;
 
     public void Setup(RoomNode node, bool showAsAdjacent)
     {
@@ -24,48 +24,39 @@ public class MinimapRoomIcon : MonoBehaviour
         }
 
         gameObject.SetActive(true);
-        playerIndicator.SetActive(node.isCurrentRoom);
 
-        if (IsShopRoom(node))
-        {
-            roomImage.color = shopRoomColor;
+        if (playerIndicator != null)
+            playerIndicator.SetActive(node.isCurrentRoom);
+
+        if (roomImage == null)
             return;
-        }
+
+        roomImage.sprite = SpriteFor(node, showAsAdjacent);
+        roomImage.color = Color.white;
+        roomImage.preserveAspect = true;
+    }
+
+    private Sprite SpriteFor(RoomNode node, bool showAsAdjacent)
+    {
+        if (IsShopRoom(node))
+            return shopSprite;
 
         if (IsBossRoom(node))
-        {
-            roomImage.color = bossRoomColor;
-            return;
-        }
+            return bossSprite;
 
         if (IsBuffConnectionRoom(node))
-        {
-            roomImage.color = buffRoomColor;
-            return;
-        }
+            return buffSprite;
+
+        if (IsChallengeRoom(node))
+            return challengeSprite;
+
+        if (IsStartRoom(node))
+            return spawnSprite;
 
         if (!node.hasBeenVisited && showAsAdjacent)
-        {
-            roomImage.color = adjacentRoomColor;
-            return;
-        }
+            return hiddenNormalSprite;
 
-        if (node.isCurrentRoom)
-        {
-            roomImage.color = currentRoomColor;
-            return;
-        }
-
-        switch (node.information.type)
-        {
-            case RoomType.Start:
-                roomImage.color = startRoomColor;
-                break;
-
-            default:
-                roomImage.color = normalVisitedColor;
-                break;
-        }
+        return visitedNormalSprite;
     }
 
     private static bool IsShopRoom(RoomNode node)
@@ -76,6 +67,19 @@ public class MinimapRoomIcon : MonoBehaviour
     private static bool IsBossRoom(RoomNode node)
     {
         return node.information != null && node.information.type == RoomType.Boss;
+    }
+
+    private static bool IsChallengeRoom(RoomNode node)
+    {
+        return node.information != null && node.information.type == RoomType.Challenge;
+    }
+
+    private static bool IsStartRoom(RoomNode node)
+    {
+        if (node.uniqueNodeID == "Start")
+            return true;
+
+        return node.information != null && node.information.type == RoomType.Start;
     }
 
     private static bool IsBuffConnectionRoom(RoomNode node)
