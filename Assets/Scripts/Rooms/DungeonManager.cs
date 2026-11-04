@@ -99,7 +99,6 @@ public class DungeonManager : MonoBehaviour
         progression.Configure(config.roomsBeforeShop, config.roomsBeforeBoss, config.shopRoom != null, config.extraRoomsAfterBoss); // CAMBIADO: + tope después del boss
 
         RoomInformation boss = PickBoss(config);
-        Debug.Log($"[DungeonManager] Nivel {currentFloor}/{MaxFloor}: {config.floorName} | boss = {(boss != null ? boss.ID : "NINGUNO")}");
 
         dungeonLayout = new DungeonLayout();
         dungeonLayout.Build(config.startRoom, config.normalRooms, config.shopRoom, boss, config.challengeRooms, config.buffRoom);
