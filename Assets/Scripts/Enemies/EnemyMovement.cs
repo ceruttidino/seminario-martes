@@ -33,6 +33,7 @@ public class EnemyMovement : MonoBehaviour, IMovement
         };
 
     private static readonly RaycastHit2D[] AvoidanceHitBuffer = new RaycastHit2D[1];
+    private readonly Collider2D[] overlapBuffer = new Collider2D[4];
 
     private ContactFilter2D obstacleFilter;
     private Vector2 lastFacingDirection = Vector2.down;
@@ -60,6 +61,10 @@ public class EnemyMovement : MonoBehaviour, IMovement
     private int moveStamp = -1;
     private bool wasBlocked;
     private Vector2 separation;
+    private Vector2 pendingGoal;
+    private bool pendingGoalValid;
+    private int wallSlideSign = 1;
+    private float bodyRadius = 0.32f;
 
     private Vector2 slideVelocity;
     private float slideTimer;
@@ -95,7 +100,30 @@ public class EnemyMovement : MonoBehaviour, IMovement
         obstacleFilter.SetLayerMask(obstacleLayers);
 
         stuckWindowStartPos = rb != null ? rb.position : (Vector2)transform.position;
-        ConfigureAgent();
+        bodyRadius = MeasureBodyRadius();
+
+        // El NavMeshAgent en este bake 2D (la malla esta rotada) devuelve una velocidad
+        // en linea recta hacia el objetivo y la rata se clava en la piedra. El camino
+        // lo calcula DungeonNavMesh; el agente no mueve a nadie.
+        NavMeshAgent existing = GetComponent<NavMeshAgent>();
+        if (existing != null)
+            existing.enabled = false;
+    }
+
+    private float MeasureBodyRadius()
+    {
+        float radius = 0.28f;
+        Collider2D[] cols = GetComponents<Collider2D>();
+        for (int i = 0; i < cols.Length; i++)
+        {
+            Collider2D col = cols[i];
+            if (col == null || col.isTrigger)
+                continue;
+
+            radius = Mathf.Max(radius, col.bounds.extents.x, col.bounds.extents.y);
+        }
+
+        return Mathf.Clamp(radius, 0.2f, 0.55f);
     }
 
     private void Start()
@@ -109,27 +137,6 @@ public class EnemyMovement : MonoBehaviour, IMovement
             rb.linearVelocity = Vector2.zero;
             rb.interpolation = RigidbodyInterpolation2D.Interpolate;
         }
-    }
-
-    private void ConfigureAgent()
-    {
-        agent = GetComponent<NavMeshAgent>();
-        if (agent == null)
-            agent = gameObject.AddComponent<NavMeshAgent>();
-
-        agent.enabled = false;
-        agent.updatePosition = false;
-        agent.updateRotation = false;
-        agent.updateUpAxis = false;
-        agent.obstacleAvoidanceType = ObstacleAvoidanceType.HighQualityObstacleAvoidance;
-        agent.autoBraking = false;
-        agent.autoRepath = true;
-        agent.angularSpeed = 0f;
-        agent.acceleration = 80f;
-        agent.stoppingDistance = 0.05f;
-        agent.baseOffset = 0f;
-        agent.height = 1f;
-        agent.radius = 0.02f;
     }
 
     public void Move(Vector2 direction)
@@ -166,11 +173,33 @@ public class EnemyMovement : MonoBehaviour, IMovement
 
         Vector2 steered = direction;
         bool navReady = DungeonNavMesh.Instance != null && DungeonNavMesh.Instance.IsReady;
+        Vector2 from = rb != null ? rb.position : (Vector2)transform.position;
+        pendingGoalValid = false;
 
-        if (avoidObstacles && navReady && TryAgentDirection(direction, speedOverride, out Vector2 agentDirection))
-            steered = agentDirection;
+        if (avoidObstacles && navReady && direction.sqrMagnitude > 0.0001f)
+        {
+            Vector2 goal = hasExplicitGoal
+                ? explicitGoal
+                : from + direction.normalized * 4f;
+
+            if (DungeonNavMesh.TryGetSteerTarget(from, goal, out Vector2 steerPoint))
+            {
+                Vector2 toSteer = steerPoint - from;
+                if (toSteer.sqrMagnitude > 0.0004f)
+                    steered = toSteer.normalized * Mathf.Max(direction.magnitude, 0.01f);
+
+                pendingGoal = steerPoint;
+                pendingGoalValid = true;
+            }
+            else
+            {
+                steered = ApplyPathfinding(direction);
+            }
+        }
         else if (avoidObstacles)
+        {
             steered = ApplyPathfinding(direction);
+        }
 
         if (!navReady)
         {
@@ -303,6 +332,9 @@ public class EnemyMovement : MonoBehaviour, IMovement
         if (!handled)
             blocked = PhysicsClamp(from, desired, out next, out normal);
 
+        if (!reportWallHits)
+            next = KeepBodyOffObstacles(from, next, speedOverride);
+
         rb.MovePosition(next);
         Velocity = (next - from) / Mathf.Max(0.0001f, Time.fixedDeltaTime);
         SyncAgent(next);
@@ -317,69 +349,70 @@ public class EnemyMovement : MonoBehaviour, IMovement
         wasBlocked = blocked;
     }
 
-    private bool TryAgentDirection(Vector2 desiredDirection, float speedOverride, out Vector2 steered)
+    /// <summary>
+    /// La malla esta bakeada con un radio diminuto, y la rata es mucho mas ancha.
+    /// El camino puede pasar pegado a la piedra: este paso empuja el cuerpo afuera
+    /// y, si el frente esta ocupado, lo desliza por el costado hacia la esquina.
+    /// </summary>
+    private Vector2 KeepBodyOffObstacles(Vector2 from, Vector2 next, float speedOverride)
     {
-        steered = desiredDirection;
-        float magnitude = desiredDirection.magnitude;
-        if (magnitude < 0.0001f || !EnsureAgentOnMesh())
-            return false;
+        if (obstacleLayers.value == 0)
+            return next;
 
-        Vector2 from = rb.position;
-        Vector2 goal = hasExplicitGoal
-            ? explicitGoal
-            : from + (desiredDirection / magnitude) * 2.4f;
+        float travel = Mathf.Max(0.04f, speedOverride * Time.fixedDeltaTime);
+        float probe = bodyRadius * 0.92f;
 
-        if (!DungeonNavMesh.TryProject(goal, out Vector3 goalOnMesh))
-            return false;
+        // Solo si el centro ya esta adentro de la piedra. Si apenas la roza, se desliza por el costado.
+        int overlaps = Physics2D.OverlapCircle(from, bodyRadius * 0.35f, obstacleFilter, overlapBuffer);
+        if (overlaps > 0 && overlapBuffer[0] != null)
+        {
+            Collider2D rock = overlapBuffer[0];
+            Vector2 away = from - (Vector2)rock.ClosestPoint(from);
+            if (away.sqrMagnitude < 0.0001f)
+                away = from - (Vector2)rock.bounds.center;
+            if (away.sqrMagnitude < 0.0001f)
+                away = Vector2.up;
 
-        agent.speed = Mathf.Max(0.1f, speedOverride);
-        agent.SetDestination(goalOnMesh);
+            return from + away.normalized * travel;
+        }
 
-        Vector3 steer = agent.desiredVelocity;
-        if (steer.sqrMagnitude < 0.04f && agent.hasPath)
-            steer = agent.steeringTarget - agent.nextPosition;
+        Vector2 step = next - from;
+        float distance = step.magnitude;
+        if (distance < 0.0001f)
+            return next;
 
-        Vector2 planar = new Vector2(steer.x, steer.y);
-        if (planar.sqrMagnitude < 0.0001f)
-            return false;
+        Vector2 dir = step / distance;
+        int hits = Physics2D.CircleCast(from, probe, dir, obstacleFilter, AvoidanceHitBuffer, distance + 0.04f);
+        if (hits <= 0)
+            return next;
 
-        steered = planar.normalized * magnitude;
-        return true;
+        Vector2 hitNormal = AvoidanceHitBuffer[0].normal;
+        if (hitNormal.sqrMagnitude < 0.0001f)
+            hitNormal = -dir;
+
+        Vector2 tangent = new Vector2(-hitNormal.y, hitNormal.x);
+        Vector2 prefer = pendingGoalValid ? pendingGoal - from : dir;
+        if (Vector2.Dot(tangent, prefer) < 0f)
+            tangent = -tangent;
+        if (wallSlideSign < 0)
+            tangent = -tangent;
+
+        tangent.Normalize();
+        if (SlideIsClear(from, tangent, travel, probe))
+            return from + tangent * travel;
+
+        tangent = -tangent;
+        wallSlideSign = -wallSlideSign;
+        if (SlideIsClear(from, tangent, travel, probe))
+            return from + tangent * travel;
+
+        return from;
     }
 
-    private bool EnsureAgentOnMesh()
+    private bool SlideIsClear(Vector2 from, Vector2 dir, float distance, float probe)
     {
-        if (agent == null || rb == null)
-            return false;
-
-        if (DungeonNavMesh.Instance == null || !DungeonNavMesh.Instance.IsReady)
-        {
-            if (agent.enabled)
-                agent.enabled = false;
-            return false;
-        }
-
-        if (!agent.enabled)
-        {
-            float baked = DungeonNavMesh.Instance != null ? DungeonNavMesh.Instance.AgentRadius : 0.02f;
-            agent.radius = Mathf.Max(0.01f, baked * 0.9f);
-            agent.obstacleAvoidanceType = ObstacleAvoidanceType.HighQualityObstacleAvoidance;
-            agent.updatePosition = false;
-            agent.updateRotation = false;
-            agent.updateUpAxis = false;
-            agent.enabled = true;
-        }
-
-        if (!agent.isOnNavMesh)
-        {
-            if (!DungeonNavMesh.TryProject(rb.position, out Vector3 onMesh) || !agent.Warp(onMesh))
-            {
-                agent.enabled = false;
-                return false;
-            }
-        }
-
-        return agent.isOnNavMesh;
+        int hits = Physics2D.CircleCast(from, probe * 0.92f, dir, obstacleFilter, AvoidanceHitBuffer, distance);
+        return hits <= 0;
     }
 
     private void SyncAgent(Vector2 planar)
@@ -474,6 +507,7 @@ public class EnemyMovement : MonoBehaviour, IMovement
         {
             escapeTimer = escapeDuration;
             escapeAngleJitter = UnityEngine.Random.Range(60f, 150f) * (UnityEngine.Random.value < 0.5f ? 1f : -1f);
+            wallSlideSign = -wallSlideSign;
 
             Vector2 side = RotateVector(desiredDirection.sqrMagnitude > 0.01f
                 ? desiredDirection.normalized
@@ -506,8 +540,9 @@ public class EnemyMovement : MonoBehaviour, IMovement
             cachedPathStep = navStep;
             lastPathGoal = goal;
             Vector2 toNav = navStep - from;
-            if (toNav.sqrMagnitude >= 0.04f)
+            if (toNav.sqrMagnitude >= 0.01f)
                 return toNav.normalized * magnitude;
+
             return desiredDirection;
         }
 

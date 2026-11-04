@@ -147,6 +147,100 @@ public class DungeonNavMesh : MonoBehaviour
         ready = false;
     }
 
+    /// <summary>
+    /// Punto al que hay que caminar para ir de 'from' a 'goal' sin atravesar un obstaculo.
+    /// Si el cuerpo esta metido en una piedra, el primer punto es la salida a la malla.
+    /// Si no hay una esquina a la vista, devuelve un punto al costado del borde para rodearla.
+    /// </summary>
+    public static bool TryGetSteerTarget(Vector2 from, Vector2 goal, out Vector2 steer)
+    {
+        steer = goal;
+        DungeonNavMesh mesh = Instance;
+        if (mesh == null || !mesh.IsReady)
+            return false;
+
+        float sample = mesh.sampleRadius;
+        if (!NavMesh.SamplePosition(from, out NavMeshHit fromHit, sample, mesh.queryFilter))
+            return false;
+
+        Vector2 onMesh = fromHit.position;
+        if ((onMesh - from).sqrMagnitude > 0.012f)
+        {
+            steer = onMesh;
+            return true;
+        }
+
+        if (!NavMesh.SamplePosition(goal, out NavMeshHit goalHit, sample, mesh.queryFilter))
+            return false;
+
+        Vector3 from3 = fromHit.position;
+        Vector3 goal3 = goalHit.position;
+
+        if (!NavMesh.Raycast(from3, goal3, out NavMeshHit blockHit, mesh.queryFilter))
+        {
+            steer = goal3;
+            return true;
+        }
+
+        if (mesh.sharedPath == null)
+            mesh.sharedPath = new NavMeshPath();
+
+        bool havePath = NavMesh.CalculatePath(from3, goal3, mesh.queryFilter, mesh.sharedPath)
+            && mesh.sharedPath.corners != null
+            && mesh.sharedPath.corners.Length >= 2
+            && (mesh.sharedPath.status == NavMeshPathStatus.PathComplete
+                || mesh.sharedPath.status == NavMeshPathStatus.PathPartial);
+
+        if (havePath)
+        {
+            const float minDist = 0.22f;
+            for (int i = 1; i < mesh.sharedPath.corners.Length; i++)
+            {
+                Vector2 corner = mesh.sharedPath.corners[i];
+                if ((corner - from).sqrMagnitude < minDist * minDist)
+                    continue;
+
+                Vector3 corner3 = new Vector3(corner.x, corner.y, from3.z);
+                if (NavMesh.Raycast(from3, corner3, out _, mesh.queryFilter))
+                    continue;
+
+                steer = corner;
+                return true;
+            }
+        }
+
+        Vector2 normal = PlanarNormal(blockHit.normal, (Vector2)from3 - (Vector2)goal3);
+        Vector2 tangent = new Vector2(-normal.y, normal.x);
+        Vector2 hitPoint = blockHit.position;
+        Vector2 sideA = hitPoint + tangent * 0.7f;
+        Vector2 sideB = hitPoint - tangent * 0.7f;
+
+        bool aOk = NavMesh.SamplePosition(sideA, out NavMeshHit aHit, 0.8f, mesh.queryFilter);
+        bool bOk = NavMesh.SamplePosition(sideB, out NavMeshHit bHit, 0.8f, mesh.queryFilter);
+        if (!aOk && !bOk)
+        {
+            steer = hitPoint + tangent * 0.7f;
+            return true;
+        }
+
+        if (!aOk)
+        {
+            steer = bHit.position;
+            return true;
+        }
+
+        if (!bOk)
+        {
+            steer = aHit.position;
+            return true;
+        }
+
+        Vector2 a = aHit.position;
+        Vector2 b = bHit.position;
+        steer = (a - goal).sqrMagnitude <= (b - goal).sqrMagnitude ? a : b;
+        return true;
+    }
+
     public static bool TryGetNextCorner(Vector2 from, Vector2 goal, out Vector2 next)
     {
         next = goal;
