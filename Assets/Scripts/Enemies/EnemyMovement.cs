@@ -74,6 +74,8 @@ public class EnemyMovement : MonoBehaviour, IMovement
     /// <summary>Velocidad de mundo de este frame. La animacion la lee aca: el Rigidbody queda en cero a proposito.</summary>
     public Vector2 Velocity { get; private set; }
 
+    public Vector2 Facing => lastFacingDirection;
+
     public bool IsSliding => slideTimer > 0f;
 
     private void Awake()
@@ -576,17 +578,28 @@ public class EnemyMovement : MonoBehaviour, IMovement
 
         lastFacingDirection = direction.normalized;
 
-        if (spriteRenderer != null)
-        {
-            if (direction.x > 0) spriteRenderer.flipX = true;
-            else if (direction.x < 0) spriteRenderer.flipX = false;
-        }
+        ApplyFacingFlip(direction);
 
         if (animator != null)
         {
             animator.SetFloat("X", lastFacingDirection.x);
             animator.SetFloat("Y", lastFacingDirection.y);
         }
+    }
+
+    private void ApplyFacingFlip(Vector2 direction)
+    {
+        if (spriteRenderer == null || Mathf.Abs(direction.x) < 0.01f)
+            return;
+
+        // La rata tiene hoja propia para la derecha y para la izquierda.
+        if (wideBody)
+        {
+            spriteRenderer.flipX = false;
+            return;
+        }
+
+        spriteRenderer.flipX = direction.x > 0f;
     }
 
     private void UpdateStuckTracking(Vector2 desiredDirection)
@@ -784,11 +797,7 @@ public class EnemyMovement : MonoBehaviour, IMovement
         {
             lastFacingDirection = direction.normalized;
 
-            if (spriteRenderer != null)
-            {
-                if (direction.x > 0) spriteRenderer.flipX = true;
-                else if (direction.x < 0) spriteRenderer.flipX = false;
-            }
+            ApplyFacingFlip(direction);
         }
 
         animator.SetFloat("X", lastFacingDirection.x);

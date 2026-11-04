@@ -110,6 +110,9 @@ public class VanishingOwl : MonoBehaviour
     public void TriggerAttack()
     {
         if (animator != null) animator.SetTrigger("Attack");
+
+        Vector2 direction = movement != null ? movement.Facing : Vector2.down;
+        EnemyMeleeSlash.Spawn(transform.position, direction, 0.85f);
     }
 
     public void ResetAttackTrigger()

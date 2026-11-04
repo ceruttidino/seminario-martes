@@ -6,7 +6,6 @@ public class ChallengeRoomController : MonoBehaviour
 {
     [Header("Waves")]
     [SerializeField] private int waveCount = 3;
-    [SerializeField] private int enemiesPerWave = 4;
     [SerializeField] private float delayBetweenWaves = 1.75f;
     [SerializeField] private float enemySpeedMultiplier = 0.6f;
     [SerializeField] private List<GameObject> waveEnemyPrefabs = new List<GameObject>();
@@ -142,21 +141,30 @@ public class ChallengeRoomController : MonoBehaviour
             Finish(won: true);
     }
 
+    private static int EnemiesPerWaveForFloor()
+    {
+        int floor = DungeonManager.Instance != null ? DungeonManager.Instance.CurrentFloor : 1;
+        if (floor <= 1) return 2;
+        if (floor == 2) return 3;
+        return 4;
+    }
+
     private IEnumerator SpawnWave()
     {
         if (allowedEnemyPrefabs.Count == 0 || container == null)
             yield break;
 
         Transform parent = roomInstance != null ? roomInstance.transform : transform;
-        Vector3[] spawnPositions = GetInsideSpawnPositions(enemiesPerWave);
+        int count = EnemiesPerWaveForFloor();
+        Vector3[] spawnPositions = GetInsideSpawnPositions(count);
 
-        pendingWaveSpawns = enemiesPerWave;
-        for (int i = 0; i < enemiesPerWave; i++)
+        pendingWaveSpawns = count;
+        for (int i = 0; i < count; i++)
             EnemySummon.PlaySmoke(spawnPositions[i]);
 
         yield return new WaitForSeconds(EnemySummon.Delay);
 
-        for (int i = 0; i < enemiesPerWave; i++)
+        for (int i = 0; i < count; i++)
         {
             if (challengeFinished)
             {

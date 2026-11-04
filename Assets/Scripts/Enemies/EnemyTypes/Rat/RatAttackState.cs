@@ -25,7 +25,7 @@ public class RatAttackState : IEnemyState
         elapsed = 0f;
         hasStruck = false;
         movement.Move(Vector2.zero);
-        rat.BeginAttackFeedback();
+        rat.BeginAttackFeedback(player.position);
     }
 
     public void Tick()

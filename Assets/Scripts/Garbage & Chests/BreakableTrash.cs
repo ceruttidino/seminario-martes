@@ -79,6 +79,8 @@ public class BreakableTrash : MonoBehaviour
         if (hitShake != null)
             hitShake.Play(0.16f, 0.12f);
 
+        AudioManager.PlaySfx(trashType == TrashType.GreenContainer ? GameSfx.ContainerHit : GameSfx.TrashBagHit);
+
         if (currentHits >= maxHits)
             StartCoroutine(BreakAfterShake());
     }
@@ -104,6 +106,8 @@ public class BreakableTrash : MonoBehaviour
 
     private void ShowOpenVisual()
     {
+        AudioManager.PlaySfx(trashType == TrashType.GreenContainer ? GameSfx.ContainerOpen : GameSfx.TrashBagOpen);
+
         if (closedSprite != null)
             closedSprite.enabled = false;
 

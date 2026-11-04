@@ -110,6 +110,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
             return;
 
         isDead = true;
+        AudioManager.PlayEnemyDeath();
         if (!WillLeaveCorpse())
             BloodPool.Spawn(transform.position, GetComponentInParent<RoomInstance>()?.transform);
         OnDeath?.Invoke();

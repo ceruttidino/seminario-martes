@@ -11,11 +11,19 @@ public class WebProjectile : MonoBehaviour
     [Header("Layers")]
     [SerializeField] private LayerMask wallLayer;
 
+    [Header("Animacion")]
+    [SerializeField] private Sprite[] frames;
+    [SerializeField] private float frameRate = 12f;
+
     private Vector2 direction;
+    private SpriteRenderer body;
+    private float frameTimer;
+    private int frameIndex;
 
     private void Awake()
     {
         GetComponent<Collider2D>().isTrigger = true;
+        body = GetComponent<SpriteRenderer>();
     }
 
     private void Start()
@@ -26,6 +34,23 @@ public class WebProjectile : MonoBehaviour
     private void Update()
     {
         transform.position += (Vector3)(direction * speed * Time.deltaTime);
+        AdvanceFrame();
+    }
+
+    private void AdvanceFrame()
+    {
+        if (body == null || frames == null || frames.Length == 0 || frameRate <= 0f)
+            return;
+
+        frameTimer += Time.deltaTime;
+        float step = 1f / frameRate;
+        while (frameTimer >= step)
+        {
+            frameTimer -= step;
+            frameIndex = (frameIndex + 1) % frames.Length;
+            if (frames[frameIndex] != null)
+                body.sprite = frames[frameIndex];
+        }
     }
 
     public void Initialize(Vector2 shootDirection)

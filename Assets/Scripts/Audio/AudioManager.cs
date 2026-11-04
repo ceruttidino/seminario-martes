@@ -30,7 +30,19 @@ public enum GameSfx
     SpiderMelee2,
     SpiderWebShot,
     SpiderWalk,
-    SpiderPoisonFloor
+    SpiderPoisonFloor,
+    ContainerHit,
+    ContainerOpen,
+    TrashBagHit,
+    TrashBagOpen,
+    RatDefault,
+    SnailDefault,
+    MoleDefault,
+    AntDefault,
+    SnakeDefault,
+    HedgehogDefault,
+    TurtleDefault,
+    EnemyDeath
 }
 
 public enum GameMusic
@@ -198,6 +210,19 @@ public class AudioManager : MonoBehaviour
         Instance.PlayClip(clip, 1f, 1f);
     }
 
+    public static void PlayEnemyDefault(EnemyType enemyType)
+    {
+        if (Instance == null) return;
+
+        AudioClip clip = Instance.library != null ? Instance.library.GetEnemyDefaultSfx(enemyType) : null;
+        Instance.PlayClip(clip, 1f, 1f);
+    }
+
+    public static void PlayEnemyDeath()
+    {
+        PlaySfx(GameSfx.EnemyDeath);
+    }
+
     public static void PlayBossHurt()
     {
         PlaySfx(GameSfx.BossHurt);
@@ -255,6 +280,9 @@ public class AudioManager : MonoBehaviour
 
         if (track != GameMusic.Boss)
             Instance.StopLoopInternal();
+
+        if (track == GameMusic.Boss && Instance.TryPlayBossFightMusic(room))
+            return;
 
         Instance.PlayMusicInternal(track, fallbackToDungeon: true);
     }
@@ -359,6 +387,33 @@ public class AudioManager : MonoBehaviour
         float mix = library != null ? library.sfxMixGain : 1f;
         voice.volume = Mathf.Clamp01(SfxVolume * volume * mix);
         voice.Play();
+    }
+
+    private bool TryPlayBossFightMusic(RoomInstance room)
+    {
+        if (library == null || room == null)
+            return false;
+
+        AudioClip clip = null;
+        if (room.GetComponentInChildren<DisgustedToadBoss>(true) != null)
+            clip = library.toadBossMusic;
+        else if (room.GetComponentInChildren<SorcererCrowBoss>(true) != null)
+            clip = library.crowBossMusic;
+
+        if (clip == null)
+            return false;
+
+        if (currentMusic == GameMusic.Boss && currentMusicClip == clip && musicSource.isPlaying)
+            return true;
+
+        currentMusic = GameMusic.Boss;
+        currentMusicClip = clip;
+
+        if (musicFade != null)
+            StopCoroutine(musicFade);
+
+        musicFade = StartCoroutine(FadeToMusic(clip));
+        return true;
     }
 
     private void PlayMusicInternal(GameMusic track, bool fallbackToDungeon = false)

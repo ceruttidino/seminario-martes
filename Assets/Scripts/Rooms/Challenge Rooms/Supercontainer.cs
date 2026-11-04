@@ -63,6 +63,8 @@ public class Supercontainer : MonoBehaviour
         if (hitShake != null)
             hitShake.Play(0.16f, 0.12f);
 
+        AudioManager.PlaySfx(GameSfx.ContainerHit);
+
         if (defenseStarted)
             return;
 
@@ -79,6 +81,7 @@ public class Supercontainer : MonoBehaviour
 
         currentHealth = Mathf.Max(0f, currentHealth - damage);
         RefreshHealthBar();
+        AudioManager.PlaySfx(GameSfx.ContainerHit);
 
         if (currentHealth <= 0f)
             Break();
@@ -86,6 +89,8 @@ public class Supercontainer : MonoBehaviour
 
     public void MarkOpened()
     {
+        AudioManager.PlaySfx(GameSfx.ContainerOpen);
+
         if (spriteRenderer != null)
         {
             spriteRenderer.enabled = true;

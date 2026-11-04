@@ -41,6 +41,8 @@ public class EnemyBehaviour : MonoBehaviour
 
     private void Start()
     {
+        AudioManager.PlayEnemyDefault(enemyType);
+
         if (GetComponent<ChallengeContainerHunter>() != null)
             return;
 

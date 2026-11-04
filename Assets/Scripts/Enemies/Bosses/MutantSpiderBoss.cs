@@ -221,6 +221,11 @@ public class MutantSpiderBoss : BossBase
         if (animator != null)
             animator.SetTrigger("MeleeAttack");
 
+        Vector2 slashDirection = player != null
+            ? (Vector2)player.position - (Vector2)transform.position
+            : lastMoveDirection;
+        EnemyMeleeSlash.Spawn(transform.position, slashDirection, 1.15f);
+
         yield return new WaitForSeconds(meleeWindup);
 
         // TryAttack vuelve a chequear el alcance: si el jugador se corrió durante el windup, lo esquivó.

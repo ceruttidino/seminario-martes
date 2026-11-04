@@ -45,14 +45,38 @@ public class RegeneratingRat : MonoBehaviour
         StartCoroutine(ReviveRoutine());
     }
 
-    public void BeginAttackFeedback()
+    public void BeginAttackFeedback(Vector2 targetPosition)
     {
-        damageFlash?.StartLoopFlash();
+        Vector2 direction = targetPosition - (Vector2)transform.position;
+        if (direction.sqrMagnitude < 0.0001f)
+            direction = Vector2.down;
+
+        SpriteRenderer body = GetComponent<SpriteRenderer>();
+        bool side = Mathf.Abs(direction.x) > Mathf.Abs(direction.y);
+        if (body != null)
+            body.flipX = side && direction.x < 0f;
+
+        if (animator != null)
+        {
+            Vector2 facing = direction.normalized;
+            animator.SetFloat("X", facing.x);
+            animator.SetFloat("Y", facing.y);
+            animator.ResetTrigger("Attack");
+            animator.SetTrigger("Attack");
+        }
+
+        EnemyMeleeSlash.Spawn(transform.position, direction, 0.72f);
     }
 
     public void EndAttackFeedback()
     {
         damageFlash?.StopLoopFlash();
+        if (animator != null)
+            animator.ResetTrigger("Attack");
+
+        SpriteRenderer body = GetComponent<SpriteRenderer>();
+        if (body != null)
+            body.flipX = false;
     }
 
     public void TryStrike(Transform player)

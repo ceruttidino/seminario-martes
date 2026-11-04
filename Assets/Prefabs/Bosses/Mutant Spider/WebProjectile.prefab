@@ -157,3 +157,11 @@ MonoBehaviour:
   wallLayer:
     serializedVersion: 2
     m_Bits: 1024
+  frames:
+  - {fileID: 5213969388181980468, guid: 18dd588f7737edd48aaab34275b5c952, type: 3}
+  - {fileID: -1787943321600556804, guid: 18dd588f7737edd48aaab34275b5c952, type: 3}
+  - {fileID: -6756610315638646548, guid: 18dd588f7737edd48aaab34275b5c952, type: 3}
+  - {fileID: 427264137320146347, guid: 18dd588f7737edd48aaab34275b5c952, type: 3}
+  - {fileID: -7998250541758008574, guid: 18dd588f7737edd48aaab34275b5c952, type: 3}
+  - {fileID: -5140663535241474529, guid: 18dd588f7737edd48aaab34275b5c952, type: 3}
+  frameRate: 12

@@ -529,15 +529,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyDeathAnimation
   frames:
-  - {fileID: 771000001, guid: 53bf2b181b8f4773b309bbc0df65c50f, type: 3}
-  - {fileID: 771000002, guid: 53bf2b181b8f4773b309bbc0df65c50f, type: 3}
-  - {fileID: 771000003, guid: 53bf2b181b8f4773b309bbc0df65c50f, type: 3}
-  - {fileID: 771000004, guid: 53bf2b181b8f4773b309bbc0df65c50f, type: 3}
-  - {fileID: 771000005, guid: 53bf2b181b8f4773b309bbc0df65c50f, type: 3}
-  - {fileID: 771000006, guid: 53bf2b181b8f4773b309bbc0df65c50f, type: 3}
-  - {fileID: 771000007, guid: 53bf2b181b8f4773b309bbc0df65c50f, type: 3}
-  - {fileID: 771000008, guid: 53bf2b181b8f4773b309bbc0df65c50f, type: 3}
-  - {fileID: 771000009, guid: 53bf2b181b8f4773b309bbc0df65c50f, type: 3}
+  - {fileID: 7260000000000000001, guid: 11aa22bb33cc44dd55ee66ff7788990b, type: 3}
+  - {fileID: 7260000000000000002, guid: 11aa22bb33cc44dd55ee66ff7788990b, type: 3}
+  - {fileID: 7260000000000000003, guid: 11aa22bb33cc44dd55ee66ff7788990b, type: 3}
+  - {fileID: 7260000000000000004, guid: 11aa22bb33cc44dd55ee66ff7788990b, type: 3}
+  - {fileID: 7260000000000000005, guid: 11aa22bb33cc44dd55ee66ff7788990b, type: 3}
+  - {fileID: 7260000000000000006, guid: 11aa22bb33cc44dd55ee66ff7788990b, type: 3}
+  - {fileID: 7260000000000000007, guid: 11aa22bb33cc44dd55ee66ff7788990b, type: 3}
+  - {fileID: 7260000000000000008, guid: 11aa22bb33cc44dd55ee66ff7788990b, type: 3}
+  - {fileID: 7260000000000000009, guid: 11aa22bb33cc44dd55ee66ff7788990b, type: 3}
+  - {fileID: 7260000000000000010, guid: 11aa22bb33cc44dd55ee66ff7788990b, type: 3}
   fps: 14
   startFrame: 0
   lastFrameFade: 0

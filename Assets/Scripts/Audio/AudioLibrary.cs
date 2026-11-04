@@ -16,8 +16,12 @@ public class AudioLibrary : ScriptableObject
     public AudioClip shopMusic;
     [Tooltip("Character upgrade room (connection room)")]
     public AudioClip upgradeRoomMusic;
-    [Tooltip("Un track por boss, índice = piso - 1")]
+    [Tooltip("Un track por boss, índice = piso - 1. Se usa si el tema del sapo o del cuervo todavía está vacío.")]
     public AudioClip[] bossMusicByFloor;
+    [Tooltip("Música de la boss fight del sapo")]
+    public AudioClip toadBossMusic;
+    [Tooltip("Música de la boss fight del cuervo")]
+    public AudioClip crowBossMusic;
 
     [Header("Música extra")]
     public AudioClip victoryMusic;
@@ -78,6 +82,29 @@ public class AudioLibrary : ScriptableObject
     public AudioClip spiderWalk;
     [Range(0f, 1f)] public float spiderWalkVolume = 0.35f;
     public AudioClip spiderPoisonFloor;
+
+    [Header("Contenedor y basura")]
+    [Tooltip("Contenedor golpeado")]
+    public AudioClip containerHit;
+    [Tooltip("Contenedor abierto")]
+    public AudioClip containerOpen;
+    [Tooltip("Bolsa de basura golpeada")]
+    public AudioClip trashBagHit;
+    [Tooltip("Bolsa de basura abierta")]
+    public AudioClip trashBagOpen;
+
+    [Header("Enemies (sonido predeterminado)")]
+    public AudioClip ratDefault;
+    public AudioClip snailDefault;
+    public AudioClip moleDefault;
+    public AudioClip antDefault;
+    public AudioClip snakeDefault;
+    public AudioClip hedgehogDefault;
+    public AudioClip turtleDefault;
+
+    [Header("Muerte")]
+    [Tooltip("Muerte general de todos los enemigos")]
+    public AudioClip enemyDeath;
 
     public AudioClip GetMusic(GameMusic track, int floor = 1)
     {
@@ -143,6 +170,18 @@ public class AudioLibrary : ScriptableObject
             case GameSfx.SpiderWebShot: return spiderWebShot;
             case GameSfx.SpiderWalk: return spiderWalk;
             case GameSfx.SpiderPoisonFloor: return spiderPoisonFloor;
+            case GameSfx.ContainerHit: return containerHit;
+            case GameSfx.ContainerOpen: return containerOpen;
+            case GameSfx.TrashBagHit: return trashBagHit;
+            case GameSfx.TrashBagOpen: return trashBagOpen;
+            case GameSfx.RatDefault: return ratDefault;
+            case GameSfx.SnailDefault: return snailDefault;
+            case GameSfx.MoleDefault: return moleDefault;
+            case GameSfx.AntDefault: return antDefault;
+            case GameSfx.SnakeDefault: return snakeDefault;
+            case GameSfx.HedgehogDefault: return hedgehogDefault;
+            case GameSfx.TurtleDefault: return turtleDefault;
+            case GameSfx.EnemyDeath: return enemyDeath;
             default: return null;
         }
     }
@@ -207,6 +246,21 @@ public class AudioLibrary : ScriptableObject
             case EnemyType.Turtle: return turtleHurt;
             case EnemyType.Snake: return snakeHurt;
             case EnemyType.Owl: return owlHurt;
+            default: return null;
+        }
+    }
+
+    public AudioClip GetEnemyDefaultSfx(EnemyType enemyType)
+    {
+        switch (enemyType)
+        {
+            case EnemyType.Rat: return ratDefault;
+            case EnemyType.Snail: return snailDefault;
+            case EnemyType.Mole: return moleDefault;
+            case EnemyType.Ant: return antDefault;
+            case EnemyType.Snake: return snakeDefault;
+            case EnemyType.Hedgehog: return hedgehogDefault;
+            case EnemyType.Turtle: return turtleDefault;
             default: return null;
         }
     }
