@@ -18,6 +18,14 @@ public class EnemySeparation : MonoBehaviour
         if (rb == null || GetComponent<BossBase>() != null)
             return;
 
+        HitReaction reaction = GetComponent<HitReaction>();
+        if (reaction != null && (reaction.IsStunned || reaction.IsInKnockback))
+            return;
+
+        EnemyMovement sliding = GetComponent<EnemyMovement>();
+        if (sliding != null && sliding.IsSliding)
+            return;
+
         int count = Physics2D.OverlapCircle(rb.position, radius, ContactFilter2D.noFilter, hits);
         Vector2 separation = Vector2.zero;
         int others = 0;
@@ -44,6 +52,15 @@ public class EnemySeparation : MonoBehaviour
 
         if (others == 0)
             return;
+
+        // El cuerpo es kinematic y lo mueve el NavMesh. Una fuerza del Rigidbody no lo separa
+        // y, si el cuerpo fuera dinamico, pelearia con el avoidance.
+        EnemyMovement movement = GetComponent<EnemyMovement>();
+        if (movement != null)
+        {
+            movement.AddSeparation(separation * push * 0.05f);
+            return;
+        }
 
         rb.AddForce(separation * push, ForceMode2D.Force);
     }

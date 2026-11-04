@@ -179,8 +179,13 @@ public class ExplosiveHedgehog : MonoBehaviour
         if (direction.sqrMagnitude < 0.01f)
             direction = Vector2.up;
 
-        rb.linearVelocity = direction * hitKnockbackForce;
         knockbackUntil = Time.time + hitKnockbackDuration;
+
+        EnemyMovement movement = GetComponent<EnemyMovement>();
+        if (movement != null)
+            movement.BeginKnockback(direction * hitKnockbackForce, hitKnockbackDuration);
+        else if (rb != null)
+            rb.linearVelocity = direction * hitKnockbackForce;
     }
 
     public void Explode()
@@ -330,6 +335,13 @@ public class ExplosiveHedgehog : MonoBehaviour
         if (knockback != null)
         {
             knockback.ApplyKnockback(direction, force);
+            return;
+        }
+
+        EnemyMovement movement = targetRb.GetComponent<EnemyMovement>();
+        if (movement != null && targetRb.GetComponent<BossBase>() == null)
+        {
+            movement.BeginKnockback(direction.normalized * force, 0.15f);
             return;
         }
 

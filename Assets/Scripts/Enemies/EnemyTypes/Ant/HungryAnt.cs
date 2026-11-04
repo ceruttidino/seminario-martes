@@ -354,7 +354,7 @@ public class HungryAnt : MonoBehaviour
 
         movement.MoveTowards(wanderTarget, wanderSpeed);
 
-        Vector2 velocity = rb != null ? rb.linearVelocity : Vector2.zero;
+        Vector2 velocity = movement != null ? movement.Velocity : (rb != null ? rb.linearVelocity : Vector2.zero);
         Vector2 heading = velocity.sqrMagnitude > 0.04f ? velocity : toTarget;
         PlayWalk(FacingFor(heading), false);
     }
@@ -715,7 +715,7 @@ public class HungryAnt : MonoBehaviour
     /// <summary>Modo pasivo: la hormiga camina animada segun la velocidad que le imponen desde afuera.</summary>
     private void PassiveAnimation()
     {
-        Vector2 velocity = rb != null ? rb.linearVelocity : Vector2.zero;
+        Vector2 velocity = movement != null ? movement.Velocity : (rb != null ? rb.linearVelocity : Vector2.zero);
         if (velocity.sqrMagnitude > 0.04f)
             PlayWalk(FacingFor(velocity), false);
         else

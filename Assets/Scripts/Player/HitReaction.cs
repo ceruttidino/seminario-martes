@@ -62,6 +62,7 @@ public class HitReaction : MonoBehaviour
     private float knockbackTimer;
     private float stunEndTime = -999f;
     private bool knockbackImmune;
+    private bool delegatedKnockback;
 
     private static readonly RaycastHit2D[] castHits = new RaycastHit2D[4];
     private const float Skin = 0.02f;
@@ -126,6 +127,7 @@ public class HitReaction : MonoBehaviour
         if (isFlashing) RestoreRenderers();
         flashRoutine = null;
         knockbackTimer = 0f;
+        delegatedKnockback = false;
     }
 
     public void ReceiveHit(Vector2 direction, float force)
@@ -139,7 +141,20 @@ public class HitReaction : MonoBehaviour
 
         if (hasKnockback)
         {
-            knockbackVelocity = direction * finalForce;
+            // El avoidance del NavMesh no convive con un Rigidbody dinamico. El golpe es un
+            // desplazamiento en el mundo que EnemyMovement recorta a la malla.
+            EnemyMovement movement = GetComponent<EnemyMovement>();
+            if (movement != null && GetComponent<BossBase>() == null)
+            {
+                movement.BeginKnockback(direction * finalForce, knockbackDuration);
+                delegatedKnockback = true;
+            }
+            else
+            {
+                delegatedKnockback = false;
+                knockbackVelocity = direction * finalForce;
+            }
+
             knockbackTimer = knockbackDuration;
         }
 
@@ -162,6 +177,15 @@ public class HitReaction : MonoBehaviour
         if (knockbackTimer <= 0f || rb == null) return;
 
         knockbackTimer -= Time.fixedDeltaTime;
+
+        if (delegatedKnockback)
+        {
+            if (rb != null)
+                rb.linearVelocity = Vector2.zero;
+            if (knockbackTimer <= 0f)
+                delegatedKnockback = false;
+            return;
+        }
 
         // Arranca fuerte y frena rápido (curva cuadrática): se siente como un "golpe", no como un empujón
         float t = 1f - Mathf.Clamp01(knockbackTimer / knockbackDuration);

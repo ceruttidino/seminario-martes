@@ -13,16 +13,22 @@ public class EnemyCollisionHandler : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        if (behaviour == null)
+            return;
+
         if ((wallLayer.value & (1 << collision.gameObject.layer)) != 0)
         {
-            Vector2 normal = Vector2.zero;
-            for (int i = 0; i < collision.contacts.Length; i++)
-            {
-                normal += collision.contacts[i].normal;
-            }
-            normal = (normal / collision.contacts.Length).normalized;
+            if (collision.contactCount <= 0)
+                return;
 
-            behaviour.OnWallHit(normal);
+            Vector2 normal = Vector2.zero;
+            for (int i = 0; i < collision.contactCount; i++)
+                normal += collision.GetContact(i).normal;
+
+            if (normal.sqrMagnitude < 0.0001f)
+                return;
+
+            behaviour.OnWallHit(normal.normalized);
         }
     }
 }

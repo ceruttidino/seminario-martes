@@ -210,6 +210,75 @@ public class DungeonNavMesh : MonoBehaviour
         return true;
     }
 
+    /// <summary>Punto sobre la malla (incluye la Z real del bake). Sirve para colocar un NavMeshAgent.</summary>
+    public static bool TryProject(Vector2 world, out Vector3 onMesh, float radius = -1f)
+    {
+        onMesh = world;
+        DungeonNavMesh mesh = Instance;
+        if (mesh == null || !mesh.IsReady)
+            return false;
+
+        float sample = radius > 0f ? radius : mesh.sampleRadius;
+        if (!NavMesh.SamplePosition(world, out NavMeshHit hit, sample, mesh.queryFilter))
+            return false;
+
+        onMesh = hit.position;
+        return true;
+    }
+
+    /// <summary>
+    /// Recorta un paso para que no salga de la malla ni atraviese un obstaculo bakeado.
+    /// El movimiento de los enemigos tiene que usar esto (posicion), no la velocidad del Rigidbody.
+    /// </summary>
+    public static bool ClampStep(Vector2 from, Vector2 to, out Vector2 clamped, out Vector2 hitNormal, out bool blocked)
+    {
+        clamped = to;
+        hitNormal = Vector2.zero;
+        blocked = false;
+
+        DungeonNavMesh mesh = Instance;
+        if (mesh == null || !mesh.IsReady)
+            return false;
+
+        float sample = mesh.sampleRadius;
+        if (!NavMesh.SamplePosition(from, out NavMeshHit fromHit, sample, mesh.queryFilter))
+            return false;
+
+        Vector3 from3 = fromHit.position;
+        Vector3 to3 = new Vector3(to.x, to.y, from3.z);
+        bool toOnMesh = NavMesh.SamplePosition(to3, out NavMeshHit toHit, sample, mesh.queryFilter);
+        if (toOnMesh)
+            to3 = toHit.position;
+
+        if (NavMesh.Raycast(from3, to3, out NavMeshHit rayHit, mesh.queryFilter))
+        {
+            blocked = true;
+            clamped = rayHit.position;
+            hitNormal = PlanarNormal(rayHit.normal, from - to);
+            return true;
+        }
+
+        if (!toOnMesh)
+        {
+            blocked = true;
+            clamped = from3;
+            hitNormal = PlanarNormal(Vector3.zero, from - to);
+            return true;
+        }
+
+        clamped = to3;
+        return true;
+    }
+
+    private static Vector2 PlanarNormal(Vector3 normal, Vector2 fallback)
+    {
+        Vector2 planar = new Vector2(normal.x, normal.y);
+        if (planar.sqrMagnitude < 0.0001f)
+            planar = fallback;
+
+        return planar.sqrMagnitude > 0.0001f ? planar.normalized : Vector2.zero;
+    }
+
     public static bool HasClearLine(Vector2 from, Vector2 to)
     {
         if (Instance == null || !Instance.IsReady)

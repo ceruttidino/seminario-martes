@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class EnemyMovement : MonoBehaviour, IMovement
 {
@@ -49,6 +50,26 @@ public class EnemyMovement : MonoBehaviour, IMovement
     private bool hasExplicitGoal;
     private Vector2 explicitGoal;
 
+    // El NavMeshAgent solo calcula el camino y el obstacle avoidance. No mueve el transform:
+    // updatePosition queda en false y el paso se aplica a mano, recortado a la malla.
+    // Un Rigidbody dinamico pisa ese resultado (por eso el agente va en kinematic).
+    private NavMeshAgent agent;
+    private Vector2 pendingDirection;
+    private float pendingSpeed;
+    private bool reportWalls;
+    private int moveStamp = -1;
+    private bool wasBlocked;
+    private Vector2 separation;
+
+    private Vector2 slideVelocity;
+    private float slideTimer;
+    private float slideDuration;
+
+    /// <summary>Velocidad de mundo de este frame. La animacion la lee aca: el Rigidbody queda en cero a proposito.</summary>
+    public Vector2 Velocity { get; private set; }
+
+    public bool IsSliding => slideTimer > 0f;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -74,6 +95,41 @@ public class EnemyMovement : MonoBehaviour, IMovement
         obstacleFilter.SetLayerMask(obstacleLayers);
 
         stuckWindowStartPos = rb != null ? rb.position : (Vector2)transform.position;
+        ConfigureAgent();
+    }
+
+    private void Start()
+    {
+        // Despues de EnemyBodyCollision.Awake: el cuerpo no puede seguir siendo dinamico
+        // si el recorrido lo marca el NavMesh. Un dinamico y el avoidance se pelean la posicion.
+        if (rb != null && GetComponent<BossBase>() == null)
+        {
+            rb.bodyType = RigidbodyType2D.Kinematic;
+            rb.gravityScale = 0f;
+            rb.linearVelocity = Vector2.zero;
+            rb.interpolation = RigidbodyInterpolation2D.Interpolate;
+        }
+    }
+
+    private void ConfigureAgent()
+    {
+        agent = GetComponent<NavMeshAgent>();
+        if (agent == null)
+            agent = gameObject.AddComponent<NavMeshAgent>();
+
+        agent.enabled = false;
+        agent.updatePosition = false;
+        agent.updateRotation = false;
+        agent.updateUpAxis = false;
+        agent.obstacleAvoidanceType = ObstacleAvoidanceType.HighQualityObstacleAvoidance;
+        agent.autoBraking = false;
+        agent.autoRepath = true;
+        agent.angularSpeed = 0f;
+        agent.acceleration = 80f;
+        agent.stoppingDistance = 0.05f;
+        agent.baseOffset = 0f;
+        agent.height = 1f;
+        agent.radius = 0.02f;
     }
 
     public void Move(Vector2 direction)
@@ -88,9 +144,20 @@ public class EnemyMovement : MonoBehaviour, IMovement
 
     public void Move(Vector2 direction, float speedOverride, bool avoidObstacles)
     {
-        // NUEVO: mientras está golpeado no se mueve. La velocidad la maneja el knockback de HitReaction
-        // y la animación queda congelada en el frame del golpe.
+        // Mientras esta aturdido no persigue. El golpe, si lo hay, lo mueve BeginKnockback por posicion.
         if (hitReaction != null && hitReaction.IsStunned)
+        {
+            pendingDirection = Vector2.zero;
+            Velocity = Vector2.zero;
+            moveStamp = -1;
+            if (rb != null)
+                rb.linearVelocity = Vector2.zero;
+            if (animator != null)
+                animator.SetFloat("AnimSpeed", 0f);
+            return;
+        }
+
+        if (IsSliding)
         {
             if (animator != null)
                 animator.SetFloat("AnimSpeed", 0f);
@@ -98,22 +165,251 @@ public class EnemyMovement : MonoBehaviour, IMovement
         }
 
         Vector2 steered = direction;
-        if (avoidObstacles)
+        bool navReady = DungeonNavMesh.Instance != null && DungeonNavMesh.Instance.IsReady;
+
+        if (avoidObstacles && navReady && TryAgentDirection(direction, speedOverride, out Vector2 agentDirection))
+            steered = agentDirection;
+        else if (avoidObstacles)
             steered = ApplyPathfinding(direction);
 
-        bool usingNavMesh = DungeonNavMesh.Instance != null && DungeonNavMesh.Instance.IsReady;
-        if (!usingNavMesh)
+        if (!navReady)
+        {
             steered = SmoothDirection(steered);
+            if (avoidObstacles && IsImmediatelyBlocked(steered))
+                steered = ApplyObstacleAvoidance(steered);
+        }
 
-        if (avoidObstacles && IsImmediatelyBlocked(steered))
-            steered = ApplyObstacleAvoidance(steered);
+        pendingDirection = steered;
+        pendingSpeed = speedOverride;
+        reportWalls = !avoidObstacles;
+        moveStamp = Time.frameCount;
+        Velocity = steered.sqrMagnitude > 0.0001f ? steered.normalized * speedOverride : Vector2.zero;
 
-        rb.linearVelocity = steered * speedOverride;
+        if (rb != null)
+            rb.linearVelocity = Vector2.zero;
 
         UpdateAnimator(steered);
 
         if (avoidObstacles)
             UpdateStuckTracking(direction);
+    }
+
+    /// <summary>
+    /// Golpe: un desplazamiento en el mundo, recortado a la malla. No se escribe linearVelocity.
+    /// </summary>
+    public void BeginKnockback(Vector2 worldVelocity, float duration)
+    {
+        if (worldVelocity.sqrMagnitude < 0.0001f || duration <= 0f)
+            return;
+
+        slideVelocity = worldVelocity;
+        slideDuration = duration;
+        slideTimer = duration;
+        pendingDirection = Vector2.zero;
+        Velocity = Vector2.zero;
+
+        if (rb != null)
+            rb.linearVelocity = Vector2.zero;
+
+        if (agent != null && agent.enabled && agent.isOnNavMesh)
+            agent.ResetPath();
+    }
+
+    /// <summary>Separacion entre enemigos, sumada al paso de este fixed frame (no es una fuerza del Rigidbody).</summary>
+    public void AddSeparation(Vector2 offset)
+    {
+        separation += offset;
+    }
+
+    private void FixedUpdate()
+    {
+        if (rb == null)
+            return;
+
+        if (slideTimer > 0f)
+        {
+            ApplySlide();
+            return;
+        }
+
+        if (Time.frameCount - moveStamp > 1)
+        {
+            pendingDirection = Vector2.zero;
+            Velocity = Vector2.zero;
+        }
+
+        ApplyPlanarStep(pendingDirection, pendingSpeed, reportWalls);
+    }
+
+    private void ApplySlide()
+    {
+        float duration = Mathf.Max(0.05f, slideDuration);
+        slideTimer -= Time.fixedDeltaTime;
+
+        float t = 1f - Mathf.Clamp01(slideTimer / duration);
+        float strength = (1f - t) * (1f - t);
+        Vector2 delta = slideVelocity * strength * Time.fixedDeltaTime;
+
+        Vector2 from = rb.position;
+        Vector2 desired = from + delta;
+        Vector2 next = desired;
+        bool blocked = false;
+
+        if (DungeonNavMesh.ClampStep(from, desired, out Vector2 clamped, out _, out blocked))
+            next = clamped;
+
+        if (blocked)
+            slideTimer = 0f;
+
+        rb.linearVelocity = Vector2.zero;
+        rb.MovePosition(next);
+        Velocity = (next - from) / Mathf.Max(0.0001f, Time.fixedDeltaTime);
+        SyncAgent(next);
+        separation = Vector2.zero;
+    }
+
+    private void ApplyPlanarStep(Vector2 steered, float speedOverride, bool reportWallHits)
+    {
+        rb.linearVelocity = Vector2.zero;
+
+        Vector2 extra = separation * 0.35f;
+        separation = Vector2.zero;
+        if (extra.magnitude > 0.12f)
+            extra = extra.normalized * 0.12f;
+
+        if (steered.sqrMagnitude < 0.0001f || speedOverride <= 0f)
+        {
+            if (extra.sqrMagnitude < 0.0001f)
+            {
+                wasBlocked = false;
+                return;
+            }
+
+            steered = extra.normalized;
+            speedOverride = extra.magnitude / Mathf.Max(0.0001f, Time.fixedDeltaTime);
+            extra = Vector2.zero;
+        }
+
+        Vector2 from = rb.position;
+        Vector2 desired = from + steered.normalized * speedOverride * Time.fixedDeltaTime + extra;
+        Vector2 next = desired;
+        Vector2 normal = Vector2.zero;
+        bool blocked = false;
+        bool handled = false;
+
+        if (DungeonNavMesh.Instance != null && DungeonNavMesh.Instance.IsReady)
+            handled = DungeonNavMesh.ClampStep(from, desired, out next, out normal, out blocked);
+
+        if (!handled)
+            blocked = PhysicsClamp(from, desired, out next, out normal);
+
+        rb.MovePosition(next);
+        Velocity = (next - from) / Mathf.Max(0.0001f, Time.fixedDeltaTime);
+        SyncAgent(next);
+
+        if (reportWallHits && blocked && !wasBlocked && normal.sqrMagnitude > 0.0001f)
+        {
+            EnemyBehaviour behaviour = GetComponent<EnemyBehaviour>();
+            if (behaviour != null)
+                behaviour.OnWallHit(normal);
+        }
+
+        wasBlocked = blocked;
+    }
+
+    private bool TryAgentDirection(Vector2 desiredDirection, float speedOverride, out Vector2 steered)
+    {
+        steered = desiredDirection;
+        float magnitude = desiredDirection.magnitude;
+        if (magnitude < 0.0001f || !EnsureAgentOnMesh())
+            return false;
+
+        Vector2 from = rb.position;
+        Vector2 goal = hasExplicitGoal
+            ? explicitGoal
+            : from + (desiredDirection / magnitude) * 2.4f;
+
+        if (!DungeonNavMesh.TryProject(goal, out Vector3 goalOnMesh))
+            return false;
+
+        agent.speed = Mathf.Max(0.1f, speedOverride);
+        agent.SetDestination(goalOnMesh);
+
+        Vector3 steer = agent.desiredVelocity;
+        if (steer.sqrMagnitude < 0.04f && agent.hasPath)
+            steer = agent.steeringTarget - agent.nextPosition;
+
+        Vector2 planar = new Vector2(steer.x, steer.y);
+        if (planar.sqrMagnitude < 0.0001f)
+            return false;
+
+        steered = planar.normalized * magnitude;
+        return true;
+    }
+
+    private bool EnsureAgentOnMesh()
+    {
+        if (agent == null || rb == null)
+            return false;
+
+        if (DungeonNavMesh.Instance == null || !DungeonNavMesh.Instance.IsReady)
+        {
+            if (agent.enabled)
+                agent.enabled = false;
+            return false;
+        }
+
+        if (!agent.enabled)
+        {
+            float baked = DungeonNavMesh.Instance != null ? DungeonNavMesh.Instance.AgentRadius : 0.02f;
+            agent.radius = Mathf.Max(0.01f, baked * 0.9f);
+            agent.obstacleAvoidanceType = ObstacleAvoidanceType.HighQualityObstacleAvoidance;
+            agent.updatePosition = false;
+            agent.updateRotation = false;
+            agent.updateUpAxis = false;
+            agent.enabled = true;
+        }
+
+        if (!agent.isOnNavMesh)
+        {
+            if (!DungeonNavMesh.TryProject(rb.position, out Vector3 onMesh) || !agent.Warp(onMesh))
+            {
+                agent.enabled = false;
+                return false;
+            }
+        }
+
+        return agent.isOnNavMesh;
+    }
+
+    private void SyncAgent(Vector2 planar)
+    {
+        if (agent == null || !agent.enabled || !agent.isOnNavMesh)
+            return;
+
+        if (DungeonNavMesh.TryProject(planar, out Vector3 onMesh))
+            agent.nextPosition = onMesh;
+    }
+
+    private bool PhysicsClamp(Vector2 from, Vector2 to, out Vector2 clamped, out Vector2 normal)
+    {
+        clamped = to;
+        normal = Vector2.zero;
+
+        Vector2 delta = to - from;
+        float distance = delta.magnitude;
+        if (distance < 0.0001f || obstacleLayers.value == 0)
+            return false;
+
+        Vector2 dir = delta / distance;
+        int hitCount = Physics2D.CircleCast(from, avoidanceRadius, dir, obstacleFilter, AvoidanceHitBuffer, distance);
+        if (hitCount <= 0)
+            return false;
+
+        float allowed = Mathf.Max(0f, AvoidanceHitBuffer[0].distance - 0.02f);
+        clamped = from + dir * allowed;
+        normal = AvoidanceHitBuffer[0].normal;
+        return true;
     }
 
     public void MoveTowards(Vector2 worldTarget)

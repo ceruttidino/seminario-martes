@@ -11,9 +11,16 @@ public class KnockbackReceiver : MonoBehaviour
 
     public void ApplyKnockback(Vector2 direction, float force)
     {
-        if (rb == null) return;
         if (direction.sqrMagnitude < 0.01f) return;
 
+        EnemyMovement movement = GetComponent<EnemyMovement>();
+        if (movement != null && GetComponent<BossBase>() == null)
+        {
+            movement.BeginKnockback(direction.normalized * force, 0.15f);
+            return;
+        }
+
+        if (rb == null) return;
         rb.linearVelocity = direction.normalized * force;
     }
 }

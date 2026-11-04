@@ -4,8 +4,7 @@ using UnityEngine;
 /// Animacion por sprites de la Serpiente Venenosa. Reemplaza al Animator viejo: las hojas nuevas (idle, caminar de
 /// lado / de espaldas, ataque de frente / de lado y muerte) se reproducen desde aca, sin controller ni transiciones.
 ///
-/// - Camina / descansa solo, segun la velocidad real del Rigidbody2D (asi tambien anda cuando la mueve otro script,
-///   por ejemplo en el desafio "Defender el supercontenedor").
+/// - Camina / descansa segun EnemyMovement.Velocity. El Rigidbody ya no empuja al enemigo: el paso lo recorta el NavMesh.
 /// - Para atacar, la IA llama BeginAttack(direccion) y despues EndAttack().
 /// - El flip horizontal lo sigue manejando EnemyMovement (los sprites miran a la izquierda, flipX = mira a la derecha).
 /// - Mientras el enemigo esta aturdido por un golpe (HitReaction) la animacion queda congelada, como en el resto.
@@ -19,6 +18,7 @@ public class SnakeAnimator : MonoBehaviour
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private Rigidbody2D body;
     [SerializeField] private HitReaction hitReaction;
+    [SerializeField] private EnemyMovement movement;
 
     [Header("Frames")]
     [Tooltip("Enroscada, de frente. Tambien se usa cuando avanza hacia abajo.")]
@@ -73,6 +73,7 @@ public class SnakeAnimator : MonoBehaviour
         if (spriteRenderer == null) spriteRenderer = GetComponent<SpriteRenderer>();
         if (body == null) body = GetComponent<Rigidbody2D>();
         if (hitReaction == null) hitReaction = GetComponent<HitReaction>();
+        if (movement == null) movement = GetComponent<EnemyMovement>();
 
         ApplyFrame();
     }
@@ -149,7 +150,7 @@ public class SnakeAnimator : MonoBehaviour
         if (attacking)
             return attackPose;
 
-        Vector2 velocity = body != null ? body.linearVelocity : Vector2.zero;
+        Vector2 velocity = movement != null ? movement.Velocity : (body != null ? body.linearVelocity : Vector2.zero);
         if (velocity.sqrMagnitude < moveThreshold * moveThreshold)
             return Pose.Idle;
 
