@@ -164,8 +164,8 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0.013462743}
-  m_Size: {x: 0.3, y: 0.5269258}
+  m_Offset: {x: -0.005377551, y: 0.026368778}
+  m_Size: {x: 0.22901607, y: 0.41077027}
   m_Direction: 0
 --- !u!114 &7485646153013272562
 MonoBehaviour:
@@ -292,7 +292,7 @@ MonoBehaviour:
   recoverTime: 0.25
   dizzyDuration: 3
   aggroCooldownAfterDizzy: 1
-  knockbackDistance: 3.2
+  knockbackDistance: 1
   knockbackDuration: 0.28
   frontFrames:
   - {fileID: 6140265055159734981, guid: c5e4842020f0c3b46a2751b1809f8e24, type: 3}

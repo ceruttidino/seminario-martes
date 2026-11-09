@@ -101,7 +101,7 @@ SpriteRenderer:
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
 --- !u!50 &1000004
 Rigidbody2D:
@@ -164,8 +164,8 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_Size: {x: 0.4, y: 0.6}
+  m_Offset: {x: 0, y: -0.0021508832}
+  m_Size: {x: 0.4, y: 0.707552}
   m_Direction: 0
 --- !u!114 &1000006
 MonoBehaviour:
@@ -247,6 +247,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PoisonousSnake
   fireRangeTiles: 10
   tooCloseTiles: 3
+  fleeIfChasedTiles: 8
   comfortDistanceTiles: 6
   tileSize: 1
   roamSpeed: 1.7
@@ -308,6 +309,7 @@ MonoBehaviour:
   spriteRenderer: {fileID: 1000003}
   body: {fileID: 1000004}
   hitReaction: {fileID: 7916449587331540508}
+  movement: {fileID: 0}
   idleFrames:
   - {fileID: 752000001, guid: 707c89cba0c2460b86aac229031544c8, type: 3}
   - {fileID: 752000002, guid: 707c89cba0c2460b86aac229031544c8, type: 3}
