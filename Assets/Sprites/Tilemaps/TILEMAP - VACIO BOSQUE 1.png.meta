@@ -1,0 +1,533 @@
+fileFormatVersion: 2
+guid: 05f3872960d8b184baa620fc64e8546f
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 8967884088868417231
+    second: TILEMAP - VACIO BOSQUE 1_0
+  - first:
+      213: -5081632254101472404
+    second: TILEMAP - VACIO BOSQUE 1_1
+  - first:
+      213: 7094617560104365641
+    second: TILEMAP - VACIO BOSQUE 1_2
+  - first:
+      213: 4199842526711664615
+    second: TILEMAP - VACIO BOSQUE 1_3
+  - first:
+      213: -6142507278597424414
+    second: TILEMAP - VACIO BOSQUE 1_4
+  - first:
+      213: -8847792124511687773
+    second: TILEMAP - VACIO BOSQUE 1_5
+  - first:
+      213: -1747125521224043955
+    second: TILEMAP - VACIO BOSQUE 1_6
+  - first:
+      213: -5972883011676373666
+    second: TILEMAP - VACIO BOSQUE 1_7
+  - first:
+      213: -6978497703884857671
+    second: TILEMAP - VACIO BOSQUE 1_8
+  - first:
+      213: -6283120684030965522
+    second: TILEMAP - VACIO BOSQUE 1_9
+  - first:
+      213: -4772746026913273951
+    second: TILEMAP - VACIO BOSQUE 1_10
+  - first:
+      213: 1865736054923460788
+    second: TILEMAP - VACIO BOSQUE 1_11
+  - first:
+      213: -7352275204410331469
+    second: TILEMAP - VACIO BOSQUE 1_12
+  - first:
+      213: 7551356644212985832
+    second: TILEMAP - VACIO BOSQUE 1_13
+  - first:
+      213: 5648835238608825107
+    second: TILEMAP - VACIO BOSQUE 1_14
+  - first:
+      213: -7883929026099512758
+    second: TILEMAP - VACIO BOSQUE 1_15
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: TILEMAP - VACIO BOSQUE 1_0
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 196
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fce21ef9013547c70800000000000000
+      internalID: 8967884088868417231
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - VACIO BOSQUE 1_1
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 131
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c6b3d17736a6a79b0800000000000000
+      internalID: -5081632254101472404
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - VACIO BOSQUE 1_2
+      rect:
+        serializedVersion: 2
+        x: 66
+        y: 196
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 94ee44ff415257260800000000000000
+      internalID: 7094617560104365641
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - VACIO BOSQUE 1_3
+      rect:
+        serializedVersion: 2
+        x: 65
+        y: 130
+        width: 66
+        height: 66
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7ef4a3db686d84a30800000000000000
+      internalID: 4199842526711664615
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - VACIO BOSQUE 1_4
+      rect:
+        serializedVersion: 2
+        x: 131
+        y: 196
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2eaf2fcac2e61caa0800000000000000
+      internalID: -6142507278597424414
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - VACIO BOSQUE 1_5
+      rect:
+        serializedVersion: 2
+        x: 131
+        y: 131
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3ab6bfbb0f3563580800000000000000
+      internalID: -8847792124511687773
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - VACIO BOSQUE 1_6
+      rect:
+        serializedVersion: 2
+        x: 196
+        y: 196
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d42fb695896f0c7e0800000000000000
+      internalID: -1747125521224043955
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - VACIO BOSQUE 1_7
+      rect:
+        serializedVersion: 2
+        x: 196
+        y: 131
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e5d701ceb8e0c1da0800000000000000
+      internalID: -5972883011676373666
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - VACIO BOSQUE 1_8
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 66
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9be501edf45672f90800000000000000
+      internalID: -6978497703884857671
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - VACIO BOSQUE 1_9
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 1
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ee8cc6bf60fddc8a0800000000000000
+      internalID: -6283120684030965522
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - VACIO BOSQUE 1_10
+      rect:
+        serializedVersion: 2
+        x: 65
+        y: 65
+        width: 66
+        height: 66
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1a76dae86ccc3cdb0800000000000000
+      internalID: -4772746026913273951
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - VACIO BOSQUE 1_11
+      rect:
+        serializedVersion: 2
+        x: 66
+        y: 1
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4b00a5e8e0d64e910800000000000000
+      internalID: 1865736054923460788
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - VACIO BOSQUE 1_12
+      rect:
+        serializedVersion: 2
+        x: 130
+        y: 65
+        width: 66
+        height: 66
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3bea536d7a877f990800000000000000
+      internalID: -7352275204410331469
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - VACIO BOSQUE 1_13
+      rect:
+        serializedVersion: 2
+        x: 131
+        y: 1
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8efc99eebdecbc860800000000000000
+      internalID: 7551356644212985832
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - VACIO BOSQUE 1_14
+      rect:
+        serializedVersion: 2
+        x: 196
+        y: 66
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 31becff78b1b46e40800000000000000
+      internalID: 5648835238608825107
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TILEMAP - VACIO BOSQUE 1_15
+      rect:
+        serializedVersion: 2
+        x: 196
+        y: 1
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a4a72f45258a69290800000000000000
+      internalID: -7883929026099512758
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 60dff296123782e4799cde794f396cae
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      TILEMAP - VACIO BOSQUE 1_0: 8967884088868417231
+      TILEMAP - VACIO BOSQUE 1_1: -5081632254101472404
+      TILEMAP - VACIO BOSQUE 1_10: -4772746026913273951
+      TILEMAP - VACIO BOSQUE 1_11: 1865736054923460788
+      TILEMAP - VACIO BOSQUE 1_12: -7352275204410331469
+      TILEMAP - VACIO BOSQUE 1_13: 7551356644212985832
+      TILEMAP - VACIO BOSQUE 1_14: 5648835238608825107
+      TILEMAP - VACIO BOSQUE 1_15: -7883929026099512758
+      TILEMAP - VACIO BOSQUE 1_2: 7094617560104365641
+      TILEMAP - VACIO BOSQUE 1_3: 4199842526711664615
+      TILEMAP - VACIO BOSQUE 1_4: -6142507278597424414
+      TILEMAP - VACIO BOSQUE 1_5: -8847792124511687773
+      TILEMAP - VACIO BOSQUE 1_6: -1747125521224043955
+      TILEMAP - VACIO BOSQUE 1_7: -5972883011676373666
+      TILEMAP - VACIO BOSQUE 1_8: -6978497703884857671
+      TILEMAP - VACIO BOSQUE 1_9: -6283120684030965522
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
