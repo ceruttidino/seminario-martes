@@ -27,6 +27,11 @@ public static class AttackHitResolver
         HitResult result = default;
         alreadyHit.Clear();
 
+        // NUEVO (DEBUG): si el ataque no encuentra nada, casi siempre es un problema de layers
+        if (HitStopManager.DebugLogs && hits.Length == 0)
+            Debug.Log("[HitStop] El ataque no tocó ningún collider. Si había un enemigo adentro de la zona, " +
+                      "su collider NO está en una de las layers tildadas en 'Enemy Layer' / 'Trash Layer' del ataque.");
+
         foreach (Collider2D hit in hits)
         {
             if (hit == null) continue;
@@ -82,7 +87,16 @@ public static class AttackHitResolver
                 result.objectsHit++;
                 SpawnHitFx(hit, origin, direction);
             }
+            else if (HitStopManager.DebugLogs) // NUEVO (DEBUG)
+            {
+                Debug.LogWarning($"[HitStop] Se tocó '{hit.name}' (layer '{LayerMask.LayerToName(hit.gameObject.layer)}') " +
+                                 "pero ni él ni sus padres tienen un script con IDamageable: no cuenta como golpe acertado.", hit);
+            }
         }
+
+        // NUEVO (DEBUG)
+        if (HitStopManager.DebugLogs && hits.Length > 0)
+            Debug.Log($"[HitStop] Golpe: {result.enemiesHit} enemigo(s), {result.objectsHit} objeto(s).");
 
         return result;
     }

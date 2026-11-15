@@ -1,22 +1,18 @@
-using System.Collections;
-using UnityEngine;
+using UnityEngine; // CAMBIADO: ya no hace falta System.Collections (no hay corrutina)
 
 // NUEVO (archivo completo)
-// Centraliza el "juice" del combate: hit stop, camera shake, camera kick,
+// Centraliza el "juice" del combate: camera shake, camera kick,
 // partículas de impacto y sonido de impacto.
+// CAMBIADO: el HIT STOP ahora lo hace HitStopManager (se crea solo, no depende de esta escena).
+// HitStop() e IsHitStopped siguen existiendo para no romper a los scripts que ya los usan.
 // Poner UNO por escena (por ejemplo en un GameObject "CombatFeedback").
 [DefaultExecutionOrder(1000)] // corre después de los scripts de cámara
 public class CombatFeedback : MonoBehaviour
 {
     public static CombatFeedback Instance { get; private set; }
-    public static bool IsHitStopped { get; private set; }
+    public static bool IsHitStopped => HitStopManager.IsActive; // CAMBIADO: ahora lo informa HitStopManager
 
-    [Header("Hit Stop")]
-    [SerializeField] private bool hitStopEnabled = true;
-    [Tooltip("Tope de congelamiento para que varios golpes juntos no traben el juego")]
-    [SerializeField] private float maxHitStop = 0.15f;
-    [Tooltip("timeScale durante el hit stop. NO usar 0: GamePause considera timeScale 0 como 'pausa' y se perdería el input del jugador.")]
-    [SerializeField] private float hitStopTimeScale = 0.02f;
+    // ELIMINADO: los campos de Hit Stop (hitStopEnabled, maxHitStop, hitStopTimeScale). Ahora están en HitStopManager.
 
     [Header("Camera Shake")]
     [Tooltip("Ideal: la Main Camera como HIJA de un 'CameraRig'. Tu script de rooms mueve el rig, esto sacude la cámara.")]
@@ -47,8 +43,7 @@ public class CombatFeedback : MonoBehaviour
     private Vector3 lastPosOffset;
     private float lastAngle;
 
-    private float hitStopEndRealtime;
-    private float timeScaleBeforeHitStop = 1f;
+    // ELIMINADO: hitStopEndRealtime y timeScaleBeforeHitStop
     private float lastHitSoundTime = -999f;
 
     private void Awake()
@@ -69,16 +64,9 @@ public class CombatFeedback : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (Instance != this) return;
-        Instance = null;
-
-        // Si se cambia de escena en pleno hit stop, no dejar el juego congelado
-        if (IsHitStopped)
-        {
-            if (Mathf.Approximately(Time.timeScale, hitStopTimeScale))
-                Time.timeScale = timeScaleBeforeHitStop;
-            IsHitStopped = false;
-        }
+        // CAMBIADO: el timeScale ya no se toca acá (lo maneja HitStopManager)
+        if (Instance == this)
+            Instance = null;
     }
 
     // ---------------- HIT STOP ----------------
@@ -86,31 +74,7 @@ public class CombatFeedback : MonoBehaviour
     /// <summary>Congela el juego unos milisegundos. Si ya hay uno activo, lo extiende (no se apilan).</summary>
     public void HitStop(float duration)
     {
-        if (!hitStopEnabled || duration <= 0f) return;
-        if (!IsHitStopped && GamePause.IsGameplayFrozen) return;
-
-        duration = Mathf.Min(duration, maxHitStop);
-        hitStopEndRealtime = Mathf.Max(hitStopEndRealtime, Time.unscaledTime + duration);
-
-        if (!IsHitStopped)
-            StartCoroutine(HitStopRoutine());
-    }
-
-    private IEnumerator HitStopRoutine()
-    {
-        IsHitStopped = true;
-        timeScaleBeforeHitStop = Time.timeScale;
-        Time.timeScale = hitStopTimeScale;
-
-        while (Time.unscaledTime < hitStopEndRealtime)
-            yield return null;
-
-        // Solo restauramos si nadie más cambió el timeScale mientras tanto
-        // (ej: si abrieron la pausa justo en el hit stop, GamePause.SetPaused se encarga)
-        if (Mathf.Approximately(Time.timeScale, hitStopTimeScale))
-            Time.timeScale = timeScaleBeforeHitStop;
-
-        IsHitStopped = false;
+        HitStopManager.Play(duration); // CAMBIADO: delega en HitStopManager (ELIMINADO: HitStopRoutine)
     }
 
     // ---------------- CAMERA ----------------

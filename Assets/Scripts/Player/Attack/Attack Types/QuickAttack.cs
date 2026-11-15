@@ -200,15 +200,18 @@ public class QuickAttack : MonoBehaviour, IAttack
 
         if (!result.AnyHit) return; // al aire = sin hit stop, así el golpe que conecta se siente distinto
 
-        // NUEVO: feedback de impacto
-        CombatFeedback fx = CombatFeedback.Instance;
-        if (fx == null) return;
-
         float stop = result.enemiesHit > 0
             ? hitStopDuration + Mathf.Max(0, result.enemiesHit - 1) * hitStopPerExtraEnemy
             : hitStopDuration * 0.5f; // objetos (tachos): hit stop más suave
 
-        fx.HitStop(stop);
+        // CAMBIADO: el hit stop va directo a HitStopManager. Antes estaba DESPUÉS del
+        // "if (fx == null) return", así que sin CombatFeedback en la escena nunca se frenaba el juego.
+        HitStopManager.Play(stop);
+
+        // Feedback de cámara y sonido (este sí necesita CombatFeedback en la escena)
+        CombatFeedback fx = CombatFeedback.Instance;
+        if (fx == null) return;
+
         fx.AddTrauma(shakeTrauma);
         fx.Kick(attackDirection, cameraKick);
         fx.PlayHitSound();

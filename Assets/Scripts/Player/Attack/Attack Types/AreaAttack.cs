@@ -132,8 +132,7 @@ public class AreaAttack : MonoBehaviour, IAttack
             c => (Vector2)c.transform.position - origin);
 
         // NUEVO: feedback
-        CombatFeedback fx = CombatFeedback.Instance;
-        if (fx == null) return;
+        CombatFeedback fx = CombatFeedback.Instance; // CAMBIADO: ya no corta acá si es null (cortaba también el hit stop)
 
         if (result.AnyHit)
         {
@@ -141,11 +140,15 @@ public class AreaAttack : MonoBehaviour, IAttack
                 ? hitStopDuration + Mathf.Max(0, result.enemiesHit - 1) * hitStopPerExtraEnemy
                 : hitStopDuration * 0.5f;
 
-            fx.HitStop(stop);
-            fx.AddTrauma(shakeTraumaOnHit);
-            fx.PlayHitSound();
+            HitStopManager.Play(stop); // CAMBIADO: directo a HitStopManager, funciona aunque no haya CombatFeedback
+
+            if (fx != null) // CAMBIADO
+            {
+                fx.AddTrauma(shakeTraumaOnHit);
+                fx.PlayHitSound();
+            }
         }
-        else
+        else if (fx != null) // CAMBIADO
         {
             fx.AddTrauma(shakeTraumaOnWhiff);
         }

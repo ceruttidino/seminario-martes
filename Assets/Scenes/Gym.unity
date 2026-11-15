@@ -27594,9 +27594,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ddab7d7a8f5f7a24ba0577d9fa7cc7fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CombatFeedback
-  hitStopEnabled: 1
-  maxHitStop: 0.15
-  hitStopTimeScale: 0.02
   shakeTarget: {fileID: 0}
   maxShakeOffset: 0.3
   maxShakeAngle: 0
@@ -28334,6 +28331,10 @@ PrefabInstance:
       propertyPath: attackVfxPrefab
       value: 
       objectReference: {fileID: 3468082337772140813, guid: 5a4bd54df0c47334fa0097377597e535, type: 3}
+    - target: {fileID: 6354491309245815682, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
+      propertyPath: hitStopDuration
+      value: 0.07
+      objectReference: {fileID: 0}
     - target: {fileID: 6354491309245815682, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
       propertyPath: vfxCenterOffset.y
       value: 0
