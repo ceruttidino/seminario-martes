@@ -103,7 +103,7 @@ Transform:
   m_GameObject: {fileID: 317444336967845193}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3, y: 0, z: 0}
+  m_LocalPosition: {x: 4, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -134,7 +134,7 @@ Transform:
   m_GameObject: {fileID: 1631132105595468487}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2, y: -1, z: 0}
+  m_LocalPosition: {x: -4, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1222,7 +1222,7 @@ Transform:
   m_GameObject: {fileID: 2597950227476770015}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2, y: 1, z: 0}
+  m_LocalPosition: {x: -2, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1570,12 +1570,14 @@ MonoBehaviour:
   diggingSpotPrefab: {fileID: 3611433241170528407, guid: 7367a0a007b04e74d875d4e74d4a5fa3, type: 3}
   chanceToHaveDiggingSpots: 35
   enemyGroups:
-  - name: Enemy_Rat x1 (1 puntos)
+  - name: Enemy_Rat x3 (3 puntos)
     enemyPrefab: {fileID: 5136333534524507215, guid: 1010f75008e5eec49a330b3df2c0c32a, type: 3}
-    minCount: 1
-    maxCount: 1
+    minCount: 3
+    maxCount: 3
     spawnPoints:
     - {fileID: 3471704183191795967}
+    - {fileID: 7740443061381885153}
+    - {fileID: 113021288292821505}
     randomizePoints: 0
   spawnSpread: 0.45
   spawnBlockingLayers:

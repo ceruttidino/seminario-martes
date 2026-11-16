@@ -1923,8 +1923,8 @@ MonoBehaviour:
   diggingSpotPrefab: {fileID: 0}
   chanceToHaveDiggingSpots: 35
   enemyGroups:
-  - name: Enemy_Ant x2 (2 puntos)
-    enemyPrefab: {fileID: 8734249323408576011, guid: 23b9ec134f2fcab418d04cee4d163d96, type: 3}
+  - name: Enemy_Owl x2 (2 puntos)
+    enemyPrefab: {fileID: 8734249323408576011, guid: 363038cda6e697f43a97b2858d1556e1, type: 3}
     minCount: 2
     maxCount: 2
     spawnPoints:

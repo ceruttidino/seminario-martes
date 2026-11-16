@@ -103,7 +103,38 @@ Transform:
   m_GameObject: {fileID: 286818130503388084}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -1.96, y: -1.2, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5582182234710786644}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &482705406574901112
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 691477374869999228}
+  m_Layer: 10
+  m_Name: EnemySpawnPoint_1 (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &691477374869999228
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 482705406574901112}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 2.25, y: 1.25, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2018,6 +2049,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8833555781646325935}
+  - {fileID: 691477374869999228}
   m_Father: {fileID: 8855914108497674385}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5206472789810506396
@@ -2089,12 +2121,13 @@ MonoBehaviour:
   diggingSpotPrefab: {fileID: 3611433241170528407, guid: 7367a0a007b04e74d875d4e74d4a5fa3, type: 3}
   chanceToHaveDiggingSpots: 35
   enemyGroups:
-  - name: Enemy_Owl x1 (1 puntos)
-    enemyPrefab: {fileID: 8734249323408576011, guid: 363038cda6e697f43a97b2858d1556e1, type: 3}
-    minCount: 1
-    maxCount: 1
+  - name: Enemy_Ant x2 (2 puntos)
+    enemyPrefab: {fileID: 8734249323408576011, guid: 23b9ec134f2fcab418d04cee4d163d96, type: 3}
+    minCount: 2
+    maxCount: 2
     spawnPoints:
     - {fileID: 8833555781646325935}
+    - {fileID: 691477374869999228}
     randomizePoints: 0
   spawnSpread: 0.45
   spawnBlockingLayers:

@@ -1352,6 +1352,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 8855914108497674385}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &3437212779412915308
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7058345664725281065}
+  m_Layer: 10
+  m_Name: EnemySpawnPoint_2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7058345664725281065
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3437212779412915308}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2, y: -0.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5582182234710786644}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3857411769287756706
 GameObject:
   m_ObjectHideFlags: 0
@@ -1465,6 +1496,37 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 17.815788, y: 0.5789499}
   m_EdgeRadius: 0
+--- !u!1 &4373058468362877963
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7503698932486087677}
+  m_Layer: 10
+  m_Name: EnemySpawnPoint_3
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7503698932486087677
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4373058468362877963}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2, y: 0.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5582182234710786644}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4887584115782207371
 GameObject:
   m_ObjectHideFlags: 0
@@ -1617,6 +1679,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3471704183191795967}
+  - {fileID: 7058345664725281065}
+  - {fileID: 7503698932486087677}
   m_Father: {fileID: 8855914108497674385}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5206472789810506396
@@ -1699,6 +1763,14 @@ MonoBehaviour:
     maxCount: 1
     spawnPoints:
     - {fileID: 3471704183191795967}
+    randomizePoints: 0
+  - name: Enemy_Ant x1 (2 puntos)
+    enemyPrefab: {fileID: 8734249323408576011, guid: 23b9ec134f2fcab418d04cee4d163d96, type: 3}
+    minCount: 1
+    maxCount: 1
+    spawnPoints:
+    - {fileID: 7058345664725281065}
+    - {fileID: 7503698932486087677}
     randomizePoints: 0
   spawnSpread: 0.45
   spawnBlockingLayers:

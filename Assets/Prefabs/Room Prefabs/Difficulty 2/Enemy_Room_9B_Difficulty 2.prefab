@@ -1,36 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &27342437835280060
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2525931838446208959}
-  m_Layer: 10
-  m_Name: EnemySpawnPoint_2.2
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2525931838446208959
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 27342437835280060}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -4, y: 1, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 5582182234710786644}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &211408628528439955
 GameObject:
   m_ObjectHideFlags: 0
@@ -196,7 +165,7 @@ Transform:
   m_GameObject: {fileID: 1706779212726754592}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 4, y: -1, z: 0}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1521,7 +1490,6 @@ Transform:
   - {fileID: 3471704183191795967}
   - {fileID: 513007690863302231}
   - {fileID: 3881570961760294575}
-  - {fileID: 2525931838446208959}
   m_Father: {fileID: 8855914108497674385}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5155456461342254617
@@ -1634,13 +1602,12 @@ MonoBehaviour:
     - {fileID: 3471704183191795967}
     - {fileID: 513007690863302231}
     randomizePoints: 0
-  - name: Enemy_Snake x2 (2 puntos)
+  - name: Enemy_Snake x1 (1 puntos)
     enemyPrefab: {fileID: 1000001, guid: 66f14781c1d04b228b9694b3d657150e, type: 3}
-    minCount: 2
-    maxCount: 2
+    minCount: 1
+    maxCount: 1
     spawnPoints:
     - {fileID: 3881570961760294575}
-    - {fileID: 2525931838446208959}
     randomizePoints: 0
   spawnSpread: 0.45
   spawnBlockingLayers:

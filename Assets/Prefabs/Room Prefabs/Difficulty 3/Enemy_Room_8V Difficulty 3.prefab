@@ -109,6 +109,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 5582182234710786644}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1014191880543577489
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4011479193864332370}
+  m_Layer: 10
+  m_Name: EnemySpawnPoint_3
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4011479193864332370
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1014191880543577489}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -2, y: -1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5582182234710786644}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1922882045659642345
 GameObject:
   m_ObjectHideFlags: 0
@@ -2018,6 +2049,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8833555781646325935}
+  - {fileID: 6410308947074885896}
+  - {fileID: 4011479193864332370}
   m_Father: {fileID: 8855914108497674385}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5206472789810506396
@@ -2091,6 +2124,14 @@ MonoBehaviour:
     maxCount: 1
     spawnPoints:
     - {fileID: 8833555781646325935}
+    randomizePoints: 0
+  - name: Enemy_Ant x1 (2 puntos)
+    enemyPrefab: {fileID: 8734249323408576011, guid: 23b9ec134f2fcab418d04cee4d163d96, type: 3}
+    minCount: 1
+    maxCount: 1
+    spawnPoints:
+    - {fileID: 6410308947074885896}
+    - {fileID: 4011479193864332370}
     randomizePoints: 0
   spawnSpread: 0.45
   spawnBlockingLayers:
@@ -2377,6 +2418,37 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1.9181952, y: 10.02632}
   m_EdgeRadius: 0
+--- !u!1 &7801223289449442971
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6410308947074885896}
+  m_Layer: 10
+  m_Name: EnemySpawnPoint_2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6410308947074885896
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7801223289449442971}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 2, y: 1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5582182234710786644}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7942455390066402997
 GameObject:
   m_ObjectHideFlags: 0
