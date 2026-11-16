@@ -52,6 +52,18 @@ public class VanishingOwl : MonoBehaviour
     [Tooltip("Cuanto tarda en desvanecerse (gradual, al ocultarse).")]
     [SerializeField] private float fadeOutTime = 0.4f;
 
+    [Header("Footsteps")]
+    [Tooltip("Prefab de la marca que deja al estar invisible.")]
+    [SerializeField] private GameObject footprintPrefab;
+    [Tooltip("Cada cuanto deja una marca (segundos).")]
+    [SerializeField] private float footprintInterval = 0.4f;
+    [Tooltip("Distancia minima que debe moverse antes de dejar otra marca (evita amontonarlas si esta quieto).")]
+    [SerializeField] private float footprintMinDistance = 0.3f;
+
+    private float footprintTimer;
+    private Vector2 lastFootprintPos;
+    private bool droppingFootprints;
+
     private SpriteRenderer[] bodyGroup;
     private SpriteRenderer[] shadowGroup;
     private SpriteRenderer[] projGroup;
@@ -196,6 +208,30 @@ public class VanishingOwl : MonoBehaviour
             c.a = a;
             r.color = c;
         }
+    }
+
+    // Lo llama OwlInvisibleState mientras el owl esta invisible.
+    public void DropFootprints()
+    {
+        if (footprintPrefab == null) return;
+
+        footprintTimer -= Time.deltaTime;
+
+        bool movedEnough = Vector2.Distance((Vector2)transform.position, lastFootprintPos) >= footprintMinDistance;
+
+        if (footprintTimer <= 0f && movedEnough)
+        {
+            Instantiate(footprintPrefab, transform.position, Quaternion.identity);
+            footprintTimer = footprintInterval;
+            lastFootprintPos = transform.position;
+        }
+    }
+
+    // Resetea el ciclo al entrar a invisible, para que la primer marca no salga pegada a la ultima fase.
+    public void StartFootprints()
+    {
+        footprintTimer = footprintInterval;
+        lastFootprintPos = transform.position;
     }
 
 

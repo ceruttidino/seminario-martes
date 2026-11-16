@@ -32,6 +32,12 @@ public class PlayerHealth : MonoBehaviour, IDamageable, ISourcedDamageable
 
     [SerializeField] private AudioSource sfxSource;
 
+    [Header("Muerte")]
+    [Tooltip("Animator del player. Si está vacío lo busca en el objeto o en sus hijos.")]
+    [SerializeField] private Animator animator;
+    [Tooltip("Trigger del Animator que arranca la animación de muerte. Vacío = sin animación.")]
+    [SerializeField] private string deathTrigger = "Die";
+
     private enum HeartKind : byte { Empty, Half, Full }
 
     private Image[] heartImages;
@@ -64,6 +70,9 @@ public class PlayerHealth : MonoBehaviour, IDamageable, ISourcedDamageable
 
         if (hurtFeedback == null) // NUEVO: lo busca solo si te olvidaste de asignarlo
             hurtFeedback = GetComponent<PlayerHurtFeedback>();
+
+        if (animator == null)
+            animator = GetComponentInChildren<Animator>();
     }
 
     void Start()
@@ -142,13 +151,23 @@ public class PlayerHealth : MonoBehaviour, IDamageable, ISourcedDamageable
         string enemyType = LastDamageSource != null && LastDamageSource.HasEnemyType ? LastDamageSource.EnemyType.ToString() : "";
         GameMetrics.PlayerDied(source, enemyType, playerMaxHealth);
         DisablePlayerControls();
+        PlayDeathAnimation();
         OnPlayerDeath?.Invoke();
+    }
+
+    private void PlayDeathAnimation()
+    {
+        if (animator == null || string.IsNullOrEmpty(deathTrigger)) return;
+
+        animator.SetTrigger(deathTrigger);
     }
 
     private void DisablePlayerControls()
     {
         if (TryGetComponent<PlayerMovement>(out var movement)) movement.enabled = false;
         if (TryGetComponent<PlayerAttack>(out var attack)) attack.enabled = false;
+        if (TryGetComponent<QuickAttack>(out var quick)) quick.enabled = false;   // NUEVO
+        if (TryGetComponent<AreaAttack>(out var area)) area.enabled = false;      // NUEVO
         if (TryGetComponent<PlayerDash>(out var dash)) dash.enabled = false;
 
         if (TryGetComponent<Rigidbody2D>(out var rb))
@@ -315,4 +334,6 @@ public class PlayerHealth : MonoBehaviour, IDamageable, ISourcedDamageable
         if (playerHealth <= 1)
             poisonStatus?.Cure();
     }
+
+
 }

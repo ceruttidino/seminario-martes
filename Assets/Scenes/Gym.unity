@@ -17282,6 +17282,7 @@ MonoBehaviour:
   restartButton: {fileID: 1824005491}
   mainMenuButton: {fileID: 901630314}
   mainMenuSceneName: Main Menu
+  deathScreenDelay: 1.5
   killerImage: {fileID: 990001013}
   portraitOverrides:
   - type: 0
@@ -28342,6 +28343,10 @@ PrefabInstance:
     - target: {fileID: 7409795251022180326, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 7840586562795469529, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
+      propertyPath: playerHealth
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 7840586562795469529, guid: 5d44ba0fa06e1c547bcc14e5f4d18bbe, type: 3}
       propertyPath: 'hearts.Array.data[0]'

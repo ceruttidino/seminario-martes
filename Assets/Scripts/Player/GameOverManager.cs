@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -20,6 +21,10 @@ public class GameOverManager : MonoBehaviour
     [SerializeField] private Button mainMenuButton;
     [Tooltip("Nombre EXACTO de la escena del menú principal (tiene que estar en Build Settings).")]
     [SerializeField] private string mainMenuSceneName = "MainMenu";
+
+    [Header("Timing")]
+    [Tooltip("Segundos entre la muerte y la pantalla de Game Over. Igualalo a la duración de la animación de muerte.")]
+    [SerializeField] private float deathScreenDelay = 1.5f;
 
     [Header("Killer Portrait")]
     [Tooltip("Image del canvas donde se muestra al enemigo que te mató.")]
@@ -75,7 +80,23 @@ public class GameOverManager : MonoBehaviour
         if (gameOverScreen == null) return;
         if (IsOpen) return;
 
+        // Se marca abierto YA para que una segunda muerte/evento no dispare otra espera.
         IsOpen = true;
+        StartCoroutine(ShowAfterDelay());
+    }
+
+    private IEnumerator ShowAfterDelay()
+    {
+        // Realtime: el hit stop del PlayerHurtFeedback puede frenar timeScale y no queremos que alargue la espera.
+        // El juego NO se pausa durante la espera: si se pausara, el Animator congelaría la animación de muerte.
+        if (deathScreenDelay > 0f)
+            yield return new WaitForSecondsRealtime(deathScreenDelay);
+
+        OpenScreen();
+    }
+
+    private void OpenScreen()
+    {
         ShowKiller(playerHealth != null ? playerHealth.LastDamageSource : null);
 
         gameOverScreen.SetActive(true);
@@ -133,7 +154,6 @@ public class GameOverManager : MonoBehaviour
     public void RestartLevel()
     {
         IsOpen = false;
-        GameMetrics.MarkRestart();
         GamePause.SetPaused(false);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }

@@ -135,8 +135,8 @@ Transform:
   m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_ConstrainProportionsScale: 1
   m_Children:
-  - {fileID: 2351398750439772785}
   - {fileID: 5829830915938300050}
+  - {fileID: 2351398750439772785}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &8208979293606837074
@@ -430,6 +430,9 @@ MonoBehaviour:
   movement: {fileID: 2366819222791710392}
   fadeInTime: 0.15
   fadeOutTime: 0.4
+  footprintPrefab: {fileID: 8708388183489006354, guid: 4cad2793ebbddab43800103612a8124f, type: 3}
+  footprintInterval: 0.4
+  footprintMinDistance: 0.3
 --- !u!114 &-3288538801856917683
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -19,6 +19,7 @@ public class OwlInvisibleState : IEnemyState
     public void Enter()
     {
         owl.EnterInvisible();
+        owl.StartFootprints();
         timer = owl.InvisibleDuration;
     }
 
@@ -29,6 +30,7 @@ public class OwlInvisibleState : IEnemyState
         timer -= Time.deltaTime;
 
         owl.MoveTowards(player.position);
+        owl.DropFootprints();   // <-- deja marcas mientras persigue invisible
 
         if (Vector2.Distance(self.position, player.position) <= owl.RevealDistance)
         {
