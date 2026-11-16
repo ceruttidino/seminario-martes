@@ -29,6 +29,14 @@ public class DungeonFloorConfig : ScriptableObject
     [Tooltip("Room de buff / Connection Room (tipo Normal). Sale una por nivel.")]
     public RoomInformation buffRoom;
 
+    [Header("Rooms conectoras (sin enemigos)")] // NUEVO
+    [Tooltip("Rooms de paso SIN enemigos (tipo Normal). Van solo acá: NO las pongas también en 'Normal Rooms'.")]
+    public List<RoomInformation> connectorRooms = new List<RoomInformation>(); // NUEVO
+    [Tooltip("Mínimo de rooms conectoras por nivel. Si al final del nivel no salieron, el generador las fuerza.")]
+    [Min(0)] public int minConnectorRooms = 0; // NUEVO
+    [Tooltip("Máximo de rooms conectoras por nivel. En cada partida sale una cantidad al azar entre el mínimo y el máximo.")]
+    [Min(0)] public int maxConnectorRooms = 2; // NUEVO
+
     [Header("Largo del nivel")]
     [Tooltip("Rooms normales que se generan antes de que pueda aparecer la Shop")]
     [Min(1)] public int roomsBeforeShop = 7;
@@ -36,6 +44,17 @@ public class DungeonFloorConfig : ScriptableObject
     [Min(1)] public int roomsBeforeBoss = 5;
     [Tooltip("Rooms normales que todavía se pueden generar DESPUÉS de que aparece el Boss (ramas para explorar). 0 = el nivel deja de crecer apenas sale el Boss.")]
     [Min(0)] public int extraRoomsAfterBoss = 2; // NUEVO: tope del nivel (antes crecía para siempre)
+
+    // NUEVO: cuántas rooms normales tiene más o menos el nivel (incluye las conectoras).
+    // El generador lo usa para repartir las conectoras a lo largo del nivel en vez de amontonarlas al principio.
+    public int ExpectedNormalRooms => roomsBeforeShop + roomsBeforeBoss + extraRoomsAfterBoss;
+
+    // NUEVO: sortea cuántas conectoras salen en esta partida (entre mínimo y máximo, ambos incluidos)
+    public int RollConnectorCount()
+    {
+        int max = Mathf.Max(minConnectorRooms, maxConnectorRooms);
+        return Random.Range(minConnectorRooms, max + 1);
+    }
 
     /// <summary>Revisa que el nivel esté bien armado. Devuelve false y la lista de problemas si algo falta.</summary>
     public bool Validate(out string problems)
@@ -48,6 +67,8 @@ public class DungeonFloorConfig : ScriptableObject
         CheckSingle(shopRoom, RoomType.Shop, "Shop Room", required: false, sb);
         CheckList(challengeRooms, RoomType.Challenge, "Challenge Rooms", required: false, sb);
         CheckSingle(buffRoom, RoomType.Normal, "Buff Room", required: false, sb);
+        CheckList(connectorRooms, RoomType.Normal, "Connector Rooms", required: minConnectorRooms > 0, sb); // NUEVO
+        CheckConnectors(sb); // NUEVO
 
         problems = sb.ToString();
         return problems.Length == 0;
@@ -94,8 +115,37 @@ public class DungeonFloorConfig : ScriptableObject
             sb.AppendLine($"- '{room.name}' no tiene puertas.");
     }
 
+    // NUEVO: reglas propias de las conectoras
+    private void CheckConnectors(StringBuilder sb)
+    {
+        if (maxConnectorRooms < minConnectorRooms)
+            sb.AppendLine($"- 'Max Connector Rooms' ({maxConnectorRooms}) es menor que el mínimo ({minConnectorRooms}).");
+
+        if (connectorRooms == null) return;
+
+        foreach (RoomInformation room in connectorRooms)
+        {
+            if (room == null || room.prefab == null) continue;
+
+            if (room.prefab.HasEnemySetup)
+                sb.AppendLine($"- '{room.name}' está en Connector Rooms pero su prefab tiene enemigos configurados.");
+
+            if (room.Doors.Count < 2)
+                sb.AppendLine($"- '{room.name}' está en Connector Rooms pero tiene {room.Doors.Count} puerta: una conectora necesita al menos 2.");
+
+            if (normalRooms != null && normalRooms.Contains(room))
+                sb.AppendLine($"- '{room.name}' está en Normal Rooms Y en Connector Rooms. Dejala solo en Connector Rooms.");
+
+            if (room == buffRoom)
+                sb.AppendLine($"- '{room.name}' es la Buff Room y también está en Connector Rooms. Dejala solo en uno de los dos.");
+        }
+    }
+
     private void OnValidate()
     {
+        if (maxConnectorRooms < minConnectorRooms) // NUEVO: el máximo nunca queda por debajo del mínimo
+            maxConnectorRooms = minConnectorRooms;
+
         if (!Validate(out string problems))
             Debug.LogWarning($"[FloorConfig] '{name}' tiene cosas para revisar:\n{problems}", this);
     }

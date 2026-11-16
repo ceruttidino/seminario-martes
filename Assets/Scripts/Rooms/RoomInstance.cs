@@ -82,6 +82,31 @@ public class RoomInstance : MonoBehaviour
         }
     }
 
+    // NUEVO: true si la room tiene enemigos configurados (grupos, legacy o enemigos puestos a mano en el prefab).
+    // Lo usa DungeonFloorConfig para avisar si pusiste una room con enemigos en "Connector Rooms".
+    public bool HasEnemySetup
+    {
+        get
+        {
+            if (enemyGroups != null)
+            {
+                foreach (EnemySpawnGroup group in enemyGroups)
+                {
+                    if (group != null && group.enemyPrefab != null && Mathf.Max(group.minCount, group.maxCount) > 0)
+                        return true;
+                }
+            }
+
+            if (enemyPrefab != null && enemySpawnPoints != null)
+            {
+                foreach (Transform point in enemySpawnPoints)
+                    if (point != null) return true;
+            }
+
+            return GetComponentInChildren<EnemyHealth>(true) != null;
+        }
+    }
+
     private RoomNode currentNode;
     private DoorDirection? entryDirection;
 

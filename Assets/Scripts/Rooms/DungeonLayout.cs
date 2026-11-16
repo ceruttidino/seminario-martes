@@ -24,6 +24,24 @@ public class DungeonLayout
     private bool preferRoomsWithSpareDoor;
     private RoomInformation forcedSelection;
 
+    // NUEVO: rooms conectoras (sin enemigos)
+    private readonly List<RoomInformation> connectorRooms = new List<RoomInformation>();
+    private readonly List<RoomInformation> remainingConnectorRooms = new List<RoomInformation>();
+    private readonly HashSet<RoomInformation> connectorSet = new HashSet<RoomInformation>();
+    private int connectorTarget;       // cuántas tienen que salir en este nivel (sorteado entre mín y máx)
+    private int connectorMinimum;      // las que sí o sí tienen que salir
+    private int connectorsGenerated;   // las que ya salieron
+    private int normalRoomsCreated;    // rooms normales creadas (incluye conectoras): sirve para repartirlas
+    private int expectedNormalRooms = 1;
+    private bool forceConnectorNext;
+
+    /// <summary>NUEVO: cuántas conectoras salieron hasta ahora en este nivel.</summary>
+    public int ConnectorsGenerated => connectorsGenerated;
+    /// <summary>NUEVO: cuántas conectoras tienen que salir en este nivel.</summary>
+    public int ConnectorTarget => connectorTarget;
+    /// <summary>NUEVO: true si todavía no salió el mínimo de conectoras.</summary>
+    public bool ConnectorsBelowMinimum => connectorsGenerated < connectorMinimum;
+
     public RoomNode StartNode { get; private set; }
 
     public void Build(RoomInformation startRoom, List<RoomInformation> normalRooms, RoomInformation shopRoom, RoomInformation bossRoom, List<RoomInformation> challengeRooms, RoomInformation buffRoom = null)
@@ -36,6 +54,17 @@ public class DungeonLayout
         buffAlreadyGenerated = false;
         preferRoomsWithSpareDoor = false;
         forcedSelection = null;
+
+        // NUEVO: sin conectoras hasta que alguien llame a SetConnectorRooms (así el resto del código que usa Build no cambia)
+        connectorRooms.Clear();
+        remainingConnectorRooms.Clear();
+        connectorSet.Clear();
+        connectorTarget = 0;
+        connectorMinimum = 0;
+        connectorsGenerated = 0;
+        normalRoomsCreated = 0;
+        expectedNormalRooms = 1;
+        forceConnectorNext = false;
 
         if (normalRooms != null)
         {
@@ -121,6 +150,9 @@ public class DungeonLayout
         MarkGenerated(roomType);
         createdNew = true;
 
+        if (roomType == RoomType.Normal) normalRoomsCreated++;      // NUEVO
+        if (connectorSet.Contains(selected)) connectorsGenerated++; // NUEVO
+
         return newNode;
     }
 
@@ -168,6 +200,18 @@ public class DungeonLayout
                 RoomInformation forced = forcedSelection;
                 forcedSelection = null;
                 return forced.prefab != null && forced.HasDoor(requiredEntrance) ? forced : null;
+            }
+
+            // NUEVO: el DungeonManager pidió una conectora sí o sí (para llegar al mínimo)
+            if (forceConnectorNext)
+                return PickConnectorWithDoor(requiredEntrance);
+
+            // NUEVO: a veces, en lugar de una room normal sale una conectora
+            if (ShouldPlaceConnector())
+            {
+                RoomInformation connector = PickConnectorWithDoor(requiredEntrance);
+                if (connector != null)
+                    return connector;
             }
 
             return PickNormalWithDoor(requiredEntrance);
@@ -227,6 +271,89 @@ public class DungeonLayout
         remainingNormalRooms.AddRange(allNormalRooms);
         return PickFromPool(remainingNormalRooms, requiredEntrance);
     }
+
+    // ---------------- NUEVO: ROOMS CONECTORAS ----------------
+
+    /// <summary>
+    /// Se llama justo después de Build. 'target' = cuántas conectoras salen en este nivel (ya sorteado),
+    /// 'minimum' = las que sí o sí tienen que salir, 'expectedNormals' = largo aproximado del nivel.
+    /// </summary>
+    public void SetConnectorRooms(List<RoomInformation> connectors, int target, int minimum, int expectedNormals)
+    {
+        connectorRooms.Clear();
+        remainingConnectorRooms.Clear();
+        connectorSet.Clear();
+
+        if (connectors != null)
+        {
+            foreach (RoomInformation room in connectors)
+            {
+                if (room == null || room.prefab == null || room.type != RoomType.Normal || room.Doors.Count == 0)
+                    continue;
+
+                if (room == buffRoomInformation || connectorSet.Contains(room))
+                    continue;
+
+                connectorRooms.Add(room);
+                connectorSet.Add(room);
+            }
+        }
+
+        // Una conectora nunca entra en el sorteo de rooms normales (por si quedó en las dos listas)
+        allNormalRooms.RemoveAll(connectorSet.Contains);
+        remainingNormalRooms.RemoveAll(connectorSet.Contains);
+        remainingConnectorRooms.AddRange(connectorRooms);
+
+        connectorTarget = connectorRooms.Count > 0 ? Mathf.Max(0, target) : 0;
+        connectorMinimum = Mathf.Clamp(minimum, 0, connectorTarget);
+        expectedNormalRooms = Mathf.Max(1, expectedNormals);
+    }
+
+    /// <summary>Crea una conectora detrás de esa puerta (la usa el DungeonManager para llegar al mínimo).</summary>
+    public RoomNode CreateConnectorRoom(RoomNode fromNode, DoorDirection exitDirection, out bool createdNew)
+    {
+        createdNew = false;
+
+        if (connectorsGenerated >= connectorTarget || connectorRooms.Count == 0)
+            return null;
+
+        forceConnectorNext = true;
+        RoomNode node = CreateNextRoom(fromNode, exitDirection, RoomType.Normal, out createdNew);
+        forceConnectorNext = false;
+
+        return node;
+    }
+
+    /// <summary>
+    /// Reparte las conectoras a lo largo del nivel: la chance es "conectoras que faltan / rooms normales que faltan".
+    /// Ej: faltan 2 conectoras y quedan ~8 rooms normales = 25% en cada room nueva.
+    /// </summary>
+    private bool ShouldPlaceConnector()
+    {
+        int remaining = connectorTarget - connectorsGenerated;
+        if (remaining <= 0 || connectorRooms.Count == 0)
+            return false;
+
+        int slotsLeft = Mathf.Max(1, expectedNormalRooms - normalRoomsCreated);
+        return Random.value < (float)remaining / slotsLeft;
+    }
+
+    private RoomInformation PickConnectorWithDoor(DoorDirection requiredEntrance)
+    {
+        if (connectorsGenerated >= connectorTarget)
+            return null;
+
+        RoomInformation selected = PickFromPool(remainingConnectorRooms, requiredEntrance);
+        if (selected != null)
+            return selected;
+
+        // Si ya salieron todas las conectoras distintas, se pueden repetir
+        remainingConnectorRooms.Clear();
+        remainingConnectorRooms.AddRange(connectorRooms);
+        return PickFromPool(remainingConnectorRooms, requiredEntrance);
+    }
+
+    // ---------------------------------------------------------
 
     public void SetPreferSpareDoors(bool prefer)
     {

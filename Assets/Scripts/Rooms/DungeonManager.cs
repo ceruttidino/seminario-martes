@@ -103,6 +103,11 @@ public class DungeonManager : MonoBehaviour
         dungeonLayout = new DungeonLayout();
         dungeonLayout.Build(config.startRoom, config.normalRooms, config.shopRoom, boss, config.challengeRooms, config.buffRoom);
 
+        // NUEVO: rooms conectoras (sin enemigos). Se sortea cuántas salen en este nivel, entre el mínimo y el máximo.
+        dungeonLayout.SetConnectorRooms(config.connectorRooms, config.RollConnectorCount(), config.minConnectorRooms, config.ExpectedNormalRooms);
+        Debug.Log($"[DungeonManager] {config.floorName}: van a salir {dungeonLayout.ConnectorTarget} room(s) conectora(s) " +
+                  $"(mín {config.minConnectorRooms}, máx {config.maxConnectorRooms}).", config); // NUEVO
+
         currentNode = dungeonLayout.StartNode;
         currentNode.isCurrentRoom = true;
 
@@ -481,8 +486,9 @@ public class DungeonManager : MonoBehaviour
         bool bossMissing = !progression.HasSpawnedBoss();
         bool challengeMissing = HasPendingChallenges() && !challengeSpawned;
         bool buffMissing = config != null && config.buffRoom != null && !buffRoomSpawned;
+        bool connectorMissing = dungeonLayout != null && dungeonLayout.ConnectorsBelowMinimum; // NUEVO
 
-        return shopMissing || bossMissing || challengeMissing || buffMissing;
+        return shopMissing || bossMissing || challengeMissing || buffMissing || connectorMissing; // CAMBIADO: + connectorMissing
     }
 
     /// <summary>
@@ -499,6 +505,11 @@ public class DungeonManager : MonoBehaviour
 
         if (!challengeSpawned)
             TryForceChallengeRoom();
+
+        // NUEVO: si el nivel ya llegó a su largo (toca el boss) y todavía no salió el mínimo de conectoras, se fuerzan.
+        // Antes de eso no se fuerzan: así salen repartidas por el nivel y no todas pegadas al principio.
+        if (dungeonLayout.ConnectorsBelowMinimum && (progression.IsBossDue || progression.HasSpawnedBoss()))
+            TryForceConnectorRooms();
 
         // CAMBIADO: antes el boss se forzaba con 10 rooms fijas. Ahora cuando el nivel ya llegó a su largo.
         if (progression.IsBossDue)
@@ -530,6 +541,33 @@ public class DungeonManager : MonoBehaviour
         }
 
         return false;
+    }
+
+    // NUEVO: cuelga conectoras de puertas libres hasta llegar al mínimo del nivel
+    private void TryForceConnectorRooms()
+    {
+        foreach (RoomNode host in HostsForEssentials(farthestFirst: false))
+        {
+            foreach (DoorDirection dir in ShuffledDirections())
+            {
+                if (!dungeonLayout.ConnectorsBelowMinimum)
+                    return;
+
+                if (host.HasNeighbor(dir))
+                    continue;
+
+                RoomNode connectorNode = dungeonLayout.CreateConnectorRoom(host, dir, out bool createdNew);
+                if (!createdNew || connectorNode == null)
+                    continue;
+
+                progression.RegisterGeneratedRoom(RoomType.Normal);
+                RefreshDoors(host);
+            }
+        }
+
+        if (dungeonLayout.ConnectorsBelowMinimum)
+            Debug.LogWarning($"[DungeonManager] No hubo lugar para todas las rooms conectoras mínimas " +
+                             $"({dungeonLayout.ConnectorsGenerated} salieron). Se reintenta en la próxima room nueva.", this);
     }
 
     private bool TryAttachEssential(RoomType type, bool farthestFirst)
