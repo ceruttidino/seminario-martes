@@ -32,6 +32,22 @@ MonoBehaviour:
   challengeRooms:
   - {fileID: 11400000, guid: 16b9995ef1dc39444982e0161e1e9e69, type: 2}
   buffRoom: {fileID: 11400000, guid: f8bffb1b1582f03418ab11edcdb0c1e7, type: 2}
+  connectorRooms:
+  - {fileID: 11400000, guid: 913b4145185be134981ca4e3643899da, type: 2}
+  - {fileID: 11400000, guid: f23e46ad37d591f438a174c2b1491be9, type: 2}
+  - {fileID: 11400000, guid: 26de1c1642f9a034cae5edffbb1f0361, type: 2}
+  - {fileID: 11400000, guid: a39866930c5554d4f93a05a1d0bd02dc, type: 2}
+  - {fileID: 11400000, guid: f631ce0f5a04428499e93dbefc842fca, type: 2}
+  - {fileID: 11400000, guid: 39dfa089d4265a548ae383fdca18fc8d, type: 2}
+  - {fileID: 11400000, guid: c19e31944ab490240bb5af06cbcad3fe, type: 2}
+  - {fileID: 11400000, guid: f6dfb69a34bfc29419abecc248516464, type: 2}
+  - {fileID: 11400000, guid: 015900f20f84faa4cbc582a4f4828d03, type: 2}
+  - {fileID: 11400000, guid: bcdf3ae13246cc64b91ac98a54152ed4, type: 2}
+  - {fileID: 11400000, guid: 8ff191050de7db24096d722319111c9a, type: 2}
+  - {fileID: 11400000, guid: d6e95db1cebd8e940b99fe3f369c1e13, type: 2}
+  - {fileID: 11400000, guid: 7c6189747b233c64884c68fdb7018653, type: 2}
+  minConnectorRooms: 0
+  maxConnectorRooms: 2
   roomsBeforeShop: 5
   roomsBeforeBoss: 5
   extraRoomsAfterBoss: 0
