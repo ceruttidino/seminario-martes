@@ -1538,7 +1538,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ChallengeRoomController
   waveCount: 3
-  enemiesPerWave: 4
   delayBetweenWaves: 1.75
   enemySpeedMultiplier: 0.6
   waveEnemyPrefabs:

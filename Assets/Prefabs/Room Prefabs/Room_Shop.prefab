@@ -3758,6 +3758,7 @@ MonoBehaviour:
   priceText: {fileID: 6796405062678962020}
   itemVisual: {fileID: 8853363775894326311}
   Npc: {fileID: 1446226721047764618}
+  promptOffset: {x: 0, y: 0.95, z: 0}
 --- !u!61 &1755915384906204313
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -4873,6 +4874,7 @@ MonoBehaviour:
   priceText: {fileID: 4733674680580755692}
   itemVisual: {fileID: 178539450843355972}
   Npc: {fileID: 1446226721047764618}
+  promptOffset: {x: 0, y: 0.95, z: 0}
 --- !u!61 &8674702053868066170
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5593,6 +5595,7 @@ MonoBehaviour:
   priceText: {fileID: 4673331991888164170}
   itemVisual: {fileID: 4224250123262572922}
   Npc: {fileID: 1446226721047764618}
+  promptOffset: {x: 0, y: 0.95, z: 0}
 --- !u!61 &8109673632684254416
 BoxCollider2D:
   m_ObjectHideFlags: 0
