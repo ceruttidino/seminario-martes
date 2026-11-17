@@ -16,7 +16,7 @@ public class MainMenu : MonoBehaviour
         settingsCanvas.SetActive(true);
     }
 
-    public void GoToMainMenu() 
+    public void GoToMainMenu()
     {
         menuCanvas.SetActive(true);
         settingsCanvas.SetActive(false);

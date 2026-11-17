@@ -117,7 +117,9 @@ public class PlayerHealth : MonoBehaviour, IDamageable, ISourcedDamageable
         UpdateHearts(playerHealth);
         GameMetrics.PlayerDamaged(damage, LastDamageSource != null ? LastDamageSource.Name : "unknown", playerHealth, playerMaxHealth);
 
-        if (damageFlash != null)
+        // CAMBIADO: si está el PlayerHurtFeedback, él hace el feedback visual (silueta + parpadeo).
+        // Antes los dos titilaban a la vez durante todos los iFrames y se pisaban.
+        if (damageFlash != null && hurtFeedback == null)
             damageFlash.Flash(iFrames);
 
         // CAMBIADO: antes solo era CameraShake.Play(). Ahora, si está el PlayerHurtFeedback,

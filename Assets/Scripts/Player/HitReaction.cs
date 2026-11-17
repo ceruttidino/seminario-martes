@@ -67,6 +67,9 @@ public class HitReaction : MonoBehaviour
     private static readonly RaycastHit2D[] castHits = new RaycastHit2D[4];
     private const float Skin = 0.02f;
 
+    private RoomPathGrid roomGrid;      // NUEVO
+    private bool roomGridSearched;      // NUEVO
+
     /// <summary>
     /// Material "de verdad" de un sprite del enemigo. El golpe final llega con el material de flash blanco puesto
     /// (ReceiveHit corre antes que TakeDamage), asi que un efecto de muerte que copie sharedMaterial directamente sale
@@ -194,6 +197,14 @@ public class HitReaction : MonoBehaviour
 
         if (rb.bodyType == RigidbodyType2D.Dynamic)
         {
+            // NUEVO: si el próximo paso cae en un tile de vacío, el empuje se corta en el borde
+            if (IsOverVoid(rb.position + velocity * Time.fixedDeltaTime))
+            {
+                rb.linearVelocity = Vector2.zero;
+                knockbackTimer = 0f;
+                return;
+            }
+
             // Unity 6. Si usás Unity 2022 o anterior, cambiar linearVelocity por velocity
             rb.linearVelocity = knockbackTimer > 0f ? velocity : Vector2.zero;
         }
@@ -225,7 +236,28 @@ public class HitReaction : MonoBehaviour
             }
         }
 
-        rb.MovePosition(rb.position + dir * distance);
+        // NUEVO: si el paso cae en un tile de vacío, el empuje se corta en el borde
+        Vector2 target = rb.position + dir * distance;
+        if (IsOverVoid(target))
+        {
+            knockbackTimer = 0f;
+            return;
+        }
+
+        rb.MovePosition(target);
+    }
+
+    // NUEVO: los enemigos que NO usan EnemyMovement también respetan los vacíos al ser empujados
+    // (los que sí lo usan ya los respetan adentro de EnemyMovement)
+    private bool IsOverVoid(Vector2 point)
+    {
+        if (!roomGridSearched)
+        {
+            roomGrid = RoomPathGrid.ForQuick(transform);
+            roomGridSearched = true;
+        }
+
+        return roomGrid != null && roomGrid.IsVoidTile(point); // CAMBIADO: solo tiles de vacío
     }
 
     // ---------------- FLASH ----------------

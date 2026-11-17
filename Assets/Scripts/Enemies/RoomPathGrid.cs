@@ -68,6 +68,16 @@ public class RoomPathGrid : MonoBehaviour
         return IsTerrainHole(world);
     }
 
+    /// <summary>
+    /// NUEVO: true SOLO si hay un tile del Tilemap de vacío en ese punto (no mira el tilemap de piso).
+    /// Lo usan los enemigos: más estricto que IsOverVoid, así un piso armado con otro tilemap no los frena.
+    /// </summary>
+    public bool IsVoidTile(Vector2 world)
+    {
+        CacheTilemaps();
+        return voidMap != null && voidMap.HasTile(voidMap.WorldToCell(world));
+    }
+
     public void Invalidate()
     {
         dirty = true;

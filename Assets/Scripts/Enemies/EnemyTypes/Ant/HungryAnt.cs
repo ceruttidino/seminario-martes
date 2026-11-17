@@ -32,6 +32,14 @@ public class HungryAnt : MonoBehaviour
     [SerializeField] private float minStillTime = 1.2f;
     [SerializeField] private float maxStillTime = 2.4f;
 
+    [Header("Decisiones de movimiento")] // NUEVO
+    [Tooltip("Distancia a las paredes que la hormiga no elige como destino. Sin esto, los tramos de 6-7 tiles casi siempre terminaban en un borde o una esquina.")]
+    [SerializeField] private float edgeMargin = 1f; // NUEVO
+    [Tooltip("Cada cuánto revisa si quedó trabada mientras camina.")]
+    [SerializeField] private float stuckCheckTime = 0.4f; // NUEVO
+    [Tooltip("Si en ese tiempo avanzó menos que esto, está trabada: corta el tramo y elige otra dirección.")]
+    [SerializeField] private float stuckMinDistance = 0.12f; // NUEVO
+
     [Header("Deteccion y ataque (GDD)")]
     [Tooltip("GDD: rango de deteccion de 1.5 metros.")]
     [SerializeField] private float detectionRange = 1.5f;
@@ -107,6 +115,16 @@ public class HungryAnt : MonoBehaviour
     private Vector2 lastPosition;
     private WalkFacing facing = WalkFacing.Front;
 
+    // NUEVO: decisiones de movimiento
+    private HitReaction hitReaction;
+    private float bodyRadius = 0.3f;
+    private Vector2 lastWanderDir;     // hacia dónde fue el último tramo (para no ir y volver)
+    private Vector2 blockedDir;        // hacia dónde se trabó (para no volver a intentarlo enseguida)
+    private float stuckTimer;
+    private Vector2 stuckCheckPos;
+    private ContactFilter2D obstacleFilter;
+    private readonly RaycastHit2D[] castBuffer = new RaycastHit2D[8];
+
     // Animacion por sprites
     private Sprite[] windupFrames;
     private Sprite[] spinFrames;
@@ -144,6 +162,15 @@ public class HungryAnt : MonoBehaviour
         legacyAnimator = GetComponent<Animator>();
         if (legacyAnimator != null)
             legacyAnimator.enabled = false;
+
+        // NUEVO: tamaño real del cuerpo y capas que bloquean (las mismas que usa EnemyMovement)
+        hitReaction = GetComponent<HitReaction>();
+        if (bodyCollider != null)
+            bodyRadius = Mathf.Clamp(Mathf.Max(bodyCollider.bounds.extents.x, bodyCollider.bounds.extents.y), 0.2f, 0.55f);
+
+        obstacleFilter = new ContactFilter2D();
+        obstacleFilter.useTriggers = false;
+        obstacleFilter.SetLayerMask(LayerMask.GetMask("Default", "Trash", "Wall"));
 
         BuildAttackClips();
 
@@ -337,6 +364,8 @@ public class HungryAnt : MonoBehaviour
         state = AntState.Wandering;
         wanderTravelled = 0f;
         lastPosition = rb != null ? rb.position : (Vector2)transform.position;
+        stuckCheckPos = lastPosition; // NUEVO
+        stuckTimer = 0f;              // NUEVO
 
         // Tiempo maximo del tramo (por si se traba): el doble de lo que tardaria + un margen.
         stateTimer = (wanderDistance / Mathf.Max(0.1f, wanderSpeed)) * 2f + 1.5f;
@@ -361,6 +390,16 @@ public class HungryAnt : MonoBehaviour
         {
             movement.Move(Vector2.zero);
             EnterStill();
+            return;
+        }
+
+        // NUEVO: si no avanza (pared, piedra, otro enemigo), no se queda empujando: corta el tramo,
+        // se frena un instante y el próximo tramo evita esa dirección.
+        if (CheckStuck(position, dt))
+        {
+            blockedDir = toTarget.sqrMagnitude > 0.0001f ? toTarget.normalized : lastWanderDir;
+            movement.Move(Vector2.zero);
+            EnterStill(Random.Range(0.25f, 0.5f));
             return;
         }
 
@@ -582,34 +621,90 @@ public class HungryAnt : MonoBehaviour
     }
     // ================================================================= movimiento autonomo
 
+    // CAMBIADO: antes agarraba el PRIMER destino que encontraba (y si caía afuera lo "pegaba" al borde de la malla,
+    // por eso terminaba en bordes y esquinas). Ahora prueba muchos destinos, descarta los malos y se queda con el mejor:
+    //  - tiene que quedar lejos de las paredes (zona segura de la room),
+    //  - el cuerpo entero tiene que pasar en línea recta (no solo una línea finita que roza las piedras),
+    //  - suma puntos si el tramo es largo (GDD: 6-7 tiles) y si el destino queda lejos de bordes y esquinas,
+    //  - resta puntos si es volver por donde vino o ir hacia donde se acaba de trabar,
+    //  - un poco de azar para que no haga siempre lo mismo.
     private bool TryPickWanderTarget(out Vector2 target)
     {
         Vector2 from = rb != null ? rb.position : (Vector2)transform.position;
         RoomPathGrid grid = RoomPathGrid.For(transform);
+        bool hasArea = TryGetSafeArea(out Rect safe);
         float baseDistance = Random.Range(minWanderTiles, maxWanderTiles) * Mathf.Max(0.1f, tileSize);
+        float startAngle = Random.Range(0f, 360f);
 
-        // Primero se busca un tramo completo de 6-7 tiles; si la sala no da en ninguna direccion se acorta de a poco.
-        for (float factor = 1f; factor >= 0.45f; factor -= 0.2f)
+        float bestScore = float.NegativeInfinity;
+        Vector2 bestTarget = from;
+        float bestDistance = 0f;
+
+        // Tramo completo de 6-7 tiles y, si la room no da, versiones más cortas
+        for (int step = 0; step < 4; step++)
         {
+            float factor = 1f - step * 0.2f; // 100%, 80%, 60%, 40%
             float distance = baseDistance * factor;
-            float startAngle = Random.Range(0f, 360f);
 
-            for (int i = 0; i < 12; i++)
+            for (int i = 0; i < 16; i++)
             {
-                float angle = (startAngle + i * 30f) * Mathf.Deg2Rad;
+                float angle = (startAngle + i * 22.5f) * Mathf.Deg2Rad;
                 Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
                 Vector2 candidate = from + direction * distance;
+
+                if (hasArea && !safe.Contains(candidate))
+                    continue;
+
+                if (!BodyPathIsClear(from, candidate, grid))
+                    continue;
+
+                float score = factor;
+
+                if (hasArea)
+                    score += Clearance01(candidate, safe) * 1.2f;
+
+                if (lastWanderDir != Vector2.zero && Vector2.Dot(direction, lastWanderDir) < -0.85f)
+                    score -= 0.35f;
+
+                if (blockedDir != Vector2.zero && Vector2.Dot(direction, blockedDir) > 0.3f)
+                    score -= 2f;
+
+                score += Random.value * 0.6f;
+
+                if (score > bestScore)
+                {
+                    bestScore = score;
+                    bestTarget = candidate;
+                    bestDistance = distance;
+                }
+            }
+        }
+
+        if (bestScore > float.NegativeInfinity)
+        {
+            target = bestTarget;
+            wanderDistance = bestDistance;
+            lastWanderDir = (bestTarget - from).normalized;
+            blockedDir = Vector2.zero;
+            return true;
+        }
+
+        // Ningún tramo sirve (metida en un rincón o entre piedras): vuelve hacia el centro de la room.
+        // EnemyMovement rodea las piedras que haya en el camino.
+        if (hasArea)
+        {
+            Vector2 toCenter = safe.center - from;
+            float distance = Mathf.Min(toCenter.magnitude, baseDistance * 0.5f);
+            if (distance > 0.5f)
+            {
+                Vector2 candidate = from + toCenter.normalized * distance;
                 if (DungeonNavMesh.SampleWalkable(candidate, out Vector2 snapped, 0.8f))
                     candidate = snapped;
 
-                bool blocked = DungeonNavMesh.Instance != null && DungeonNavMesh.Instance.IsReady
-                    ? !DungeonNavMesh.HasClearLine(from, candidate)
-                    : grid != null && (!grid.IsWalkableWorld(candidate) || !grid.HasClearLine(from, candidate, 0.3f));
-                if (blocked)
-                    continue;
-
                 target = candidate;
                 wanderDistance = distance;
+                lastWanderDir = toCenter.normalized;
+                blockedDir = Vector2.zero;
                 return true;
             }
         }
@@ -617,6 +712,109 @@ public class HungryAnt : MonoBehaviour
         target = from;
         wanderDistance = 0f;
         return false;
+    }
+
+    // NUEVO: interior de la room (el del NavMesh) achicado por el margen + el tamaño del cuerpo
+    private bool TryGetSafeArea(out Rect safe)
+    {
+        safe = default;
+
+        DungeonNavMesh mesh = DungeonNavMesh.Instance;
+        if (mesh == null || mesh.CurrentRoom == null)
+            return false;
+
+        Bounds interior = mesh.InteriorBounds;
+        if (interior.size.x < 1f || interior.size.y < 1f)
+            return false;
+
+        // En rooms chicas el margen se achica, así siempre queda lugar para moverse
+        float margin = edgeMargin + bodyRadius;
+        float marginX = Mathf.Min(margin, interior.size.x * 0.3f);
+        float marginY = Mathf.Min(margin, interior.size.y * 0.3f);
+
+        safe = Rect.MinMaxRect(
+            interior.min.x + marginX,
+            interior.min.y + marginY,
+            interior.max.x - marginX,
+            interior.max.y - marginY);
+        return true;
+    }
+
+    // NUEVO: 0 = pegado al borde de la zona segura, 1 = en el medio
+    private static float Clearance01(Vector2 point, Rect safe)
+    {
+        float toEdge = Mathf.Min(
+            Mathf.Min(point.x - safe.xMin, safe.xMax - point.x),
+            Mathf.Min(point.y - safe.yMin, safe.yMax - point.y));
+
+        float half = Mathf.Max(0.01f, Mathf.Min(safe.width, safe.height) * 0.5f);
+        return Mathf.Clamp01(toEdge / half);
+    }
+
+    // NUEVO: ¿pasa el cuerpo ENTERO de 'from' a 'to' en línea recta?
+    private bool BodyPathIsClear(Vector2 from, Vector2 to, RoomPathGrid grid)
+    {
+        bool navReady = DungeonNavMesh.Instance != null && DungeonNavMesh.Instance.IsReady;
+        if (navReady)
+        {
+            if (!DungeonNavMesh.HasClearLine(from, to))
+                return false;
+        }
+        else if (grid != null && (!grid.IsWalkableWorld(to) || !grid.HasClearLine(from, to, 0.3f)))
+        {
+            return false;
+        }
+
+        Vector2 delta = to - from;
+        float distance = delta.magnitude;
+        if (distance < 0.01f)
+            return true;
+
+        Vector2 dir = delta / distance;
+        int hits = Physics2D.CircleCast(from, bodyRadius, dir, obstacleFilter, castBuffer, distance);
+        for (int i = 0; i < hits; i++)
+        {
+            Collider2D col = castBuffer[i].collider;
+            if (col == null || col.isTrigger)
+                continue;
+            if (col.transform == transform || col.transform.IsChildOf(transform))
+                continue;
+
+            // Si ya está tocando algo (ej: apoyada en la pared) y este tramo la ALEJA, no cuenta como bloqueo
+            if (castBuffer[i].distance <= 0.01f)
+            {
+                Vector2 away = from - col.ClosestPoint(from);
+                if (away.sqrMagnitude < 0.0001f)
+                    away = from - (Vector2)col.bounds.center;
+                if (Vector2.Dot(dir, away) > 0f)
+                    continue;
+            }
+
+            return false;
+        }
+
+        return true;
+    }
+
+    // NUEVO: true si en el último 'stuckCheckTime' casi no avanzó
+    private bool CheckStuck(Vector2 position, float dt)
+    {
+        // Golpeada o empujada no cuenta como trabada
+        if ((hitReaction != null && hitReaction.IsStunned) || (movement != null && movement.IsSliding))
+        {
+            stuckTimer = 0f;
+            stuckCheckPos = position;
+            return false;
+        }
+
+        stuckTimer += dt;
+        if (stuckTimer < stuckCheckTime)
+            return false;
+
+        bool stuck = Vector2.Distance(position, stuckCheckPos) < stuckMinDistance;
+        stuckTimer = 0f;
+        stuckCheckPos = position;
+        return stuck;
     }
 
     // ================================================================= animacion por sprites

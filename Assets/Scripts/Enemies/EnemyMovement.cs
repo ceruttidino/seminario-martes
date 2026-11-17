@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Tilemaps; // NUEVO: para reconocer el collider de los tiles de vacío
 
 public class EnemyMovement : MonoBehaviour, IMovement
 {
@@ -74,6 +75,13 @@ public class EnemyMovement : MonoBehaviour, IMovement
     private float slideTimer;
     private float slideDuration;
 
+    // NUEVO: vacíos. La grilla de la room ya sabe dónde hay tiles de vacío (es la misma que usa el player).
+    private RoomPathGrid roomGrid;
+    private bool roomGridSearched;
+    // CAMBIADO: antes era un radio de búsqueda (0.25) y la malla está a otra altura (Z): nunca la encontraba.
+    // Ahora se busca con el radio normal del NavMesh y esto es la distancia PLANA (X/Y) máxima aceptada.
+    private const float SafeGroundTolerance = 0.25f;
+
     /// <summary>Velocidad de mundo de este frame. La animacion la lee aca: el Rigidbody queda en cero a proposito.</summary>
     public Vector2 Velocity { get; private set; }
 
@@ -109,8 +117,13 @@ public class EnemyMovement : MonoBehaviour, IMovement
 
         // La rata y el búho se traban contra las piedras con el agente chico.
         // Los dos rodean por una esquina libre. El resto conserva el recorrido anterior.
+        // CAMBIADO: la hormiga también. El NavMesh está bakeado con un radio diminuto (0.02), así que con el agente
+        // el CENTRO de la hormiga podía llegar al borde de la piedra y medio cuerpo quedaba adentro (parecía que la
+        // atravesaba). Este modo mide el cuerpo real y lo mantiene afuera de las piedras.
         directionalSheets = GetComponent<RegeneratingRat>() != null;
-        steerAroundRocks = directionalSheets || GetComponent<VanishingOwl>() != null;
+        steerAroundRocks = directionalSheets
+                           || GetComponent<VanishingOwl>() != null
+                           || GetComponent<HungryAnt>() != null; // CAMBIADO: + HungryAnt
         if (steerAroundRocks)
         {
             bodyRadius = MeasureBodyRadius();
@@ -311,6 +324,14 @@ public class EnemyMovement : MonoBehaviour, IMovement
 
     private void ApplySlide()
     {
+        // NUEVO: si ya está sobre un vacío o fuera de la malla, primero vuelve a piso firme
+        if (TryRescueToSafeGround(rb.position, out Vector2 rescued))
+        {
+            slideTimer = 0f;
+            PlaceAt(rescued);
+            return;
+        }
+
         float duration = Mathf.Max(0.05f, slideDuration);
         slideTimer -= Time.fixedDeltaTime;
 
@@ -338,6 +359,13 @@ public class EnemyMovement : MonoBehaviour, IMovement
             next = free;
         }
 
+        // NUEVO: un golpe nunca lo puede dejar sobre un vacío ni fuera de la malla: se frena en el borde
+        if (!IsSafeGround(next))
+        {
+            next = from;
+            slideTimer = 0f;
+        }
+
         rb.linearVelocity = Vector2.zero;
         rb.MovePosition(next);
         Velocity = (next - from) / Mathf.Max(0.0001f, Time.fixedDeltaTime);
@@ -350,6 +378,16 @@ public class EnemyMovement : MonoBehaviour, IMovement
         rb.linearVelocity = Vector2.zero;
 
         Vector2 from = rb.position;
+
+        // NUEVO: si ya está sobre un vacío o fuera de la malla (por lo que sea), vuelve al piso firme más cercano
+        if (TryRescueToSafeGround(from, out Vector2 rescued))
+        {
+            separation = Vector2.zero;
+            wasBlocked = false;
+            PlaceAt(rescued);
+            return;
+        }
+
         if (steerAroundRocks)
         {
             Vector2 freed = ExtrudeFromRocks(from);
@@ -399,6 +437,10 @@ public class EnemyMovement : MonoBehaviour, IMovement
         if (steerAroundRocks && BodyInsideRock(next))
             next = from;
 
+        // NUEVO: nunca da un paso hacia un vacío ni afuera de la malla
+        if (!IsSafeGround(next))
+            next = from;
+
         rb.MovePosition(next);
         Velocity = (next - from) / Mathf.Max(0.0001f, Time.fixedDeltaTime);
         SyncAgent(next);
@@ -412,6 +454,90 @@ public class EnemyMovement : MonoBehaviour, IMovement
 
         wasBlocked = blocked;
     }
+
+    // ---------------- NUEVO: VACÍOS ----------------
+
+    /// <summary>¿Se puede estar parado acá? No tiene que ser un tile de vacío y tiene que estar sobre la malla.</summary>
+    private bool IsSafeGround(Vector2 point)
+    {
+        RoomPathGrid grid = GetRoomGrid();
+        if (grid != null && grid.IsVoidTile(point)) // CAMBIADO: solo tiles de vacío (antes IsOverVoid)
+            return false;
+
+        // CAMBIADO: radio normal del NavMesh + distancia medida solo en X/Y (ignora la altura del bake)
+        if (DungeonNavMesh.Instance != null && DungeonNavMesh.Instance.IsReady)
+        {
+            if (!DungeonNavMesh.SampleWalkable(point, out Vector2 onMesh))
+                return false;
+            if ((onMesh - point).sqrMagnitude > SafeGroundTolerance * SafeGroundTolerance)
+                return false;
+        }
+
+        return true;
+    }
+
+    /// <summary>
+    /// Si 'from' no es piso firme, busca el punto firme más cercano (en anillos alrededor) y devuelve true.
+    /// Es la red de seguridad: pase lo que pase (golpe, empujón, separación entre enemigos), nadie queda sobre el vacío.
+    /// </summary>
+    private bool TryRescueToSafeGround(Vector2 from, out Vector2 rescued)
+    {
+        rescued = from;
+        if (IsSafeGround(from))
+            return false;
+
+        for (float radius = 0.2f; radius <= 3f; radius += 0.2f)
+        {
+            for (int i = 0; i < 12; i++)
+            {
+                float angle = i * 30f * Mathf.Deg2Rad;
+                Vector2 candidate = from + new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * radius;
+                if (!IsSafeGround(candidate))
+                    continue;
+
+                if (DungeonNavMesh.SampleWalkable(candidate, out Vector2 onMesh) && IsSafeGround(onMesh)) // CAMBIADO: radio normal
+                    candidate = onMesh;
+
+                rescued = candidate;
+                return true;
+            }
+        }
+
+        return false; // no encontró nada cerca: no se lo mueve (mejor quieto que más lejos)
+    }
+
+    private void PlaceAt(Vector2 position)
+    {
+        rb.linearVelocity = Vector2.zero;
+        rb.MovePosition(position);
+        Velocity = Vector2.zero;
+        SyncAgent(position);
+    }
+
+    private RoomPathGrid GetRoomGrid()
+    {
+        if (!roomGridSearched)
+        {
+            roomGrid = RoomPathGrid.ForQuick(transform);
+            roomGridSearched = true;
+        }
+
+        return roomGrid;
+    }
+
+    /// <summary>Colliders del terreno (tiles de vacío). No son piedras: el enemigo no tiene que "salir" de ellos empujándose.</summary>
+    private static bool IsTerrainCollider(Collider2D col)
+    {
+        if (col is TilemapCollider2D || col is CompositeCollider2D)
+            return true;
+
+        string objectName = col.gameObject.name;
+        return RoomNavMeshBuild.NameContains(objectName, "void")
+               || RoomNavMeshBuild.NameContains(objectName, "vacio")
+               || RoomNavMeshBuild.NameContains(objectName, "vacío");
+    }
+
+    // ------------------------------------------------
 
     private bool BodyInsideRock(Vector2 position)
     {
@@ -432,7 +558,12 @@ public class EnemyMovement : MonoBehaviour, IMovement
             if (!TryGetOverlappedRock(position, bodyRadius * 0.72f, out Collider2D rock))
                 return position;
 
-            Vector2 away = position - (Vector2)rock.bounds.center;
+            // CAMBIADO: antes se usaba el centro del collider. Con colliders grandes (un tilemap, una pared larga)
+            // ese centro puede quedar en cualquier lado y empujaba al enemigo en la dirección equivocada.
+            // Ahora se usa el punto del borde más cercano; el centro queda solo de respaldo.
+            Vector2 away = position - rock.ClosestPoint(position);
+            if (away.sqrMagnitude < 0.0001f)
+                away = position - (Vector2)rock.bounds.center;
             if (away.sqrMagnitude < 0.0001f)
                 away = Vector2.up;
             away.Normalize();
@@ -456,9 +587,15 @@ public class EnemyMovement : MonoBehaviour, IMovement
                     if (TryGetOverlappedRock(candidate, bodyRadius * 0.55f, out _))
                         continue;
 
+                    if (!IsSafeGround(candidate)) // NUEVO: nunca lo saca de la piedra hacia un vacío
+                        continue;
+
                     if (DungeonNavMesh.Instance != null && DungeonNavMesh.Instance.IsReady)
                     {
-                        if (!DungeonNavMesh.SampleWalkable(candidate, out Vector2 onMesh, 0.3f))
+                        // CAMBIADO: antes buscaba con radio 0.3 y, por la altura del bake, casi nunca encontraba la malla.
+                        // Ahora radio normal + distancia plana.
+                        if (!DungeonNavMesh.SampleWalkable(candidate, out Vector2 onMesh)
+                            || (onMesh - candidate).sqrMagnitude > 0.3f * 0.3f)
                             continue;
                         if (TryGetOverlappedRock(onMesh, bodyRadius * 0.55f, out _))
                             continue;
@@ -472,7 +609,12 @@ public class EnemyMovement : MonoBehaviour, IMovement
             }
 
             if (!freed)
-                return position + away * (bodyRadius + 0.05f);
+            {
+                // CAMBIADO: antes lo empujaba igual, sin mirar dónde caía. Como esto corre en cada paso,
+                // lo iba arrastrando frame a frame hasta afuera del mapa (el bug de la rata y el vacío).
+                Vector2 pushed = position + away * (bodyRadius + 0.05f);
+                return IsSafeGround(pushed) ? pushed : position;
+            }
         }
 
         return position;
@@ -491,6 +633,8 @@ public class EnemyMovement : MonoBehaviour, IMovement
             if (col == null || col.isTrigger)
                 continue;
             if (col.transform == transform || col.transform.IsChildOf(transform))
+                continue;
+            if (IsTerrainCollider(col)) // NUEVO: el vacío no es una piedra (lo maneja la malla)
                 continue;
 
             rock = col;
@@ -522,7 +666,8 @@ public class EnemyMovement : MonoBehaviour, IMovement
             if (away.sqrMagnitude < 0.0001f)
                 away = Vector2.up;
 
-            return from + away.normalized * travel;
+            Vector2 pushed = from + away.normalized * travel;
+            return IsSafeGround(pushed) ? pushed : from; // CAMBIADO: no lo empuja hacia un vacío
         }
 
         Vector2 step = next - from;
