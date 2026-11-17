@@ -49,6 +49,9 @@ public class SlimeTrailSettings
     [Range(0.3f, 1.5f)] public float hitWidthFraction = 0.8f;
     [Tooltip("Corrección del punto del player que 'pisa' (sus pies). Si el pivot del player está en el centro, bajalo (ej: 0, -0.3).")]
     public Vector2 playerFeetOffset = Vector2.zero;
+    [Tooltip("Usa el collider físico del player (el que choca con las paredes), no solo un punto en sus pies. " +
+             "Sin esto, la baba pegada a la pared no dañaba: el player no puede acercar sus pies tanto a la pared como el caracol.")]
+    public bool usePlayerCollider = true; // NUEVO
 
     [Header("Slow (opcional)")]
     [Tooltip("0 = no ralentiza (como antes). 0.3 = 30% más lento mientras está encima.")]
@@ -90,6 +93,7 @@ public class SlimeTrail : MonoBehaviour
     private Transform player;
     private IDamageable playerDamageable;
     private PlayerSlowStatus playerSlow;
+    private Collider2D[] playerColliders; // NUEVO: colliders físicos del player (no triggers)
     private float nextDamageTime;
 
     private static Material fallbackMaterial;
@@ -344,9 +348,59 @@ public class SlimeTrail : MonoBehaviour
             float radius = baseRadius * Mathf.Max(WidthFactor(a), WidthFactor(b));
             if (DistanceToSegment(point, a.position, b.position) <= radius)
                 return true;
+
+            // NUEVO: además del punto de los pies, se mide contra el collider del player.
+            // Así la baba que quedó pegada a la pared también daña.
+            if (TouchesPlayerCollider(a.position, b.position, radius))
+                return true;
         }
 
         return false;
+    }
+
+    // NUEVO
+    private bool TouchesPlayerCollider(Vector2 a, Vector2 b, float radius)
+    {
+        if (!settings.usePlayerCollider || playerColliders == null)
+            return false;
+
+        float minX = Mathf.Min(a.x, b.x) - radius;
+        float maxX = Mathf.Max(a.x, b.x) + radius;
+        float minY = Mathf.Min(a.y, b.y) - radius;
+        float maxY = Mathf.Max(a.y, b.y) + radius;
+
+        foreach (Collider2D col in playerColliders)
+        {
+            if (col == null || !col.enabled || !col.gameObject.activeInHierarchy)
+                continue;
+
+            // Descarte rápido: si el tramo ni siquiera está cerca del collider, no se calcula nada más
+            Bounds cb = col.bounds;
+            if (cb.max.x < minX || cb.min.x > maxX || cb.max.y < minY || cb.min.y > maxY)
+                continue;
+
+            // Punto del tramo más cercano al collider (un par de pasadas alcanzan: los colliders son convexos)
+            Vector2 onSegment = ClosestPointOnSegment(cb.center, a, b);
+            for (int i = 0; i < 2; i++)
+                onSegment = ClosestPointOnSegment(col.ClosestPoint(onSegment), a, b);
+
+            // ClosestPoint devuelve el mismo punto si está adentro del collider (distancia 0)
+            if (Vector2.Distance(col.ClosestPoint(onSegment), onSegment) <= radius)
+                return true;
+        }
+
+        return false;
+    }
+
+    // NUEVO
+    private static Vector2 ClosestPointOnSegment(Vector2 p, Vector2 a, Vector2 b)
+    {
+        Vector2 ab = b - a;
+        float lengthSq = ab.sqrMagnitude;
+        if (lengthSq < 0.000001f) return a;
+
+        float t = Mathf.Clamp01(Vector2.Dot(p - a, ab) / lengthSq);
+        return a + ab * t;
     }
 
     private static float DistanceToSegment(Vector2 p, Vector2 a, Vector2 b)
@@ -369,6 +423,18 @@ public class SlimeTrail : MonoBehaviour
         player = go.transform;
         playerDamageable = go.GetComponent<IDamageable>();
         playerSlow = go.GetComponent<PlayerSlowStatus>();
+
+        // NUEVO: solo los colliders físicos (los que chocan con las paredes), no los triggers
+        Collider2D[] all = go.GetComponentsInChildren<Collider2D>(true);
+        int solid = 0;
+        foreach (Collider2D col in all)
+            if (col != null && !col.isTrigger) solid++;
+
+        playerColliders = new Collider2D[solid];
+        int index = 0;
+        foreach (Collider2D col in all)
+            if (col != null && !col.isTrigger) playerColliders[index++] = col;
+
         return playerDamageable != null;
     }
 }
