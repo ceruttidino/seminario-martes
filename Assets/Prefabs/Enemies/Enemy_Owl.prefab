@@ -356,9 +356,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAttack
   damage: 1
-  attackRange: 0.2
+  attackRange: 0.1
   surfaceReach: 0.35
-  attackCooldown: 1
+  attackCooldown: 2
   targetLayer:
     serializedVersion: 2
     m_Bits: 512
@@ -431,7 +431,7 @@ MonoBehaviour:
   fadeInTime: 0.15
   fadeOutTime: 0.4
   footprintPrefab: {fileID: 8708388183489006354, guid: 4cad2793ebbddab43800103612a8124f, type: 3}
-  footprintInterval: 0.4
+  footprintInterval: 0.3
   footprintMinDistance: 0.3
 --- !u!114 &-3288538801856917683
 MonoBehaviour:
