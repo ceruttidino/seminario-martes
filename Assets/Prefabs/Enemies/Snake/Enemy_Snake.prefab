@@ -247,8 +247,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PoisonousSnake
   fireRangeTiles: 10
   tooCloseTiles: 3
-  fleeIfChasedTiles: 8
-  comfortDistanceTiles: 6
+  fleeIfChasedTiles: 6
+  comfortDistanceTiles: 4
   tileSize: 1
   roamSpeed: 1.7
   repositionSpeed: 2.4

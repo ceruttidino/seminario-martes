@@ -825,7 +825,7 @@ MonoBehaviour:
   lungeOnHitMultiplier: 0.3
   attackSlowDuration: 0.15
   knockbackForce: 28
-  hitStopDuration: 0.05
+  hitStopDuration: 0.1
   hitStopPerExtraEnemy: 0.015
   shakeTrauma: 0.2
   cameraKick: 0.1
@@ -866,7 +866,7 @@ MonoBehaviour:
   radius: 1.2
   attackActiveDuration: 0.3
   knockbackForce: 45
-  hitStopDuration: 0.08
+  hitStopDuration: 0.12
   hitStopPerExtraEnemy: 0.01
   shakeTraumaOnHit: 0.45
   shakeTraumaOnWhiff: 0.2
@@ -933,6 +933,8 @@ MonoBehaviour:
   - {fileID: 777000010, guid: ac2282d467164926aca0a6cfaf277040, type: 3}
   poisonedHeartFps: 10
   sfxSource: {fileID: 5460443969507782636}
+  animator: {fileID: 0}
+  deathTrigger: Die
 --- !u!114 &8932515960615368468
 MonoBehaviour:
   m_ObjectHideFlags: 0

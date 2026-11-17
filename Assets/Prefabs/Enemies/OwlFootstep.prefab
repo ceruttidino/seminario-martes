@@ -105,4 +105,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OwlFootprint
   lifetime: 1.5
-  fadeTime: 1
+  fadeTime: 2
