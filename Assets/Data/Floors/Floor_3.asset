@@ -23,7 +23,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 19e30ace363adbe469af19980d161227, type: 2}
   - {fileID: 11400000, guid: 39833778167e5de46af0d3bd5d12c895, type: 2}
   - {fileID: 11400000, guid: 4ae9f0e3ec90bd8478b7af0677b6688e, type: 2}
-  - {fileID: 11400000, guid: 31cba07a26d29cb4faf933974408cabb, type: 2}
   - {fileID: 11400000, guid: 66fcd5a463965564b8abcf69ab0dc937, type: 2}
   - {fileID: 11400000, guid: 2babfab453f67004bb14b8105a7f365f, type: 2}
   bossRooms:
